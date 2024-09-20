@@ -96,6 +96,7 @@
         "newLayout": "New Layout",
         "newCrossSystemLayout": "New Cross System Layout",
         "layoutCopy": "{name} (copy)",
+        "layoutLocked": "Layout locked",
         "statistics": "{resourceType} \"{name}\" Statistics",
         "treeActions": {
             "create": {
@@ -217,6 +218,8 @@
             }
         },
         "otherSystems": {
+            "mySystems": "My Systems",
+            "sharedWithMe": "Shared with Me",
             "noCameras": "No Devices available",
             "systemOffline": "System is offline",
             "loadingCameras": "Loading Devices...",
@@ -337,6 +340,7 @@
             }
         },
         "overlay": {
+            "tooSmall": "Too Small",
             "info": {
                 "resolution": {
                     "high": "Hi-Res ({codec})",

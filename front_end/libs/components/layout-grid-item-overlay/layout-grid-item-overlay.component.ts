@@ -58,8 +58,8 @@ import {
 import { NxLayoutGridTreeComponent } from '@components/layout-grid-tree/layout-grid-tree.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
-import { NxTooltipDirective } from '@directives/nx-tooltip.directive';
 import { NxResizeObserver } from '@directives/resize/nx-resize.directive';
+import { NxTooltipV2Directive } from '@directives/tooltip-v2/tooltip-v2.directive';
 import staticLang from '@language_static';
 import { NxImageComponent } from '@pages/health/table-components/image/image.component';
 import { PipesModule } from '@pipes/pipes.module';
@@ -99,21 +99,21 @@ const EMPTY_MENU_ACTION = {
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         AngularSvgIconModule,
+        CdkContextMenuTrigger,
+        CdkMenuTrigger,
         CommonModule,
         DragDropModule,
+        NxAddSvgSrcDirective,
+        NxContextMenu,
         NxImageComponent,
         NxLayoutGridTreeComponent,
         NxMonitoringGraphComponent,
         NxPreLoaderComponent,
+        NxResizeObserver,
+        NxTooltipV2Directive,
         PipesModule,
         TourMatMenuModule,
         TranslateModule,
-        NxResizeObserver,
-        NxAddSvgSrcDirective,
-        NxTooltipDirective,
-        NxContextMenu,
-        CdkMenuTrigger,
-        CdkContextMenuTrigger,
     ],
     hostDirectives: [NxResizeObserver],
     exportAs: 'overlay',
@@ -755,4 +755,5 @@ export class NxLayoutGridItemOverlayComponent {
 
         window.open(...params);
     };
+    protected readonly staticLang = staticLang;
 }

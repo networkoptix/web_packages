@@ -163,6 +163,17 @@ button:focus {
     }
 }
 
+.content-container {
+    padding: 20px;
+    display: flex;
+    align-content: center;
+    justify-content: space-between;
+    div {
+        outline: gray solid 1px;
+        padding: 4px;
+    }
+}
+
 .styling {
     display: flex;
     flex-direction: column;

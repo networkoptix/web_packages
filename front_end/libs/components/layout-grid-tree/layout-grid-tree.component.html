@@ -56,7 +56,7 @@
                 >
                     <nx-layout-grid-tree-node
                         [node]="node"
-                        [expanded]="!treeControl.isExpanded(node) && !tourService.currentStep"
+                        [expanded]="treeControl.isExpanded(node) && !tourService.currentStep"
                         [isRoot]="true"
                         [menuItems]="menuItemsByType[node.type]"
                         [treeMenuItems]="treeMenuItems[node.type]"
@@ -119,21 +119,18 @@
                             })
                         "
                         (cdkDragReleased)="layoutGridService.addItem.next(node)"
-                        [alternativeTargetRef]="tooltipOffsetTarget"
-                        [nxTooltip]="
-                            showTooltip &&
-                            ({
+                        nxTooltipV2
+                        [tooltipContent]="
+                            {
                                 node,
                                 tooltips: {
                                     camera: cameraTooltip,
                                     server: serverTooltip
                                 }
-                            } | mapWith: pickTooltip)
+                            } | mapWith: pickPreviewTooltip
                         "
                         (mouseenter)="updateTooltipTarget(node.details.id)"
                         (mouseleave)="unsubTooltips()"
-                        horizontal
-                        alternateStyle
                         [tourAnchor]="
                             layout?.id &&
                             cleanIdLegacy(changingLayout || layout?.id) ===
@@ -144,12 +141,7 @@
                                       : 'focus')
                                 : ''
                         "
-                        class="tooltip-offset-parent"
                     >
-                        <div
-                            #tooltipOffsetTarget
-                            class="tooltip-offset-target"
-                        ></div>
                         <div *cdkDragPreview>
                             @if (node.type !== RESOURCE_TYPE.CAMERA) {
                                 <div class="add-preview">
@@ -182,6 +174,7 @@
                                     : node?.details?.id === 'noLayouts'
                             "
                             [query]="search$$()"
+                            [statusTooltip]="node | mapWith: pickStatusTooltip"
                         >
                         </nx-layout-grid-tree-node>
                     </div>

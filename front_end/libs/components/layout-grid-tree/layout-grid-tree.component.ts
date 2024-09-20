@@ -62,7 +62,7 @@ import { NxLinesLoaderComponent } from '@components/skeleton-loader/variants/lin
 import { NxTagComponent } from '@components/tag/tag.component';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { NxForceVisibilityDirective } from '@directives/nx-force-visibility.directive';
-import { NxTooltipDirective } from '@directives/nx-tooltip.directive';
+import { NxTooltipV2Directive } from '@directives/tooltip-v2/tooltip-v2.directive';
 import staticLang from '@language_static';
 import { MenuModule } from '@menu/menu.module';
 import { NxImageComponent } from '@pages/health/table-components/image/image.component';
@@ -78,6 +78,7 @@ import { NxSystem } from '@services/system.service/system';
 import { NxSystemsService } from '@services/systems.service';
 import { NxSystemInfo } from '@services/systems.service.types';
 import { icons } from '@static-variables';
+import { canViewLayouts } from '@utils/can-view-layouts';
 import { cleanIdLegacy, dirtyId } from '@utils/general';
 import { hasCrossSystemItems } from '@utils/has-cross-system-items';
 import { paramSignal } from '@utils/signals';
@@ -113,7 +114,7 @@ import { queryChangeSideEffectsFactory } from './utils/query-change-side-effects
         MenuModule,
         NxContextMenu,
         NxAddSvgSrcDirective,
-        NxTooltipDirective,
+        NxTooltipV2Directive,
         NxForceVisibilityDirective,
         NxSearchComponent,
         NxSearchHighlightComponent,
@@ -451,7 +452,7 @@ export class NxLayoutGridTreeComponent extends WithMenuItemsByType {
         untilDestroyed(this),
     );
 
-    pickTooltip = (selectFrom: {
+    pickPreviewTooltip = (selectFrom: {
         node: ResourceNode;
         tooltips: {
             camera: string | TemplateRef<string>;
@@ -468,20 +469,21 @@ export class NxLayoutGridTreeComponent extends WithMenuItemsByType {
         if (type === ResourceType.SERVER && nxConfig.featureFlags.layoutsDemo) {
             return selectFrom.tooltips.server;
         }
-        if (type === ResourceType.SYSTEM) {
-            const node = selectFrom.node;
-            if (assertResourceOfType.system_cloud(node)) {
-                const { version, system2faEnabled } = node.details as NxSystemInfo;
-                const minimumVersion = nxConfig.featureFlags.layouts51Enabled ? 5.1 : 6;
-                const sessionVerified = this.accountService.account.sessionVerified;
 
-                if (system2faEnabled && !sessionVerified) {
-                    return staticLang.layouts.otherSystems.tooltips.twoFactor;
-                }
+        return '';
+    };
 
-                if (version < minimumVersion) {
-                    return staticLang.layouts.otherSystems.tooltips.updateSite;
-                }
+    pickStatusTooltip = (node: ResourceNode): string => {
+        if (node && node.type === ResourceType.SYSTEM && assertResourceOfType.system_cloud(node)) {
+            const { version, system2faEnabled } = node.details as NxSystemInfo;
+            const sessionVerified = this.accountService.account.sessionVerified;
+
+            if (!canViewLayouts(version)) {
+                return staticLang.layouts.otherSystems.tooltips.updateSite;
+            }
+
+            if (system2faEnabled && !sessionVerified) {
+                return staticLang.layouts.otherSystems.tooltips.twoFactor;
             }
         }
 

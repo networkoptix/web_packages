@@ -166,6 +166,12 @@ span.node-name {
     }
 }
 
+nx-search-highlight {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
 svg-icon {
     display: flex;
     flex-direction: row;

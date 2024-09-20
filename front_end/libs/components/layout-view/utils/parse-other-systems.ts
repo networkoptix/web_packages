@@ -5,7 +5,6 @@ import staticLang from '@language_static';
 import { OrganizationAndStructure } from '@pages/home/store/groups/groups-cache.store';
 import { Account } from '@services/account.service/account';
 import { CloudSystemLight } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
-import { nxConfig } from '@services/nx-config/config';
 import { NxSystemCamera } from '@services/system.service/camera-manager/camera-manager-types';
 import { NxSystemServer } from '@services/system.service/types/servers.types';
 import { NxSystemInfo } from '@services/systems.service.types';
@@ -28,77 +27,72 @@ export const parseOtherSystems = (
     account: Account | undefined = undefined,
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 ) => {
-    const allSystems = otherSystems
-        .filter(({ version }) => canViewLayouts(version))
-        .map(system => {
-            const parsedCameras = generateCamerasForTree(
-                parseCameras(
-                    otherSystemsCameras.filter(({ systemId }) => systemId === system.id),
-                    otherSystemsServers,
-                    aspectRatio,
-                ),
-            );
+    const allSystems = otherSystems.map(system => {
+        const parsedCameras = generateCamerasForTree(
+            parseCameras(
+                otherSystemsCameras.filter(({ systemId }) => systemId === system.id),
+                otherSystemsServers,
+                aspectRatio,
+            ),
+        );
 
-            const normalizedSystem = normalizeSystemForLayout(system);
+        const normalizedSystem = normalizeSystemForLayout(system);
 
-            const requires2Fa = normalizedSystem.system2faEnabled;
+        const requires2Fa = normalizedSystem.system2faEnabled;
 
-            const supportedVersion = nxConfig.featureFlags.layouts51Enabled ? 5.1 : 6.0;
+        const systemVersionSupported = canViewLayouts(normalizedSystem);
 
-            const systemVersionSupported = normalizedSystem.version >= supportedVersion;
+        const placeholder = [
+            {
+                name: (() => {
+                    if (normalizedSystem.status === 'offline') {
+                        return staticLang.layouts.otherSystems.systemOffline;
+                    }
 
-            const placeholder = [
-                {
-                    name: (() => {
-                        if (normalizedSystem.status === 'offline') {
-                            return staticLang.layouts.otherSystems.systemOffline;
+                    if (!systemVersionSupported) {
+                        return 'siteOutdated';
+                    }
+
+                    if (loadedSystemIds.includes(system.id)) {
+                        if (!requires2Fa || account?.account2faEnabled) {
+                            return staticLang.layouts.otherSystems.noCameras;
                         }
 
+                        return account?.totpExistsForAccount
+                            ? 'twoFactorNotEnabled'
+                            : 'twoFactorNotAvailable';
+                    }
+
+                    return staticLang.layouts.otherSystems.loadingCameras;
+                })(),
+                details: {
+                    id: (() => {
                         if (!systemVersionSupported) {
                             return 'siteOutdated';
                         }
 
-                        if (loadedSystemIds.includes(system.id)) {
-                            if (!requires2Fa || account?.account2faEnabled) {
-                                return staticLang.layouts.otherSystems.noCameras;
-                            }
-
-                            return account?.totpExistsForAccount
-                                ? 'twoFactorNotEnabled'
-                                : 'twoFactorNotAvailable';
+                        if (
+                            normalizedSystem.status === 'offline' ||
+                            loadedSystemIds.includes(system.id)
+                        ) {
+                            return requires2Fa ? 'twoFactorNotEnabled' : 'noResults';
                         }
-
                         return staticLang.layouts.otherSystems.loadingCameras;
                     })(),
-                    details: {
-                        id: (() => {
-                            if (!systemVersionSupported) {
-                                return 'siteOutdated';
-                            }
-
-                            if (
-                                normalizedSystem.status === 'offline' ||
-                                loadedSystemIds.includes(system.id)
-                            ) {
-                                return requires2Fa ? 'twoFactorNotEnabled' : 'noResults';
-                            }
-                            return staticLang.layouts.otherSystems.loadingCameras;
-                        })(),
-                    },
-                    type: null,
-                    aspectRatio: 0,
                 },
-            ];
+                type: null,
+                aspectRatio: 0,
+            },
+        ];
 
-            return {
-                id: system.id,
-                type: ResourceType.SYSTEM,
-                name: system.name,
-                details: normalizedSystem,
-                children:
-                    parsedCameras.length && systemVersionSupported ? parsedCameras : placeholder,
-            };
-        });
+        return {
+            id: system.id,
+            type: ResourceType.SYSTEM,
+            name: system.name,
+            details: normalizedSystem,
+            children: parsedCameras.length && systemVersionSupported ? parsedCameras : placeholder,
+        };
+    });
 
     const groupedSystems = groupBy<(typeof allSystems)[number]>(allSystems, ({ details }) => {
         if (isOrgSystem(details) && details.organizationId) {
@@ -145,14 +139,14 @@ export const parseOtherSystems = (
         ...orgSystems,
         {
             id: 'mySystems',
-            name: 'My Systems',
+            name: staticLang.layouts.otherSystems.mySystems,
             type: ResourceType.SYSTEMS_GROUP,
             details: { id: 'mySystems' },
             children: groupedSystems.mySystems || [],
         },
         {
             id: 'sharedSystems',
-            name: 'Shared with Me',
+            name: staticLang.layouts.otherSystems.sharedWithMe,
             type: ResourceType.SYSTEMS_GROUP,
             details: { id: 'sharedSystems' },
             children: groupedSystems.sharedSystems || [],

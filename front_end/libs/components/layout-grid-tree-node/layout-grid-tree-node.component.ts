@@ -35,8 +35,9 @@ import {
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxSearchHighlightComponent } from '@components/search-highlight/search-highlight.component';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
-import { NxTooltipDirective } from '@directives/nx-tooltip.directive';
 import { NxResizeObserver } from '@directives/resize/nx-resize.directive';
+import { NxTooltipV2Directive } from '@directives/tooltip-v2/tooltip-v2.directive';
+import staticLang from '@language_static';
 import { NxImageComponent } from '@pages/health/table-components/image/image.component';
 import { PipesModule } from '@pipes/pipes.module';
 import { NxAccountService } from '@services/account.service';
@@ -49,6 +50,7 @@ import { CameraTypeId } from '@services/system.service/camera-manager/camera-man
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemInfo } from '@services/systems.service.types';
 import { icons } from '@static-variables';
+import { canViewLayouts } from '@utils/can-view-layouts';
 import { cleanId } from '@utils/general';
 
 @UntilDestroy()
@@ -70,7 +72,7 @@ import { cleanId } from '@utils/general';
         TranslateModule,
         NxResizeObserver,
         NxAddSvgSrcDirective,
-        NxTooltipDirective,
+        NxTooltipV2Directive,
         NxContextMenu,
         CdkMenuTrigger,
         CdkContextMenuTrigger,
@@ -98,6 +100,7 @@ export class NxLayoutGridTreeNode {
     >({ alias: 'treeMenuItems' });
     node$$ = input.required<ResourceNode>({ alias: 'node' });
     query$$ = input.required<string | RegExp | null>({ alias: 'query' });
+    statusTooltip$$ = input<string>('', { alias: 'statusTooltip' });
 
     isMenuOpened$$ = signal(false);
 
@@ -157,7 +160,7 @@ export class NxLayoutGridTreeNode {
         return false;
     });
 
-    planeMenuItems$$ = computed(() => {
+    plainMenuItems$$ = computed(() => {
         const menuItems = this.menuItems$$();
 
         if (Array.isArray(menuItems)) {
@@ -244,6 +247,8 @@ export class NxLayoutGridTreeNode {
 
     iconSrc$$ = computed(() => {
         const node = this.node$$();
+        const expanded = this.expanded$$();
+
         const account = this.accountService.account;
         const statusIcon =
             node.details?.id && this.layoutItemsErrorsStore.icons$$()[node.details?.id];
@@ -253,10 +258,11 @@ export class NxLayoutGridTreeNode {
         const statusForCrossSiteSystem = (() => {
             if (assertResourceOfType.system_cloud(node)) {
                 const { status, system2faEnabled, version } = node.details as NxSystemInfo;
-                const minimumVersion = nxConfig.featureFlags.layouts51Enabled ? 5.1 : 6;
-                const incompatible = status === 'incompatible' || version < minimumVersion;
+                if (status === 'incompatible' || !canViewLayouts(version)) {
+                    return 'incompatible';
+                }
                 const requires2fa = system2faEnabled && !account?.sessionVerified;
-                if (incompatible || requires2fa) {
+                if (requires2fa) {
                     return 'unauthorized';
                 }
             }
@@ -289,6 +295,11 @@ export class NxLayoutGridTreeNode {
                 : '') +
             (assertResourceOfType.layout(node) && node.shared ? '_shared' : '') +
             (assertResourceOfType.layout(node) && node.crossSystem ? '_cloud' : '') +
+            (assertResourceOfType.systems_group(node) || assertResourceOfType.cameras_group(node)
+                ? expanded
+                    ? '_open'
+                    : '_close'
+                : '') +
             '.svg'
         );
     });
@@ -313,4 +324,5 @@ export class NxLayoutGridTreeNode {
         });
     };
     protected readonly assertResourceOfType = assertResourceOfType;
+    protected readonly layoutsLang = staticLang.layouts;
 }

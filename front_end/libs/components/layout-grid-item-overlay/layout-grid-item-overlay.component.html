@@ -37,7 +37,9 @@
                     'width.px': '{{size || 24}}',
                     'height.px': '{{size || 24}}'
                 }"
-                [nxTooltip]="(menuItem.tooltip | translate) + (tooltipExtra || '')"
+                nxTooltipV2
+                [tooltipContent]="(menuItem.tooltip | translate) + (tooltipExtra || '')"
+                [tooltipPositions]="['N', 'start']"
                 (click)="handleIconClick(menuItem.action, $event)"
             ></svg-icon>
         }
@@ -57,7 +59,9 @@
         @if (nodeName$$() || ('Unavailable' | translate); as nodeName) {
             <div
                 class="resource-name ellipsis"
-                [nxTooltip]="nodeName"
+                nxTooltipV2
+                [tooltipContent]="nodeName"
+                [tooltipPositions]="['N', 'start']"
             >
                 {{ nodeName }}
             </div>
@@ -131,11 +135,12 @@
             <ng-content />
         } @else {
             <div
-                [nxTooltip]="'Too Small' | translate"
+                nxTooltipV2
+                [tooltipContent]="staticLang.layouts.overlay.tooSmall | translate"
+                [tooltipPositions]="['N', 'start']"
                 class="too-small"
-                translate
             >
-                Too Small
+                {{ staticLang.layouts.overlay.tooSmall | translate }}
             </div>
         }
     </div>

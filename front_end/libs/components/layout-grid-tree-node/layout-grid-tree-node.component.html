@@ -13,11 +13,12 @@
 @if (menuItems$$()) {
     @if (assertResourceOfType.layouts(node$$())) {
         <ng-container [ngTemplateOutlet]="simpleNodeText" />
-        @for (menuItem of planeMenuItems$$(); track menuItem.id) {
+        @for (menuItem of plainMenuItems$$(); track menuItem.id) {
             <button
                 data-escape-global-style
                 class="action-button"
-                [nxTooltip]="menuItem?.tooltip || false"
+                nxTooltipV2
+                [tooltipContent]="menuItem?.tooltip | translate"
                 (click)="menuItem?.action($event, node$$())"
                 [tourAnchor]="'cloud-layouts_add_layout'"
             >
@@ -139,7 +140,7 @@
             opacity: expandable$$() ? '1' : '0'
         }"
         class="secondary-icon"
-        [src]="icons.dirLayouts + (expanded$$() ? 'arrow_close.svg' : 'arrow_open.svg')"
+        [src]="icons.dirLayouts + (expanded$$() ? 'arrow_open.svg' : 'arrow_close.svg')"
     >
     </svg-icon>
 </ng-template>
@@ -184,7 +185,11 @@
             'height.px': '20',
             opacity: unsavedLayoutString$$() || isNodeLocked$$() ? '1' : '0'
         }"
-        [nxTooltip]="isNodeLocked$$() ? 'Layout locked' : (unsavedLayoutString$$() | translate)"
+        nxTooltipV2
+        [tooltipPositions]="['N', 'start']"
+        [tooltipContent]="
+            (isNodeLocked$$() ? layoutsLang.layoutLocked : unsavedLayoutString$$()) | translate
+        "
         class="status-icon"
         svgClass="{{ isNodeLocked$$() ? 'locked-icon' : '' }}"
         [src]="icons.dirLayouts + (isNodeLocked$$() ? 'locked.svg' : 'unsaved.svg')"
@@ -201,6 +206,9 @@
         }"
         class="primary-icon"
         [src]="iconSrc$$()"
+        nxTooltipV2
+        [tooltipPositions]="['N', 'start']"
+        [tooltipContent]="statusTooltip$$() | translate"
     />
 </ng-template>
 
