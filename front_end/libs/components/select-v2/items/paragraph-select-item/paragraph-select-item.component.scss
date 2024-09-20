@@ -2,7 +2,9 @@
 @use "typography";
 @use "theme_generator" as tg;
 @include tg.generate-theme-vars((
-    '--dropdown-item-bg-alt': ('dark': 13, 'light': 1),
+    '--dropdown-item-text': ('dark': -10, 'light': -9),
+    '--dropdown-selected-item-text': ('dark': -4, 'light': 1),
+    '--dropdown-item-bg-alt': ('dark': 4, 'light': 1),
     '--dropdown-item-border-alt': ('dark': 14, 'light': 4),
 ), ':host');
 
@@ -11,15 +13,11 @@
     overflow: clip;
     text-overflow: ellipsis;
     cursor: pointer;
-    color: var(--text-contrast);
+    color: var(--dropdown-item-text);
     background-color: var(--dropdown-item-bg-alt);
     line-height: normal;
     user-select: none;
     padding: rem(12px);
-
-    &:not(:last-child) {
-        border-bottom: 1px solid var(--dropdown-item-border-alt);
-    }
 
     &:hover:not([disabled]):not(.disabled):not([highlighted]):not(.highlighted) {
         background-color: var(--dropdown-item-hover-bg);
@@ -28,7 +26,7 @@
 
     &.highlighted {
         background-color: var(--dropdown-item-selected-bg);
-        color: var(--dropdown-item-selected-color);
+        color: var(--dropdown-selected-item-text);
     }
 
     &.disabled {
