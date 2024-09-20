@@ -478,6 +478,68 @@
             "label": "No Permissions"
         }
     },
+    "accessRolesLegacy": {
+        "Administrator": {
+            "description": "Unrestricted access including the ability to share",
+            "label": "Administrator"
+        },
+        "Advanced Viewer": {
+            "description": "Can view live video, browse the archive, control PTZ etc",
+            "label": "Advanced Viewer"
+        },
+        "Custom": {
+            "description": "Use the %VMS_NAME% Client application to set up custom permissions",
+            "label": "Custom"
+        },
+        "Live Viewer": {
+            "description": "Can only view live video",
+            "label": "Live Viewer"
+        },
+        "Owner": {
+            "description": "Unrestricted access including the ability to share and connect/disconnect System from cloud",
+            "label": "Owner"
+        },
+        "Viewer": {
+            "description": "Can view live video and browse the archive",
+            "label": "Viewer"
+        },
+        "advancedViewer": {
+            "description": "Can view live video, browse the archive, configure cameras, control PTZ etc",
+            "label": "Advanced Viewer"
+        },
+        "cloudAdmin": {
+            "description": "Can configure System and share it",
+            "label": "Administrator"
+        },
+        "custom": {
+            "description": "Use the %VMS_NAME% Client application to set up custom permissions",
+            "label": "Custom"
+        },
+        "customRole": {
+            "description": "Custom user role specified in System",
+            "label": "Custom role"
+        },
+        "disabled": {
+            "description": "User is disabled and cannot log in to System",
+            "label": "Disabled"
+        },
+        "liveViewer": {
+            "description": "Can only view live video",
+            "label": "Live Viewer"
+        },
+        "owner": {
+            "description": "Unrestricted access including the ability to share and connect/disconnect System from cloud",
+            "label": "Owner"
+        },
+        "viewer": {
+            "description": "Can view live video and browse the archive",
+            "label": "Viewer"
+        },
+        "none": {
+            "description": "",
+            "label": "No Permissions"
+        }
+    },
     "account": {
         "account": "Account",
         "key": "Key",

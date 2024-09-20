@@ -38,7 +38,7 @@ export class NxSystemUsersWithRolesComponent extends NxSystemUsersBaseComponent 
         this.role =
             !this.isCloud$$() && user.name === 'admin'
                 ? 'Owner'
-                : user?.role?.name || this.LANG.accessRoles.custom.label;
+                : user?.role?.name || this.LANG.accessRolesLegacy.custom.label;
 
         this.userRoleForm = NxFormBuilder<UserRoleFormControls>({
             email: {
@@ -99,9 +99,9 @@ export class NxSystemUsersWithRolesComponent extends NxSystemUsersBaseComponent 
 
     public setPermission(): void {
         const userRole = this.selectedUser.role?.name ?? this.selectedUser.accessRole;
-        this.accessDescription = this.LANG.accessRoles[userRole]
-            ? this.LANG.accessRoles[userRole].description
-            : this.LANG.accessRoles.customRole.description;
+        this.accessDescription = this.LANG.accessRolesLegacy[userRole]
+            ? this.LANG.accessRolesLegacy[userRole].description
+            : this.LANG.accessRolesLegacy.customRole.description;
 
         this.role = this.selectedUser?.role?.name || this.LANG.accessRoles.custom.label;
     }
