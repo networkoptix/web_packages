@@ -1,6 +1,6 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { CommonModule } from '@angular/common';
-import { Component, Inject, signal } from '@angular/core';
+import { Component, computed, Inject, signal } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
@@ -46,12 +46,18 @@ export class NxBookmarksCardModalComponent {
     fullRecordingUrl: string;
     videoError$$ = signal(false);
     videoLoaded$$ = signal(false);
-    bookmarkSharingEnabled = false;
+
+    bookmarkSharingEnabled$$ = computed(() => {
+        const currentSystemVersion = this.systemService.currentSystem$$()?.version || 0;
+        const isCurrentSystemSaaS = this.systemService.isCurrentSystemSaaS();
+        const isFeatureFlagEnabled = nxConfig.featureFlags.bookmarkSharing;
+        return isFeatureFlagEnabled && currentSystemVersion >= 6.1 && isCurrentSystemSaaS;
+    });
 
     constructor(
         public dialogRef: DialogRef<DT['return']>,
         private dialogs: NxDialogsService,
-        systemService: NxSystemService,
+        public systemService: NxSystemService,
         @Inject(DIALOG_DATA) { bookmark, startTime, startDate }: DT['data'],
     ) {
         this.bookmark = bookmark;
@@ -59,9 +65,6 @@ export class NxBookmarksCardModalComponent {
         this.time = startTime;
         this.date = startDate;
         this.fullRecordingUrl = `systems/${bookmark.systemId}/view/${bookmark.deviceId}?time=${bookmark.startTimeMs}`;
-        this.bookmarkSharingEnabled =
-            !!nxConfig.featureFlags.bookmarkSharing &&
-            systemService.getCurrentSystem().version >= 6.1;
     }
 
     openDownloadDialog(): void {

@@ -25,6 +25,7 @@ import type { ChangedIdReturned, UnauthorizedCallback } from './system-api.types
 import {
     CloudBindData,
     CloudRemoteToken,
+    CloudSaasState,
     MergeSystems,
     RemoteSystem,
     RemoteToken,
@@ -327,5 +328,9 @@ export class NxSystemRestAPI3 extends NxSystemRestAPI2 {
                 });
             }),
         );
+    }
+
+    getCloudSaasState(): Observable<CloudSaasState> {
+        return this.get('/rest/v3/system/cloud/saas');
     }
 }

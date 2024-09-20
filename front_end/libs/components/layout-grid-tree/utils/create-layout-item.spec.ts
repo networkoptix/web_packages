@@ -6,7 +6,7 @@ import { cleanId, dirtyId } from '@utils/general';
 import { createLayoutItem } from './create-layout-item';
 
 describe('createLayoutItem', () => {
-    const resourceId = dirtyId(uuid());
+    const resourceId = dirtyId(uuid()) as string;
     const systemId = uuid();
     const resourceName = uuid();
     const rotation = Math.random() * 360;

@@ -106,7 +106,7 @@
             Download
         </button>
         <button
-            *ngIf="bookmarkSharingEnabled"
+            *ngIf="bookmarkSharingEnabled$$()"
             (click)="openShareDialog()"
             class="action-button btn-default btn"
             type="button"

@@ -1,5 +1,5 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, computed, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { DateRange } from '@angular/material/datepicker';
 import { ActivatedRoute, Router } from '@angular/router';
 import { isEqual } from 'lodash-es';
@@ -20,6 +20,7 @@ import { debounceTime, distinctUntilChanged, map, startWith, take, tap } from 'r
 import type { SuggestionSections } from '@components/simple-search/simple-search.types';
 import staticLang from '@language_static';
 import { pollingTimeout } from '@pages/static-variables-features';
+import { nxConfig } from '@services/nx-config/config';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxPageService } from '@services/page.service';
@@ -154,7 +155,12 @@ export class NxBookmarksComponent implements OnInit {
 
     private queryParams: BookmarkParams;
 
-    bookmarkSharingEnabled = false;
+    bookmarkSharingEnabled$$ = computed(() => {
+        const currentSystemVersion = this.systemService.currentSystem$$()?.version || 0;
+        const isCurrentSystemSaaS = this.systemService.isCurrentSystemSaaS();
+        const isFeatureFlagEnabled = nxConfig.featureFlags.bookmarkSharing;
+        return isFeatureFlagEnabled && currentSystemVersion >= 6.1 && isCurrentSystemSaaS;
+    });
 
     constructor(
         configService: NxConfigService,
@@ -164,9 +170,6 @@ export class NxBookmarksComponent implements OnInit {
         private pageService: NxPageService,
     ) {
         this.CONFIG = configService.getConfig();
-        this.bookmarkSharingEnabled =
-            !!this.CONFIG.featureFlags.bookmarkSharing &&
-            systemService.getCurrentSystem().version >= 6.1;
     }
 
     ngOnInit(): void {

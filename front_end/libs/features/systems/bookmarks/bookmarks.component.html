@@ -25,7 +25,7 @@
                 [selection]="tagFilter"
                 (selectionChange)="updateParam('tags')"
             ></nx-tag-filter>
-            @if (bookmarkSharingEnabled) {
+            @if (bookmarkSharingEnabled$$()) {
                 <div class="sharing-filter-container">
                     <nx-filter-container [header]="LANG.bookmarkSharing.filterHeader">
                         <nx-single-filter

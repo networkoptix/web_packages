@@ -3,6 +3,7 @@ import {
     DeviceType,
     RecordingStatus,
 } from '@services/system.service/camera-manager/camera-manager-types';
+import { DirtyId } from '@utils/general';
 
 import type { NormalResponse, Param } from '.';
 
@@ -423,3 +424,92 @@ export interface CloudBindData {
     owner?: string;
     organizationId?: string;
 }
+
+type CloudSaasStateEmpty = {
+    channelPartner: {
+        id: '{00000000-0000-0000-0000-000000000000}';
+        name: '';
+        supportInformation: {
+            custom: [];
+            emails: [];
+            phones: [];
+            sites: [];
+        };
+    };
+    cloudSystemId: '{00000000-0000-0000-0000-000000000000}';
+    organization: {
+        id: '{00000000-0000-0000-0000-000000000000}';
+        name: '';
+    };
+    security: {
+        checkPeriodS: 0;
+        lastCheck: '';
+        status: Record<string, never>;
+        tmpExpirationDate: '';
+    };
+    services: Record<string, never>;
+    servicesAvailable: Record<string, never>;
+    signature: '';
+    state: 'uninitialized';
+};
+
+type CloudSaasStateFull = {
+    channelPartner: {
+        id: DirtyId;
+        name: string;
+        supportInformation: {
+            custom: [];
+            emails: [];
+            phones: [];
+            sites: {
+                description: string;
+                value: string;
+            }[];
+        };
+    };
+    cloudSystemId: DirtyId;
+    organization: {
+        id: DirtyId;
+        name: string;
+    };
+    security: {
+        checkPeriodS: number;
+        lastCheck: string;
+        status: {
+            analytics: {
+                issueExpirationDate: string;
+                status: string;
+            };
+            cloud_storage: {
+                issueExpirationDate: string;
+                status: string;
+            };
+            local_recording: {
+                issueExpirationDate: string;
+                status: string;
+            };
+        };
+        tmpExpirationDate: string;
+    };
+    services: Record<string, unknown>;
+    servicesAvailable: {
+        [key: DirtyId]: {
+            createdByChannelPartner: DirtyId;
+            description: string;
+            displayName: string;
+            id: DirtyId;
+            parameters:
+                | {
+                      integrationId: string;
+                  }
+                | { days: number; maxResolutionMp: number }
+                | Record<string, unknown>;
+            state: string;
+            type: string;
+        };
+    };
+    signature: string;
+    state: 'active' | 'suspended' | 'shutdown' | 'autoShutdown';
+};
+
+export type CloudSaasState = CloudSaasStateEmpty | CloudSaasStateFull;

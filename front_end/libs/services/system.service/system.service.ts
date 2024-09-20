@@ -4,11 +4,14 @@ import { Store } from '@ngrx/store';
 import {
     BehaviorSubject,
     catchError,
+    defer,
     firstValueFrom,
     forkJoin,
     from,
+    iif,
     map,
     Observable,
+    of,
     switchMap,
 } from 'rxjs';
 
@@ -17,6 +20,7 @@ import { environment } from '@environments/environment';
 import { nxSystemFactory } from '@services/system/factories/initial-system-factory';
 import { NxSystemBase } from '@services/system/system-base';
 import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';
+import type { NxSystemRestAPI3 } from '@services/system-rest-api-v3.service';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { NxSystemsService } from '@services/systems.service';
 import {
@@ -263,4 +267,21 @@ export class NxSystemService {
         this.currentSystem$.next(undefined);
         this.system = undefined;
     }
+
+    isCurrentSystemSaaS = toSignal(
+        this.currentSystem$.pipe(
+            switchMap(system =>
+                iif(
+                    () => !!system && system.version >= 6.0,
+                    defer(() =>
+                        (system!.mediaserver as NxSystemRestAPI3)
+                            .getCloudSaasState()
+                            .pipe(map(state => state.state === 'active')),
+                    ),
+                    of(false),
+                ),
+            ),
+        ),
+        { initialValue: false },
+    );
 }

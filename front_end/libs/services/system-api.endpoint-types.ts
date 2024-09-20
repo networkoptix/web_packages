@@ -36,6 +36,7 @@ import type {
 import {
     Alarms,
     AlarmsReply,
+    CloudSaasState,
     Manifests,
     MergeStatus,
     SystemSettingsResp,
@@ -98,6 +99,7 @@ export interface GetEndpoints {
     '/rest/v2/system/metrics/values': ValuesReply;
 
     /* rest/v3 */
+    '/rest/v3/system/cloud/saas': CloudSaasState;
 
     /* static */
     '/static/openapi_legacy.json': APIDoc;

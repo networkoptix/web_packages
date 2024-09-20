@@ -18,6 +18,8 @@ import {
     SupportedCameraProjection,
 } from '@services/system.service/camera-manager/camera-manager-types';
 
+import { Branded } from './type-helpers';
+
 /* String */
 /** @deprecated Old version has nullish coalescing for undefined argument, but this shouldn't ever happen.
  *
@@ -27,9 +29,13 @@ export function cleanIdLegacy(id: unknown): string | undefined {
     return (id as string)?.replace(/{|}/g, '');
 }
 
+export type DirtyId = Branded<string, 'DirtyId'>;
+export type CleanId = Branded<string, 'CleanId'>;
 const __wrappedIdRegex = /^{[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12}}$/;
 const __unwrappedIdRegex = /^[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12}$/;
-export function cleanId(dirtyId: string): string {
+export function cleanId(dirtyId: DirtyId): CleanId;
+export function cleanId(dirtyId: string): string;
+export function cleanId(dirtyId: string | DirtyId): CleanId {
     if (!environment.production) {
         if (__unwrappedIdRegex.test(dirtyId)) {
             console.warn('Attempting to clean already clean uuid');
@@ -37,11 +43,13 @@ export function cleanId(dirtyId: string): string {
             console.warn('Attempting to clean non-uuid string');
         }
     }
-    return dirtyId.replace(/{|}/g, '');
+    return dirtyId.replace(/{|}/g, '') as CleanId;
 }
 
-export function dirtyId(id: string): string {
-    return id[0] === '{' ? id : `{${id}}`;
+export function dirtyId(id: CleanId): DirtyId;
+export function dirtyId(id: string): DirtyId;
+export function dirtyId(id: string | CleanId): DirtyId {
+    return (id[0] === '{' ? id : `{${id}}`) as DirtyId;
 }
 
 export function cleanIp(ip: string): string {
