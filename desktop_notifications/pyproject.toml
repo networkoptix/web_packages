@@ -11,6 +11,7 @@ redis = "4.4.0rc1" #MIT License|https://github.com/redis/node-redis|https://gith
 aiohttp = "^3.8.1" #MIT License|https://github.com/aio-libs/aiohttp|https://github.com/aio-libs/aiohttp/blob/master/LICENSE.txt
 marshmallow = "^3.15.0" #MIT License|https://github.com/cjpatoilo/marshmallow|https://github.com/cjpatoilo/marshmallow/blob/main/license
 hypercorn = "^0.13.2" #MIT License|https://github.com/pgjones/hypercorn|https://github.com/pgjones/hypercorn/blob/main/LICENSE
+structlog = "^24.4.0"
 
 [tool.poetry.dev-dependencies]
 

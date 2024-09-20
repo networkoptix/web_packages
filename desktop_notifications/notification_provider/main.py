@@ -1,13 +1,12 @@
+import json
+from functools import wraps
 from typing import Tuple
 
+import redis.asyncio as redis
 from quart import Quart, websocket, Response
 
-import redis.asyncio as redis
-
-from functools import wraps
-import json
-
 from cloud import CloudAPI
+from logging_config import setup_logging
 from protocol import ProviderProtocol
 from subscription import *
 
@@ -21,9 +20,9 @@ class QuartCustom(Quart):
 
 app = QuartCustom(__name__)
 app.config.from_object('config')
+
 redis_client = redis.Redis.from_url(app.config['REDIS_URL'])
 redis_pubsub = redis_client.pubsub()
-
 
 connected = set()
 
@@ -33,11 +32,15 @@ def collect_websocket(func):
     async def wrapper(*args, **kwargs):
         global connected
         queue = asyncio.Queue()
-        connected.add(websocket._get_current_object())
+        current_object = websocket._get_current_object()
+        connected.add(current_object)
         try:
+            app.logger.info("Client connected", client=str(current_object))
             return await func(queue, *args, **kwargs)
         finally:
-            connected.remove(websocket._get_current_object())
+            app.logger.info("Client disconnected", client=str(current_object))
+            connected.remove(current_object)
+
     return wrapper
 
 
@@ -57,7 +60,14 @@ async def sending(socket_queue, provider_protocol: ProviderProtocol):
 
         # Send message
         data = json.loads(message.get('data', b'').decode())
-        await provider_protocol.send_notification(data.get('systemId'), data.get('userId'), payload=data['notification'])
+        await provider_protocol.send_notification(
+            data.get('systemId'),
+            data.get('userId'),
+            payload=data['notification'])
+        app.logger.debug(
+            "Sent notification",
+            system_id=data.get('systemId'),
+            user_id=data.get('userId'))
 
 
 async def receiving(provider_protocol: ProviderProtocol):
@@ -82,7 +92,8 @@ async def subscribe(socket_queue):
     try:
         await asyncio.gather(producer, consumer, auth_watcher)
     finally:
-        await stop_lisening(provider_protocol.email, socket_queue)
+        await stop_listening(provider_protocol.email, socket_queue)
+        app.logger.info("Stopped subscription", client=str(websocket._get_current_object()))
 
 
 @app.route('/api/v1/health', methods=['GET'])
@@ -98,13 +109,16 @@ def health():
 @app.before_serving
 async def startup():
     app.cloud_auth = await CloudAPI.create()
+    setup_logging(app)
     app.add_background_task(setup_polling)
+    app.logger.info("Application startup complete")
 
 
 @app.after_serving
 async def shutdown():
     app.shutting_down = True
     await app.cloud_auth.close()
+    app.logger.info("Application shutdown complete")
 
 
 @app.route('/api/v1/ping', methods=['GET'])
