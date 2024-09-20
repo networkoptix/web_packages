@@ -122,8 +122,10 @@ export class AddUserModalContent extends ModalBase<DT['return']> {
     private getAccessDescription(): string {
         const name = this.selectedPermission?.name;
         return (
-            (name && this.LANG.accessRoles[name] && this.LANG.accessRoles[name].description) ||
-            this.LANG.accessRoles.customRole.description
+            (name &&
+                this.LANG.accessRolesLegacy[name] &&
+                this.LANG.accessRolesLegacy[name].description) ||
+            this.LANG.accessRolesLegacy.customRole.description
         );
     }
 

@@ -62,7 +62,8 @@ export class NxPermissionsDropdown extends BaseDropdown {
             this.selected = value;
             const name = value?.name;
             this.selection =
-                (name && (this.LANG.accessRoles[name]?.label || name)) || this.LANG.pleaseSelect;
+                (name && (this.LANG.accessRolesLegacy[name]?.label || name)) ||
+                this.LANG.pleaseSelect;
         }
     }
 
@@ -84,7 +85,7 @@ export class NxPermissionsDropdown extends BaseDropdown {
             })
             .map(role => ({
                 ...role,
-                optionLabel: this.LANG.accessRoles[role.name]?.label || role.name,
+                optionLabel: this.LANG.accessRolesLegacy[role.name]?.label || role.name,
             }));
     }
 
@@ -93,7 +94,9 @@ export class NxPermissionsDropdown extends BaseDropdown {
             this.processAccessRoles();
             const role = this.accessRoles.find(x => x.name === this.selected?.name);
             const roleOptionLabel =
-                this.LANG.accessRoles[role?.name]?.label || role?.name || this.LANG.pleaseSelect;
+                this.LANG.accessRolesLegacy[role?.name]?.label ||
+                role?.name ||
+                this.LANG.pleaseSelect;
 
             if (!role || roleOptionLabel !== this.selection) {
                 this.selection = roleOptionLabel;
