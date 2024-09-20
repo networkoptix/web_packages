@@ -2348,7 +2348,7 @@ class ContributorAgreement(models.Model):
     def save(self, *args, **kwargs):
         self.full_clean()
         return super().save(*args, **kwargs)
-    
+
     @staticmethod
     def get_latest_agreement_by_type(agreement_type, customization):
         return get_reviews_by_type(agreement_type, customization).last()
@@ -3575,7 +3575,7 @@ class ReadOnlyAPI(models.Model):
     def save(self, *args, **kwargs):
         if self.id:
             # Clear cache
-            ReadOnlyAPICache(api_id=self.id).set_cached_item({})
+            ReadOnlyAPICache(api_id=self.id).clear_cache()
 
         super().save(*args, **kwargs)
 
@@ -3618,7 +3618,7 @@ class ReadOnlyAPIFile(models.Model):
     class Meta:
         verbose_name = "Readonly API file"
 
-    FILE_TYPES = Choices((0, "json", "JSON"),  (1, "preamble_markdown", "Preamble Markdown File"), (2, "changelog_markdown", "Changelog Markdown File"))
+    FILE_TYPES = Choices((0, "json", "JSON"),  (1, "preamble_markdown", "Preamble Markdown File"), (2, "changelog_markdown", "Changelog Markdown File"), (3, "markdown", "Markdown"))
     readonly_api = models.ForeignKey(ReadOnlyAPI, on_delete=models.CASCADE)
     filename = models.CharField(max_length=46, help_text="File name must exist in the readonlyAPI's manifest")
     type = models.IntegerField(
@@ -3626,34 +3626,53 @@ class ReadOnlyAPIFile(models.Model):
     content = models.TextField(blank=True, help_text="File contents")
 
     def clean(self):
+        try:
+            manifest = json.loads(self.readonly_api.manifest)
+        except ReadOnlyAPI.DoesNotExist:
+            raise ValidationError({'readonly_api': 'Please select a valid API'})
+        def to_list(value):
+            return isinstance(value, dict) and list(value.values()) or isinstance(value, list) and value or []
+
+        def find_file_in_manifest(manifest, filename):
+            if manifest == filename:
+                return True
+            for value in to_list(manifest):
+                if find_file_in_manifest(value, filename):
+                    return True
+                continue
+
+            return False
+
+        required_in_manifest = self.type in [self.FILE_TYPES.json, self.FILE_TYPES.markdown]
+
+        if required_in_manifest and not find_file_in_manifest(manifest, self.filename):
+            raise ValidationError({'content': 'File name does not exist in manifest'})
+
         if self.type in [self.FILE_TYPES.json]:
             try:
                 json.loads(self.content)
             except JSONDecodeError:
                 raise ValidationError({'content': 'Content is not valid JSON'})
-            manifest = json.loads(self.readonly_api.manifest)
-            filename_found = False
-            try:
-                for type in manifest:
-                    for section in type['sections']:
-                        if section['scheme'] == self.filename:
-                            filename_found = True
-            except Exception:
-                raise ValidationError({'content': 'Error parsing manifest to validate file name'})
-            if not filename_found:
-                raise ValidationError({'content': 'File name does not exist in manifest'})
+
         self.content = vms_vars_replacement(self.content)
 
     def validate_unique(self, exclude=None):
-        if self.type in [self.FILE_TYPES.preamble_markdown, self.FILE_TYPES.changelog_markdown]:
-            existing_file = ReadOnlyAPIFile.objects.filter(type=self.type, readonly_api=self.readonly_api).exclude(id=self.id)
-            if existing_file:
-                raise ValidationError('This file type is unique and already exists for this Readonly API')
-            super(ReadOnlyAPIFile, self).validate_unique(exclude=exclude)
+        try:
+            if self.type in [self.FILE_TYPES.preamble_markdown, self.FILE_TYPES.changelog_markdown]:
+                if ReadOnlyAPIFile.objects.filter(type=self.type, readonly_api=self.readonly_api).exclude(id=self.id):
+                    raise ValidationError('This file type is unique and already exists for this Readonly API')
+            elif ReadOnlyAPIFile.objects.filter(filename=self.filename, readonly_api=self.readonly_api).exclude(id=self.id):
+                raise ValidationError('This file already exists for this API. Or modify the existing one.')
+        except ReadOnlyAPI.DoesNotExist:
+            pass
+        super().validate_unique(exclude=exclude)
 
     def save(self, *args, **kwargs):
+        # Unit tests are kind of brittle and depend on instance not being cleaned before saving.
+        if not settings.TESTING:
+            self.full_clean()
         # Clear cache
-        ReadOnlyAPICache(api_id=self.readonly_api.id).set_cached_item({})
+        ReadOnlyAPICache(api_id=self.readonly_api.id).clear_cache()
         super().save(*args, **kwargs)
 
     def __str__(self):

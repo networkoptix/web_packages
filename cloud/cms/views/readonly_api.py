@@ -68,14 +68,27 @@ async def get_readonly_api(request, api_id=None):
                      operation_description="Returns a list of readonlyAPIs. Can be filtered by type.",
                      responses={'200': openapi.Response('ReadOnlyAPI List', ReadOnlyAPIListSerializer)},
                      manual_parameters=[type__query_param])
-@async_api_view(("GET", ))
+@swagger_auto_schema(method='DELETE')
+@async_api_view(("GET", "DELETE"))
 @permission_classes((AllowAny, ))
 async def get_readonly_apis(request):
     type = request.GET.get('type', False)
     lookup_key = f'readonly_apis-{type}' if type else 'readonly_apis'
     api_cache = BaseCacheV2(lookup_key=lookup_key, cache_key='readonly_apis',
                             customization_name=request.CUSTOMIZATION)
+
+    if request.method == 'DELETE':
+        if request.user.is_staff:
+            api_cache.clear_cache()
+            readonly_apis = await sync_to_async(list)(ReadOnlyAPI.objects.all().values_list('id', flat=True))
+            for api_id in readonly_apis:
+                ReadOnlyAPICache(api_id=api_id).clear_cache()
+            return api_success('Cache cleared.', status_code=status.HTTP_204_NO_CONTENT)
+        else:
+            return api_success('You do not have permission to clear the cache.', status_code=status.HTTP_403_FORBIDDEN)
+
     data = await api_cache.aget_cached_item()
+
     if not data:
         if type:
             if (api_type := getattr(ReadOnlyAPI.API_TYPES, type, False)) is False:

@@ -1,9 +1,14 @@
 from json.decoder import JSONDecodeError
+import json
 from django import forms
 from django.db.models import Q
 from django.core.validators import RegexValidator
 from django.contrib.admin import site
 from django.contrib.admin.widgets import FilteredSelectMultiple, ForeignKeyRawIdWidget
+from django.db import transaction
+import httpx
+import asyncio
+from asgiref.sync import sync_to_async, async_to_sync
 from django.db.models import When, Case, QuerySet, ForeignKey, SET_NULL
 from django.template.loader import render_to_string
 from django.urls import reverse
@@ -17,6 +22,7 @@ from cms.models import *
 from cms.controllers.modify_db import are_asset_datarecords_unique, GUID_REGEXP
 from cms.controllers.special_structures import SpecialStructures
 from cms.widgets import BootstrapMultiSelect
+from util.base_cache import BaseCacheV2
 
 
 BYTES_TO_MEGABYTES = 1048576.0
@@ -838,3 +844,125 @@ class QASettingsForm(forms.Form):
     def update_cache(self):
         for name, val in self.cleaned_data.items():
             caches['testing'].set(name, val)
+
+class ReadOnlyAPIForm(forms.ModelForm):
+    manifest_download_url = forms.CharField(required=False, help_text='Automatically populates content from manifest file and also automatically downloads files listed in the manifest file. Additional files should be in the same folder as the manifest file.')
+    base_url = None
+    downloaded_structure = None
+
+    @cached_property
+    def async_client(self):
+        return httpx.AsyncClient()
+
+    def clean(self):
+        super().clean()
+        manifest_download_url = self.cleaned_data.pop('manifest_download_url')
+        if manifest_download_url:
+
+            self.downloaded_structure = async_to_sync(self.download_structure)(manifest_download_url)
+
+            self.cleaned_data['manifest'] = '{}'
+            self.errors.pop('manifest', None)
+
+        return self.cleaned_data
+
+    @transaction.atomic
+    def save(self, commit=True):
+        instance = super().save(commit=commit)
+
+        if not self.downloaded_structure:
+            return instance
+
+        if self.downloaded_structure:
+            instance.manifest = json.dumps(self.downloaded_structure.pop('manifest', None))
+            instance.save()
+            instance.readonlyapifile_set.all().delete()
+
+            for filename, content in self.downloaded_structure.items():
+                is_json = filename.endswith('.json')
+                ReadOnlyAPIFile.objects.create(
+                    readonly_api=instance,
+                    type=ReadOnlyAPIFile.FILE_TYPES.json if is_json else ReadOnlyAPIFile.FILE_TYPES.markdown,
+                    filename=filename,
+                    content=json.dumps(content) if is_json else content
+                )
+
+        return instance
+
+    def recursive_get_file_names(self, node, files=None):
+        if files is None:
+            files = []
+
+        if node is None:
+            return files
+
+        if isinstance(node, str):
+            if re.search(r'\.(md|json)$', node):
+                files.append(node)
+            return files
+
+        node = node.values() if isinstance(node, dict) else node
+
+        for value in node:
+            self.recursive_get_file_names(value, files)
+        return files
+
+    async def download_file(self, filename):
+        url = f'{self.base_url}/{filename}'
+        lookup_key = f'readonly-api-download-{url}'
+        download_result_cache = BaseCacheV2(lookup_key=lookup_key, cache_key='global', customization_required=False)
+        response = {
+            'error': None,
+            'data': await download_result_cache.aget_cached_item(),
+            'filename': filename
+        }
+
+        if response['data']:
+            return response
+
+        try:
+            fetch_manifest_request = await self.async_client.get(url)
+        except Exception as e:
+            response['error'] = f'Failed to fetch file {filename}. {e}'
+        else:
+            if fetch_manifest_request.status_code != 200:
+                response['error'] = f'Failed to fetch file {filename}. Status code: {fetch_manifest_request.status_code}'
+            else:
+                try:
+                    response['data'] = fetch_manifest_request.json() if filename.endswith('.json') else fetch_manifest_request.text
+                    await download_result_cache.aset_cached_item(response['data'], timeout=60 * 10)
+                except JSONDecodeError:
+                    response['error'] = f'Failed to parse JSON file {filename}'
+                except Exception as e:
+                    response['error'] = f'Failed to fetch or parse manifest file. {e}'
+
+        return response
+
+
+    async def download_structure(self, url):
+        structures = {}
+        errors = []
+        try:
+            self.base_url, manifest_filename = url.rsplit('/', 1)
+        except ValueError:
+            raise forms.ValidationError({ 'manifest_download_url': 'Invalid URL. Must include a filename' })
+
+        manifest = await self.download_file(manifest_filename)
+
+        if error := manifest['error']:
+            errors.append(error)
+        else:
+            structures['manifest'] = manifest['data']
+
+            filenames = [filename for filename in self.recursive_get_file_names(manifest) if filename != manifest_filename]
+
+            for response in await asyncio.gather(*list(self.download_file(filename) for filename in filenames)):
+                if error := response['error']:
+                    errors.append(error)
+                else:
+                    structures[response['filename']] = response['data']
+
+        if errors:
+            raise forms.ValidationError({ 'manifest_download_url': errors })
+
+        return structures

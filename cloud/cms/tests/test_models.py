@@ -1442,7 +1442,7 @@ class TestContributorAgreement:
     def test_get_current(self, asset_type_factory, agreement_type, default_customization):
         agreement = make_test_agreement(default_customization)
         version = make_test_version_with_records(agreement, agreement_type=agreement_type)
-        review = make_test_review(default_customization, version)  
+        review = make_test_review(default_customization, version)
         if agreement_type == AgreementTypes.contributor: # get current returns contributor on default
             assert ContributorAgreement.get_current(customization=default_customization) == review
         assert ContributorAgreement.get_current(customization=default_customization,
@@ -2223,7 +2223,7 @@ class TestGetReviewsByType:
 
     def make_review(self, version):
         return make_test_review(self.customization, version)
-    
+
     def get_random_agreement_type_excluding_current(self, exclude_type):
         all_types = [value for name, value in AgreementTypes.__dict__.items() if not name.startswith('__') and name != exclude_type]
         return choice(all_types)

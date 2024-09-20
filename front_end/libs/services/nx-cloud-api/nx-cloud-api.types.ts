@@ -266,7 +266,7 @@ export interface ReadOnlyAPIDetail extends ReadOnlyAPI {
     files: [
         {
             filename: string;
-            type: 'JSON' | 'Preamble Markdown File' | 'Changelog Markdown File';
+            type: 'JSON' | 'Preamble Markdown File' | 'Changelog Markdown File' | 'Markdown';
             content: APIDoc | string;
         },
     ];

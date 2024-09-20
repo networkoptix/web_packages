@@ -107,7 +107,10 @@ export class NxOpenAPIJSONService {
         return this._activeNode;
     }
     set activeNode(node: MenuNodeWithParent) {
-        this.isInfoNode = this.determineIsInfoNode(node, this.APIToolService.currentServerId);
+        this.isInfoNode = this.determineIsInfoNode(
+            node,
+            this.APIToolService.currentSystem && this.APIToolService.currentServerId,
+        );
         this.isMarkdownNode = this.determineIsMarkdownNode();
         this._activeNode = node;
     }
@@ -200,7 +203,7 @@ export class NxOpenAPIJSONService {
                 filter(api => !!api),
             )
             .subscribe(api => {
-                this.APIToolService.useBrandingVariables(api.api);
+                this.APIToolService.useBrandingVariables(api.api as any);
                 this.APIToolService.useBrandingVariables(api.markdown);
                 this.setReadonlyAPI(api);
             });
@@ -265,7 +268,7 @@ export class NxOpenAPIJSONService {
                 addLegacyAPIInfoNodesToMenu(combinedJSON, menu);
             }
         }
-        this.APIToolService.useBrandingVariables(combinedJSON);
+        this.APIToolService.useBrandingVariables(combinedJSON as any);
 
         if (this.queuedServerChange === server.id) {
             // Handles race condition where the currentServer is changed to this server before it is ready to display
@@ -303,7 +306,8 @@ export class NxOpenAPIJSONService {
     }
 
     setReadonlyAPI = (readonlyAPI: ReadOnlyAPIStore): void => {
-        const manifest = JSON.parse(readonlyAPI.api.manifest) as LegacyMenuManifest;
+        const _manifest = JSON.parse(readonlyAPI.api.manifest) as LegacyMenuManifest | MenuManifest;
+        const manifest = Array.isArray(_manifest) ? _manifest : _manifest.versions;
         for (let i = 0; i < manifest.length; i++) {
             const apiType = { displayName: manifest[i].name, type: i + 1 };
             this.emitAPIType(apiType);
