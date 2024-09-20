@@ -8,10 +8,15 @@ import { firstValueFrom, BehaviorSubject, Subject } from 'rxjs';
 import { MenuNodeWithParent } from '@components/developers-menu/developers-menu-types';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { ReadOnlyAPI, ReadOnlyAPIDetail } from '@services/nx-cloud-api/nx-cloud-api.types';
-import { FeatureFlagStrings, LegacyMenuManifest } from '@services/nx-config/base-config';
+import {
+    FeatureFlagStrings,
+    LegacyMenuManifest,
+    MarkdownItem,
+} from '@services/nx-config/base-config';
 import { nxConfig } from '@services/nx-config/config';
 import { apiTool } from '@static-variables';
 import { isUUID } from '@utils/general';
+import { useBrandingVariables } from '@utils/nx';
 
 import {
     addAPIInfoNodesToMenu,
@@ -127,6 +132,25 @@ export class NxReadonlyAPIService {
                 );
 
                 if (preparedReadOnlyAPI) {
+                    if (!markdown && 'docs' in manifest && Array.isArray(manifest.docs)) {
+                        const docs = manifest.docs as MarkdownItem[];
+                        const flattenMarkdown = (docs: MarkdownItem[]): MarkdownItem[] =>
+                            docs.flatMap(({ chapters = [], ...doc }) =>
+                                chapters.length ? [...flattenMarkdown(chapters), doc] : doc,
+                            );
+                        markdown = useBrandingVariables(
+                            flattenMarkdown(docs).reduce((acc, { name, doc }) => {
+                                const matchingDoc = readonlyAPI.files.find(
+                                    ({ filename }) => filename === doc,
+                                );
+
+                                if (matchingDoc) {
+                                    acc[name.replace(/\s+/g, '')] = matchingDoc.content as string;
+                                }
+                                return acc;
+                            }, {} as MarkdownIndex),
+                        );
+                    }
                     const apiStoreObject = { ...readonlyAPI, content: preparedReadOnlyAPI.json };
                     this.readonlyAPIStore[readonlyAPI.id] = {
                         api: apiStoreObject,
@@ -153,10 +177,19 @@ export class NxReadonlyAPIService {
     }
 
     prepareReadonlyAPI(
-        manifest: LegacyMenuManifest,
+        _manifest: LegacyMenuManifest | { docs: MarkdownItem[]; versions: LegacyMenuManifest },
         readonlyAPI: ReadOnlyAPIDetail,
         markdown: MarkdownIndex | undefined = undefined,
     ) {
+        const manifest = Array.isArray(_manifest) ? _manifest : _manifest.versions;
+        const docs = Array.isArray(_manifest) ? [] : _manifest.docs;
+
+        if (docs.length) {
+            markdown ||= {};
+            for (const doc of docs) {
+                markdown[doc.name.replace(/\s+/g, '')] = doc.doc;
+            }
+        }
         let combinedJSON: APIDoc = {} as APIDoc;
         let combinedJSONCreated = false;
         const menus = {};
@@ -184,8 +217,14 @@ export class NxReadonlyAPIService {
                 generateMenu(menu, json);
                 menus[i + 1] = menu;
             }
-            if (markdown) {
-                addAPIInfoNodesToMenu(apiTool.defaultDocs, menu, markdown);
+
+            const hasDocs = docs.length;
+            if (markdown || hasDocs) {
+                addAPIInfoNodesToMenu(
+                    hasDocs ? docs : apiTool.defaultDocs,
+                    menu,
+                    hasDocs ? undefined : markdown,
+                );
             }
         }
         return {

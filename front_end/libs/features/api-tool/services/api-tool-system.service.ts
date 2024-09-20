@@ -35,7 +35,7 @@ import { NxSystemsService } from '@services/systems.service';
 import type { NxSystemInfo } from '@services/systems.service.types';
 import { NxUriService } from '@services/uri.service';
 import { apiTool } from '@static-variables';
-import { processLanguageFactory } from '@utils/nx';
+import { useBrandingVariables } from '@utils/nx';
 
 import type { APIDoc } from '../api-tool-types';
 
@@ -566,19 +566,7 @@ export class NxAPIToolSystemService {
         return { APIInformation, APIChangelog };
     }
 
-    useBrandingVariables(data: any) {
-        if (!data) {
-            return;
-        }
-        const customStrings = {
-            '%CLOUD_NAME%': this.CONFIG.cloudName,
-            '%VMS_NAME%': this.CONFIG.vmsName,
-            '%SUPPORT_LINK%': this.CONFIG.company.links.website,
-            '%COMPANY_NAME%': this.CONFIG.company.name,
-        };
-        const processLanguage = processLanguageFactory(customStrings);
-        return processLanguage(data);
-    }
+    useBrandingVariables = useBrandingVariables;
 
     // Caching
     private makeCacheKey = (systemId: string, scheme: string) => {

@@ -1543,7 +1543,7 @@ class FlagAdmin(WaffleFlagAdmin):
 
 @admin.register(ReadOnlyAPI)
 class ReadOnlyAPIAdmin(CMSAdmin):
-    pass
+    form = ReadOnlyAPIForm
 
 @admin.register(ReadOnlyAPIFile)
 class ReadOnlyAPIFileAdmin(CMSAdmin):

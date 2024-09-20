@@ -550,3 +550,19 @@ type WriteOnlySignal<S extends WritableSignal<T>, T> = Pick<S, 'set' | 'update'>
 export function writeOnlySignal<S extends WritableSignal<T>, T>(s: S): WriteOnlySignal<S, T> {
     return s;
 }
+
+export const useBrandingVariables = <T extends Language>(data?: T): typeof data => {
+    if (!data) {
+        return;
+    }
+    const customStrings = {
+        '%CLOUD_NAME%': CONFIG.cloudName,
+        '%VMS_NAME%': CONFIG.vmsName,
+        '%vmsName%': CONFIG.vmsName,
+        '%cloudName%': CONFIG.cloudName,
+        '%SUPPORT_LINK%': CONFIG.company.links.website,
+        '%COMPANY_NAME%': CONFIG.company.name,
+    };
+    const processLanguage = processLanguageFactory(customStrings);
+    return processLanguage(data) as T;
+};
