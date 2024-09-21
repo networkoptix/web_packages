@@ -6,75 +6,74 @@
         class="header"
         *ngIf="currentOrganization$$() as currentOrg"
     >
-        <nx-hidable>
-            @if (inChannelPartner) {
-                <a
-                    [routerLink]="routerState.partnersRoot$$()"
-                    queryParamsHandling="preserve"
+        <div class="hidable-container">
+            <nx-hidable>
+                <div
+                    class="hidable-content"
+                    [ngClass]="{
+                        'has-back-button': inChannelPartner || groupsStore.groupsPath$$().length
+                    }"
                 >
-                    @if (!groupsStore.groupsPath$$().length) {
-                        <svg-icon
-                            nx-add-svg-src
-                            [src]="icons.dirTextButtons + 'arrow_left.svg'"
-                        ></svg-icon>
+                    <div
+                        #pathContainer
+                        class="path"
+                    >
+                        @if (inChannelPartner) {
+                            <a
+                                [routerLink]="routerState.partnersRoot$$()"
+                                queryParamsHandling="preserve"
+                            >
+                                @if (!groupsStore.groupsPath$$().length) {
+                                    <svg-icon
+                                        nx-add-svg-src
+                                        [src]="icons.dirTextButtons + 'arrow_left.svg'"
+                                    ></svg-icon>
+                                }
+                                <span translate> All Organizations </span></a
+                            >
+                        }
+
+                        @if (!inChannelPartner && groupsStore.groupsPath$$().length) {
+                            <a
+                                [routerLink]="routerState.rootGroupLink$$()"
+                                queryParamsHandling="preserve"
+                            >
+                                <svg-icon
+                                    nx-add-svg-src
+                                    [src]="icons.dirTextButtons + 'arrow_left.svg'"
+                                ></svg-icon>
+
+                                {{ currentOrganization$$()!.name }}</a
+                            >
+                        }
+
+                        @for (breadcrumb of path$$(); track breadcrumb.id) {
+                            <a
+                                [ngStyle]="{ display: 'inline' }"
+                                [routerLink]="breadcrumb.id | mapWith: routerState.getGroupLink$$()"
+                                queryParamsHandling="preserve"
+                            >
+                                {{ breadcrumb.name }}</a
+                            >
+                        }
+                    </div>
+                    @if (canManageSystems$$() && currentTabRoute$$() === 'systems') {
+                        <button
+                            (click)="openTutorial()"
+                            class="tutorial-link btn btn-clear"
+                            type="text"
+                        >
+                            <svg-icon
+                                nx-add-svg-src
+                                [svgStyle]="breadcrumbIconStyle"
+                                [src]="icons.dirTextButtons + 'info.svg'"
+                            ></svg-icon>
+                            <span translate>How to add system</span>
+                        </button>
                     }
-                    <span translate> All Organizations </span></a
-                >
-
-                @if (groupsStore.groupsPath$$().length) {
-                    <a
-                        [routerLink]="routerState.rootGroupLink$$()"
-                        queryParamsHandling="preserve"
-                    >
-                        {{ currentOrganization$$()!.name }}</a
-                    >
-                }
-            }
-
-            @if (!inChannelPartner) {
-                @if (groupsStore.groupsPath$$().length) {
-                    <a
-                        [routerLink]="routerState.rootGroupLink$$()"
-                        queryParamsHandling="preserve"
-                    >
-                        <svg-icon
-                            nx-add-svg-src
-                            [src]="icons.dirTextButtons + 'arrow_left.svg'"
-                        ></svg-icon>
-
-                        {{ currentOrganization$$()!.name }}</a
-                    >
-                }
-            }
-
-            @for (
-                breadcrumb of groupsStore.groupsPath$$() | mapWith: excludeLast;
-                track breadcrumb.id;
-                let last = $last
-            ) {
-                <a
-                    [ngStyle]="{ display: 'inline' }"
-                    [routerLink]="breadcrumb.id | mapWith: routerState.getGroupLink$$()"
-                    queryParamsHandling="preserve"
-                >
-                    {{ breadcrumb.name }}</a
-                >
-            }
-            @if (canManageSystems$$() && currentTabRoute$$() === 'systems') {
-                <button
-                    (click)="openTutorial()"
-                    class="tutorial-link btn btn-clear"
-                    type="text"
-                >
-                    <svg-icon
-                        nx-add-svg-src
-                        [svgStyle]="breadcrumbIconStyle"
-                        [src]="icons.dirTextButtons + 'info.svg'"
-                    ></svg-icon>
-                    <span translate>How to add system</span>
-                </button>
-            }
-        </nx-hidable>
+                </div>
+            </nx-hidable>
+        </div>
         <h2 class="org-name">
             {{ groupsStore.currentGroupName$$() || currentOrg.name }}
             <nx-tag

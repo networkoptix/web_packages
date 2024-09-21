@@ -27,6 +27,13 @@
 
 $org-cards-container-height: calc(100dvh - var(--channel-partners-header-height, 324px));
 $org-cards-hidden-spacing: 4px;
+$org-cards-search-width: 336px;
+
+nx-search {
+    @media screen and (min-width: 520px) {
+        width: $org-cards-search-width;
+    }
+}
 
 .cards-container {
     display: flex;
