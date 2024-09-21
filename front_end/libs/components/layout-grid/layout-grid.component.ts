@@ -32,7 +32,6 @@ import {
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { cloneDeep, flatten, groupBy, isEqual, mapValues, pick, values } from 'lodash-es';
@@ -120,7 +119,6 @@ import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
 import { NxToastService } from '@services/toast.service';
 import { icons } from '@static-variables';
-import { SystemResourcesSelectors } from '@store/system-resources';
 import { SystemResourcesTypeMap } from '@store/system-resources/system-resources.types';
 import { ViewportBreakpoints } from '@styles/theme-variables-common';
 import { canViewLayouts } from '@utils/can-view-layouts';
@@ -679,10 +677,12 @@ export class NxLayoutGridComponent {
     #fullscreenElement$ = new BehaviorSubject<Element>(null);
     unsubTooltip$ = new Subject<string>();
 
-    checkLayoutItemsErrors = (layout: ParsedLayoutWithItems): void => {
+    checkLayoutItemsErrors = (
+        layout: ParsedLayoutWithItems,
+        layoutItemLookup: LayoutResourceTree,
+    ): void => {
         this.layoutItemsErrorsStore.reset(['layoutError']);
 
-        const layoutItemLookup = this.layoutItemLookup$$();
         layout.items.forEach(item => {
             const itemDetail = this.getItem({ item, layoutItemLookup });
             const { systemId } = extractSystemAndResourceId(item.resourcePath);
@@ -773,10 +773,8 @@ export class NxLayoutGridComponent {
     layout$: Observable<ParsedLayoutWithItems> = combineLatest([
         this.initialLayout$,
         this.#wrapperSize$,
-        this.store.select(SystemResourcesSelectors.selectResourceValuesAllSystems),
-        this.systemsService.systemsSubject,
     ]).pipe(
-        filter(([layout, _, systemResources, systems]) => !!layout),
+        filter(([layout, _]) => !!layout),
         map(
             ([layout, wrapperSize]) =>
                 [
@@ -796,7 +794,6 @@ export class NxLayoutGridComponent {
             renderConfig,
             items: this.annotateWithRenderConfig({ items, renderConfig, ...layout }, size),
         })),
-        tap(this.checkLayoutItemsErrors),
         shareReplay({
             bufferSize: 1,
             refCount: true,
@@ -806,6 +803,16 @@ export class NxLayoutGridComponent {
     layout$$ = toSignal(this.layout$);
 
     wrapperSize$$ = toSignal(this.#wrapperSize$);
+
+    updateLayoutErrorsEffect = effect(
+        () => {
+            const layout = this.layout$$();
+            if (layout) {
+                this.checkLayoutItemsErrors(layout, this.layoutItemLookup$$());
+            }
+        },
+        { allowSignalWrites: true },
+    );
 
     showTooltip$ = this.#wrapperSize$.pipe(
         filter(Boolean),
@@ -1199,7 +1206,6 @@ export class NxLayoutGridComponent {
         private pageService: NxPageService,
         public layoutGridService: NxLayoutGridService,
         public layoutStateService: LayoutStateService,
-        private store: Store,
         public layoutItemsErrorsStore: LayoutItemsErrorsStore,
     ) {
         if (nxConfig.featureFlags.layoutsTimeline) {
