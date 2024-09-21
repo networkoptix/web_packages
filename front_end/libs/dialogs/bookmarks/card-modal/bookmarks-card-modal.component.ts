@@ -48,10 +48,22 @@ export class NxBookmarksCardModalComponent {
     videoLoaded$$ = signal(false);
 
     bookmarkSharingEnabled$$ = computed(() => {
-        const currentSystemVersion = this.systemService.currentSystem$$()?.version || 0;
+        const currentSystem = this.systemService.currentSystem$$();
+        if (!currentSystem) {
+            return false;
+        }
+        const currentSystemVersion = currentSystem.version || 0;
         const isCurrentSystemSaaS = this.systemService.isCurrentSystemSaaS();
         const isFeatureFlagEnabled = nxConfig.featureFlags.bookmarkSharing;
-        return isFeatureFlagEnabled && currentSystemVersion >= 6.1 && isCurrentSystemSaaS;
+        const userHasPermission = currentSystem.permissionManager.canManageDeviceBookmarks(
+            this.bookmark.deviceId,
+        );
+        return (
+            isFeatureFlagEnabled &&
+            currentSystemVersion >= 6.1 &&
+            isCurrentSystemSaaS &&
+            userHasPermission
+        );
     });
 
     constructor(
