@@ -5,6 +5,7 @@ import {
     computed,
     DestroyRef,
     effect,
+    HostListener,
     inject,
     Input,
     input,
@@ -110,6 +111,29 @@ export class NxOrganizationsComponent implements OnInit, OnDestroy {
             fieldset => fieldset?.length,
         );
     });
+
+    windowWidth$$ = signal(window.innerWidth);
+    path$$ = computed(() => {
+        const path = this.groupsStore.groupsPath$$();
+        if (!path.length) {
+            return [];
+        }
+        const orgBreadcrumb = {
+            name: this.currentOrganization$$()?.name,
+            id: this.routerState.rootGroupLink$$(),
+        };
+        const width = this.windowWidth$$();
+        const mobileWidth = 520;
+        if (width < mobileWidth) {
+            return [path.at(-2) ?? orgBreadcrumb];
+        }
+        return [orgBreadcrumb, ...path];
+    });
+
+    @HostListener('window:resize', ['$event'])
+    onResize(): void {
+        this.windowWidth$$.set(window.innerWidth);
+    }
 
     canManageSystems$$ = this.permissionsStore.canManageSystems$$;
 

@@ -64,6 +64,8 @@
         width: 100%;
         height: 100%;
         padding: 1.5rem;
+        min-width: 380px;
+
         .header {
             padding-bottom: 0;
             
@@ -103,6 +105,9 @@
 }
 
 nx-hidable {
+    display: block;
+    height: 2rem;
+
     a {
         @include typography.light14light16;
         color: var(--channel-partner-back-button-text-color) !important;
@@ -111,7 +116,6 @@ nx-hidable {
         align-items: center;
         display: inline-flex;
         text-decoration: none;
-        padding-bottom: .5rem;
         svg > path {
             stroke: var(--channel-partner-back-button-stroke);
         }
@@ -132,10 +136,31 @@ nx-hidable {
         }
 }
     .tutorial-link {
-        position: absolute;
-        right: 20px;
         color: var(--body-text-color);
         cursor: pointer;
+    }
+    
+}
+
+.hidable-container {
+    height: 2rem;
+
+    .hidable-content {
+        display: flex;
+        height: 2rem;
+        justify-content: flex-end;
+        align-items: center;
+
+        &.has-back-button {
+            justify-content: space-between;;
+        }
+    }
+}
+
+.path {
+    overflow: hidden;
+    @media screen and (max-width: 520px) {
+        max-width: 180px;
     }
 }
 
