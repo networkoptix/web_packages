@@ -17,6 +17,44 @@ http {
     default_type application/octet-stream;
     sendfile on;
 
+log_format custom_json escape=json '{'
+        '"level": "info",'
+        '"ts": "${DOLLAR}time_iso8601",'
+        '"message": "handled request ${DOLLAR}request_method ${DOLLAR}request_uri",'
+        '"request": {'
+            '"id": "${DOLLAR}http_x_request_id",'
+            '"remote_ip": "${DOLLAR}remote_addr",'
+            '"remote_port": "${DOLLAR}remote_port",'
+            '"protocol": "${DOLLAR}server_protocol",'
+            '"method": "${DOLLAR}request_method",'
+            '"host": "${DOLLAR}host",'
+            '"uri": "${DOLLAR}request_uri",'
+            '"headers": {'
+                '"user-agent": "${DOLLAR}http_user_agent",'
+                '"accept": "${DOLLAR}http_accept",'
+                '"accept-encoding": "${DOLLAR}http_accept_encoding",'
+                '"traceparent": "${DOLLAR}http_traceparent",'
+                '"tracestate": "${DOLLAR}http_tracestate",'
+                '"x_forwarded_for": "${DOLLAR}http_x_forwarded_for",'
+                '"x_amzn_trace_id": "${DOLLAR}http_x_amzn_trace_id",'
+                '"origin": "${DOLLAR}http_origin"'
+            '}'
+        '},'
+        '"bytes_read": ${DOLLAR}request_length,'
+        '"duration_msecs": ${DOLLAR}request_time,'
+        '"size": ${DOLLAR}bytes_sent,'
+        '"status": ${DOLLAR}status,'
+        '"resp_headers": {'
+            '"content_length": "${DOLLAR}sent_http_content_length",'
+            '"content_type": "${DOLLAR}sent_http_content_type"'
+        '},'
+        '"request_duration": "${DOLLAR}request_time",'
+        '"response_duration": "${DOLLAR}upstream_response_time"'
+    '}';
+
+    access_log /var/log/nginx/access.log custom_json;
+
+
     gzip on;
     gzip_vary on;
     gzip_min_length 1024;
