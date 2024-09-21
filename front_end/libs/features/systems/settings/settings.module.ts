@@ -3,11 +3,11 @@ import { NgModule, inject } from '@angular/core';
 import {
     ActivatedRouteSnapshot,
     CanActivateFn,
-    ResolveFn,
     Router,
     RouterModule,
     RouterStateSnapshot,
     Routes,
+    type UrlTree,
     createUrlTreeFromSnapshot,
 } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -31,7 +31,6 @@ import { currentSystemResolver } from '@resolvers/current-system-resolver';
 import { serverResolver } from '@resolvers/server-resolver';
 import { SystemTitleResolver } from '@resolvers/system-title-resolver';
 import { userResolver } from '@resolvers/user-resolver';
-import { NxSystemCamera } from '@services/system.service/camera-manager/camera-manager-types';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxToastService } from '@services/toast.service';
 import { NxMenuProjectionDirective } from 'nx-components';
@@ -70,24 +69,26 @@ const camerasExistActivator: CanActivateFn = async (
     return true;
 };
 
-const cameraResolver: ResolveFn<NxSystemCamera> = async (
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot,
-) => {
-    const systemsService: NxSystemService = inject(NxSystemService);
-    const router: Router = inject(Router);
+const CanEditAndDataLoadedGuard: CanActivateFn = async (route: ActivatedRouteSnapshot) => {
     const toastService = inject(NxToastService);
-    const LANG = staticLang;
+    const redirectToBaseCamera = (): UrlTree => {
+        toastService.notify(staticLang.errorCodes.failedToAccessCamera, ToastType.Warning);
+        return createUrlTreeFromSnapshot(route, ['../']);
+    };
+
+    const systemsService: NxSystemService = inject(NxSystemService);
     const currentSystem = systemsService.getCurrentSystem();
     const cameraId = route.params.cameraId;
-    const ec2Camera = await firstValueFrom(currentSystem.mediaserver.getCamera(cameraId));
-    if (ec2Camera) {
-        return currentSystem.cameraManager.parseCamera(ec2Camera);
-    } else {
-        toastService.notify(LANG.errorCodes.failedToAccessCamera, ToastType.Warning);
+    if (!currentSystem.permissionManager.canEditDevice(cameraId)) {
+        return redirectToBaseCamera();
     }
-    await router.navigateByUrl(createUrlTreeFromSnapshot(route, ['../']));
-    return undefined;
+    const ec2Camera = await firstValueFrom(currentSystem.mediaserver.getCamera(cameraId));
+    if (!ec2Camera) {
+        return redirectToBaseCamera();
+    }
+    const parsedCamera = currentSystem.cameraManager.parseCamera(ec2Camera);
+    route.data = { ...route.data, guardedCamera: parsedCamera };
+    return true;
 };
 export const cloudSettingsRoutes: Routes = [
     {
@@ -164,10 +165,11 @@ export const cloudSettingsRoutes: Routes = [
                 path: 'cameras/:cameraId',
                 title: SystemTitleResolver,
                 component: NxCamerasComponent,
+                canActivate: [CanEditAndDataLoadedGuard],
                 canDeactivate: [ApplyGuard],
                 resolve: {
                     system: currentSystemResolver,
-                    camera: cameraResolver,
+                    camera: route => route.data.guardedCamera,
                 },
                 runGuardsAndResolvers: 'pathParamsChange',
             },
