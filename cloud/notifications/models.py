@@ -505,7 +505,7 @@ def clean_content_factory(known_urls=None, customization=None):
     known_urls += [
         val.split("@")[-1].split("//")[-1]
         for _, val in _branding + hidden_branding + vms_branding
-        if val and re.search(URL_REGEX, val)
+        if val and isinstance(val, str) and re.search(URL_REGEX, val)
     ]
     def _clean_content(to_clean):
         return re.sub(URL_REGEX, check_urls(known_urls), to_clean)
