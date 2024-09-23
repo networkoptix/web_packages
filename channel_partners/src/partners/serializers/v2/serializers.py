@@ -1981,7 +1981,11 @@ class SystemToOrgTransferSerializer(serializers.Serializer):
             'systemId': str(system_id),
         }
         context_vars = get_context_vars()
-        headers = {"x-request-id": context_vars.get('request_id')}
+        request_id = context_vars.get('request_id', None)
+        if request_id is None:
+            # TODO: This needs to be moved over to NxCloudApiClient
+            request_id = "NOT SET"
+        headers = {"x-request-id": request_id}
         if context_vars.get('cloud_host'):
             headers["x-original-host"] = context_vars.get('cloud_host')
 

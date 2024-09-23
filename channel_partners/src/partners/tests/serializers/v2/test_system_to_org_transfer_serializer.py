@@ -1,6 +1,7 @@
 from uuid import uuid4
 
 import pytest
+import structlog
 from rest_framework.exceptions import (
     APIException,
     PermissionDenied,
@@ -50,6 +51,7 @@ class TestSystemToOrgTransferSerializer:
         self.request = arf.post('/')
         self.request.auth = f'Bearer {uuid4()}'
         self.request.cloud_host = cloud_test_host
+        structlog.contextvars.bind_contextvars(request_id=str(uuid4()))
 
     def make_context(self, user):
         self.request.user = user

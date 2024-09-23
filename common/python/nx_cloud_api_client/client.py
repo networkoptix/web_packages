@@ -186,6 +186,9 @@ class NxCloudAPIClient(ContextAPIMixin):
         else:
             raise TypeError("Client of _default_client_class must be defined.")
 
+        # Add Event Hooks
+        self.client.event_hooks.update(kwargs.get("event_hooks", {}))
+
         self.authentication: typing.Optional[CdbAuthAPIClient] = None
 
         if any([access_token, refresh_token, code, (username and password)]):

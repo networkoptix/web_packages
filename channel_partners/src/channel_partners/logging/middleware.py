@@ -55,12 +55,9 @@ class DebugLevelFilter(logging.Filter):
         return record.levelno <= self.get_level()
 
 
-class RequestTimerMiddleware:
+class RequestLoggerMiddleware:
     """
-    Middleware to measure and log the duration of request processing.
-
-    This middleware records the start time of a request, processes the request,
-    then calculates and logs the total processing time before returning the response.
+    Middleware to log various request and response details including duration, database queries, headers, and more.
     """
 
     def __init__(self, get_response: Callable[[http.HttpRequest], http.response.HttpResponseBase]) -> None:
@@ -73,7 +70,7 @@ class RequestTimerMiddleware:
 
     def __call__(self, request: http.HttpRequest) -> http.response.HttpResponseBase:
         """
-        Record the start time, process the request, and log the processing duration.
+        Log various request and response details.
 
         :param request: The HttpRequest object.
         :return: The HttpResponse object from the next middleware or view.
@@ -82,58 +79,37 @@ class RequestTimerMiddleware:
         start_time = time.time()
         set_request_internal(request, start_time=start_time)
 
-        # Process the request.
-        response = self.get_response(request)
-
-        # Calculate and store the duration.
-        duration_ms = int((time.time() - start_time) * 1000)
-        cps_cache = response.get(CACHE_STATUS_HEADER_KEY, None)
-
-        if response.status_code >= 500:
-            set_request_internal(request, cps_cache=cps_cache)
-        else:
-            structlog.contextvars.bind_contextvars(request_duration_ms=duration_ms, cps_cache=cps_cache)
-
-        return response
-
-
-class DBQueryLoggerMiddleware:
-    """
-    Middleware to log the number of database queries made during the request processing.
-
-    This middleware counts the number of database queries before and after processing the request,
-    then logs the difference.
-    """
-
-    def __init__(self, get_response: Callable[[http.HttpRequest], http.response.HttpResponseBase]) -> None:
-        """
-        Initialize the middleware with the next middleware or view in the chain.
-
-        :param get_response: A callable that takes an HttpRequest and returns an HttpResponse.
-        """
-        self.get_response = get_response
-
-    def __call__(self, request: http.HttpRequest) -> http.response.HttpResponseBase:
-        """
-        Count DB queries, process the request, and log the number of DB queries.
-
-        :param request: The HttpRequest object.
-        :return: The HttpResponse object from the next middleware or view.
-        """
         # Count initial queries.
         initial_query_count = len(connection.queries)
         set_request_internal(request, initial_query_count=initial_query_count)
 
+        # Add Amazon Trace ID to the context
+        structlog.contextvars.bind_contextvars(
+            x_amzn_trace_id=request.META.get('HTTP_X_AMZN_TRACE_ID'),
+            x_forwarded_for=request.META.get('HTTP_X_FORWARDED_FOR'),
+            host=request.META.get('HTTP_HOST'),
+            origin=request.META.get('HTTP_ORIGIN')
+        )
+
         # Process the request.
         response = self.get_response(request)
 
-        # Calculate and store the number of queries during the request.
+        # Preform post-request enrichment.
+        duration_ms = int((time.time() - start_time) * 1000)
         final_query_count = len(connection.queries)
         queries_during_request = final_query_count - initial_query_count
+        cps_cache = response.get(CACHE_STATUS_HEADER_KEY, None)
 
+        # Log the request and response details.
         if response.status_code >= 500:
             set_request_internal(request, queries_during_request=queries_during_request)
+            set_request_internal(request, request_duration_ms=duration_ms)
+            set_request_internal(request, cps_cache=cps_cache)
         else:
-            structlog.contextvars.bind_contextvars(db_queries=queries_during_request)
+            structlog.contextvars.bind_contextvars(
+                db_queries=queries_during_request,
+                request_duration_ms=duration_ms,
+                cps_cache=cps_cache
+            )
 
         return response
