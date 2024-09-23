@@ -8,6 +8,7 @@ import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { SessionState } from '@dialogs/update-session/update-session.component.types';
 import staticLang from '@language_static';
 import { MS } from '@utils/general';
+import { parseJWTToken } from '@utils/token-tools';
 
 import { NxLoginService } from './login.service';
 import { NxSystemRestAPI } from './system-rest-api.service';
@@ -17,13 +18,9 @@ const minutesToMilliseconds = (minutes: number): number => minutes * 60 * 1000;
 const millisecondsToMinutes = (milliseconds: number): number => milliseconds / 60 / 1000;
 
 const getPasswordEnteredTime = (token: string): number => {
-    const parsedToken = token
-        .replace('nxcdb-', '')
-        .split('.')
-        .slice(0, 2)
-        .map(part => JSON.parse(atob(part)));
+    const parsedToken = parseJWTToken(token);
     // password is in seconds from JWT
-    return parsedToken[1].pwdTime * 1000;
+    return parsedToken.passwordTime * 1000;
 };
 
 const DEFAULT_SETTINGS = {

@@ -1,0 +1,22 @@
+<div
+    class="modal-container"
+    [ngClass]="{ 'auth-loaded': !authorizationLoading() }"
+>
+    <iframe
+        [src]="authorizationUrl"
+        (load)="handleLoad($event)"
+        [style.height.px]="iframeHeightInPixels()"
+        [style.width.px]="iframeWidthInPixels()"
+    ></iframe>
+    <button
+        type="button"
+        data-escape-global-style
+        class="nx-modal__header-close-btn close-btn"
+        data-dismiss="modal"
+        aria-label="Close"
+        (click)="close()"
+    ></button>
+</div>
+@if (authorizationLoading()) {
+    <nx-pre-loader></nx-pre-loader>
+}

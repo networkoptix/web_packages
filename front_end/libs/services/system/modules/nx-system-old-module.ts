@@ -669,16 +669,19 @@ export class NxSystemOldModule extends NxSystemModuleBase {
         if (this.subscriberCount > 1) {
             this.subscriberCount--;
         } else if (!environment.isLocal) {
-            if (this.activeSubscription instanceof Subscription) {
-                this.activeSubscription.unsubscribe();
-            }
-            this.killPoll$.next(true);
-
-            this.infoPromise = undefined;
-            this.usersPromise = undefined;
-            // this.systemInfo = undefined;
-            this.subscriberCount = 0;
+            this.forceStopAllPolls();
         }
+    }
+
+    forceStopAllPolls(): void {
+        if (this.activeSubscription instanceof Subscription) {
+            this.activeSubscription.unsubscribe();
+        }
+        this.killPoll$.next(true);
+
+        this.infoPromise = undefined;
+        this.usersPromise = undefined;
+        this.subscriberCount = 0;
     }
 
     update = (): Promise<any> => {

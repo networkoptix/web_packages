@@ -10,7 +10,7 @@ export class ModalBase<R> {
         protected dialogRef: DialogRef<R>,
         syncCdkWithBusyState: boolean = true,
     ) {
-        if (syncCdkWithBusyState) {
+        if (syncCdkWithBusyState && !this.dialogRef.disableClose) {
             effect(() => {
                 this.dialogRef.disableClose = this.busy$$();
             });

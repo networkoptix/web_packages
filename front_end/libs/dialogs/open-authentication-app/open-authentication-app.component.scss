@@ -1,0 +1,29 @@
+@use '../nx-modal';
+
+.modal-container {
+  position: relative;
+  opacity: 0.01;
+  transition: opacity 0.3s;
+
+  &.auth-loaded {
+    opacity: 1;
+  }
+}
+
+.close-btn {
+  top: 0;
+  border: none;
+  border-radius: 50%;
+  background-color: var(--dark12);
+}
+
+iframe {
+  border: none;
+}
+
+nx-pre-loader {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}

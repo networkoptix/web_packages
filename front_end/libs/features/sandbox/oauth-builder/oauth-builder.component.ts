@@ -15,6 +15,7 @@ import { NxSelectV2ItemComponent } from '@components/select-v2/items/select-item
 import { NxSelectV2Component } from '@components/select-v2/select-v2.component';
 import { environment } from '@environments/environment';
 import { PipesModule } from '@pipes/pipes.module';
+import { parseJWTToken } from '@utils/token-tools';
 
 @Component({
     selector: 'nx-oauth-builder',
@@ -126,13 +127,10 @@ export class NxOauthBuilderComponent {
     parsedToken = computed(() => {
         const oauthBody = this.oauthRequestBody();
         if (!oauthBody || !oauthBody.access_token) {
-            return '';
+            return {};
         }
-        return oauthBody.access_token
-            .replace('nxcdb-', '')
-            .split('.')
-            .slice(0, 2)
-            .map(chunk => JSON.parse(atob(chunk)));
+
+        return parseJWTToken(oauthBody.access_token);
     });
 
     copyToClipboard(value: string): void {

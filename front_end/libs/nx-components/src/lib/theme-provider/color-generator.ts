@@ -230,10 +230,6 @@ export class ColorGenerator {
                     );
                 }
                 const value = Reflect.get(target, colorCode);
-                console.info({
-                    colorCode,
-                    value,
-                });
                 return value;
             },
         });

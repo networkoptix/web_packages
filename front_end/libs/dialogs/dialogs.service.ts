@@ -332,6 +332,14 @@ export class NxDialogsService {
         { disableClose: true },
     );
 
+    openAuthenticationApp = this.dialogV2Factory<Dt.OpenAuthenticationApp>(
+        () =>
+            import('./open-authentication-app/open-authentication-app.component').then(
+                m => m.NxOpenAuthenticationApp,
+            ),
+        { disableClose: true },
+    );
+
     /* Account */
     account2faEnable = this.dialogV1Factory<Dt.EnableAccount2fa>(
         () =>

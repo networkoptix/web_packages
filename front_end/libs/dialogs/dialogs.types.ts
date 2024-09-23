@@ -146,6 +146,7 @@ interface UpdateSessionData {
 }
 export type UpdateSession = DialogType<UpdateSessionData, string | undefined>;
 export type Client2faWarning = DialogType<void, void>;
+export type OpenAuthenticationApp = DialogType<void, void>;
 
 /* Account */
 export type EnableAccount2fa = DialogType<void, true>;
