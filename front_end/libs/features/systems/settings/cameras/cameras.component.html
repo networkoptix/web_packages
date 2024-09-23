@@ -111,7 +111,7 @@
                             [isPrimary]="true"
                             aspect="override"
                             [preloader]="true"
-                            [state]="camera.status"
+                            [state]="canSeeLiveView$$() ? camera.status : CameraStatus.Unauthorized"
                             [url]="preview$ | async"
                             [lightBackground]="true"
                         ></nx-health-image>
@@ -253,7 +253,7 @@
                 [healthImageUrl]="preview$"
                 [selectedRotation]="selectedRotationWatcher.value || 0"
                 [selectedAspectRatio]="selectedAspectWatcher.value || aspectRatioOptions['16:9']"
-                [imageState]="camera.status"
+                [imageState]="canSeeLiveView$$() ? camera.status : CameraStatus.Unauthorized"
                 [overlayEnabled]="overlayEnabled()"
                 [(motionMaskString)]="motionMaskWatcher.value"
             ></nx-motion-detection-settings>

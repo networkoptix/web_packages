@@ -105,6 +105,7 @@ export class NxCamerasComponent implements OnInit, OnChanges {
         this.system.permissionManager.canEditDevice(this.cameraId$$()),
     );
 
+    CameraStatus = CameraStatus;
     LANG = staticLang;
     defaultAspectRatio: number | null = null;
     aspectRatioOptions = ASPECT_RATIOS;
@@ -176,6 +177,10 @@ export class NxCamerasComponent implements OnInit, OnChanges {
         }
         const { canViewDevice, canViewDeviceArchive } = this.system.permissionManager;
         return canViewDevice(cameraId) || canViewDeviceArchive(cameraId);
+    });
+    canSeeLiveView$$ = computed<boolean>(() => {
+        const cameraId = this.cameraId$$();
+        return this.system.permissionManager.canViewDevice(cameraId);
     });
 
     private get cameraName(): string {
@@ -318,28 +323,32 @@ export class NxCamerasComponent implements OnInit, OnChanges {
     }
 
     private setPreviewImage(): void {
-        this.preview$ = combineLatest([
-            this.route.params,
-            this.selectedAspectWatcher.valueSubject,
-            this.selectedRotationWatcher.valueSubject,
-            this.reload$,
-        ]).pipe(
-            switchMap(([{ cameraId }, _1, _2, _3]) => {
-                if (!cameraId || _1 === undefined || _2 === undefined) {
-                    return of('');
-                }
-                return this.system.serverManager.getPreviewUrl(
-                    cameraId,
-                    null,
-                    (this.selectedAspectWatcher?.value || ASPECT_RATIOS['4:3']) *
-                        this.maxHeight *
-                        2,
-                    this.maxHeight * 2,
-                    this.selectedRotationWatcher?.value || 0,
-                );
-            }),
-            share({ resetOnRefCountZero: true }),
-        );
+        if (this.canSeeLiveView$$()) {
+            this.preview$ = combineLatest([
+                this.route.params,
+                this.selectedAspectWatcher.valueSubject,
+                this.selectedRotationWatcher.valueSubject,
+                this.reload$,
+            ]).pipe(
+                switchMap(([{ cameraId }, _1, _2, _3]) => {
+                    if (!cameraId || _1 === undefined || _2 === undefined) {
+                        return of('');
+                    }
+                    return this.system.serverManager.getPreviewUrl(
+                        cameraId,
+                        null,
+                        (this.selectedAspectWatcher?.value || ASPECT_RATIOS['4:3']) *
+                            this.maxHeight *
+                            2,
+                        this.maxHeight * 2,
+                        this.selectedRotationWatcher?.value || 0,
+                    );
+                }),
+                share({ resetOnRefCountZero: true }),
+            );
+        } else {
+            this.preview$ = of('');
+        }
     }
 
     private get saveSettingsProcess(): Process {
