@@ -58,6 +58,11 @@ from partners.models import (
 )
 
 
+@pytest.fixture(autouse=True)
+def resource():
+    yield
+    structlog.contextvars.clear_contextvars()
+
 @contextlib.contextmanager
 def auto_execute_on_commit_callbacks(using='default'):
     with TestCase.captureOnCommitCallbacks(using=using, execute=True) as callbacks:

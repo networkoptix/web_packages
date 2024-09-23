@@ -314,6 +314,8 @@ class TestRequestFinishedLogs:
         assert log_data.get('db_queries') == 0
         assert log_data.get('request_duration_ms') > 0
         assert log_data.get('cps_cache') is None
+        assert log_data.get('x_amzn_trace_id') is None
+        assert log_data.get('x_forwarded_for') is None
         assert log_data.get('request_id') is not None
         assert log_data.get('normalized_path') == '/'
         assert log_data.get('logger') == 'django_structlog.middlewares.request'
@@ -326,14 +328,25 @@ class TestRequestFinishedLogs:
         except ValueError:
             assert False, f"Timestamp {timestamp} is not parsable."
 
+    @pytest.mark.parametrize("url, headers, expected_status, expected_key, expected_value", [
+        ("/partners/#/", None, 200, 'db_queries', 3),
+        ("/partners/#/", {"X-Amzn-Trace-Id": "test-trace-id"}, 200, 'x_amzn_trace_id', "test-trace-id"),
+        ("/partners/#/", {"X-Forwarded-For": "192.168.0.1"}, 200, 'x_forwarded_for', "192.168.0.1"),
+        ("/partners/#/", {"Host": "test-host"}, 200, 'cloud_host', "test-host"),
+        ("/partners/#/", {"Origin": "test-origin"}, 200, 'origin', "test-origin"),
+    ])
     @override_settings(ENV_NAME='local')
-    def test_request_finished_logs_200(
+    def test_logging(
             self,
             caplog,
+            url,
+            headers,
+            expected_status,
+            expected_key,
+            expected_value,
             django_capture_on_commit_callbacks
     ) -> None:
-
-        # Test setup
+        # Test Setup
         min_level = settings.MIN_LOGGING_LEVEL
         caplog.set_level(min_level)
         capturedOutput = io.StringIO()
@@ -343,20 +356,17 @@ class TestRequestFinishedLogs:
 
         # Capture database queries
         with CaptureQueriesContext(connection) as queries:
-            # Make request to openapi documentation
             client = Client()
-            response = client.get("/partners/#/")
+            response = client.get(url, headers=headers)
 
         logs = caplog.records
-
-        # Check the status code of the response
-        assert response.status_code == 200
+        assert response.status_code == expected_status
 
         request_finished_log = next((log for log in logs if "request_finished" in log.message), None)
         assert request_finished_log is not None
 
         log_data = request_finished_log.msg
-        assert log_data.get('db_queries') == 3
+        assert log_data.get(expected_key) == expected_value
 
     @override_settings(ENV_NAME='local')
     def test_request_to_view_with_db_queries(
