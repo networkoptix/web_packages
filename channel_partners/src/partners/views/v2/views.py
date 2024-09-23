@@ -1736,20 +1736,32 @@ def all_services(request):
     return Response(ServiceSerializer(services, many=True).data)
 
 
-def get_authorized_system(request, system_id, roles: Iterable | VmsRoles.AnyRole | None = None):
+def get_authorized_system(request, system_id, roles: Iterable | VmsRoles.AnyRole | None = None) -> CloudSystemId:
+    # Set default roles if none are provided
     if not roles:
         roles = {VmsRoles.ADMINISTRATOR, VmsRoles.POWER_USER}
-    if (cloud_system := getattr(request, 'cloud_system', None)):
+
+    # Check if the request already has a cloud_system attribute
+    if cloud_system := getattr(request, 'cloud_system', None):
+        # Verify if the system_id matches the cloud_system's system_id
         if str(system_id) != str(cloud_system.system_id):
             raise exceptions.PermissionDenied(detail='Insufficient permissions.')
         return cloud_system
+
+    # Ensure the user is authenticated
     if not (hasattr(request, 'user') and request.user.is_authenticated):
         raise exceptions.NotAuthenticated()
+
+    # Retrieve the cloud system by system_id
     if cloud_system := CloudSystemId.objects.filter(system_id=system_id).first():
+        # Check if the request has the required VMS roles
         if CdbInternalAuthentication.has_vms_roles(request, system_id, roles):
             return cloud_system
+        # Check if the user has the required VMS roles
         if cloud_system.has_vms_role(request.user, vms_roles=roles):
             return cloud_system
+
+    # Raise an exception if permissions are insufficient or the system does not exist
     raise exceptions.PermissionDenied(detail='Insufficient permissions or system does not exists.')
 
 
@@ -1806,11 +1818,11 @@ def system_user(request, system_id, email):
 @authentication_classes([NxCloudSystemBasicAuthentication, NxCloudOauthTokenAuthentication])
 @permission_classes([IsAuthenticated])
 def system_users(request, system_id):
-    system = get_authorized_system(request, system_id, roles={VmsRoles.ADMINISTRATOR, VmsRoles.POWER_USER})
+    system: CloudSystemId = get_authorized_system(request, system_id, roles={VmsRoles.ADMINISTRATOR, VmsRoles.POWER_USER})
     if not system or not system.organization:
         raise exceptions.NotFound('System not found')
-    all_user_role_rels = system.get_all_users()
-    serializer = SystemUserSerializer(all_user_role_rels, many=True)
+    users = system.get_all_users()
+    serializer = SystemUserSerializer(users, many=True)
     return Response(serializer.data)
 
 

@@ -225,7 +225,7 @@ class CloudUser(VersionMixin, models.Model):
 
     def systems_memberships(self):
         roles_with_sys_perm = list(get_roles_with_vms_perms().keys())
-        cp_roles = [ChannelPartnerRoles.ADMINISTRATOR, ChannelPartnerRoles.MANAGER]
+        cp_roles = ChannelPartnerRoles.CPAL_ROLES
 
         organization_sys_q = Q(
             organization__organizationtouser__system_group__isnull=True,
@@ -273,11 +273,10 @@ class CloudUser(VersionMixin, models.Model):
 
     def all_systems(self):
         roles_with_sys_perm = list(get_roles_with_vms_perms().keys())
-        cp_roles = [ChannelPartnerRoles.ADMINISTRATOR, ChannelPartnerRoles.MANAGER]
         channel_partner_membership_ids = Organization.objects.filter(
             channel_partner_access_level__in=roles_with_sys_perm,
             channel_partner__channelpartnertouser__user=self,
-            channel_partner__channelpartnertouser__roles__overlap=cp_roles,
+            channel_partner__channelpartnertouser__roles__overlap=ChannelPartnerRoles.CPAL_ROLES,
         ).values('id')
 
         organization_membership_ids = (
@@ -558,7 +557,7 @@ class CloudSystemId(
             return False
         channel_partner_manager = ChannelPartnerToUser.objects.filter(
             user=user, channel_partner_id=self.organization.channel_partner_id,
-            roles__overlap=[ChannelPartnerRoles.ADMINISTRATOR, ChannelPartnerRoles.MANAGER]
+            roles__overlap=ChannelPartnerRoles.CPAL_ROLES
         ).exists()
         if channel_partner_manager:
             return self.organization.channel_partner_access_level_id in allowed_roles
@@ -805,22 +804,22 @@ class CloudSystemId(
     def get_channel_partner_users(self, email=None) -> QuerySet[dict]:
         vms_roles = list(get_roles_with_vms_perms().keys())
         cpal_role = self.organization.channel_partner_access_level_id
+
         if cpal_role not in vms_roles:
             return ChannelPartnerToUser.objects.none()
+
         users = ChannelPartnerToUser.objects.filter(
-            channel_partner_id=self.organization.channel_partner_id, roles__overlap=vms_roles)
+            channel_partner_id=self.organization.channel_partner_id,
+            roles__overlap=vms_roles
+        ).filter(roles__overlap=ChannelPartnerRoles.CPAL_ROLES)
+
         if email:
             users = users.filter(user__email=email)
-        users = (
-            users.filter(channel_partner_id=self.organization.channel_partner_id, roles__overlap=vms_roles)
-            .values('user__email')
-            .distinct()
-            .annotate(
-                roles=models.Value([cpal_role], output_field=ArrayField(base_field=models.UUIDField())),
-                type=models.Value('channel_partner', output_field=models.CharField())
-            )
+
+        return users.values('user__email').distinct().annotate(
+            roles=models.Value([cpal_role], output_field=ArrayField(base_field=models.UUIDField())),
+            type=models.Value('channel_partner', output_field=models.CharField())
         )
-        return users
 
     def get_all_users(self, email=None) -> QuerySet[dict]:
         users = self.get_organization_users(email=email)
@@ -847,6 +846,8 @@ class ChannelPartnerRoles:
     ADMINISTRATOR = uuid.UUID('00000000-0000-4000-8000-000000000001')
     MANAGER = uuid.UUID('00000000-0000-4000-8000-000000000002')
     REPORTS_VIEWER = uuid.UUID('00000000-0000-4000-8000-000000000003')
+
+    CPAL_ROLES: List[uuid.UUID] = [ADMINISTRATOR, MANAGER]
 
 
 class ChannelPartnerRole(models.Model):
@@ -1676,7 +1677,7 @@ class Organization(
         if self.channel_partner_access_level_id in allowed_role_uuid:
             channel_partner_manager = ChannelPartnerToUser.objects.filter(
                 user=user, channel_partner=self.channel_partner,
-                roles__overlap=[ChannelPartnerRoles.ADMINISTRATOR, ChannelPartnerRoles.MANAGER]
+                roles__overlap=ChannelPartnerRoles.CPAL_ROLES
             ).exists()
             if channel_partner_manager:
                 user.cpal_on = self.id
