@@ -463,7 +463,11 @@ def test_clean_content_factory_and_check_urls(mocker):
         ({"name": email_name}, f"support@{email_value}.com"),
     ]
     hidden = [({"name": hidden_name}, hidden_value)]
-    vms = [({"name": vms_name}, f"http://{vms_value}.com")]
+    vms = [
+        ({"name": vms_name}, f"http://{vms_value}.com"),
+        # some values may be not a string
+        ({"invalid_value": email_name}, [f"support@{email_value}.com"]),
+    ]
     mocker.patch.object(
         forms, "get_branding_shortcuts", return_value=[branding, hidden]
     )
