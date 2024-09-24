@@ -60,7 +60,13 @@ export class MosScoreTracker extends BaseTracker<number> {
                 this.logger?.info({ issues });
                 const isCandidateUpdate = ({ type, statsSample }: IssuePayload) => type === 'network' && 'usingRelay' in statsSample;
                 if (issues.some(payload => payload.type !== 'cpu' && !isCandidateUpdate(payload))) {
-                    connection.reconnectionHandler(true);
+                    connection.timeIssueOccurred ||= performance.now();
+                } else {
+                    connection.timeIssueOccurred = undefined;
+                }
+
+                if (connection.timeIssueOccurred && connection.timeIssueOccurred < performance.now() - toMs(5)) {
+                    connection.reconnectionHandler(false);
                 }
 
                 const candidateTypeUpdate = [...issues].reverse().find(isCandidateUpdate);
