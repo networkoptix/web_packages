@@ -5,7 +5,6 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 import {
     InfoBlockLine,
     InfoBlockSection,
-    InfoBlockStyle,
     InfoDetailClass,
     InfoLineStyle,
 } from '@components/info-block/info-block.component.types';
@@ -34,7 +33,6 @@ export class NxLicenseDetailComponent implements OnChanges {
     @Input() system: NxSystem;
 
     infoLineStyle = InfoLineStyle.CONDENSED;
-    infoBlockStyle = InfoBlockStyle.DARK;
 
     private setupDefaults(): void {
         this.orderedLicense = [];

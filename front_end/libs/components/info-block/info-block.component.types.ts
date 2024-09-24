@@ -5,11 +5,6 @@ export enum InfoBlockSize {
     FULL = 'full',
 }
 
-export enum InfoBlockStyle {
-    LIGHT = 'light',
-    DARK = 'dark',
-}
-
 export enum InfoLineStyle {
     CONDENSED = 'condensed',
     WIDE = 'wide',

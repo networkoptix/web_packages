@@ -189,12 +189,12 @@ describe('Licenses (Details)', () => {
 
             it('should display license key properties', async () => {
                 const { debugElement, component } = await setupLicenseDetailComponent();
-                const properties = getTile(debugElement)
-                    .querySelector('div.block-section-values')
-                    .querySelectorAll('p');
+                const properties = getTile(debugElement).querySelectorAll(
+                    'div.block-grid-row-value p',
+                );
 
-                // Last item "Deactivations should be hidden
-                expect(properties.length).toBe(7);
+                // Last item "Deactivations" is removed from the list
+                expect(properties.length).toBe(6);
 
                 // ? value for class is empty
                 // expect(properties[0].innerHTML.replace(/<!--((.|[\r\n|\r|\n])*?)-->/g, '').trim())
@@ -214,11 +214,6 @@ describe('Licenses (Details)', () => {
                 expect(
                     properties[5].innerHTML.replace(/<!--((.|[\r\n|\r|\n])*?)-->/g, '').trim(),
                 ).toBe('-');
-
-                expect(
-                    properties[6].innerHTML.replace(/<!--((.|[\r\n|\r|\n])*?)-->/g, '').trim(),
-                ).toBe(component.licenses[0].info.deactivations);
-                expect(properties[6].getAttribute('style')).toBe('display: none;');
             });
         });
     });

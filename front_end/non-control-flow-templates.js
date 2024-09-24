@@ -56,7 +56,6 @@ module.exports = [
     "libs/components/header/new-header/new-header.component.html",
     "libs/components/header/tabs/tabs.component.html",
     "libs/components/html-input/html-input.component.html",
-    "libs/components/info-block/info-block.component.html",
     "libs/components/layout-grid-tree/layout-grid-tree.component.html",
     "libs/components/logger/logger.component.html",
     "libs/components/mat-like-components/mat-like-generic-select/dropdown.component.html",
