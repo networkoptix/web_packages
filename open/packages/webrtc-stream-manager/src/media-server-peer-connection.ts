@@ -6,6 +6,7 @@ import { iceServers } from './config_check_excluded';
 
 export class MediaServerPeerConnection extends RTCPeerConnection {
     connectionId: string;
+    timeIssueOccurred = 0;
 
     remoteDataChannel: RTCDataChannel;
     closed = false;
