@@ -5,7 +5,7 @@
 >
     <div
         class="subchannels-body"
-        *ngIf="!(inSubchannels$ | async); else outlet"
+        *ngIf="!routerState.state$$().subChannelId; else outlet"
     >
         <div
             class="actions"

@@ -9,10 +9,10 @@
 }
 <div
     class="channel-partner"
-    *ngIf="routeData$ | async as routeData"
-    [ngClass]="{ root: !routeData.parentData.inOrganization && !routeData.parentData.inSubchannel }"
+    *ngIf="routerState.state$$() as state"
+    [ngClass]="{ root: !state.organizationId && !state.subChannelId }"
 >
-    @if (!routeData.parentData.inOrganization && parentPartner$$(); as parentChannelPartner) {
+    @if (!state.organizationId && parentPartner$$(); as parentChannelPartner) {
         @if (!parentChannelPartner.ownRolesIds.includes(ChannelPartnerRoleIds.REPORTS_VIEWER)) {
             <a
                 class="back-link"
@@ -27,12 +27,7 @@
         }
     }
     <ng-container
-        *ngIf="
-            isValidPartner &&
-                !routeData.parentData.inOrganization &&
-                !routeData.parentData.inSubchanne;
-            else outlet
-        "
+        *ngIf="isValidPartner && !state.organizationId && !state.subChannelId; else outlet"
     >
         <div
             class="header"
@@ -51,16 +46,8 @@
                 {{ currentPartner.effectiveState | translate | uppercase }}
             </nx-tag>
         </div>
-        <nx-tabs animated>
-            <nx-base-tab
-                *ngFor="let tab of tabs$$()"
-                [displayName]="tab.displayName"
-                [route]="tab.route"
-            >
-                {{ tab.displayName }}
-            </nx-base-tab>
-        </nx-tabs>
-        <ng-container *ngIf="showOrganizations; else tabOutlet">
+        <nx-tabs [tabs]="tabs$$()" />
+        <ng-container *ngIf="!currentTab$$(); else tabOutlet">
             @if ((filteredOrganizations$ | async)?.length || search$$()) {
                 <div class="actions">
                     <button

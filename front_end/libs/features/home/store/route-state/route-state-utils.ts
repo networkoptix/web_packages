@@ -33,5 +33,9 @@ export const generateRoute = ({
         }
     }
 
+    if (groupId && !['users', 'systems'].includes(tabId)) {
+        segments.pop();
+    }
+
     return [...segments].join('/');
 };

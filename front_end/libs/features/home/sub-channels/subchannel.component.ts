@@ -7,7 +7,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { selectCurrentSubChannel } from '@common/store/channel-partners/channel-partners.selectors';
-import { NxTabsModule } from '@components/tabs/tabs.module';
+import { NxTabsComponent } from '@components/tabs/tabs.component';
 import { Tab } from '@components/tabs/tabs.types';
 import { NxTagComponent } from '@components/tag/tag.component';
 import staticLang from '@language_static';
@@ -25,9 +25,9 @@ import { icons } from '@variables/static-variables';
     imports: [
         RouterOutlet,
         CommonModule,
-        NxTabsModule,
         AngularSvgIconModule,
         NxTagComponent,
+        NxTabsComponent,
         TranslateModule,
     ],
 })

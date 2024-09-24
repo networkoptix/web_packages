@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Component, DestroyRef, inject, computed, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
@@ -26,6 +26,7 @@ import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { NxIntersectionObserver } from '@directives/nx-intersection.directive';
 import { NxThemeAttributeDirective } from '@directives/theme-attribute.directive';
 import { PermissionsStore } from '@pages/home/store/permissions/permissions.store';
+import { ChannelPartnersRouteState } from '@pages/home/store/route-state/route-state.store';
 import { PartnerRedirect } from '@pages/home/utils/redirect';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
 import {
@@ -122,7 +123,8 @@ export class NxSubchannelsComponent {
             return caseInsensitiveSearch(subchannels.name, search);
         });
     });
-    inSubchannels$ = this.route.parent.data.pipe(map(data => data.parentData.inSubchannel));
+
+    routerState = inject(ChannelPartnersRouteState);
     destroyRef = inject(DestroyRef);
     subchannelsStoresLoaded = false;
     searchConfig = searchConfig;
@@ -135,7 +137,6 @@ export class NxSubchannelsComponent {
         private dialogsService: NxDialogsService,
         private CPService: NxChannelPartnersService,
         private router: Router,
-        private route: ActivatedRoute,
     ) {
         this.currentPartnerId$
             .pipe(
@@ -185,7 +186,7 @@ export class NxSubchannelsComponent {
 
         const redirectUrl = isPartner
             ? PartnerRedirect.toPartner(id)
-            : PartnerRedirect.toSubChannelPartner(id);
+            : `${PartnerRedirect.toSubChannelPartner(id)}/settings`;
 
         if (isPartner) {
             this.store.dispatch(CPActions.setCurrentPartnerId({ currentPartnerId: id }));

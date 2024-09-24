@@ -10,10 +10,7 @@ import { NxReportsComponent } from '../components/reports/reports.component';
 import { Mode } from '../components/reports/reports.types';
 import { NxOrganizationSettingsComponent } from '../components/settings/organization-settings/organization-settings.component';
 import { NxOrganizationUsersComponent } from '../components/users/org-users/org-users.component';
-import { CPResovler } from '../resolvers/CP-resolver';
-import { WithParentDataResolver } from '../resolvers/data-resolver';
 import { orgTabGuard } from '../resolvers/org-tab-guard';
-import { withTabReporterResolver } from '../resolvers/tab-id-reporter-resolver';
 
 import { NxOrganizationCardContainerComponent } from './cards-container/org-cards-container.component';
 import { NxOrganizationsComponent } from './organization.component';
@@ -25,16 +22,11 @@ const setOrgId: CanActivateFn = (route: ActivatedRouteSnapshot) => {
     return true;
 };
 
-const orgRoutes: Routes = withTabReporterResolver([
+const orgRoutes: Routes = [
     {
         path: ':organizationId',
         component: NxOrganizationsComponent,
-        resolve: {
-            parentData: WithParentDataResolver,
-            inChannelPartner: CPResovler,
-        },
         canActivate: [setOrgId],
-        runGuardsAndResolvers: 'always',
         children: [
             {
                 path: 'systems',
@@ -106,7 +98,7 @@ const orgRoutes: Routes = withTabReporterResolver([
         path: '**',
         redirectTo: '/home',
     },
-]);
+];
 
 @NgModule({
     imports: [RouterModule.forChild(orgRoutes)],
