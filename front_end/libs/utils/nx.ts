@@ -560,6 +560,8 @@ export const useBrandingVariables = <T extends Language>(data?: T): typeof data 
         '%VMS_NAME%': CONFIG.vmsName,
         '%vmsName%': CONFIG.vmsName,
         '%cloudName%': CONFIG.cloudName,
+        '%cloudHost%': location.host,
+        '%CLOUD_HOST%': location.host,
         '%SUPPORT_LINK%': CONFIG.company.links.website,
         '%COMPANY_NAME%': CONFIG.company.name,
     };

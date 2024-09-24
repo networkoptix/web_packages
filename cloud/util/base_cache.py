@@ -204,12 +204,10 @@ class ReadOnlyAPICache(BaseCacheV2):
     _cache_key = 'readonly_apis'
     _customization_required = False
 
-    def __init__(self, api_id, *args, **kwargs):
-        self.api_id = api_id
+    def __init__(self, *args, api_id=None, type_id=None, **kwargs):
+        kwargs['lookup_key'] = f"{self._cache_key}-{'instance' if api_id else 'type'}-{api_id or type_id or 'all'}"
         super().__init__(*args, **kwargs)
 
-    def get_lookup_key(self):
-        return f'readonlyapi-{self.api_id}'
 
 
 class IntegrationCache(BaseCacheV2):

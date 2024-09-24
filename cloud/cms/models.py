@@ -3554,10 +3554,19 @@ class ReadOnlyAPI(models.Model):
     enabled = models.BooleanField(default=True)
     manifest = models.TextField(default=DEFAULT_MANIFEST, help_text="Content manifest")
 
+    def clear_cache(self):
+        ReadOnlyAPICache(api_id=self.id).clear_cache()
+        ReadOnlyAPICache(type_id=self.type).clear_cache()
+        ReadOnlyAPICache().clear_cache()
+
+    def delete(self, *args, **kwargs):
+        self.clear_cache()
+        return super().delete(*args, **kwargs)
+
     def save(self, *args, **kwargs):
         if self.id:
             # Clear cache
-            ReadOnlyAPICache(api_id=self.id).clear_cache()
+            self.clear_cache()
 
         super().save(*args, **kwargs)
 
@@ -3587,8 +3596,8 @@ def vms_vars_replacement(content, replacements=None):
 
         if ctx and (ctx_template := ContextTemplate.objects.filter(context=ctx).last()):
             replacements = json.loads(ctx_template.template or "{}")
-    if not replacements:
-        return content
+    if replacements:
+        replacements['cloudHost'] = '%cloudHost%'
     for match in re.findall(r'@[-_.0-9A-Za-z]+@', content):
         replacement = get_dot_notated(replacements, match.replace('@', ''))
         if replacement:
@@ -3649,12 +3658,16 @@ class ReadOnlyAPIFile(models.Model):
             pass
         super().validate_unique(exclude=exclude)
 
+    def delete(self, *args, **kwargs):
+        self.readonly_api.clear_cache()
+        return super().delete(*args, **kwargs)
+
     def save(self, *args, **kwargs):
         # Unit tests are kind of brittle and depend on instance not being cleaned before saving.
         if not settings.TESTING:
             self.full_clean()
         # Clear cache
-        ReadOnlyAPICache(api_id=self.readonly_api.id).clear_cache()
+        self.readonly_api.clear_cache()
         super().save(*args, **kwargs)
 
     def __str__(self):

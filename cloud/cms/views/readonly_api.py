@@ -72,10 +72,8 @@ async def get_readonly_api(request, api_id=None):
 @async_api_view(("GET", "DELETE"))
 @permission_classes((AllowAny, ))
 async def get_readonly_apis(request):
-    type = request.GET.get('type', False)
-    lookup_key = f'readonly_apis-{type}' if type else 'readonly_apis'
-    api_cache = BaseCacheV2(lookup_key=lookup_key, cache_key='readonly_apis',
-                            customization_name=request.CUSTOMIZATION)
+    type_id = request.GET.get('type', False)
+    api_cache = ReadOnlyAPICache(type_id=type_id)
 
     if request.method == 'DELETE':
         if request.user.is_staff:
@@ -90,8 +88,8 @@ async def get_readonly_apis(request):
     data = await api_cache.aget_cached_item()
 
     if not data:
-        if type:
-            if (api_type := getattr(ReadOnlyAPI.API_TYPES, type, False)) is False:
+        if type_id:
+            if (api_type := getattr(ReadOnlyAPI.API_TYPES, type_id, False)) is False:
                 return api_success(INVALID_API_TYPE, status_code=status.HTTP_404_NOT_FOUND)
             apis = ReadOnlyAPI.objects.filter(type=api_type)
         else:
