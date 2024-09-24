@@ -1,5 +1,4 @@
 @use "typography";
-@use "mixins";
 @use "theme_variables_common" as *;
 @use "src-variables/pages/cameras" as *;
 @use "bootstrap_utils" as bootstrap;
@@ -52,7 +51,43 @@
             display: flex;
 
             .camera-buttons {
-                @include mixins.details-buttons;
+                // Taken from @mixin details-buttons due to stroke/fill override
+                flex: 0 0 auto;
+                &:hover,
+                &:hover>span {
+                    color: var(--btn-text-hover-color) !important;
+                    svg-icon {
+                        svg {
+                            g,
+                            path,
+                            circle {
+                                fill: var(--btn-text-hover-color) !important;
+                            }
+                        }
+                    }
+                }
+                @include typography.regular13nocolor;
+                color: var(--btn-text-color);
+                background-color: inherit;
+                display: flex;
+                align-items: center;
+                white-space: nowrap;
+                padding-left: 8px;
+                padding-right: 0;
+                svg-icon {
+                    svg {
+                        height: 20px;
+                        g,
+                        path,
+                        circle {
+                            fill: var(--btn-text-color) !important;
+                        }
+                    }
+                }
+                a {
+                    text-decoration: none;
+                    color: inherit;
+                }
 
                 @include bootstrap.media-breakpoint-down(lg) {
                     &:first-of-type {
