@@ -87,7 +87,6 @@ module.exports = [
     "libs/components/system-card/system-card.component.html",
     "libs/components/systems-list/list.component.html",
     "libs/components/table/table.component.html",
-    "libs/components/tabs/tabs.component.html",
     "libs/components/tag/tag.component.html",
     "libs/components/theme-generator/theme-colors.component.html",
     "libs/components/theme-switcher/theme-switcher.component.html",

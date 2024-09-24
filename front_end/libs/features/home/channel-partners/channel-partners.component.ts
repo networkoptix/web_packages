@@ -6,7 +6,6 @@ import {
     DestroyRef,
     inject,
     computed,
-    input,
     HostBinding,
     effect,
     untracked,
@@ -14,7 +13,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
@@ -45,7 +44,7 @@ import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-lo
 import { NxPagePlaceholderNoAccessComponent } from '@components/placeholdersV2/page/no-access/page-placeholder.component';
 import { NxPagePlaceholderGenericNewV2Component } from '@components/placeholdersV2/page/page-placeholder.component';
 import { NxSearchComponent } from '@components/search/search.component';
-import { NxTabsModule } from '@components/tabs/tabs.module';
+import { NxTabsComponent } from '@components/tabs/tabs.component';
 import { Tab } from '@components/tabs/tabs.types';
 import { NxTagComponent } from '@components/tag/tag.component';
 import { NxDialogsService } from '@dialogs/dialogs.service';
@@ -54,6 +53,7 @@ import { NxIntersectionObserver } from '@directives/nx-intersection.directive';
 import { NxResizeObserver } from '@directives/resize/nx-resize.directive';
 import staticLang from '@language_static';
 import { PermissionsStore } from '@pages/home/store/permissions/permissions.store';
+import { channelPartnersLastPath } from '@pages/home/utils/channel-partners-last-path';
 import { PartnerRedirect } from '@pages/home/utils/redirect';
 import { PipesModule } from '@pipes/pipes.module';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
@@ -87,7 +87,7 @@ import { ChannelPartnersRouteState } from '../store/route-state/route-state.stor
         CdkMenuModule,
         AngularSvgIconModule,
         NxCardComponent,
-        NxTabsModule,
+        NxTabsComponent,
         NxAddSvgSrcDirective,
         NxTagComponent,
         PipesModule,
@@ -109,7 +109,6 @@ export class NxChannelPartnersComponent implements OnInit {
     routerState = inject(ChannelPartnersRouteState);
 
     isLoading$$ = this.store.selectSignal<boolean>(selectArePartnerOrgsLoading);
-    routeData$ = this.route.data;
     channelPartners$ = this.store.select<ChannelPartner[]>(selectChannelPartners);
     currentPartner$ = this.store.select(selectCurrentPartner);
     currentPartner$$ = this.store.selectSignal<ChannelPartner>(selectCurrentPartner);
@@ -189,7 +188,6 @@ export class NxChannelPartnersComponent implements OnInit {
     );
 
     destroyRef = inject(DestroyRef);
-    currentTabRoute$$ = input.required<string>({ alias: 'currentTabRoute' });
     banner$$ = this.store.selectSignal(selectBanner);
     directParentPartner$$ = this.store.selectSignal(selectCurrentParentPartnerForChild);
 
@@ -245,16 +243,8 @@ export class NxChannelPartnersComponent implements OnInit {
         }
         return tabs;
     });
-    currentTabIndex$$ = computed(() => {
-        const tabs = this.tabs$$();
-        const currentTabRoute = this.currentTabRoute$$();
-        for (const [index, tab] of tabs.entries()) {
-            if (tab.route === currentTabRoute) {
-                return index;
-            }
-        }
-        return -1;
-    });
+
+    currentTab$$ = channelPartnersLastPath();
     returnToParentLink$$ = computed(() => {
         const parentChannelPartner = this.parentPartner$$();
         return parentChannelPartner
@@ -266,7 +256,6 @@ export class NxChannelPartnersComponent implements OnInit {
 
     constructor(
         private store: Store,
-        private route: ActivatedRoute,
         private CPService: NxChannelPartnersService,
         private dialogsService: NxDialogsService,
     ) {}
@@ -317,10 +306,6 @@ export class NxChannelPartnersComponent implements OnInit {
                     }),
                 );
             });
-    }
-
-    get showOrganizations(): boolean {
-        return !this.tabs$$()[this.currentTabIndex$$()]?.route;
     }
 
     newOrgDialog = (): void => {

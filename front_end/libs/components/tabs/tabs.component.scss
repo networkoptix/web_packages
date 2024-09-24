@@ -36,18 +36,15 @@
           opacity: 1;
         }
 
-        .content {
+        a {
           color: var(--tabs-active-color) !important;
         }
       }
     }
 
-    input {
-      display: none;
-    }
-    
-    .content {
+    a {
       @include typography.medium15nocolor;
+      text-decoration: none;
       justify-content: center;
       cursor: pointer;
       height: 100%;

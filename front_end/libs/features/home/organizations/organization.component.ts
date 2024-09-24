@@ -7,8 +7,6 @@ import {
     effect,
     HostListener,
     inject,
-    Input,
-    input,
     OnDestroy,
     OnInit,
     signal,
@@ -36,14 +34,14 @@ import { NxHidableModule } from '@components/hidable/hidable.module';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxPagePlaceholderGenericNewV2Component } from '@components/placeholdersV2/page/page-placeholder.component';
 import { NxRibbonStandaloneComponent } from '@components/ribbon/ribbon-standalone.component';
-import { NxTabsModule } from '@components/tabs/tabs.module';
+import { NxTabsComponent } from '@components/tabs/tabs.component';
 import { Tab } from '@components/tabs/tabs.types';
 import { NxTagComponent } from '@components/tag/tag.component';
-import { NxTutorialDialogComponent } from '@dialogs/channel-partners/tutorial-dialog/tutorial-dialog.component';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import staticLang from '@language_static';
 import { PermissionsStore } from '@pages/home/store/permissions/permissions.store';
+import { channelPartnersLastPath } from '@pages/home/utils/channel-partners-last-path';
 import { PipesModule } from '@pipes/pipes.module';
 import { Account } from '@services/account.service/account';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
@@ -61,8 +59,6 @@ import { Crumb } from '../home.types';
 import { GroupsStore } from '../store/groups/groups.store';
 import { ChannelPartnersRouteState } from '../store/route-state/route-state.store';
 
-import { NxOrganizationCardContainerComponent } from './cards-container/org-cards-container.component';
-
 interface SidebarSettings {
     showSidebarState: boolean;
 }
@@ -79,17 +75,15 @@ interface SidebarSettings {
         CommonModule,
         AngularSvgIconModule,
         NxSystemGroupsSidebarComponent,
-        NxOrganizationCardContainerComponent,
         NxAddSvgSrcDirective,
         DragDropModule,
-        NxTabsModule,
+        NxTabsComponent,
         NxAccessTableContainerComponent,
         NxTagComponent,
         TranslateModule,
         PipesModule,
         NxHidableModule,
         NxAlertBlockComponent,
-        NxTutorialDialogComponent,
         NxPagePlaceholderGenericNewV2Component,
         NxRibbonStandaloneComponent,
     ],
@@ -102,7 +96,7 @@ export class NxOrganizationsComponent implements OnInit, OnDestroy {
     parentPartner$$ = this.store.selectSignal(selectCurrentParentPartnerForChild);
     groupsStore = inject(GroupsStore);
     routerState = inject(ChannelPartnersRouteState);
-    currentTabRoute$$ = input.required<string>({ alias: 'currentTabRoute' });
+    currentTab$$ = channelPartnersLastPath();
     breadcrumbIconStyle = { 'width.px': '20', 'height.px': '20', 'margin-right.px': '4' } as const;
     isValidOrg = false;
 
@@ -185,7 +179,6 @@ export class NxOrganizationsComponent implements OnInit, OnDestroy {
     isChannelPartnerUser$$ = signal<boolean>(false);
     showAccessTable = false;
     accessTableUser: string = '';
-    @Input() inChannelPartner: boolean = false;
 
     private account$$ = this.store.selectSignal<Account>(selectCurrentUser);
     organizations$$ = this.store.selectSignal<Organization[]>(selectAllOrganizations);
@@ -253,7 +246,7 @@ export class NxOrganizationsComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        if (!this.inChannelPartner) {
+        if (!this.routerState.state$$().partnerId) {
             this.store.dispatch(CPActions.setCurrentPartnerId({ currentPartnerId: null }));
         }
         this.cpService.paramStateHandler.state$

@@ -1,24 +1,14 @@
 <div class="tabs-component">
     <div class="tabs-row">
-        <ng-container *ngFor="let tab of tabItems$$(); index as i">
+        @for (tab of tabs(); track tab.route) {
             <div
                 class="tab-container"
-                [routerLink]="tab.route | mapWith: routeState.getTabLink$$()"
-                [ngClass]="{ selected: tab.selected }"
+                [class.selected]="currentTab$$() === tab.route"
             >
-                <input
-                    class="tab"
-                    [id]="'t' + i"
-                    type="radio"
-                    [disabled]="tab.disabled"
-                />
-                <label
-                    class="content"
-                    [for]="'t' + i"
-                >
-                    {{ tab.displayName | translate }}
-                </label>
+                <a [routerLink]="tab.route | mapWith: routeState.getTabLink$$()">
+                    {{ tab.displayName }}
+                </a>
             </div>
-        </ng-container>
+        }
     </div>
 </div>

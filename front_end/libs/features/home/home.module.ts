@@ -11,11 +11,8 @@ import { SystemsDisplayMode } from '@pages/home/home.types';
 import { NxHomeComponent } from './home.component';
 import { HistoryGuard } from './resolvers/cp-history-guard';
 import { FindGroupGuard } from './resolvers/find-group-guard';
-import { OrgResolver } from './resolvers/org-resolver';
-import { SubChannelResolver } from './resolvers/subchannel-resolver';
-import { withTabReporterResolver } from './resolvers/tab-id-reporter-resolver';
 
-const homeRoutes: Routes = withTabReporterResolver([
+const homeRoutes: Routes = [
     {
         path: 'redirect-to-group/:systemId',
         canActivate: [FindGroupGuard],
@@ -23,11 +20,6 @@ const homeRoutes: Routes = withTabReporterResolver([
     },
     {
         path: '',
-        resolve: {
-            inOrganization: OrgResolver,
-            inSubchannel: SubChannelResolver,
-        },
-        runGuardsAndResolvers: 'always',
         component: NxHomeComponent,
         canActivate: [AuthGuard, HistoryGuard],
         children: [
@@ -77,7 +69,7 @@ const homeRoutes: Routes = withTabReporterResolver([
             },
         ],
     },
-]);
+];
 
 @NgModule({
     imports: [

@@ -11,14 +11,15 @@
                 <div
                     class="hidable-content"
                     [ngClass]="{
-                        'has-back-button': inChannelPartner || groupsStore.groupsPath$$().length
+                        'has-back-button':
+                            routerState.partnerId() || groupsStore.groupsPath$$().length
                     }"
                 >
                     <div
                         #pathContainer
                         class="path"
                     >
-                        @if (inChannelPartner) {
+                        @if (routerState.partnerId()) {
                             <a
                                 [routerLink]="routerState.partnersRoot$$()"
                                 queryParamsHandling="preserve"
@@ -33,7 +34,7 @@
                             >
                         }
 
-                        @if (!inChannelPartner && groupsStore.groupsPath$$().length) {
+                        @if (!routerState.partnerId() && groupsStore.groupsPath$$().length) {
                             <a
                                 [routerLink]="routerState.rootGroupLink$$()"
                                 queryParamsHandling="preserve"
@@ -57,7 +58,7 @@
                             >
                         }
                     </div>
-                    @if (canManageSystems$$() && currentTabRoute$$() === 'systems') {
+                    @if (canManageSystems$$() && currentTab$$() === 'systems') {
                         <button
                             (click)="openTutorial()"
                             class="tutorial-link btn btn-clear"
@@ -89,15 +90,7 @@
             </nx-tag>
         </h2>
     </div>
-    <nx-tabs animated>
-        <nx-base-tab
-            *ngFor="let tab of tabs$$()"
-            [displayName]="tab.displayName"
-            [route]="tab.route"
-        >
-            {{ tab.displayName }}
-        </nx-base-tab>
-    </nx-tabs>
+    <nx-tabs [tabs]="tabs$$()" />
 </ng-template>
 
 <ng-container *ngIf="!isLoading; else loading">

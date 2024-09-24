@@ -183,6 +183,7 @@ export class NxParamStateService {
             queryParams,
             queryParamsHandling: 'merge',
             relativeTo: this.route,
+            replaceUrl: true,
         });
     };
 

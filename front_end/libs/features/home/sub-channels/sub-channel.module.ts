@@ -7,7 +7,6 @@ import { map, switchMap } from 'rxjs/operators';
 import { NxReportsComponent } from '@pages/home/components/reports/reports.component';
 import { Mode } from '@pages/home/components/reports/reports.types';
 import { cpTabGuard } from '@pages/home/resolvers/CP-tab-guard';
-import { withTabReporterResolver } from '@pages/home/resolvers/tab-id-reporter-resolver';
 import { updateParentPartnerId } from '@pages/home/resolvers/update-parent-partner-guard';
 import { NxSubchannelComponent } from '@pages/home/sub-channels/subchannel.component';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
@@ -54,7 +53,7 @@ const setParentPartnerId: CanActivateFn = (route: ActivatedRouteSnapshot) => {
     );
 };
 
-const subChannelRoutes: Routes = withTabReporterResolver([
+const subChannelRoutes: Routes = [
     {
         path: ':subChannelId',
         canActivate: [setParentPartnerId],
@@ -81,7 +80,7 @@ const subChannelRoutes: Routes = withTabReporterResolver([
             },
         ],
     },
-]);
+];
 
 @NgModule({
     imports: [RouterModule.forChild(subChannelRoutes)],
