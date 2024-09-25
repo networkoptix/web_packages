@@ -21,6 +21,7 @@ from cryptography.hazmat.primitives.asymmetric.rsa import (
     RSAPrivateKey,
     RSAPublicKey,
 )
+from dateutil.relativedelta import relativedelta
 from django.conf import settings
 from django.core.cache import caches
 from django.test import TestCase
@@ -616,16 +617,21 @@ def org_service_factory(cp_service_factory):
 def service_record_factory():
     def factory(service, cloud_system, organization=None,
                 quantity=1, created_ts=timezone.now(), effective_ts=None):
-        service = baker.make(ChannelPartnerServiceRecord, service=service,
+        service_record = baker.make(ChannelPartnerServiceRecord, service=service,
                              cloud_system=cloud_system, quantity=quantity,
                              organization=organization or cloud_system.organization,
                              created_ts=created_ts, effective_ts=effective_ts or created_ts)
-        service.created_ts = created_ts
-        service.save()
-        # Overwrite the created_ts
-        service.created_ts = created_ts
-        service.save()
-        return service
+        service_record.created_ts = created_ts
+        service_record.save()
+        if service.sub_type != ChannelPartnerService.REGULAR:
+            # properties created during service record creation use now() as created_ts,
+            # we need to alter it
+            expiration_time = created_ts + relativedelta(months=service.duration)
+            props, _ = ServiceToOrganizationProperties.objects.get_or_create(
+                service=service, organization=service_record.organization)
+            props.expiring_at = expiration_time
+            props.save()
+        return service_record
 
     return factory
 

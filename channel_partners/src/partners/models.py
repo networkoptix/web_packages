@@ -1781,7 +1781,11 @@ class Organization(
 
     @property
     def all_services(self) -> QuerySet['ChannelPartnerService']:
-        return self.channel_partner.all_services
+        queryset = ChannelPartnerService.objects.filter(
+            Q(organization_properties__organization=self) | Q(organization_properties__isnull=True),
+            created_by_channel_partner_id=self.channel_partner_id,
+        ).annotate(expiring_at=F('organization_properties__expiring_at'))
+        return queryset
 
     @classmethod
     def update_effective_states(cls, queryset, parent_effective_state):
@@ -2311,9 +2315,21 @@ class ChannelPartnerServiceRecord(models.Model):
     record_type = models.IntegerField(choices=ServiceRecordTypes.CHOICES, default=ServiceRecordTypes.REGULAR)
 
     def save(self, *args, **kwargs):
-        if self._state.adding and not self.organization:
+        new = self._state.adding
+        if new and not self.organization:
             self.organization = self.cloud_system.organization
         super().save(*args, **kwargs)
+        if (
+                new
+                and self.record_type in (ServiceRecordTypes.REGULAR, ServiceRecordTypes.LICENSE_MIGRATION)
+                and self.service.sub_type != ChannelPartnerService.REGULAR
+                and self.service.duration > 0
+        ):
+            ServiceToOrganizationProperties.add_service_expiration(
+                service_id=self.service.id,
+                organization_id=self.organization_id,
+                expiring_at=self.created_ts + relativedelta(months=self.service.duration)
+            )
 
     @property
     def automated(self) -> bool:
@@ -2612,6 +2628,7 @@ class ServiceToOrganizationProperties(FieldOriginalMixin, models.Model):
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE, related_name='service_properties')
     service = models.ForeignKey(ChannelPartnerService, on_delete=models.CASCADE, related_name='organization_properties')
     price = models.DecimalField(null=True, max_digits=10, decimal_places=3)
+    expiring_at = models.DateTimeField(null=True)
     created_ts = models.DateTimeField(auto_now_add=True)
 
     observed_fields = ('price',)
@@ -2638,7 +2655,6 @@ class ServiceToOrganizationProperties(FieldOriginalMixin, models.Model):
             elif price_changed:
                 OrganizationPriceChange.objects.create(
                     service_properties=self, price=self.price)
-
 
     def can_access(self, user: CloudUser):
         return self.organization.can_access(user)
@@ -2668,6 +2684,43 @@ class ServiceToOrganizationProperties(FieldOriginalMixin, models.Model):
             cls(service_id=service_id, organization_id=organization_id)
             for service_id in missing_service_ids
         ], ignore_conflicts=True)
+
+    @classmethod
+    def add_service_expiration(cls, service_id: uuid.UUID, organization_id: uuid.UUID, expiring_at: datetime):
+        """
+        Add expiration date to service properties
+        Args:
+            service_id: uuid.UUID
+            organization_id: uuid.UUID
+            expiring_at: datetime
+        """
+        service_properties = cls.objects.filter(
+            service_id=service_id,
+            organization_id=organization_id
+        ).first()
+
+        if not service_properties:
+            # create new service properties if not exists
+            service_properties = cls.objects.create(
+                service_id=service_id,
+                organization_id=organization_id,
+                expiring_at=expiring_at,
+            )
+            return
+
+        if service_properties.expiring_at:
+            # do nothing if expiration date is already set
+            return
+
+        service_properties.expiring_at=expiring_at
+        service_properties.save()
+
+    @property
+    def hidden(self) -> bool:
+        if not self.expiring_at:
+            return False
+        return timezone.now().date() > self.expiring_at.date()
+
 
 class ChannelPartnerEvent(models.Model):
     SERVICE_CHANGED = 0
