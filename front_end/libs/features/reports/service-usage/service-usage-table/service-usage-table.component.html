@@ -15,7 +15,7 @@
                 class="table-header"
                 [style.justify-content]="header.align || 'flex-start'"
             >
-                <span>{{ header.value }}</span>
+                <span>{{ header.value | translate }}</span>
                 @if (header.tooltip) {
                     <span class="hint-icon">
                         <nx-hint [tooltipText]="header.tooltip | translate"></nx-hint>
