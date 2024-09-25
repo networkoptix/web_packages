@@ -6,6 +6,7 @@ from rest_framework.test import APIClient
 
 from partners.models import (
     ChannelPartnerRoles,
+    CloudHost,
     OrganizationRole,
     OrganizationRoles,
     VmsRoles,
@@ -92,6 +93,37 @@ class TestSystemUser:
                                                  role_id=OrganizationRoles.VIEWER)
         self.token = f'{uuid4()}'
         self.client = APIClient(SERVER_NAME=cloud_test_host.hostname)
+
+    def test_success_alt_host(self, channel_partner_factory, cp_user_factory):
+        # Test Setup
+        alt_host = CloudHost.objects.create(hostname='alt-host.hdw.mx')
+
+        # Create Channel Partner and User
+        alt_host_cp = channel_partner_factory(cloud_host=alt_host)
+        alt_host_cp_user = cp_user_factory(channel_partner=alt_host_cp)
+
+        # Setting up API Client
+        self.client = APIClient(SERVER_NAME=alt_host.hostname)
+
+        # Authenticate User
+        self.client.force_authenticate(user=self.cp_admin.user)
+
+        # Test Execution
+        url_args = {
+            'system_id': str(self.group_sys.system_id),
+            'email': self.group_user.user.email
+        }
+        path = reverse('v2:system_user', kwargs=url_args)
+
+        # Response
+        response = self.client.get(path)
+
+        # Expected
+        expected = OrganizationRole.objects.get(pk=self.group_user.roles[0]).system_role_uuid
+
+        # Test Assertion
+        assert response.status_code == 200
+        assert response.data['vmsRoles'][0] == expected
 
     def test_success_cp_admin(self):
         self.client.force_authenticate(user=self.cp_admin.user)

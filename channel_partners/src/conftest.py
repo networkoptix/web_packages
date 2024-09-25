@@ -393,7 +393,7 @@ def mock_auth_with_system(mocker):
     def mock(system, status: int = CloudSystemStates.ACTIVATED, authenticated: bool = True, name: str = 'name'):
         mocked_check = mocker.patch('partners.authentication.check_system_credentials',
                                     return_value=(authenticated, status, name))
-        mocker.patch('partners.authentication.NxCloudSystemBasicAuthentication.get_or_create_system',
+        mocker.patch('partners.authentication.NxCloudSystemBasicAuthentication.get_system_or_raise',
                      return_value=system)
         mocker.patch('partners.authentication.NxCloudSystemBasicAuthentication.get_system',
                      return_value=system)
