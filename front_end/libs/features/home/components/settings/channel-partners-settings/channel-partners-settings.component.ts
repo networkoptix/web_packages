@@ -5,6 +5,7 @@ import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { NxContentBlockComponent } from '@components/content-block/content-block.component';
+import { BaseApplyV3Page } from '@components/forms/apply-v3/apply-v3-page';
 import { NxApplyV3Module } from '@components/forms/apply-v3/apply-v3.module';
 import { NxFormFieldModule } from '@components/forms/forms.module';
 import { NxInputComponent } from '@components/forms/input/input.component';
@@ -39,7 +40,7 @@ import { NxStateSettingBlockComponent } from '../state-setting-block/state-setti
         NxStateSettingBlockComponent,
     ],
 })
-export class NxChannelPartnersSettingsComponent {
+export class NxChannelPartnersSettingsComponent extends BaseApplyV3Page {
     LANG = LANG;
     icons = icons;
     State = State;

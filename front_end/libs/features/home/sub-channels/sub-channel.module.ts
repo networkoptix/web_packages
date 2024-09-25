@@ -4,6 +4,7 @@ import { Store } from '@ngrx/store';
 import { of, tap } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 
+import { nxApplyV3Guard } from '@components/forms/apply-v3/apply-v3.guard';
 import { NxReportsComponent } from '@pages/home/components/reports/reports.component';
 import { Mode } from '@pages/home/components/reports/reports.types';
 import { cpTabGuard } from '@pages/home/resolvers/CP-tab-guard';
@@ -64,6 +65,7 @@ const subChannelRoutes: Routes = [
             {
                 path: 'settings',
                 canActivate: [cpTabGuard],
+                canDeactivate: [nxApplyV3Guard],
                 component: NxSubchannelSettingsComponent,
             },
             {

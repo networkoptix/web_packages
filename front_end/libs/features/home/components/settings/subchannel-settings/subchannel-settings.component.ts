@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
 import { Store } from '@ngrx/store';
 
+import { BaseApplyV3Page } from '@components/forms/apply-v3/apply-v3-page';
 import { createAsyncAction } from '@dialogs/async-action-button/create-async-action';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
 import { State } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
@@ -20,7 +21,7 @@ import { NxStateSettingBlockComponent } from '../state-setting-block/state-setti
     standalone: true,
     imports: [CommonModule, NxStateSettingBlockComponent],
 })
-export class NxSubchannelSettingsComponent {
+export class NxSubchannelSettingsComponent extends BaseApplyV3Page {
     private cpService = inject(NxChannelPartnersService);
 
     private store = inject(Store);

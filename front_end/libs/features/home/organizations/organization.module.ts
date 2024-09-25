@@ -3,6 +3,7 @@ import { ActivatedRouteSnapshot, CanActivateFn, RouterModule, Routes } from '@an
 import { Store } from '@ngrx/store';
 
 import * as CPActions from '@common/store/channel-partners/channel-partners.actions';
+import { nxApplyV3Guard } from '@components/forms/apply-v3/apply-v3.guard';
 import { nxConfig } from '@services/nx-config/config';
 
 import { NxSupportComponent } from '../components/information/support/support.component';
@@ -54,6 +55,7 @@ const orgRoutes: Routes = [
             {
                 path: 'settings',
                 canActivate: [orgTabGuard],
+                canDeactivate: [nxApplyV3Guard],
                 component: NxOrganizationSettingsComponent,
             },
             {
