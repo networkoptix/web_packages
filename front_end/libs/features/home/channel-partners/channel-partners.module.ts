@@ -4,6 +4,7 @@ import { Store } from '@ngrx/store';
 import { of } from 'rxjs';
 import { filter, switchMap } from 'rxjs/operators';
 
+import { nxApplyV3Guard } from '@components/forms/apply-v3/apply-v3.guard';
 import { NxReportsComponent } from '@pages/home/components/reports/reports.component';
 import { Mode } from '@pages/home/components/reports/reports.types';
 import { updateParentPartnerId } from '@pages/home/resolvers/update-parent-partner-guard';
@@ -59,6 +60,7 @@ const CPRoutes: Routes = [
             {
                 path: 'settings',
                 canActivate: [cpTabGuard],
+                canDeactivate: [nxApplyV3Guard],
                 component: NxChannelPartnersSettingsComponent,
             },
             {

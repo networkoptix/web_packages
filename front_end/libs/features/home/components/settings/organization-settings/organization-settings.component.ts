@@ -10,6 +10,7 @@ import { NgxTranslateCutModule } from 'ngx-translate-cut';
 import { firstValueFrom } from 'rxjs';
 
 import { NxContentBlockComponent } from '@components/content-block/content-block.component';
+import { BaseApplyV3Page } from '@components/forms/apply-v3/apply-v3-page';
 import { NxApplyV3Module } from '@components/forms/apply-v3/apply-v3.module';
 import { errorMatcherFactory } from '@components/forms/form-field/error-state-matcher';
 import { NxFormFieldModule } from '@components/forms/forms.module';
@@ -62,7 +63,7 @@ import { NxStateSettingBlockComponent } from '../state-setting-block/state-setti
         NxApplyV3Module,
     ],
 })
-export class NxOrganizationSettingsComponent {
+export class NxOrganizationSettingsComponent extends BaseApplyV3Page {
     LANG = LANG;
     icons = icons;
     State = State;
