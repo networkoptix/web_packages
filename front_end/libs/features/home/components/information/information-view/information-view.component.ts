@@ -16,18 +16,18 @@ import { NxThemeAttributeDirective } from '@directives/theme-attribute.directive
 import LANG from '@language_static';
 import { PipesModule } from '@pipes/pipes.module';
 import type {
-    InfoRowServer,
-    SupportInformationServer,
+    SupportInfoItem,
+    SupportInformation,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { icons } from '@static-variables';
 import { keyValueNoSort } from '@utils/nx';
 
-type SectionKey = keyof SupportInformationServer;
+type SectionKey = keyof SupportInformation;
 
 @Component({
-    selector: 'nx-information-v2-view',
-    templateUrl: 'information-v2-view.component.html',
-    styleUrls: ['information-v2-view.component.scss'],
+    selector: 'nx-information-view',
+    templateUrl: 'information-view.component.html',
+    styleUrls: ['information-view.component.scss'],
     standalone: true,
     imports: [CommonModule, AngularSvgIconModule, LetDirective, TranslateModule, PipesModule],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -39,24 +39,24 @@ export class NxInformationViewComponent {
 
     noSort = keyValueNoSort;
 
-    information = input.required<SupportInformationServer>();
+    information = input.required<SupportInformation>();
     readOnly = input<boolean, unknown>(false, { transform: booleanAttribute });
     @Output() edit = new EventEmitter<void>();
 
     // Description field for sites should not be used
-    private sites = computed<InfoRowServer[]>(() =>
+    private sites = computed<SupportInfoItem[]>(() =>
         this.information().sites.map(({ value }) => ({ value, description: '' })),
     );
 
-    private phones = computed<InfoRowServer[]>(() => this.information().phones);
-    private emails = computed<InfoRowServer[]>(() => this.information().emails);
+    private phones = computed<SupportInfoItem[]>(() => this.information().phones);
+    private emails = computed<SupportInfoItem[]>(() => this.information().emails);
 
     // Make it match the other rows for iteration
-    private custom = computed<InfoRowServer[]>(() =>
+    private custom = computed<SupportInfoItem[]>(() =>
         this.information().custom.map(c => ({ value: c.label, description: c.value })),
     );
 
-    sections = computed<Record<SectionKey, InfoRowServer[]>>(() => {
+    sections = computed<Record<SectionKey, SupportInfoItem[]>>(() => {
         const [sites, phones, emails, custom] = [
             this.sites(),
             this.phones(),

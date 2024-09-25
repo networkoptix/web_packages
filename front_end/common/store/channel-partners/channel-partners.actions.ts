@@ -4,7 +4,7 @@ import {
     ChannelPartner,
     ChannelPartnersStructure,
     Organization,
-    SupportInformationServer,
+    SupportInformation,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { Banner } from '@store/channel-partners/channel-partners.state';
 
@@ -89,9 +89,7 @@ export const setCurrentPartner = createAction(
 
 export const setCurrentPartnerSupportInfo = createAction(
     "[Channel Partners] Set current partner's support information",
-    props<{
-        currentPartnerSupportInfo: SupportInformationServer | undefined;
-    }>(),
+    props<{ currentPartnerSupportInfo: SupportInformation | undefined }>(),
 );
 
 export const addPartnerOrg = createAction(

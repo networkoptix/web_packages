@@ -11,8 +11,8 @@ import { nxConfig } from '@services/nx-config/config';
 import * as CPActions from '@store/channel-partners/channel-partners.actions';
 import * as CPSelectors from '@store/channel-partners/channel-partners.selectors';
 
-import { NxInformationV2Component } from '../components/information-v2/information-v2.component';
-import { NxSupportV2Component } from '../components/information-v2/support-v2/support-v2.component';
+import { NxInformationComponent } from '../components/information/information.component';
+import { NxSupportComponent } from '../components/information/support/support.component';
 import { NxChannelPartnersSettingsComponent } from '../components/settings/channel-partners-settings/channel-partners-settings.component';
 import { NxSubchannelsComponent } from '../components/subchannels/subchannels.component';
 import { NxChannelPartnerUsersComponent } from '../components/users/channel-partner-users/channel-partner-users.component';
@@ -66,18 +66,10 @@ const CPRoutes: Routes = [
                 component: NxSubchannelsComponent,
                 canActivate: [cpTabGuard],
             },
-            // {
-            //     path: 'information',
-            //     canActivate: [cpTabGuard],
-            //     component: NxChannelPartnerInformationComponent,
-            //     canDeactivate: [
-            //         (component: NxChannelPartnerInformationComponent) => !component.busy$$(),
-            //     ],
-            // },
             {
                 path: 'information',
                 canActivate: [cpTabGuard],
-                component: NxInformationV2Component,
+                component: NxInformationComponent,
             },
             {
                 path: 'users',
@@ -92,16 +84,10 @@ const CPRoutes: Routes = [
                     mode: Mode.Partner,
                 },
             },
-            // {
-            //     path: 'support',
-            //     canActivate: [() => nxConfig.featureFlags.channelPartnersSupportUI, cpTabGuard],
-            //     component: NxChannelPartnerInformationComponent,
-            //     data: { readOnlyInfo: true },
-            // },
             {
                 path: 'support',
                 canActivate: [() => nxConfig.featureFlags.channelPartnersSupportUI, cpTabGuard],
-                component: NxSupportV2Component,
+                component: NxSupportComponent,
             },
             { path: '**', redirectTo: '' },
         ],

@@ -5,7 +5,7 @@ import { Store } from '@ngrx/store';
 import * as CPActions from '@common/store/channel-partners/channel-partners.actions';
 import { nxConfig } from '@services/nx-config/config';
 
-import { NxSupportV2Component } from '../components/information-v2/support-v2/support-v2.component';
+import { NxSupportComponent } from '../components/information/support/support.component';
 import { NxReportsComponent } from '../components/reports/reports.component';
 import { Mode } from '../components/reports/reports.types';
 import { NxOrganizationSettingsComponent } from '../components/settings/organization-settings/organization-settings.component';
@@ -56,16 +56,10 @@ const orgRoutes: Routes = [
                 canActivate: [orgTabGuard],
                 component: NxOrganizationSettingsComponent,
             },
-            // {
-            //     path: 'support',
-            //     canActivate: [() => nxConfig.featureFlags.channelPartnersSupportUI, orgTabGuard],
-            //     component: NxChannelPartnerInformationComponent,
-            //     data: { readOnlyInfo: true },
-            // },
             {
                 path: 'support',
                 canActivate: [() => nxConfig.featureFlags.channelPartnersSupportUI, orgTabGuard],
-                component: NxSupportV2Component,
+                component: NxSupportComponent,
             },
             {
                 path: 'group/:groupId',

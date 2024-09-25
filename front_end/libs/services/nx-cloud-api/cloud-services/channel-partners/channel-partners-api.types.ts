@@ -60,7 +60,7 @@ export interface ChannelPartner {
     parentChannelPartner: string;
     monthlyAdditionalServiceLimit: number | null;
     attributes: Record<string, unknown>;
-    supportInformation: SupportInformationServer;
+    supportInformation: SupportInformation;
     created: string;
     ownPermissions: string[];
     ownRoles: string[];
@@ -95,24 +95,21 @@ export enum ChannelPartnerRoleIds {
     REPORTS_VIEWER = '00000000-0000-4000-8000-000000000003',
 }
 
-export interface InfoRowServer {
+export interface SupportInfoItem {
     value: string;
     description: string;
 }
 
-export interface CustomRowServer {
+export interface SupportInfoCustomItem {
     label: string;
     value: string;
 }
 
-export type InfoDataServer = InfoRowServer | CustomRowServer;
-
-// How info is presented in server response
-export interface SupportInformationServer {
-    sites: InfoRowServer[];
-    phones: InfoRowServer[];
-    emails: InfoRowServer[];
-    custom: CustomRowServer[];
+export interface SupportInformation {
+    sites: SupportInfoItem[];
+    phones: SupportInfoItem[];
+    emails: SupportInfoItem[];
+    custom: SupportInfoCustomItem[];
 }
 
 export type PaginatedChannelPartnerList = Page<ChannelPartner>;
@@ -132,7 +129,7 @@ export type UpdateChannelPartner = Partial<{
     attributes: Record<string, unknown>;
     canCreateSubChannels: boolean;
     name: string;
-    supportInformation: SupportInformationServer;
+    supportInformation: SupportInformation;
 }>;
 
 export interface ChannelPartnersStructure {

@@ -1,77 +1,106 @@
-@use "bootstrap" as bootstrap;
-@use 'typography' as typography;
+@use 'resets';
+@use 'theme_generator' as tg;
+
+@use 'components/forms/forms';
+
+@use './information.scss' as info;
+
+@include tg.generate-theme-vars((
+    '--hr-color': 7,
+), ':host');
 
 :host {
-    overflow: auto;
     height: 100%;
-    display: block;
+    overflow-y: auto;
+    font-size: 0.875rem;
+}
 
-    .information {
-        display: grid;
-        grid-template-columns: 60%;
-        grid-template-areas: 'description' 'contact';
-        min-height: 20rem;
-        padding: 0 0 35px;
-        gap: 1rem;
+h4 {
+    margin-bottom: 0;
+}
 
-        @include bootstrap.media-breakpoint-down(md) {
-            grid-template-columns: 1fr;
+.edit-step {
+    width: 43rem;
+
+    &__note {
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: flex-start;
+        gap: 0.5rem;
+
+        span {
+            max-width: 30em;
+            color: var(--subtext-color);
+            line-height: 1.25;
+        }
+    }
+
+    &__block {
+        border-radius: var(--block-bdrs);
+        background-color: var(--block-bg);
+        padding: var(--block-padding);
+
+        hr {
+            @include resets.horizontal-rule();
+            border-color: var(--hr-color);
+            margin-top: 0.25rem;
+            margin-bottom: 0.75rem;
+        }
+    }
+
+    &__section {
+        position: relative;
+
+        @at-root .edit-step__section + .edit-step__section {
+            margin-top: 1rem;
         }
 
-        .card.tile {
-            border: 1px solid var(--CP-pane-border);
-        }
-
-        .section-header {
-            @include typography.regular14nocolor;
-            line-height: 1;
+        &-header {
             display: flex;
-            align-items: center;
             justify-content: space-between;
-            border-bottom: 1px solid var(--CP-pane-header-border);
-            margin-bottom: 8px;
-            padding-bottom: 8px;
+            align-items: center;
 
-            .header-title {
-                color: var(--card-header-text) !important;
-                margin: 0 !important;
+            button {
+                @include info.information-icon-btn();
+            }
+        }
+
+        &-row {
+            display: flex;
+            gap: 0.5rem;
+
+            nx-form-field,
+            .row-flex-spacer {
+                flex: 1;
             }
 
-            &.in-edit-mode {
-                .header-title {
-                    @extend h4;
+            .delete-btn-container {
+                align-self: flex-start;
+                position: relative;
+                display: flex;
+                flex-direction: column;
+                gap: forms.$form-field-margin;
+                width: 2rem;
+
+                label,
+                input {
+                    visibility: hidden;
+                }
+
+                button {
+                    @include info.information-icon-btn();
+                    position: absolute;
+                    left: 0;
+                    bottom: 0;
+                    right: 0;
                 }
             }
-
-            &--readonly {
-                border-bottom-color: transparent;
-                margin-bottom: 0;
-                padding-bottom: 4px;
-            }
-
-            & + span {
-                color: var(--CP-state-color);
-            }
         }
     }
 
-    .wrapper-section-apply {
-        height: 2rem;
-    }
-
-    .section-apply {
-        position: absolute;
+    &__block-footer {
+        margin-top: 2rem;
         display: flex;
-        gap: 0.5rem;
-        justify-content: flex-start;
-
-        .btn-default {
-            order: 1; // make cancel button appear on the right
-        }
-
-        // Assuming footer contents is only buttons
-        & > * {
-            min-width: 80px;
-        }
+        justify-content: space-between;
     }
 }

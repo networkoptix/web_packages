@@ -13,7 +13,6 @@ const initialState: ChannelPartnersState = {
     channelPartnersAndOrgsLoadState: LoadingState.INIT,
     currentParentPartnerId: null,
     currentPartnerId: null,
-    currentPartnerSupportInformation: undefined,
     currentOrgId: null,
     currentSubChannels: [],
     currentSubchannelId: null,
@@ -152,14 +151,6 @@ export const channelPartnersReducer = createReducer(
             arePartnerOrgsLoading: false,
             currentPartnerId,
             currentPartnerOrganizations: sortEntityByName(currentPartnerOrganizations),
-        }),
-    ),
-    /** @deprecated */
-    on(
-        ChannelPartnerActions.setCurrentPartnerSupportInfo,
-        (state, { currentPartnerSupportInfo }): ChannelPartnersState => ({
-            ...state,
-            currentPartnerSupportInformation: currentPartnerSupportInfo,
         }),
     ),
     on(
