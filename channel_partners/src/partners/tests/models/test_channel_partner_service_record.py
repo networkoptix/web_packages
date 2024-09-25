@@ -2,7 +2,6 @@ import datetime
 from datetime import timedelta
 
 import pytest
-from dateutil.relativedelta import relativedelta
 from django.db.models import Sum
 from django.utils import timezone
 
@@ -11,7 +10,6 @@ from partners.models import (
     ChannelPartnerServiceRecord,
     CloudSystemId,
     ServiceRecordTypes,
-    ServiceToOrganizationProperties,
 )
 
 
@@ -405,65 +403,3 @@ class TestServiceRecordsExpiredServices:
         assert ChannelPartnerServiceRecord.objects.filter(
             service=self.local_recording_service
         ).aggregate(Sum('quantity'))['quantity__sum'] == existing_service_quantity
-
-
-class TestServicePropertiesExpirationDate:
-
-    @pytest.fixture(autouse=True)
-    def setup(self, channel_partner_factory, organization_factory, system_factory,
-              cp_service_factory, service_record_factory):
-        self.cp = channel_partner_factory()
-        self.organization = organization_factory(channel_partner=self.cp)
-        self.system = system_factory(organization=self.organization)
-        self.regular_service = cp_service_factory(
-            channel_partner=self.cp,
-            service_type=ChannelPartnerService.LOCAL_RECORDING,
-            sub_type=ChannelPartnerService.REGULAR,
-        )
-        self.demo_service = cp_service_factory(
-            channel_partner=self.cp,
-            service_type=ChannelPartnerService.LOCAL_RECORDING,
-            sub_type=ChannelPartnerService.DEMO,
-            duration=1,
-        )
-        self.trial_service = cp_service_factory(
-            channel_partner=self.cp,
-            service_type=ChannelPartnerService.LOCAL_RECORDING,
-            sub_type=ChannelPartnerService.TRIAL,
-            duration=2,
-        )
-        self.unlimited_service = cp_service_factory(
-            channel_partner=self.cp,
-            service_type=ChannelPartnerService.LOCAL_RECORDING,
-            sub_type=ChannelPartnerService.DEMO,
-            duration=0
-        )
-
-
-    @pytest.mark.parametrize('service_name', ['regular_service', 'unlimited_service'])
-    def test_add_expiration_date_not_called(self, service_name):
-        assert ServiceToOrganizationProperties.objects.count() == 0
-        record = ChannelPartnerServiceRecord.objects.create(
-            service=getattr(self, service_name),
-            cloud_system=self.system,
-            organization=self.organization,
-            quantity=1,
-            effective_ts=timezone.now()
-        )
-        assert ServiceToOrganizationProperties.objects.count() == 0
-
-    @pytest.mark.parametrize('service_name', ['demo_service', 'trial_service'])
-    def test_creating_demo_service_record(self, service_name):
-        service = getattr(self, service_name)
-        assert ServiceToOrganizationProperties.objects.count() == 0
-        record = ChannelPartnerServiceRecord.objects.create(
-            service=service,
-            cloud_system=self.system,
-            quantity=1,
-            effective_ts=timezone.now(),
-        )
-        assert ServiceToOrganizationProperties.objects.count() == 1
-        properties = ServiceToOrganizationProperties.objects.first()
-        assert properties.organization == self.organization
-        assert properties.service == service
-        assert properties.expiring_at == record.created_ts + relativedelta(months=service.duration)
