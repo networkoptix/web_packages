@@ -3609,13 +3609,17 @@ def vms_vars_replacement(content, replacements=None):
 
     if replacements is None:
         # Getting substitution info form VMS - General Information template
-        ctx = Context.objects.filter(asset_type__type=AssetType.ASSET_TYPES.vms,
-                                     name="General information", deprecated=False).last()
-
-        if ctx and (ctx_template := ContextTemplate.objects.filter(context=ctx).last()):
+        if ctx_template := ContextTemplate.objects.filter(
+            context__asset_type__type=AssetType.ASSET_TYPES.vms,
+            context__name__startswith="General",
+            context__deprecated=False,
+        ).last():
             replacements = json.loads(ctx_template.template or "{}")
-    if replacements:
-        replacements['cloudHost'] = '%cloudHost%'
+        else:
+            replacements = {}
+
+    replacements["cloudHost"] = "%cloudHost%"
+
     for match in re.findall(r'@[-_.0-9A-Za-z]+@', content):
         replacement = get_dot_notated(replacements, match.replace('@', ''))
         if replacement:
