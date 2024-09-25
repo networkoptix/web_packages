@@ -4,6 +4,7 @@ from rest_framework.test import APIClient
 
 from partners.models import (
     ChannelPartnerRoles,
+    CloudHost,
     OrganizationRoles,
 )
 from tools.helpers import cast_uuid
@@ -109,6 +110,39 @@ class TestUserSystems:
 
         # Initialize the API client with the test host
         self.client = APIClient(SERVER_NAME=cloud_test_host.hostname)
+
+    def test_success_alt_host(self, channel_partner_factory, cp_user_factory):
+        # Test Setup
+        alt_host = CloudHost.objects.create(hostname='alt-host.hdw.mx')
+
+        # Create Channel Partner and User
+        alt_host_cp = channel_partner_factory(cloud_host=alt_host)
+        alt_host_cp_user = cp_user_factory(channel_partner=alt_host_cp)
+
+        # Setting up API Client
+        self.client = APIClient(SERVER_NAME=alt_host.hostname)
+
+        # Authenticate User
+        self.client.force_authenticate(user=self.cp_user_admin.user)
+
+        # Test Execution
+        url_args = {
+            "email": self.cp_user_admin.user.email
+        }
+        url = reverse("v2:user_systems", kwargs=url_args)
+
+
+        # Make request | Get all systems for the user
+        response = self.client.get(url)
+        actual_records = response.data
+
+        # Expected
+        required_fields = ['system_id', 'systemId', 'vmsRoles', 'membership_type', 'membershipType']
+        results = []
+        for record in actual_records:
+            results.append(not (set(required_fields) - record.keys()))
+        assert all(results)
+
 
     def test_system_user_has_all_fields(self, channel_partner_factory, cp_user_factory, arf):
         url_args = {

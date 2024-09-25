@@ -57,6 +57,7 @@ from partners.authentication import (
     CdbInternalAuthentication,
     NxCloudOauthTokenAuthentication,
     NxCloudSystemBasicAuthentication,
+    NxCloudSystemBasicAuthenticationInternal,
     NxTokenAuthentication,
 )
 from partners.models import (
@@ -1747,12 +1748,8 @@ def get_authorized_system(request, system_id, roles: Iterable | VmsRoles.AnyRole
         if str(system_id) != str(cloud_system.system_id):
             raise exceptions.PermissionDenied(detail='Insufficient permissions.')
         return cloud_system
-
-    # Ensure the user is authenticated
     if not (hasattr(request, 'user') and request.user.is_authenticated):
         raise exceptions.NotAuthenticated()
-
-    # Retrieve the cloud system by system_id
     if cloud_system := CloudSystemId.objects.filter(system_id=system_id).first():
         # Check if the request has the required VMS roles
         if CdbInternalAuthentication.has_vms_roles(request, system_id, roles):
@@ -1790,7 +1787,7 @@ def user_systems(request, email):
 )
 @version_range(Versions(min_version="v2"))
 @api_view(['GET'])
-@authentication_classes([NxCloudSystemBasicAuthentication, NxCloudOauthTokenAuthentication])
+@authentication_classes([NxCloudSystemBasicAuthenticationInternal, NxCloudOauthTokenAuthentication])
 @permission_classes([IsAuthenticated])
 def system_user(request, system_id, email):
     if request.user and request.user.email.lower() == email.lower():
@@ -1815,7 +1812,7 @@ def system_user(request, system_id, email):
 )
 @version_range(Versions(min_version="v2"))
 @api_view(['GET'])
-@authentication_classes([NxCloudSystemBasicAuthentication, NxCloudOauthTokenAuthentication])
+@authentication_classes([NxCloudSystemBasicAuthenticationInternal, NxCloudOauthTokenAuthentication])
 @permission_classes([IsAuthenticated])
 def system_users(request, system_id):
     system: CloudSystemId = get_authorized_system(request, system_id, roles={VmsRoles.ADMINISTRATOR, VmsRoles.POWER_USER})

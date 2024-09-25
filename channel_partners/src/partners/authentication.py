@@ -220,15 +220,29 @@ def check_system_credentials(
 
 
 class NxCloudSystemBasicAuthentication(BasicAuthentication):
+    """
+    Custom authentication class for NxCloud systems using basic authentication.
+    """
+    def get_cloud_hostname(self, request):
+        """
+        Retrieve the cloud_host from the request.
+        """
+        return getattr(request.cloud_host, 'hostname', None)
 
-    @staticmethod
-    def get_system(system_id, request=None):
+    def get_system(self, system_id, request):
+        """
+        Retrieve a CloudSystemId object based on the system_id and cloud_host.
+        """
         return CloudSystemId.objects.filter(
-            system_id=system_id, cloud_host=request.cloud_host).first()
+            system_id=system_id,
+            cloud_host=request.cloud_host
+        ).first()
 
-    @staticmethod
-    def get_or_create_system(system_id, request=None):
-        if system := CloudSystemId.objects.filter(system_id=system_id, cloud_host=request.cloud_host).first():
+    def get_system_or_raise(self, system_id, request=None):
+        """
+        Retrieve a CloudSystemId object or raise appropriate exceptions.
+        """
+        if system := self.get_system(system_id, request):
             if system.system_state == CloudSystemStates.DELETED:
                 raise exceptions.NotAuthenticated(detail={
                     'detail': 'System has been disconnected.',
@@ -241,39 +255,50 @@ class NxCloudSystemBasicAuthentication(BasicAuthentication):
             return system
         raise exceptions.NotFound(f'System {system_id} not found.')
 
-    def authenticate_credentials(self, userid, password, request=None):
-        auth_header = request.headers.get('authorization')
-        if not request.cloud_host:
+    def validate_request(self, request):
+        """
+        Validate the incoming request.
+        """
+        if not self.get_cloud_hostname(request):
             raise exceptions.ParseError('Invalid hostname.')
-        if (
-                (cloud_system_id := TokenCache.get_system_auth(auth_header))
-                and userid == cloud_system_id
-        ):
-            request.cloud_system = self.get_or_create_system(system_id=userid, request=request)
+
+    def check_cached_auth(self, auth_header, userid, request):
+        """
+        Check if the authentication is cached and valid.
+        """
+        if (cloud_system_id := TokenCache.get_system_auth(auth_header)) and userid == cloud_system_id:
+            request.cloud_system = self.get_system_or_raise(system_id=userid, request=request)
             return get_user_model()(), None
-        authenticated, system_status, system_name = check_system_credentials(
-            system_id=userid, system_auth_key=password,
-            cloud_host=request.cloud_host.hostname
+        return None
+
+    def authenticate_system(self, userid, password, request):
+        """
+        Authenticate the system using the provided credentials.
+        """
+        return check_system_credentials(
+            system_id=userid,
+            system_auth_key=password,
+            cloud_host=self.get_cloud_hostname(request)
         )
-        cloud_system_id = userid
-        if authenticated and system_status == CloudSystemStates.ACTIVATED:
-            TokenCache.set_system_auth(auth_header, userid)
-        with transaction.atomic():
-            if authenticated or system_status:
-                cloud_system = self.get_or_create_system(system_id=cloud_system_id, request=request)
-            else:
-                cloud_system = None
-            if isinstance(cloud_system, CloudSystemId):
-                needs_update = False
-                if cloud_system.name != system_name:
-                    cloud_system.name = system_name
-                    needs_update = True
-                # do not remove deleted state from organization system
-                if cloud_system.system_state not in (system_status, CloudSystemStates.DELETED):
-                    cloud_system.system_state = system_status
-                    needs_update = True
-                if needs_update:
-                    cloud_system.save()
+
+    def update_system_info(self, cloud_system, system_name, system_status):
+        """
+        Update the cloud system information if needed.
+        """
+        needs_update = False
+        if cloud_system.name != system_name:
+            cloud_system.name = system_name
+            needs_update = True
+        if cloud_system.system_state not in (system_status, CloudSystemStates.DELETED):
+            cloud_system.system_state = system_status
+            needs_update = True
+        if needs_update:
+            cloud_system.save()
+
+    def handle_auth_result(self, authenticated, system_status, cloud_system, request):
+        """
+        Handle the result of the authentication process.
+        """
         if authenticated:
             request.cloud_system = cloud_system
             return get_user_model()(), None
@@ -289,7 +314,75 @@ class NxCloudSystemBasicAuthentication(BasicAuthentication):
 
         raise APIErrorWithoutRollback(
             detail='Invalid system id or auth key',
-            status_code=status.HTTP_401_UNAUTHORIZED)
+            status_code=status.HTTP_401_UNAUTHORIZED
+        )
+
+    def authenticate_credentials(self, userid, password, request=None):
+        """
+        Authenticate the system credentials.
+
+        This method orchestrates the entire authentication process.
+        """
+        auth_header = request.headers.get('authorization')
+        self.validate_request(request)
+
+        # Check if authentication is cached
+        cached_auth = self.check_cached_auth(auth_header, userid, request)
+        if cached_auth:
+            return cached_auth
+
+        # Authenticate the system
+        authenticated, system_status, system_name = self.authenticate_system(userid, password, request)
+
+        # Cache the authentication if successful
+        if authenticated and system_status == CloudSystemStates.ACTIVATED:
+            TokenCache.set_system_auth(auth_header, userid)
+
+        with transaction.atomic():
+            cloud_system = self.get_system_or_raise(system_id=userid, request=request) if authenticated or system_status else None
+
+            # Update system information if needed
+            if isinstance(cloud_system, CloudSystemId):
+                self.update_system_info(cloud_system, system_name, system_status)
+
+        return self.handle_auth_result(authenticated, system_status, cloud_system, request)
+
+class NxCloudSystemBasicAuthenticationInternal(NxCloudSystemBasicAuthentication):
+    """
+    Internal version of NxCloudSystemBasicAuthentication with modified behavior.
+    """
+    def get_cloud_hostname(self, request):
+        """
+        Retrieve the cloud_host from the request.
+        """
+        return settings.DEFAULT_HOST_NAME
+
+    def get_system(self, system_id, request):
+        """
+        Retrieve a CloudSystemId object based on the system_id.
+        This version doesn't filter by cloud_host.
+        """
+        return CloudSystemId.objects.filter(system_id=system_id).first()
+
+
+    def validate_request(self, request):
+        """
+        Validate the incoming request.
+        This version skips the cloud_host validation.
+        """
+        pass  # No need to validate cloud_host for internal authentication
+
+
+    def handle_auth_result(self, authenticated, system_status, cloud_system, request):
+        """
+        Handle the result of the authentication process.
+        This version sets cloud_host on the request.
+        The .super() method adds the cloud_system to the request.
+        """
+
+        result = super().handle_auth_result(authenticated, system_status, cloud_system, request)
+        request.cloud_host = cloud_system.cloud_host
+        return result
 
 
 class NxCloudSystemBasicAuthenticationExtension(OpenApiAuthenticationExtension):
@@ -458,27 +551,32 @@ class CdbInternalAuthentication:
         return CdbInternalAuthentication.auth_header(request)[6:].strip()
 
     @staticmethod
-    def introspect_with_system(
-            token, cloud_host_name, system_id
-    ) -> IntrospectionResult:
+    def introspect_with_system(token, cloud_host_name, system_id) -> IntrospectionResult:
         cached = TokenCache.get_system_introspection(token, system_id)
         if cached:
             return cached
+
         cdb_client = NxCloudApiClientFactory.get_sync_client(
             host=cloud_host_name,
             access_token=token,
             auto_refresh=False
         )
+
         system_id = cast_uuid(system_id)
         system_ids = [str(system_id)] if system_id else []
         response = cdb_client.authentication.introspect(system_ids)
+
         if response.status_code == 200:
             introspection = response.json()
+
             if introspection.get('active') is True and (email := introspection.get('username')):
                 introspection_result = IntrospectionResult.from_cdb_response(introspection)
+
                 TokenCache.set_system_introspection(token, system_id, introspection_result)
                 TokenCache.set_token(token, email)
+
                 return introspection_result
+
         return IntrospectionResult.none()
 
     @staticmethod
