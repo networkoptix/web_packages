@@ -163,7 +163,7 @@ export interface Capabilities {
 }
 
 // Feature flags go here
-const FeatureFlagKeys = [
+export const FeatureFlagKeys = [
     // Cloud Portal Features
     'cookieBanner',
     'crossTabSyncEnabled',
@@ -239,6 +239,9 @@ const FeatureFlagKeys = [
     'newCloudLayoutWrapper',
     'layoutsTimelineSaas',
     'layoutsReplaceViewTab',
+    // User overrides
+    'userOverridesStaffFlags',
+    'userOverridesUserBetaFlags',
 ] as const;
 
 export type FeatureFlagType = (typeof FeatureFlagKeys)[number];

@@ -129,6 +129,10 @@ class FLAGS(metaclass=_FlagType):
     new_cloud_color_provider = ('Cloud 2.0 - New Cloud Color Provider', 'newCloudColorProvider')
     new_cloud_layout_wrapper = ('Cloud 2.0 - New Cloud Layout Wrapper (Requires newCloudColorProvider)', 'newCloudLayoutWrapper')
 
+    # User Overrides
+    user_overrides_staff_flags = ('User Overrides - Staff Flags', 'userOverridesStaffFlags')
+    user_overrides_user_beta_flags = ('User Overrides - User Beta Flags', 'userOverridesUserBetaFlags')
+
     # TODO: Remove this with https://networkoptix.atlassian.net/browse/CLOUD-8667 *********
     five_r = ('Paginator(experimental)', 'paginatorExperimental', '%FIVE_R_ENABLED%')
     # *************************************************************************************

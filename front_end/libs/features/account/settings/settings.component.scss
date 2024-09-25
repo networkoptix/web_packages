@@ -1,1 +1,26 @@
 @import "../account.component";
+
+.override-feature-flags {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+
+    label, nx-search {
+        white-space: nowrap;
+        min-width: 50%;
+    }
+
+    &:not(:last-child) {
+        margin-bottom: 8px;
+    }
+
+    &.filtered:not(:has(span.highlighted)) {
+        display: none;
+    }
+}
+
+nx-section:has(span.highlighted), nx-section:not(:has(.filtered)) {
+    .override-feature-flags:last-child {
+        display: none;
+    }
+}

@@ -156,6 +156,53 @@
             </nx-section>
         </nx-block>
     </div>
+
+    @if (
+        CONFIG.featureFlags.userOverridesStaffFlags ||
+        CONFIG.featureFlags.userOverridesUserBetaFlags
+    ) {
+        <div class="col-12 mt-3 p-0">
+            <nx-block>
+                <header>
+                    <h4 translate>Beta Features</h4>
+                </header>
+                <nx-section>
+                    <nx-beta-settings-component (requiresReload)="requiresReload$$.set(true)" />
+                </nx-section>
+                @if (account.is_staff) {
+                    <nx-section>
+                        <h4>{{ 'Internal Staff Overrides' }}</h4>
+                        <div class="override-feature-flags">
+                            <nx-search
+                                [placeholder]="'Search Feature Flags'"
+                                layout="search"
+                            />
+                        </div>
+                        @for (item of CONFIG.featureFlags | keyvalue; track item.key) {
+                            <div
+                                class="override-feature-flags"
+                                [ngClass]="{ filtered: !!search$$() }"
+                            >
+                                <label>
+                                    <nx-search-highlight
+                                        [text]="item.key"
+                                        [search]="search$$()"
+                                    ></nx-search-highlight
+                                ></label>
+                                <nx-checkbox
+                                    [checked]="!!item.value"
+                                    (onClick)="overrideFlag(item.key, $event)"
+                                ></nx-checkbox>
+                            </div>
+                        }
+                        <div class="override-feature-flags">
+                            <label>{{ 'No matches found' }}</label>
+                        </div>
+                    </nx-section>
+                }
+            </nx-block>
+        </div>
+    }
 </ng-container>
 
 <ng-template #preloader><nx-pre-loader></nx-pre-loader></ng-template>

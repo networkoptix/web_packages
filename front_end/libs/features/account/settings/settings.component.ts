@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ViewContainerRef, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewContainerRef, OnDestroy, signal } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
@@ -23,6 +23,7 @@ import { NxSystemsService } from '@services/systems.service';
 import { NxToastService } from '@services/toast.service';
 import { icons } from '@static-variables';
 import { selectCurrentUser } from '@store/account/account.selectors';
+import { paramSignal } from '@utils/signals';
 
 @UntilDestroy()
 @Component({
@@ -70,6 +71,15 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy {
                 this.initProcess();
             });
         });
+    }
+
+    search$$ = paramSignal('search');
+
+    requiresReload$$ = signal(false);
+
+    overrideFlag(flag: string, value: boolean): void {
+        // @ts-expect-error - debugConfig is a global variable
+        (window.debugConfig as typeof nxConfig).featureFlags[flag] = value;
     }
 
     ngOnInit(): void {

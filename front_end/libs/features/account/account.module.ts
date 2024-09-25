@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterModule, Routes } from '@angular/router';
+import { CanDeactivateFn, RouterModule, Routes } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { NgxTranslateCutModule } from 'ngx-translate-cut';
 
@@ -22,6 +22,18 @@ import { NxAccountSettingsModule } from '@pages/account/settings/settings.module
 import { PipesModule } from '@pipes/pipes.module';
 import { NxMenuProjectionDirective } from 'nx-components';
 
+const RequiresReloadGuard: CanDeactivateFn<NxAccountSettingsComponent> = (
+    component,
+    _currentRoute,
+    _currentState,
+    nextState,
+) => {
+    if (component.requiresReload$$()) {
+        window.location.href = nextState.url;
+    }
+    return true;
+};
+
 const appRoutes: Routes = [
     {
         path: '',
@@ -32,7 +44,7 @@ const appRoutes: Routes = [
                 path: '',
                 title: 'account',
                 component: NxAccountSettingsComponent,
-                canDeactivate: [ApplyGuard],
+                canDeactivate: [ApplyGuard, RequiresReloadGuard],
             },
             {
                 path: 'password',

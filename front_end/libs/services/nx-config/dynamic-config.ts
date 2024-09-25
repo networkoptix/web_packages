@@ -5,9 +5,10 @@ import staticLang from '@language_static';
 import { CustomAccountProperty } from '@services/nx-cloud-api/custom-account-property';
 import { LOGIN_STATE } from '@services/session.service.types';
 import { Role } from '@services/system-user.types';
+import { getUserEnabledBetaFeatureFlags } from '@utils/beta-features';
 import { InterceptorManager } from '@utils/interceptor-manager';
 
-import { ThemeColors } from './base-config';
+import { FeatureFlagType, ThemeColors } from './base-config';
 import { nxConfig } from './config';
 import { IConfig } from './config-types';
 
@@ -21,14 +22,44 @@ export class DynamicConfig {
         }
         const preloadedAccount = await DynamicConfig.getAccount();
         CustomAccountProperty.authenticated = !!preloadedAccount;
-        const [data, preloadedTranslation, customizationColors] = await Promise.allSettled([
-            DynamicConfig.getData(),
-            DynamicConfig.getTranslation(),
-            DynamicConfig.getCustomizationColors(),
-        ]).then(res => res.map(res => res.status === 'fulfilled' && res.value));
+        const [data, preloadedTranslation, customizationColors, userEnabledFeatureFlags] =
+            await Promise.allSettled([
+                DynamicConfig.getData(),
+                DynamicConfig.getTranslation(),
+                DynamicConfig.getCustomizationColors(),
+                preloadedAccount && !environment.isLocal
+                    ? getUserEnabledBetaFeatureFlags()
+                    : Promise.resolve([]),
+            ]).then(res => res.map(res => res.status === 'fulfilled' && res.value));
 
-        // Need to find out why featureFlag override not working for this flag
-        // data.featureFlags.useAuthenticationInterceptor = true;
+        if (preloadedAccount && !environment.isLocal) {
+            const getOverrides = (): Partial<
+                Record<`featureFlags.${FeatureFlagType}`, boolean>
+            > => {
+                const overrides = localStorage.getItem('ngx-webstorage|configoverrides');
+                try {
+                    return overrides ? JSON.parse(overrides) : {};
+                } catch {
+                    return {};
+                }
+            };
+
+            const localOverrides = getOverrides();
+
+            const checkFlag = (flag: FeatureFlagType): boolean =>
+                `featureFlags.${flag}` in localOverrides
+                    ? localOverrides['featureFlags.userOverridesStaffFlags']
+                    : data.featureFlags[flag];
+
+            const staffOverrides = checkFlag('userOverridesStaffFlags');
+            const userOverridesUserBetaFlags = checkFlag('userOverridesUserBetaFlags');
+
+            if (staffOverrides || userOverridesUserBetaFlags) {
+                userEnabledFeatureFlags.forEach(flag => {
+                    data.featureFlags[flag] = true;
+                });
+            }
+        }
 
         if (data?.featureFlags?.useAuthenticationInterceptor) {
             await DynamicConfig.registerAuthenticationInterceptor(

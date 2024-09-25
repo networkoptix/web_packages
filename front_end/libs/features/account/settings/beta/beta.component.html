@@ -1,0 +1,55 @@
+<ng-template
+    #baseNodeTemplate
+    [typedTemplate]="{ node: betaOptions$$() }"
+    let-node="node"
+>
+    @if (node.betaGroups?.length === 1 && node.betaGroups?.[0]; as onlyChild) {
+        <ng-container *ngTemplateOutlet="baseNodeTemplate; context: { node: onlyChild }" />
+    } @else {
+        <div class="section-wrapper group-wrapper">
+            <header>
+                @if (node.featureConfig?.key; as key) {
+                    <label [for]="key">
+                        <h3>
+                            <span>{{ node.name }}</span>
+                        </h3>
+                        <span>{{ node.description }}</span>
+                    </label>
+
+                    <nx-checkbox
+                        [ngModel]="betaSettingsValues$$()[key]"
+                        (ngModelChange)="setValue(node, $event)"
+                        [name]="key"
+                        [componentId]="key"
+                    />
+                } @else {
+                    <div>
+                        <h3>{{ node.name }}</h3>
+                        <span>{{ node.description }}</span>
+                    </div>
+                }
+            </header>
+            @if (node.betaGroups) {
+                <div class="section-wrapper">
+                    @for (node of node.betaGroups; track node.name) {
+                        <ng-container
+                            *ngTemplateOutlet="baseNodeTemplate; context: { node: node }"
+                        />
+                    }
+                </div>
+            }
+        </div>
+    }
+</ng-template>
+
+<form
+    #betaForm="ngForm"
+    name="betaForm"
+    novalidate
+>
+    @defer (when loaded$$()) {
+        <ng-container *ngTemplateOutlet="baseNodeTemplate; context: { node: betaOptions$$() }" />
+    } @placeholder {
+        <nx-pre-loader />
+    }
+</form>
