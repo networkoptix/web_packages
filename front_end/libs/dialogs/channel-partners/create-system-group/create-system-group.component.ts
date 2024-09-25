@@ -5,10 +5,10 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 
+import { NxAsyncSubmitButtonModule } from '@components/forms/buttons/async-submit-button/async-submit-button.module';
 import { NxFormFieldModule } from '@components/forms/forms.module';
 import { NxInputComponent } from '@components/forms/input/input.component';
 import { NxValidators } from '@components/forms/validators';
-import { NxAsyncActionButtonComponent } from '@dialogs/async-action-button/async-action-button.component';
 import { createAsyncAction } from '@dialogs/async-action-button/create-async-action';
 import type { CreateSystemGroup as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
@@ -27,7 +27,7 @@ import { NxChannelPartnersService } from '@services/channel-partners.service';
 
         NxFormFieldModule,
         NxInputComponent,
-        NxAsyncActionButtonComponent,
+        NxAsyncSubmitButtonModule,
     ],
 })
 export class CreateSystemGroupModalContent extends ModalBase<DT['return']> {

@@ -1,121 +1,119 @@
-<div class="cdk-dialog-container mt-5">
-    <div class="nx-modal__header">
-        <h1
-            class="nx-modal__header-title"
+<div class="nx-modal__header">
+    <span
+        class="nx-modal__header-title"
+        translate
+    >
+        How to add system
+    </span>
+    <button
+        type="button"
+        class="nx-modal__header-close-btn"
+        data-dismiss="modal"
+        aria-label="Close"
+        (click)="close()"
+    >
+        <span class="close-content"></span>
+    </button>
+</div>
+<div class="nx-modal__content">
+    <div class="nx-modal__body">
+        <label
+            nx-label
+            for="add-org-system-connection-state"
             translate
+            >Is your system already connected to %CLOUD_NAME%?</label
         >
-            How to add system
-        </h1>
-        <button
-            type="button"
-            class="nx-modal__header-close-btn"
-            data-dismiss="modal"
-            aria-label="Close"
-            (click)="close()"
+        <nx-button-toggle-group
+            [formControl]="statusControl"
+            id="add-org-system-connection-state"
         >
-            <span class="close-content"></span>
-        </button>
-    </div>
-    <div class="nx-modal__content">
-        <div class="nx-modal__body">
-            <label
-                nx-label
-                for="add-org-system-connection-state"
-                translate
-                >Is your system already connected to %CLOUD_NAME%?</label
+            <nx-button-toggle
+                [value]="ConnectionStatus.NotConnected"
+                color="brand"
+                ><span translate>Not connected</span></nx-button-toggle
             >
-            <nx-button-toggle-group
-                [formControl]="statusControl"
-                id="add-org-system-connection-state"
+            <nx-button-toggle
+                [value]="ConnectionStatus.Connected"
+                color="brand"
+                ><span translate>Connected</span></nx-button-toggle
             >
-                <nx-button-toggle
-                    [value]="ConnectionStatus.NotConnected"
-                    color="brand"
-                    ><span translate>Not connected</span></nx-button-toggle
-                >
-                <nx-button-toggle
-                    [value]="ConnectionStatus.Connected"
-                    color="brand"
-                    ><span translate>Connected</span></nx-button-toggle
-                >
-            </nx-button-toggle-group>
-            <div>
-                <div class="body state-body">
-                    @switch (statusControl.value) {
-                        @case (ConnectionStatus.NotConnected) {
-                            <div class="cards-container">
-                                <div class="card">
-                                    <div class="card-interior">
-                                        <div class="number-row">
-                                            <div class="number-circle">1</div>
-                                            <p
-                                                class="description-text"
-                                                translate
-                                            >
-                                                Log in to the system in %VMS_NAME%
-                                            </p>
-                                        </div>
-                                        <div class="number-row">
-                                            <div class="number-circle">2</div>
-                                            <p
-                                                class="description-text"
-                                                translate
-                                            >
-                                                Click "Connect System to %CLOUD_NAME%" in the
-                                                %CLOUD_NAME% tab in System Administration
-                                            </p>
-                                        </div>
-                                        <div class="number-row">
-                                            <div class="number-circle">3</div>
-                                            <p
-                                                class="description-text"
-                                                translate
-                                            >
-                                                Follow the steps of wizard
-                                            </p>
-                                        </div>
+        </nx-button-toggle-group>
+        <div>
+            <div class="body state-body">
+                @switch (statusControl.value) {
+                    @case (ConnectionStatus.NotConnected) {
+                        <div class="cards-container">
+                            <div class="card">
+                                <div class="card-interior">
+                                    <div class="number-row">
+                                        <div class="number-circle">1</div>
+                                        <p
+                                            class="description-text"
+                                            translate
+                                        >
+                                            Log in to the system in %VMS_NAME%
+                                        </p>
+                                    </div>
+                                    <div class="number-row">
+                                        <div class="number-circle">2</div>
+                                        <p
+                                            class="description-text"
+                                            translate
+                                        >
+                                            Click "Connect System to %CLOUD_NAME%" in the
+                                            %CLOUD_NAME% tab in System Administration
+                                        </p>
+                                    </div>
+                                    <div class="number-row">
+                                        <div class="number-circle">3</div>
+                                        <p
+                                            class="description-text"
+                                            translate
+                                        >
+                                            Follow the steps of wizard
+                                        </p>
                                     </div>
                                 </div>
                             </div>
-                        }
-                        @case (ConnectionStatus.Connected) {
-                            <div class="cards-container">
-                                <div class="card">
-                                    <div class="card-interior">
-                                        <div class="number-row">
-                                            <div class="number-circle">1</div>
-                                            <p
-                                                class="description-text"
-                                                translate
-                                            >
-                                                Connect to %CLOUD_NAME% by system owner's account
-                                            </p>
-                                        </div>
-                                        <div class="number-row">
-                                            <div class="number-circle">2</div>
-                                            <p
-                                                class="description-text"
-                                                translate
-                                            >
-                                                Open System Settings page and click “change” link
-                                                next to the owner's name
-                                            </p>
-                                        </div>
-                                        <div class="number-row">
-                                            <div class="number-circle">3</div>
-                                            <p
-                                                class="description-text"
-                                                translate
-                                            >
-                                                Follow the steps of wizard
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        }
+                        </div>
                     }
-                </div>
+                    @case (ConnectionStatus.Connected) {
+                        <div class="cards-container">
+                            <div class="card">
+                                <div class="card-interior">
+                                    <div class="number-row">
+                                        <div class="number-circle">1</div>
+                                        <p
+                                            class="description-text"
+                                            translate
+                                        >
+                                            Connect to %CLOUD_NAME% by system owner's account
+                                        </p>
+                                    </div>
+                                    <div class="number-row">
+                                        <div class="number-circle">2</div>
+                                        <p
+                                            class="description-text"
+                                            translate
+                                        >
+                                            Open System Settings page and click “change” link next
+                                            to the owner's name
+                                        </p>
+                                    </div>
+                                    <div class="number-row">
+                                        <div class="number-circle">3</div>
+                                        <p
+                                            class="description-text"
+                                            translate
+                                        >
+                                            Follow the steps of wizard
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
             </div>
         </div>
     </div>

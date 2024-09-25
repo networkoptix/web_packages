@@ -4,7 +4,8 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 
-import { NxAsyncActionButtonComponent } from '@dialogs/async-action-button/async-action-button.component';
+import { NxAsyncSubmitButtonModule } from '@components/forms/buttons/async-submit-button/async-submit-button.module';
+import { NxFormFieldModule } from '@components/forms/forms.module';
 import { AsyncAction, createAsyncAction } from '@dialogs/async-action-button/create-async-action';
 import type { MoveSystemItem as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
@@ -28,7 +29,8 @@ import { OrgTreeStatusMap } from '../org-tree-selector/org-tree-selector.types';
         ReactiveFormsModule,
         TranslateModule,
         NxOrgTreeSelectorComponent,
-        NxAsyncActionButtonComponent,
+        NxFormFieldModule,
+        NxAsyncSubmitButtonModule,
     ],
 })
 export class MoveSystemItemModalContent extends ModalBase<DT['return']> {

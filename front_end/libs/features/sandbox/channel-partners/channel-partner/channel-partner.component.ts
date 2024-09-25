@@ -74,7 +74,7 @@ export class NxChannelPartnerComponent implements OnInit {
     }
 
     updateChannelPartner(channelPartner: ChannelPartner): void {
-        this.dialogs.updateChannelPartner(channelPartner).then(res => {
+        this.dialogs._updateChannelPartner(channelPartner).then(res => {
             if (res) {
                 this.refresh$.next();
                 this.toastService.notify(`Updated partner ${res.name}`);
@@ -85,7 +85,7 @@ export class NxChannelPartnerComponent implements OnInit {
     changePartnerState(channelPartner: ChannelPartner): void {
         const { state: currentState, id } = channelPartner;
         this.dialogs
-            .changeCpState({
+            ._changeCpState({
                 currentState,
                 update: newState => this.cpService.updateChannelPartner(id, { state: newState }),
             })
@@ -131,7 +131,7 @@ export class NxChannelPartnerComponent implements OnInit {
     }
 
     updatePartnerUser(channelPartner: string, user: ChannelPartnerUser): void {
-        this.dialogs.updatePartnerUser({ channelPartner, user }).then(res => {
+        this.dialogs._updatePartnerUser({ channelPartner, user }).then(res => {
             if (res) {
                 this.refresh$.next();
                 this.toastService.notify(`Added new partner user ${res.email}`);

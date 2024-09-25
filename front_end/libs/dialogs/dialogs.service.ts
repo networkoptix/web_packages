@@ -327,18 +327,12 @@ export class NxDialogsService {
     /* Systems */
 
     /* Channel partners */
-    createChannelPartner = this.dialogV1Factory<Dt.AddChannelPartner>(
+    createChannelPartner = this.dialogV2Factory<Dt.AddChannelPartner>(
         () =>
             import('./channel-partners/add-partner/add-partner.component').then(
                 m => m.AddPartnerModalContent,
             ),
         { autoFocus: 'input', width: '313px' },
-    );
-
-    updateChannelPartner = this.dialogV1Factory<Dt.EditChannelPartner>(() =>
-        import('./channel-partners/edit-partner/edit-partner.component').then(
-            m => m.NxEditPartnerModalContent,
-        ),
     );
 
     addPartnerUser = this.dialogV2Factory<Dt.AddPartnerUser>(
@@ -349,24 +343,12 @@ export class NxDialogsService {
         { width: DIALOG_SIZE.EXTRA_SMALL },
     );
 
-    updatePartnerUser = this.dialogV1Factory<Dt.EditPartnerUser>(() =>
-        import('./channel-partners/edit-partner-user/edit-partner-user.component').then(
-            m => m.NxEditPartnerUserModalContent,
-        ),
-    );
-
     createOrganization = this.dialogV2Factory<Dt.AddOrganization>(
         () =>
             import('./channel-partners/add-organization/add-organization.component').then(
                 m => m.AddOrganizationModalContent,
             ),
         { autoFocus: 'input', width: DIALOG_SIZE.MICRO_SMALL },
-    );
-
-    updateOrganization = this.dialogV1Factory<Dt.EditOrganization>(() =>
-        import('./channel-partners/edit-organization/edit-organization.component').then(
-            m => m.NxEditOrganizationModalContent,
-        ),
     );
 
     addSystemTutorial = this.dialogV2Factory<Dt.AddSystemTutorial>(
@@ -377,30 +359,12 @@ export class NxDialogsService {
         { width: DIALOG_SIZE.ACTION },
     );
 
-    addOrgUser = this.dialogV1Factory<Dt.AddOrgUser>(() =>
-        import('./channel-partners/add-org-user/add-org-user.component').then(
-            m => m.NxAddOrgUserModalContent,
-        ),
-    );
-
-    filterUsers = this.dialogV1Factory<Dt.FilterUsers>(
+    filterUsers = this.dialogV2Factory<Dt.FilterUsers>(
         () =>
             import('@dialogs/channel-partners/filter-users/filter-users.component').then(
                 m => m.NxFilterUsersModalContent,
             ),
         { autoFocus: '#filterByEmailComponent' },
-    );
-
-    editOrgUser = this.dialogV1Factory<Dt.EditOrgUser>(() =>
-        import('./channel-partners/edit-org-user/edit-org-user.component').then(
-            m => m.NxEditOrgUserModalContent,
-        ),
-    );
-
-    changeCpState = this.dialogV1Factory<Dt.ChangeCpState>(() =>
-        import('./channel-partners/change-state/change-state.component').then(
-            m => m.NxChangeStateModalContent,
-        ),
     );
 
     createSystemGroup = this.dialogV2Factory<Dt.CreateSystemGroup>(
@@ -430,7 +394,7 @@ export class NxDialogsService {
         { width: '360px', autoFocus: 'input' },
     );
 
-    moveSystemItem = this.dialogV1Factory<Dt.MoveSystemItem>(
+    moveSystemItem = this.dialogV2Factory<Dt.MoveSystemItem>(
         () =>
             import('./channel-partners/move-system-item/move-system-item.component').then(
                 m => m.MoveSystemItemModalContent,
@@ -452,6 +416,43 @@ export class NxDialogsService {
                 m => m.NxChangeServiceModalContent,
             ),
         { width: DIALOG_SIZE.SMALL },
+    );
+
+    /* Channel partners sandbox */
+    _addOrgUser = this.dialogV1Factory<Dt.AddOrgUser>(() =>
+        import('./channel-partners/add-org-user/add-org-user.component').then(
+            m => m.NxAddOrgUserModalContent,
+        ),
+    );
+
+    _updateChannelPartner = this.dialogV1Factory<Dt.EditChannelPartner>(() =>
+        import('./channel-partners/edit-partner/edit-partner.component').then(
+            m => m.NxEditPartnerModalContent,
+        ),
+    );
+
+    _updatePartnerUser = this.dialogV1Factory<Dt.EditPartnerUser>(() =>
+        import('./channel-partners/edit-partner-user/edit-partner-user.component').then(
+            m => m.NxEditPartnerUserModalContent,
+        ),
+    );
+
+    _updateOrganization = this.dialogV1Factory<Dt.EditOrganization>(() =>
+        import('./channel-partners/edit-organization/edit-organization.component').then(
+            m => m.NxEditOrganizationModalContent,
+        ),
+    );
+
+    _editOrgUser = this.dialogV1Factory<Dt.EditOrgUser>(() =>
+        import('./channel-partners/edit-org-user/edit-org-user.component').then(
+            m => m.NxEditOrgUserModalContent,
+        ),
+    );
+
+    _changeCpState = this.dialogV1Factory<Dt.ChangeCpState>(() =>
+        import('./channel-partners/change-state/change-state.component').then(
+            m => m.NxChangeStateModalContent,
+        ),
     );
 
     /* Channel Partner Reports */

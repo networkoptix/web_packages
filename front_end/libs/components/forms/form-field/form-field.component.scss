@@ -7,7 +7,8 @@
 ), ':host');
 
 :host {
-    display: block;
+    display: flex;
+    flex-direction: column;
 }
 
 .label-container {
@@ -25,6 +26,11 @@
     }
 
     margin-bottom: forms.$form-field-margin;
+}
+
+.control-container {
+    flex: 1;
+    min-height: 0;
 }
 
 .messages-container {

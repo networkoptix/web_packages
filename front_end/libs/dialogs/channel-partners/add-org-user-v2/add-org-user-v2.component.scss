@@ -10,6 +10,9 @@
     color: var(--dialog-header-muted-color);
 }
 
-nx-org-tree-selector {
+.org-tree-form-field {
     height: 100%;
+    nx-org-tree-selector {
+        max-height: 100%;
+    }
 }

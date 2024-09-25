@@ -19,6 +19,7 @@
 <form
     class="nx-modal__content"
     [formGroup]="formGroup"
+    nxFormObserver
 >
     <div class="nx-modal__body">
         <nx-form-field>
@@ -63,12 +64,13 @@
         </nx-form-field>
     </div>
     <div class="nx-modal__footer">
-        <nx-async-action-button
+        <button
+            nx-async-submit-button
             [action]="addPartnerAction"
-            [(busy)]="busy"
+            (busyChange)="busy$$.set($event)"
         >
             <span translate>Create</span>
-        </nx-async-action-button>
+        </button>
         <button
             type="button"
             class="btn btn-default"

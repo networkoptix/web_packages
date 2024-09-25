@@ -1,22 +1,18 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { CommonModule } from '@angular/common';
 import { Component, Inject } from '@angular/core';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 
-import { NxControlMessageComponent } from '@components/forms/control-messages/control-message/control-message.component';
-import { NxControlMessagesComponent } from '@components/forms/control-messages/control-messages.component';
-import { NxFormFieldComponent } from '@components/forms/form-field/form-field.component';
+import { NxAsyncSubmitButtonModule } from '@components/forms/buttons/async-submit-button/async-submit-button.module';
+import { NxFormFieldModule } from '@components/forms/forms.module';
 import { NxInputComponent } from '@components/forms/input/input.component';
-import { NxLabelComponent } from '@components/forms/label/label.component';
 import { NxValidators } from '@components/forms/validators';
-import { NxAsyncActionButtonComponent } from '@dialogs/async-action-button/async-action-button.component';
 import { createAsyncAction } from '@dialogs/async-action-button/create-async-action';
 import type { AddChannelPartner as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
 import staticLang from '@language_static';
-import { PipesModule } from '@pipes/pipes.module';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
 
 @Component({
@@ -26,16 +22,11 @@ import { NxChannelPartnersService } from '@services/channel-partners.service';
     standalone: true,
     imports: [
         CommonModule,
-        FormsModule,
-        TranslateModule,
-        NxControlMessagesComponent,
-        NxFormFieldComponent,
-        NxInputComponent,
-        NxLabelComponent,
         ReactiveFormsModule,
-        PipesModule,
-        NxAsyncActionButtonComponent,
-        NxControlMessageComponent,
+        TranslateModule,
+        NxFormFieldModule,
+        NxInputComponent,
+        NxAsyncSubmitButtonModule,
     ],
 })
 export class AddPartnerModalContent extends ModalBase<DT['return']> {

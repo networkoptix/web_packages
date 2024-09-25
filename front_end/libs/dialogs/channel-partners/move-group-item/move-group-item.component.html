@@ -17,14 +17,23 @@
 <form
     class="nx-modal__content"
     [formGroup]="formGroup"
+    nxFormObserver
 >
     <div class="nx-modal__body">
-        <nx-org-tree-selector
-            formControlName="folder"
-            [organization]="organization"
-            [groups]="groups"
-            [statuses]="orgTreeStatuses"
-        ></nx-org-tree-selector>
+        <nx-form-field>
+            <nx-org-tree-selector
+                formControlName="folder"
+                [organization]="organization"
+                [groups]="groups"
+                [statuses]="orgTreeStatuses"
+            ></nx-org-tree-selector>
+            <nx-control-messages>
+                <nx-control-message
+                    key="required"
+                    [text]="'Destination folder is required' | translate"
+                ></nx-control-message>
+            </nx-control-messages>
+        </nx-form-field>
     </div>
     <div class="nx-modal__footer">
         <button
@@ -36,12 +45,12 @@
         >
             Cancel
         </button>
-        <nx-async-action-button
+        <button
+            nx-async-submit-button
             [action]="moveItemAction"
-            [(busy)]="busy"
-            noInvalidFirstSubmit
+            (busyChange)="busy$$.set($event)"
         >
-            {{ 'Move' | translate }}
-        </nx-async-action-button>
+            <span translate>Move</span>
+        </button>
     </div>
 </form>

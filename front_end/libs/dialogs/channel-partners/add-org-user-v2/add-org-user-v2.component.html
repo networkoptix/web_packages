@@ -27,6 +27,7 @@
             #orgUserForm="ngForm"
             class="nx-modal__content"
             [formGroup]="formGroup"
+            nxFormObserver
         >
             <div
                 class="nx-modal__body"
@@ -143,31 +144,41 @@
                 >
                     Cancel
                 </button>
-                <nx-async-action-button
+                <button
+                    nx-async-submit-button
                     [action]="addOrgUserAction"
                     [invalid]="selectedFolderStatus()?.status === 'disable'"
-                    [(busy)]="busy"
+                    (busyChange)="busy$$.set($event)"
                 >
                     <span translate>Add</span>
-                </nx-async-action-button>
+                </button>
             </div>
         </form>
     </cdk-step>
     <cdk-step>
-        <form class="nx-modal__content">
+        <form
+            class="nx-modal__content"
+            [formGroup]="folderTreeFormGroup"
+            nxFormObserver
+        >
             <div
                 class="nx-modal__body"
                 [ngStyle]="{ 'height.px': bodyHeight(), 'flex-basis': 'auto' }"
             >
-                <nx-org-tree-selector
-                    #orgTree
-                    name="targetFolder"
-                    [organization]="organization"
-                    [groups]="groups()"
-                    [statuses]="orgTreeStatuses()"
-                    [ngModel]="treeValue()"
-                    (ngModelChange)="treeValue.set($event)"
-                ></nx-org-tree-selector>
+                <nx-form-field class="org-tree-form-field">
+                    <nx-org-tree-selector
+                        formControlName="tree"
+                        [organization]="organization"
+                        [groups]="groups()"
+                        [statuses]="orgTreeStatuses()"
+                    ></nx-org-tree-selector>
+                    <nx-control-messages>
+                        <nx-control-message
+                            key="required"
+                            [text]="'Folder is required' | translate"
+                        ></nx-control-message>
+                    </nx-control-messages>
+                </nx-form-field>
             </div>
             <div class="nx-modal__footer nx-modal__footer--justify-between">
                 <button
@@ -178,12 +189,13 @@
                 >
                     Back
                 </button>
-                <nx-async-action-button
+                <button
+                    nx-async-submit-button
                     [action]="confirmFolderSelectAction"
-                    (reject)="orgTree.focus()"
+                    (busyChange)="busy$$.set($event)"
                 >
                     <span translate>Select</span>
-                </nx-async-action-button>
+                </button>
             </div>
         </form>
     </cdk-step>

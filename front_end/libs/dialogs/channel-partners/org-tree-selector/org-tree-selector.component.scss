@@ -13,6 +13,10 @@
 :host {
     display: flex;
     flex-direction: column;
+
+    &.nx-form-field__control--error .tree-wrapper {
+        outline: 1px solid var(--input-error-border-color);
+    }
 }
 
 .input-wrapper {
@@ -68,7 +72,7 @@
 
     .org-tree {
         position: relative; // This is required for item auto scrolling
-        padding: 5px 0;
+        padding: 0;
         margin-bottom: 0;
         min-width: 100%;
         height: 100%;

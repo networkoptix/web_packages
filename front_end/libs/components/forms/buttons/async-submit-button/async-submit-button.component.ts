@@ -75,11 +75,14 @@ export class NxAsyncSubmitButtonComponent<T> implements OnDestroy {
     disable the button for some other reason */
     disabled = input<never>();
 
+    /** Manual control for invalid state */
+    manualInvalid = input<boolean>(false, { alias: 'invalid' });
+
     isApplyButton = signal(false);
     hasErrorState = this.formObserver.hasErrorState;
 
     ariaDisabled = computed<AriaDisabledValue>(() =>
-        ariaDisabledValue(this.busy() || this.hasErrorState()),
+        ariaDisabledValue(this.busy() || this.hasErrorState() || this.manualInvalid()),
     );
 
     constructor(
@@ -126,7 +129,7 @@ export class NxAsyncSubmitButtonComponent<T> implements OnDestroy {
         }
 
         const { form } = this.formObserver;
-        if (form.invalid) {
+        if (form.invalid || this.manualInvalid()) {
             if (!form.submitted) {
                 form.control.markAllAsTouched();
             }

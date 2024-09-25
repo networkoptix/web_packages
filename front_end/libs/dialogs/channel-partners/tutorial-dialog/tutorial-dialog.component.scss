@@ -9,8 +9,10 @@
   margin-bottom: forms.$form-field-margin;
 }
 nx-button-toggle-group {
-  display: grid;
   margin-bottom: 1rem;
+  nx-button-toggle {
+    flex: 1;
+  }
 }
 @include tg.generate-theme-vars((
     '--button-toggle-bg': ('dark': 8, 'light': 4),
@@ -57,16 +59,4 @@ nx-button-toggle-group {
   color: var(--body-text-color);
   @include typography.regular14nocolor;
   line-height: 1.2;
-}
-
-.nx-modal__body {
-  color: var(--body-text-color);
-}
-
-.nx-modal__header {
-  padding: 0.55rem calc(38px + 1rem) 0.55rem 1rem;
-}
-
-.nx-modal__header-title {
-  margin: 3px;
 }

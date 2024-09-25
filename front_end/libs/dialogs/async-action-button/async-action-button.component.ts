@@ -27,7 +27,8 @@ import { NxToastService } from '@services/toast.service';
 
 import { AsyncAction } from './create-async-action';
 
-/** Not actually @deprecated yet, but to be soon in favor of `NxAsyncSubmitButtonComponent`.
+/** @deprecated
+ * Use `NxAsyncSubmitButtonComponent`
  *
  * ---
  *

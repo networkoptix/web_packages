@@ -29,6 +29,7 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { escapeRegExp } from 'lodash-es';
 import { BehaviorSubject, filter, NEVER, switchMap, takeUntil, timer } from 'rxjs';
 
+import { NxFormFieldControlDirective } from '@components/forms/form-field/form-field-control.directive';
 import { NxSearchHighlightComponent } from '@components/search-highlight/search-highlight.component';
 import { throttle } from '@decorators/throttle';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
@@ -71,7 +72,7 @@ import type { OrgTreeItem, OrgTreeStatusMap } from './org-tree-selector.types';
         },
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    hostDirectives: [NxThemeAttributeDirective],
+    hostDirectives: [NxFormFieldControlDirective, NxThemeAttributeDirective],
 })
 export class NxOrgTreeSelectorComponent
     implements ControlValueAccessor, Validator, OnInit, AfterViewInit

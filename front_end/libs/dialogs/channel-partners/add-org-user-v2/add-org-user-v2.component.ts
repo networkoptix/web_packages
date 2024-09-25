@@ -16,17 +16,12 @@ import {
     ViewChild,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import {
-    FormControl,
-    FormGroup,
-    FormsModule,
-    ReactiveFormsModule,
-    Validators,
-} from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { firstValueFrom, map } from 'rxjs';
 
+import { NxAsyncSubmitButtonModule } from '@components/forms/buttons/async-submit-button/async-submit-button.module';
 import {
     errorMatcherFactory,
     NX_BASE_ERROR_MATCHES,
@@ -36,7 +31,6 @@ import { NxInputComponent } from '@components/forms/input/input.component';
 import { NxValidators } from '@components/forms/validators';
 import { NxSelectV2ItemComponent } from '@components/select-v2/items/select-item/select-item.component';
 import { NxSelectV2Component } from '@components/select-v2/select-v2.component';
-import { NxAsyncActionButtonComponent } from '@dialogs/async-action-button/async-action-button.component';
 import { createAsyncAction } from '@dialogs/async-action-button/create-async-action';
 import type { AddOrgUserV2 as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
@@ -78,7 +72,6 @@ interface UserInParentPartnerError extends HttpErrorResponse {
     standalone: true,
     imports: [
         CommonModule,
-        FormsModule,
         ReactiveFormsModule,
         CdkStepperModule,
         forwardRef(() => NxAddOrgUserStepperComponent),
@@ -91,7 +84,7 @@ interface UserInParentPartnerError extends HttpErrorResponse {
         NxOrgRoleDescriptionComponent,
         NxOrgStepSelectComponent,
         NxOrgTreeSelectorComponent,
-        NxAsyncActionButtonComponent,
+        NxAsyncSubmitButtonModule,
     ],
 })
 export class NxAddOrgUserV2ModalContent extends ModalBase<DT['return']> implements AfterViewInit {
@@ -169,8 +162,10 @@ export class NxAddOrgUserV2ModalContent extends ModalBase<DT['return']> implemen
 
     emailLocked = signal(false);
     folder = signal<string | null>(null);
-    treeValue = signal<string | null>(null);
     folderLocked = signal(false);
+
+    folderTreeControl = new FormControl<string | null>(null);
+    folderTreeFormGroup = new FormGroup({ tree: this.folderTreeControl });
 
     protected _selfAddEffect = effect(
         () => {
@@ -398,7 +393,7 @@ export class NxAddOrgUserV2ModalContent extends ModalBase<DT['return']> implemen
     }
 
     gotoFolderSelect(): void {
-        this.treeValue.set(
+        this.folderTreeControl.setValue(
             this.selectedFolderStatus()?.status === 'disable' ? null : this.folder(),
         );
         this.stepper.next();
@@ -413,7 +408,7 @@ export class NxAddOrgUserV2ModalContent extends ModalBase<DT['return']> implemen
 
     confirmFolderSelectAction = createAsyncAction({
         action: () => {
-            this.folder.set(this.treeValue()!);
+            this.folder.set(this.folderTreeControl.value!);
             this.stepper.previous();
             return Promise.resolve();
         },

@@ -23,11 +23,12 @@
         >
             Cancel
         </button>
-        <nx-async-action-button
+        <button
+            nx-async-submit-button
             [action]="asyncAction"
-            [(busy)]="busy"
+            (busyChange)="busy$$.set($event)"
         >
             <span>Action</span>
-        </nx-async-action-button>
+        </button>
     </div>
 </form>

@@ -1,8 +1,9 @@
+@use 'resets';
 @use 'typography' as typography;
 @use 'theme_variables_common' as vars;
 
 p {
-    margin-bottom: unset; // Unset global
+    @include resets.paragraph();
 }
 
 .nx-modal__header {

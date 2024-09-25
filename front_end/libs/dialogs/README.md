@@ -57,6 +57,8 @@ import { ModalBase } from '@dialogs/modal-base';
 
 @Component({ ... })
 export class NxResetCameraModalContent extends ModalBase<DT['return']> {
+    formGroup = new FormGroup({ ... });
+
     // What will happen when the action button is clicked (see create-async-action.ts)
     resetCameraAction = createAsyncAction({
         action: () => { ... },
@@ -100,8 +102,12 @@ export class NxResetCameraModalContent extends ModalBase<DT['return']> {
         ></button>
     }
 </div>
-<!-- <form> is required for the action button to fire on Enter key -->
-<form class="nx-modal__content">
+<!-- form group and form observer are required for submit button -->
+<form
+    class="nx-modal__content"
+    [formGroup]="formGroup"
+    nxFormObserver
+>
     <div class="nx-modal__body">
         <!-- Body content here -->
     </div>
@@ -117,14 +123,13 @@ export class NxResetCameraModalContent extends ModalBase<DT['return']> {
         >
             Cancel
         </button>
-        <!-- If the dialog action isn't async and doesn't require validation
-        a normal <button> can be used here instead -->
-        <nx-async-action-button
+        <button
+            nx-async-submit-button
             [action]="resetCameraAction"
-            [(busy)]="busy"
+            (busyChange)="busy$$.set($event)"
         >
             <span translate>Reset</span>
-        </nx-async-action-button>
+        </button>
     </div>
 </form>
 ```

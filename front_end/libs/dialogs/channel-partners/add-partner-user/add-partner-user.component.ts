@@ -7,6 +7,7 @@ import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 
+import { NxAsyncSubmitButtonModule } from '@components/forms/buttons/async-submit-button/async-submit-button.module';
 import {
     errorMatcherFactory,
     NX_BASE_ERROR_MATCHES,
@@ -16,7 +17,6 @@ import { NxInputComponent } from '@components/forms/input/input.component';
 import { NxValidators } from '@components/forms/validators';
 import { NxSelectV2ItemComponent } from '@components/select-v2/items/select-item/select-item.component';
 import { NxSelectV2Component } from '@components/select-v2/select-v2.component';
-import { NxAsyncActionButtonComponent } from '@dialogs/async-action-button/async-action-button.component';
 import { createAsyncAction } from '@dialogs/async-action-button/create-async-action';
 import type { AddPartnerUser as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
@@ -43,7 +43,7 @@ interface UserInChildOrgError extends HttpErrorResponse {
         NxInputComponent,
         NxSelectV2Component,
         NxSelectV2ItemComponent,
-        NxAsyncActionButtonComponent,
+        NxAsyncSubmitButtonModule,
     ],
 })
 export class AddPartnerUserModalContent extends ModalBase<DT['return']> {

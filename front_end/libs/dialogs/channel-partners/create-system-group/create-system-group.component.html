@@ -17,6 +17,7 @@
 <form
     class="nx-modal__content"
     [formGroup]="formGroup"
+    nxFormObserver
 >
     <div class="nx-modal__body">
         <nx-form-field>
@@ -49,11 +50,12 @@
         >
             Cancel
         </button>
-        <nx-async-action-button
+        <button
+            nx-async-submit-button
             [action]="createGroupAction"
-            [(busy)]="busy"
+            (busyChange)="busy$$.set($event)"
         >
             <span translate>Create</span>
-        </nx-async-action-button>
+        </button>
     </div>
 </form>

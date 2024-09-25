@@ -92,7 +92,7 @@ export class NxOrganizationComponent {
     }
 
     updateOrganization(org: Organization): void {
-        this.dialogs.updateOrganization(org).then(res => {
+        this.dialogs._updateOrganization(org).then(res => {
             if (res) {
                 this.refresh$.next();
                 this.toastService.notify(`Updated organization ${res.name}`);
@@ -103,7 +103,7 @@ export class NxOrganizationComponent {
     changeOrganizationState(organization: Organization): void {
         const { state: currentState, id } = organization;
         this.dialogs
-            .changeCpState({
+            ._changeCpState({
                 currentState,
                 update: newState => this.cpService.updateOrganization(id, { state: newState }),
             })
@@ -118,7 +118,7 @@ export class NxOrganizationComponent {
     }
 
     newOrgUser(): void {
-        this.dialogs.addOrgUser(this.id$$()).then(res => {
+        this.dialogs._addOrgUser(this.id$$()).then(res => {
             if (res) {
                 this.refresh$.next();
                 this.toastService.notify(`Added new org user ${res.email}`);
@@ -127,7 +127,7 @@ export class NxOrganizationComponent {
     }
 
     updateOrgUser(user: OrganizationUser): void {
-        this.dialogs.editOrgUser({ orgId: this.id$$(), user }).then(res => {
+        this.dialogs._editOrgUser({ orgId: this.id$$(), user }).then(res => {
             if (res) {
                 this.refresh$.next();
                 this.toastService.notify(`Updated org user ${res.email}`);
