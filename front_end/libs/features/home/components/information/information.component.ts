@@ -1,356 +1,376 @@
+import { CdkStepperModule } from '@angular/cdk/stepper';
 import { CommonModule } from '@angular/common';
-import { HttpErrorResponse } from '@angular/common/http';
-import { Component, effect, input, signal } from '@angular/core';
-import { ValidationErrors, ValidatorFn } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, computed, effect, forwardRef } from '@angular/core';
+import {
+    FormArray,
+    FormControl,
+    FormGroup,
+    NonNullableFormBuilder,
+    ReactiveFormsModule,
+    ValidatorFn,
+    Validators,
+} from '@angular/forms';
+import { LetDirective } from '@ngrx/component';
 import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-import { cloneDeep, isEqual } from 'lodash-es';
-import { firstValueFrom } from 'rxjs';
+import { capitalize, chunk, memoize, zipObject } from 'lodash-es';
+import { v4 as uuid } from 'uuid';
 
+import { NxApplyV3Module } from '@components/forms/apply-v3/apply-v3.module';
+import { NxFormResetFn } from '@components/forms/apply-v3/apply-v3.types';
+import { NxResetButtonComponent } from '@components/forms/buttons/reset-button/reset-button.component';
 import {
-    selectCurrentPartnerId,
-    selectCurrentParentPartnerForChild,
-    selectCurrentPartnerSupportInfo,
-    selectCurrentPartner,
-} from '@common/store/channel-partners/channel-partners.selectors';
-import { NxApplyBackComponent } from '@components/applyV2/apply-back/apply.component';
-import { NxApplyComponent } from '@components/applyV2/apply.component';
-import { NxContentBlockComponent } from '@components/content-block/content-block.component';
-import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
-import { NxPagePlaceholderNoInfoComponent } from '@components/placeholdersV2/page/no-info/page-placeholder.component';
-import { ToastType } from '@components/toast-container/toast.types';
-import { NxAsyncActionButtonComponent } from '@dialogs/async-action-button/async-action-button.component';
+    NX_BASE_ERROR_MATCHES,
+    errorMatcherFactory,
+} from '@components/forms/form-field/error-state-matcher';
+import { NxFormFieldModule } from '@components/forms/forms.module';
+import { NxInputComponent } from '@components/forms/input/input.component';
+import { NxValidators } from '@components/forms/validators';
+import { NxPagePlaceholderGenericNewV2Component } from '@components/placeholdersV2/page/page-placeholder.component';
 import { createAsyncAction } from '@dialogs/async-action-button/create-async-action';
-import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
-import { NxValidators } from '@libs/validators/input-validators';
-import { NxInfoGroupComponent } from '@pages/home/components/information/info-form/info-form.component';
-import {
-    ControlRow,
-    CPInfoDataEvent,
-    CPInfoType,
-    InfoRow,
-    SupportInformation,
-} from '@pages/home/components/information/information.types';
+import { NxThemeAttributeDirective } from '@directives/theme-attribute.directive';
+import LANG from '@language_static';
+import { PipesModule } from '@pipes/pipes.module';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
 import {
-    CustomRowServer,
-    InfoDataServer,
-    InfoRowServer,
-    SupportInformationServer,
+    SupportInfoItem,
+    SupportInformation,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
-import { NxToastService } from '@services/toast.service';
 import { icons } from '@static-variables';
-import * as cpActions from '@store/channel-partners/channel-partners.actions';
+import { patchPartner } from '@store/channel-partners/channel-partners.actions';
+import { selectCurrentPartner } from '@store/channel-partners/channel-partners.selectors';
+import { keyValueNoSort } from '@utils/nx';
 
-/** @deprecated */
+import { NxInformationStepperComponent } from './information-stepper.component';
+import { NxInformationViewComponent } from './information-view/information-view.component';
+
+const NON_NUMBERS_REGEX = /[^0-9]/g;
+const removeNonNumbers = memoize((text: string): string => {
+    return text.replace(NON_NUMBERS_REGEX, '');
+});
+
+function uniqueWhitespace(text: string): string {
+    return !text.trim() ? uuid() : text;
+}
+
+const infoTranslations = LANG.channelPartners.supportInformation;
+
+type NewControlFn = (initial: string) => FormControl<string>;
+type StringControlArray = FormArray<FormControl<string>>;
+
+function nonEmptyInformation(information: SupportInformation): boolean {
+    return Object.values(information).some((info: object[]) => info.length);
+}
+
+enum Steps {
+    Empty = 0,
+    View = 1,
+    Edit = 2,
+}
+
 @Component({
-    selector: 'nx-channel-partner-information',
+    selector: 'nx-information',
     templateUrl: 'information.component.html',
     styleUrls: ['information.component.scss'],
     standalone: true,
     imports: [
         CommonModule,
+        CdkStepperModule,
+        ReactiveFormsModule,
+
         AngularSvgIconModule,
-        NxContentBlockComponent,
-        NxContentBlockSectionComponent,
-        NxAddSvgSrcDirective,
-        NxInfoGroupComponent,
-        NxApplyComponent,
+        LetDirective,
         TranslateModule,
-        NxPagePlaceholderNoInfoComponent,
-        NxApplyBackComponent,
-        NxAsyncActionButtonComponent,
+
+        PipesModule,
+        forwardRef(() => NxInformationStepperComponent),
+        NxPagePlaceholderGenericNewV2Component,
+        NxInformationViewComponent,
+        NxFormFieldModule,
+        NxInputComponent,
+        NxApplyV3Module,
+        NxResetButtonComponent,
     ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    hostDirectives: [NxThemeAttributeDirective],
 })
-export class NxChannelPartnerInformationComponent {
-    readOnlyInfo$$ = input<boolean>(false, {
-        alias: 'readOnlyInfo',
+export class NxInformationComponent {
+    icons = icons;
+    noSort = keyValueNoSort;
+
+    stepIndex = Steps.Empty;
+    toEmptyStep(): void {
+        this.stepIndex = Steps.Empty;
+    }
+    toViewStep(): void {
+        this.stepIndex = Steps.View;
+    }
+    toEditStep(): void {
+        this.stepIndex = Steps.Edit;
+    }
+
+    private channelPartner = computed(() => this.store.selectSignal(selectCurrentPartner)()!);
+    information = computed<SupportInformation>(() => this.channelPartner().supportInformation);
+    hasInfo = computed<boolean>(() => nonEmptyInformation(this.information()));
+
+    formGroup = new FormGroup({
+        sites: new FormArray<FormControl<string>>([]),
+        phones: new FormArray<FormControl<string>>([]),
+        emails: new FormArray<FormControl<string>>([]),
+        custom: new FormArray<FormControl<string>>([]),
     });
-
-    protected readonly CPInfoType = CPInfoType;
-    protected readonly icons = icons;
-
-    hasDirty: boolean = false;
-    hasNoItems: boolean = false;
-    hasChanges: boolean = false;
-    allValid: boolean = true;
-    parentName: string = '';
-
-    information: SupportInformation = {
-        phones: [],
-        emails: [],
-        sites: [],
-        custom: [],
-    };
-    informationData: SupportInformation = {
-        phones: [],
-        emails: [],
-        sites: [],
-        custom: [],
-    };
-
-    siteValidators: Array<ValidationErrors | null | ValidatorFn> = [
-        this.nxValidators.requiredURL(),
-        this.nxValidators.URL(),
-    ];
-    phoneValidators: Array<ValidationErrors | null | ValidatorFn> = [
-        this.nxValidators.requiredPhone(),
-        this.nxValidators.phone(),
-        this.nxValidators.uniqueNumber(),
-    ];
-    emailValidators: Array<ValidationErrors | null | ValidatorFn> = [
-        this.nxValidators.requiredEmail(),
-        this.nxValidators.email(),
-    ];
-
-    labelValidators: Array<ValidationErrors | null | ValidatorFn> = [
-        this.nxValidators.requiredLabel(),
-    ];
-
-    valueValidators: Array<ValidationErrors | null | ValidatorFn> = [
-        this.nxValidators.requiredValue(),
-    ];
-
-    validForms: Record<string, boolean> = {
-        phones: true,
-        emails: true,
-        sites: true,
-        custom: true,
-    };
-
-    validationType: Record<string, Array<ValidationErrors | null | ValidatorFn>> = {
-        phones: this.phoneValidators,
-        emails: this.emailValidators,
-        sites: this.siteValidators,
-        label: this.labelValidators,
-        value: this.valueValidators,
-    };
-
-    mapInfoFor(type: CPInfoType, psi: InfoDataServer[]): void {
-        delete this.information[type];
-        this.information[type] = [];
-
-        psi.forEach((item: InfoDataServer | ControlRow) => {
-            let value: string;
-            let description: string;
-
-            if (type === CPInfoType.CUSTOM) {
-                value = (item as CustomRowServer).label || (item as ControlRow).data;
-                description =
-                    (item as CustomRowServer).value || (item as ControlRow).description || null;
-            } else {
-                value = (item as InfoRowServer).value || (item as ControlRow).data;
-                description = (item as InfoRowServer).description;
-            }
-
-            const newItem: InfoRow = {
-                data: {
-                    value,
-                    validation: this.validationType[type],
-                },
-                description: {
-                    value: description,
-                },
-            };
-
-            if (type === CPInfoType.URL) {
-                delete newItem.description;
-            }
-
-            if (type === CPInfoType.CUSTOM) {
-                newItem.data.validation = this.validationType.label;
-                newItem.description.validation = this.validationType.value;
-            }
-
-            this.information[type].push(newItem);
-        });
-    }
-
-    mapPartnerSupportInfo(psi: SupportInformationServer | undefined): void {
-        if (!psi) {
-            return;
-        }
-
-        [CPInfoType.URL, CPInfoType.PHONE, CPInfoType.EMAIL, CPInfoType.CUSTOM].forEach(type => {
-            this.mapInfoFor(type, psi[type]);
-            this.hasNoItems &&= !(psi[type].length > 0);
-        });
-        this.parentName = this.currParentSupportInfo$$()?.name || '';
-    }
-
-    formToServerData(type: CPInfoType): InfoRowServer[] {
-        const serverData: InfoRowServer[] = [];
-        this.information[type].map(({ data, description }): number =>
-            serverData.push({
-                value: data.value,
-                description: description?.value || '', // account for "sites"
-            }),
-        );
-        return serverData;
-    }
-
-    formCustomToServerData(): CustomRowServer[] {
-        const serverData: CustomRowServer[] = [];
-        this.information.custom.map(({ data, description }): number =>
-            serverData.push({
-                label: data.value,
-                value: description.value,
-            }),
-        );
-        return serverData;
-    }
-
-    mapDataToServer(): SupportInformationServer {
-        return {
-            sites: this.formToServerData(CPInfoType.URL),
-            emails: this.formToServerData(CPInfoType.EMAIL),
-            phones: this.formToServerData(CPInfoType.PHONE),
-            custom: this.formCustomToServerData(),
-        };
-    }
-
-    currPartnerId$$ = this.store.selectSignal(selectCurrentPartnerId);
-    currPartner$$ = this.store.selectSignal(selectCurrentPartner);
-    currParentSupportInfo$$ = this.store.selectSignal(selectCurrentParentPartnerForChild);
-
-    currSupportInfoEffect = effect(() => {
-        this.currPartnerId$$();
-        const info = this.readOnlyInfo$$()
-            ? this.currParentSupportInfo$$()?.supportInformation
-            : this.currentPartnerSupportInformation$$() || this.currPartner$$()?.supportInformation;
-
-        this.mapPartnerSupportInfo(info);
-
-        this.informationData = cloneDeep(this.information);
-        this.hasNoItems = this.noItems();
-    });
-
-    currentPartnerSupportInformation$$ = this.store.selectSignal(selectCurrentPartnerSupportInfo);
-    currentPartnerSupportInformationEffect = effect(() => {
-        this.mapPartnerSupportInfo(this.currentPartnerSupportInformation$$());
-    });
-
-    editMode: boolean = false;
-
-    busy$$ = signal(false);
-    get busy(): boolean {
-        return this.busy$$();
-    }
-    set busy(state: boolean) {
-        this.busy$$.set(state);
-    }
+    initialFormValue: Record<string, unknown> = this.formGroup.getRawValue();
 
     constructor(
         private store: Store,
-        private nxValidators: NxValidators,
         private cpService: NxChannelPartnersService,
-        private toastService: NxToastService,
-    ) {}
+        private formBuilder: NonNullableFormBuilder,
+    ) {
+        if (this.hasInfo()) {
+            this.toViewStep();
+            this.initializeForm();
+        }
+    }
 
-    editModeToggle = (): void => {
-        this.editMode = !this.editMode;
+    private initializeForm(): void {
+        const sites = new FormArray(
+            this.information().sites.map(site => this.newSiteControl(site.value)),
+            {
+                validators: [
+                    NxValidators.uniqueArrayValues<string>({
+                        transformFn: uniqueWhitespace,
+                    }),
+                ],
+            },
+        );
+        this.formGroup.setControl('sites', sites);
+
+        const phones = new FormArray(
+            this.information().phones.flatMap(phone => [
+                this.newPhoneControl(phone.value),
+                this.newOptionalTextControl(phone.description),
+            ]),
+            {
+                validators: [
+                    NxValidators.uniqueArrayValues<string>({
+                        transformFn: v => (!v.trim() ? uuid() : removeNonNumbers(v)),
+                        filterFn: (_, i) => !(i % 2),
+                    }),
+                ],
+            },
+        );
+        this.formGroup.setControl('phones', phones);
+
+        const emails = new FormArray(
+            this.information().emails.flatMap(email => [
+                this.newEmailControl(email.value),
+                this.newOptionalTextControl(email.description),
+            ]),
+            {
+                validators: [
+                    NxValidators.uniqueArrayValues<string>({
+                        transformFn: uniqueWhitespace,
+                        filterFn: (_, i) => !(i % 2),
+                    }),
+                ],
+            },
+        );
+        this.formGroup.setControl('emails', emails);
+
+        const custom = new FormArray(
+            this.information().custom.flatMap(custom => [
+                this.newCustomLabelControl(custom.label),
+                this.newCustomValueControl(custom.value),
+            ]),
+            {
+                validators: [
+                    NxValidators.uniqueArrayValues<string>({
+                        transformFn: uniqueWhitespace,
+                        filterFn: (_, i) => !(i % 2),
+                    }),
+                ],
+            },
+        );
+        this.formGroup.setControl('custom', custom);
+
+        this.initialFormValue = this.formGroup.getRawValue();
+    }
+
+    controlIds = new WeakMap<FormControl<string>, string>();
+    private newControlFnFactory = (validators: () => ValidatorFn[]): NewControlFn => {
+        return initial => {
+            const control = this.formBuilder.control(initial, { validators: validators() });
+            this.controlIds.set(control, uuid());
+            return control;
+        };
+    };
+    private newSiteControl = this.newControlFnFactory(NxValidators.url);
+    private newPhoneControl = this.newControlFnFactory(NxValidators.phone);
+    private newEmailControl = this.newControlFnFactory(NxValidators.email);
+    private newCustomLabelControl = this.newControlFnFactory(() => [
+        ...NxValidators.text(),
+        Validators.pattern(/^[\p{L}]*$/u), // Letters
+    ]);
+    private newCustomValueControl = this.newControlFnFactory(() => [
+        ...NxValidators.text(),
+        Validators.pattern(/^[\p{L}\d]*$/u), // Letters and numbers
+    ]);
+    private newOptionalTextControl = this.newControlFnFactory(() => NxValidators.text(false));
+    private addFnFactory = (
+        key: keyof (typeof this.formGroup)['controls'],
+        primaryControlFn: NewControlFn,
+        secondaryControlFn?: NewControlFn,
+    ): (() => void) => {
+        return () => {
+            const formArray = this.formGroup.controls[key];
+            formArray.push(primaryControlFn(''));
+            if (secondaryControlFn) {
+                formArray.push(secondaryControlFn(''));
+            }
+        };
+    };
+    private deleteFnFactory = (
+        key: keyof (typeof this.formGroup)['controls'],
+        double = true,
+    ): ((i: number) => void) => {
+        return i => {
+            const formArray = this.formGroup.controls[key];
+            if (double) {
+                formArray.removeAt(i + 1);
+            }
+            formArray.removeAt(i);
+        };
     };
 
-    noItems(): boolean {
-        return !(
-            this.information.custom.length ||
-            this.information.emails.length ||
-            this.information.phones.length ||
-            this.information.sites.length
-        );
+    get sitesFormArray(): StringControlArray {
+        return this.formGroup.controls.sites;
     }
+    addSites = this.addFnFactory('sites', this.newSiteControl);
+    deleteSites = this.deleteFnFactory('sites', false);
 
-    addRecordTo(type: CPInfoType): void {
-        const data = [...this.information[type]];
-        const newRecord: InfoRow = {
-            data: {
-                value: '',
-                validation: this.validationType[type],
+    private addPhones = this.addFnFactory(
+        'phones',
+        this.newPhoneControl,
+        this.newOptionalTextControl,
+    );
+
+    private get emailsFormArray(): StringControlArray {
+        return this.formGroup.controls.emails;
+    }
+    private addEmails = this.addFnFactory(
+        'emails',
+        this.newEmailControl,
+        this.newOptionalTextControl,
+    );
+
+    private get customFormArray(): StringControlArray {
+        return this.formGroup.controls.custom;
+    }
+    private addCustom = this.addFnFactory(
+        'custom',
+        this.newCustomLabelControl,
+        this.newCustomValueControl,
+    );
+
+    primaryErrorMatcher = errorMatcherFactory(NX_BASE_ERROR_MATCHES, {
+        onSubmit: ['uniqueArrayValue'],
+    });
+    secondaryErrorMatcher = errorMatcherFactory();
+
+    private doubleKeys = ['phones', 'emails', 'custom'] as const;
+    DoubleKeyType!: (typeof this.doubleKeys)[number];
+    addFunctions = zipObject(
+        this.doubleKeys,
+        this.doubleKeys.map(k => this[`add${capitalize(k) as Capitalize<typeof k>}`]),
+    );
+    deleteFunctions = zipObject(
+        this.doubleKeys,
+        this.doubleKeys.map(k => this.deleteFnFactory(k)),
+    );
+    headers = infoTranslations.editHeader;
+    primaryLabels = infoTranslations.editPrimaryLabel;
+    uniqueError = infoTranslations.uniqueError;
+    secondaryLabels = infoTranslations.editSecondaryLabel;
+    emptyText = infoTranslations.emptyText;
+    doubleSections = {
+        phones: {
+            primary: {
+                type: 'tel' as const,
+                messages: [{ key: 'uniqueArrayValue', text: this.uniqueError.phones }],
             },
-            description: {
-                value: '',
+            secondary: { messages: [] },
+        },
+        emails: {
+            primary: {
+                type: 'email' as const,
+                messages: [{ key: 'uniqueArrayValue', text: this.uniqueError.emails }],
             },
-        };
+            secondary: { messages: [] },
+        },
+        custom: {
+            primary: {
+                type: '' as const,
+                messages: [
+                    { key: 'required', text: infoTranslations.labelRequired },
+                    { key: 'uniqueArrayValue', text: this.uniqueError.custom },
+                    { key: 'pattern', text: infoTranslations.labelPattern },
+                ],
+            },
+            secondary: {
+                type: '' as const,
+                messages: [
+                    { key: 'required', text: infoTranslations.valueRquired },
+                    { key: 'pattern', text: infoTranslations.valuePattern },
+                ],
+            },
+        },
+    };
 
-        if (type === CPInfoType.URL) {
-            delete newRecord.description;
-        }
-
-        if (type === CPInfoType.CUSTOM) {
-            newRecord.data.validation = this.validationType.label;
-            newRecord.description.validation = this.validationType.value;
-        }
-
-        data.push(newRecord);
-        this.information[type] = [...data];
-        this.hasChanges = true;
-        this.hasNoItems = false;
-        this.allValid = false;
-        this.validForms[type] = false;
+    private doubleFormArrayToApiArray(formArray: StringControlArray): SupportInfoItem[] {
+        return chunk(formArray.value, 2).map(([value, description]) => ({ value, description }));
     }
 
-    updateFormState(pristine: boolean): void {
-        this.hasDirty = !pristine;
-    }
-
-    updateData(e: CPInfoDataEvent): void {
-        const { formId, formData, status } = e;
-
-        this.mapInfoFor(formId as CPInfoType, formData);
-        this.validForms[formId] = status;
-
-        this.hasChanges = !isEqual(this.informationData, this.information);
-        this.allValid = !Object.values(this.validForms).some(item => !item);
-    }
-
-    saveDataChanges = createAsyncAction({
+    saveInfoAction = createAsyncAction({
         action: () => {
-            return firstValueFrom(
-                this.cpService.updateChannelPartner(this.currPartnerId$$(), {
-                    supportInformation: this.mapDataToServer(),
-                }),
-            );
+            const sites = this.sitesFormArray.value.map(value => ({ value, description: '' }));
+            const phones = this.doubleFormArrayToApiArray(this.formGroup.controls.phones);
+            const emails = this.doubleFormArrayToApiArray(this.emailsFormArray);
+            const custom = chunk(this.customFormArray.value, 2).map(([label, value]) => ({
+                label,
+                value,
+            }));
+            return this.cpService.updateChannelPartner(this.channelPartner().id, {
+                supportInformation: { sites, phones, emails, custom },
+            });
         },
-        success: user => {
-            this.hasChanges = false;
-            this.hasDirty = false;
-            this.hasNoItems = this.noItems();
-
-            if (!this.hasNoItems) {
-                this.editMode = false;
+        success: patch => {
+            this.store.dispatch(patchPartner({ patch }));
+            const { supportInformation } = patch;
+            if (nonEmptyInformation(supportInformation)) {
+                this.toViewStep();
+            } else {
+                this.toEmptyStep();
             }
-
-            this.informationData = cloneDeep(this.information);
-            this.store.dispatch(
-                cpActions.setCurrentPartnerSupportInfo({
-                    currentPartnerSupportInfo: this.mapDataToServer(),
-                }),
-            );
-        },
-        error: (err: HttpErrorResponse) => {
-            // @ts-expect-error type error
-            const msg = err.error ? `${err.status} ${err.error.detail}` : err.detail || err;
-            this.toastService.notify(msg, ToastType.Danger);
         },
     });
 
-    discardDataChanges = (): void => {
-        this.information = cloneDeep(this.informationData);
-        this.hasChanges = false;
-        this.allValid = true;
-
-        [CPInfoType.URL, CPInfoType.PHONE, CPInfoType.EMAIL, CPInfoType.CUSTOM].forEach(type => {
-            this.validForms[type] = true;
-        });
-
-        // if change was canceled prior and no items in form - exit edit mode
-        // button is having different caption per action
-        // "Cancel" if form is dirty
-        // "Back" if form is not dirty and no items
-        if (this.hasNoItems || (this.editMode && this.hasDirty)) {
-            this.hasDirty = false;
-        }
-        this.editMode = false;
+    reset: NxFormResetFn = observer => {
+        this.initializeForm();
+        observer.reset();
     };
+
+    back: NxFormResetFn = observer => {
+        if (this.hasInfo()) {
+            this.toViewStep();
+        } else {
+            this.toEmptyStep();
+        }
+        this.reset(observer);
+    };
+
+    protected _dummyControl = new FormControl('');
+    protected _dummyControlEffect = effect(() => {
+        this._dummyControl.disable();
+    });
 }

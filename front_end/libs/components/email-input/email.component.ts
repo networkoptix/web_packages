@@ -9,7 +9,6 @@ import {
     ValidationErrors,
     FormsModule,
 } from '@angular/forms';
-import { TranslateService } from '@ngx-translate/core';
 
 import { NxFocusMeDirective } from '@directives/nx-focus-me';
 import staticLang from '@language_static';
@@ -52,8 +51,6 @@ export class NxEmailComponent implements ControlValueAccessor, Validator {
 
     public value: string;
 
-    constructor(private translateService: TranslateService) {}
-
     // Placeholders for the callbacks which are later provided
     // by the Control Value Accessor
     public onTouchedCallback = (): void => {};
@@ -67,9 +64,6 @@ export class NxEmailComponent implements ControlValueAccessor, Validator {
                 ? null // valid
                 : {
                       required: true,
-                      message: this.translateService.instant(
-                          this.LANG.customValidatorMsg.emailRequired,
-                      ),
                   };
         }
 
@@ -77,7 +71,6 @@ export class NxEmailComponent implements ControlValueAccessor, Validator {
         if (!EMAIL_REGEXP.test(c.value)) {
             return {
                 pattern: true,
-                message: this.translateService.instant(this.LANG.customValidatorMsg.emailInvalid),
             };
         }
 

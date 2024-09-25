@@ -1,251 +1,256 @@
-@if (!editMode && hasNoItems) {
-    <nx-page-placeholder-no-info [clickFn]="editModeToggle" />
-} @else {
-    <div
-        class="info-note"
-        *ngIf="editMode"
-    >
-        <svg-icon
-            nx-add-svg-src
-            [src]="icons.dirTextButtons + 'info.svg'"
-            [svgStyle]="{ 'width.px': '21', 'height.px': '21' }"
-            [applyClass]="true"
-        ></svg-icon>
-        <span
-            [innerHTML]="
-                'Remember that this information will be seen not only by your employees, <br />but also by your partners and organizations.'
-                    | translate
-            "
-        ></span>
-    </div>
-    <div class="information">
-        <nx-block
-            type="tile dense information"
-            [update]="editMode"
-        >
-            <header>
-                @if (readOnlyInfo$$()) {
-                    <h4 class="float-left">
-                        {{ parentName }}
-                    </h4>
-                } @else if (!(hasNoItems || editMode)) {
-                    <h4
-                        class="float-left"
-                        translate
-                    >
-                        Support
-                    </h4>
-                    <div
-                        class="float-right clickable"
-                        (click)="editModeToggle()"
-                    >
-                        <svg-icon
-                            nx-add-svg-src
-                            [src]="icons.dir + 'edit.svg'"
-                            [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
-                            [applyClass]="true"
-                        ></svg-icon>
-                    </div>
-                }
-            </header>
-            <nx-section>
-                <div
-                    class="section-header"
-                    [ngClass]="{
-                        'in-edit-mode': editMode,
-                        'section-header--readonly': readOnlyInfo$$()
-                    }"
+<nx-information-stepper [(selectedIndex)]="stepIndex">
+    <cdk-step #emptyStep>
+        <nx-page-generic-placeholder-v2>
+            <svg-icon
+                nx-add-svg-src
+                [src]="icons.dirPageV2Placeholder + 'no_info.svg'"
+                [svgStyle]="{ 'width.px': '64', 'height.px': '64' }"
+                [applyClass]="true"
+            ></svg-icon>
+            <div
+                class="title"
+                translate
+            >
+                No Information
+            </div>
+            <div
+                class="message"
+                translate
+            >
+                You haven't added any information yet.
+            </div>
+            <div class="button-container">
+                <button
+                    type="button"
+                    class="button btn btn-default"
+                    (click)="toEditStep()"
+                    translate
                 >
-                    <div
-                        class="header-title"
-                        translate
-                    >
-                        Sites
-                    </div>
-                    <div
-                        class="clickable"
-                        *ngIf="editMode"
-                        (click)="addRecordTo(CPInfoType.URL)"
-                    >
-                        <svg-icon
-                            nx-add-svg-src
-                            [src]="icons.dir + 'plus.svg'"
-                            [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
-                            [applyClass]="true"
-                        ></svg-icon>
+                    Add Information
+                </button>
+            </div>
+        </nx-page-generic-placeholder-v2>
+    </cdk-step>
+    <cdk-step #viewStep>
+        <nx-information-view
+            [information]="information()"
+            (edit)="toEditStep()"
+        ></nx-information-view>
+    </cdk-step>
+    <cdk-step #editStep>
+        <div class="edit-step">
+            <div class="edit-step__note">
+                <svg-icon
+                    [src]="icons.dirTextButtons + 'info.svg'"
+                    [svgStyle]="{ 'width.px': '21', 'height.px': '21' }"
+                ></svg-icon>
+                <span translate
+                    >This information will be visible to your employees as well as to your partners
+                    and organizations</span
+                >
+            </div>
+            <form
+                class="edit-step__block"
+                [formGroup]="formGroup"
+                nxFormObserver
+                #observer="nxFormObserver"
+                [(initialFormValue)]="initialFormValue"
+            >
+                <div class="edit-step__section">
+                    <ng-container
+                        [ngTemplateOutlet]="sectionHeader"
+                        [ngTemplateOutletContext]="{
+                            text: headers.sites | translate,
+                            addFn: addSites
+                        }"
+                    ></ng-container>
+                    <div formArrayName="sites">
+                        @for (control of sitesFormArray.controls; track controlIds.get(control)) {
+                            <div class="edit-step__section-row">
+                                <nx-form-field [errorMatcher]="primaryErrorMatcher">
+                                    <label
+                                        nx-label
+                                        [for]="'sites-primary-' + $index"
+                                        >{{ primaryLabels.sites | translate }}</label
+                                    >
+                                    <input
+                                        nx-input
+                                        [id]="'sites-primary-' + $index"
+                                        type="url"
+                                        [formControlName]="$index"
+                                    />
+                                    <nx-control-messages
+                                        pattern="url"
+                                        required="url"
+                                    >
+                                        <nx-control-message
+                                            key="uniqueArrayValue"
+                                            [text]="uniqueError.sites | translate"
+                                        ></nx-control-message>
+                                    </nx-control-messages>
+                                </nx-form-field>
+                                <ng-container
+                                    [ngTemplateOutlet]="deleteBtnContainer"
+                                    [ngTemplateOutletContext]="{
+                                        deleteFn: deleteSites,
+                                        index: $index
+                                    }"
+                                ></ng-container>
+                                <div class="row-flex-spacer"></div>
+                            </div>
+                        } @empty {
+                            <span>{{ emptyText.sites | translate }}</span>
+                        }
                     </div>
                 </div>
-                <ng-container *ngIf="information.sites?.length; else noSites">
-                    <nx-info-form
-                        [formId]="CPInfoType.URL"
-                        [linkCaption]="'site' | translate"
-                        [editMode]="editMode"
-                        [linkPredicate]="'https://'"
-                        [data]="information.sites"
-                        (formState)="updateFormState($event)"
-                        (dataChanges)="updateData($event)"
-                    ></nx-info-form>
-                </ng-container>
-            </nx-section>
-            <nx-section>
-                <div
-                    class="section-header"
-                    [ngClass]="{
-                        'in-edit-mode': editMode,
-                        'section-header--readonly': readOnlyInfo$$()
-                    }"
-                >
+                @for (section of doubleSections | keyvalue: noSort; track $index) {
                     <div
-                        class="header-title"
-                        translate
+                        class="edit-step__section"
+                        *ngrxLet="section.key | as: DoubleKeyType as key"
                     >
-                        Phones
-                    </div>
-                    <div
-                        class="clickable"
-                        *ngIf="editMode"
-                        (click)="addRecordTo(CPInfoType.PHONE)"
-                    >
-                        <svg-icon
-                            nx-add-svg-src
-                            [src]="icons.dir + 'plus.svg'"
-                            [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
-                            [applyClass]="true"
-                        ></svg-icon>
-                    </div>
-                </div>
-                <ng-container *ngIf="information.phones?.length; else noPhones">
-                    <nx-info-form
-                        [formId]="CPInfoType.PHONE"
-                        [linkCaption]="'phone' | translate"
-                        [editMode]="editMode"
-                        [linkPredicate]="'tel:'"
-                        [data]="information.phones"
-                        (formState)="updateFormState($event)"
-                        (dataChanges)="updateData($event)"
-                    ></nx-info-form>
-                </ng-container>
-            </nx-section>
-            <nx-section>
-                <div
-                    class="section-header"
-                    [ngClass]="{
-                        'in-edit-mode': editMode,
-                        'section-header--readonly': readOnlyInfo$$()
-                    }"
-                >
-                    <div
-                        class="header-title"
-                        translate
-                    >
-                        Emails
-                    </div>
-                    <div
-                        class="clickable"
-                        *ngIf="editMode"
-                        (click)="addRecordTo(CPInfoType.EMAIL)"
-                    >
-                        <svg-icon
-                            nx-add-svg-src
-                            [src]="icons.dir + 'plus.svg'"
-                            [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
-                            [applyClass]="true"
-                        ></svg-icon>
-                    </div>
-                </div>
-                <ng-container *ngIf="information.emails?.length; else noEmails">
-                    <nx-info-form
-                        [formId]="CPInfoType.EMAIL"
-                        [linkCaption]="'email' | translate"
-                        [editMode]="editMode"
-                        [linkPredicate]="'mailto:'"
-                        [data]="information.emails"
-                        (formState)="updateFormState($event)"
-                        (dataChanges)="updateData($event)"
-                    ></nx-info-form>
-                </ng-container>
-            </nx-section>
-            <nx-section>
-                <div
-                    class="section-header"
-                    [ngClass]="{
-                        'in-edit-mode': editMode,
-                        'section-header--readonly': readOnlyInfo$$()
-                    }"
-                >
-                    <div
-                        class="header-title"
-                        translate
-                    >
-                        Custom
-                    </div>
-                    <div
-                        class="clickable"
-                        *ngIf="editMode"
-                        (click)="addRecordTo(CPInfoType.CUSTOM)"
-                    >
-                        <svg-icon
-                            nx-add-svg-src
-                            [src]="icons.dir + 'plus.svg'"
-                            [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
-                            [applyClass]="true"
-                        ></svg-icon>
-                    </div>
-                </div>
-                <ng-container *ngIf="information.custom?.length; else noCustom">
-                    <nx-info-form
-                        [formId]="CPInfoType.CUSTOM"
-                        [linkCaption]="'label' | translate"
-                        [descrCaption]="'value' | translate"
-                        [editMode]="editMode"
-                        [linkPredicate]="''"
-                        [data]="information.custom"
-                        (formState)="updateFormState($event)"
-                        (dataChanges)="updateData($event)"
-                    ></nx-info-form>
-                </ng-container>
-            </nx-section>
-            @if (hasNoItems || editMode) {
-                <nx-section>
-                    <div class="wrapper-section-apply">
-                        <div class="section-apply">
-                            <button
-                                type="button"
-                                class="btn btn-default"
-                                [disabled]="busy$$()"
-                                translate
-                                (click)="discardDataChanges()"
-                            >
-                                Cancel
-                            </button>
-                            <nx-async-action-button
-                                [action]="saveDataChanges"
-                                [invalid]="!allValid || !hasDirty"
-                                noInvalidFirstSubmit
-                                [(busy)]="busy"
-                            >
-                                <span translate>Save</span>
-                            </nx-async-action-button>
+                        <ng-container
+                            [ngTemplateOutlet]="sectionHeader"
+                            [ngTemplateOutletContext]="{
+                                text: headers[key] | translate,
+                                addFn: addFunctions[key]
+                            }"
+                        ></ng-container>
+                        <div
+                            *ngrxLet="section.value as inputs"
+                            [formArrayName]="key"
+                        >
+                            @for (
+                                control of formGroup.controls[key].controls;
+                                track controlIds.get(control)
+                            ) {
+                                @if ($even) {
+                                    <div class="edit-step__section-row">
+                                        <nx-form-field
+                                            [errorMatcher]="primaryErrorMatcher"
+                                            *ngrxLet="inputs.primary as primary"
+                                        >
+                                            <label
+                                                nx-label
+                                                [for]="key + '-primary-' + $index"
+                                                >{{ primaryLabels[key] | translate }}</label
+                                            >
+                                            <input
+                                                nx-input
+                                                [id]="key + '-primary-' + $index"
+                                                [type]="primary.type || 'text'"
+                                                [formControlName]="$index"
+                                            />
+                                            <nx-control-messages
+                                                [pattern]="primary.type || undefined"
+                                                [required]="primary.type || undefined"
+                                            >
+                                                @for (
+                                                    message of primary.messages;
+                                                    track message.key
+                                                ) {
+                                                    <nx-control-message
+                                                        [key]="message.key"
+                                                        [text]="message.text | translate"
+                                                    ></nx-control-message>
+                                                }
+                                            </nx-control-messages>
+                                        </nx-form-field>
+                                        <nx-form-field
+                                            [errorMatcher]="secondaryErrorMatcher"
+                                            *ngrxLet="inputs.secondary as secondary"
+                                        >
+                                            <label
+                                                nx-label
+                                                [for]="key + '-secondary-' + ($index + 1)"
+                                                >{{ secondaryLabels[key] | translate }}</label
+                                            >
+                                            <input
+                                                nx-input
+                                                [id]="key + '-secondary-' + ($index + 1)"
+                                                [formControlName]="$index + 1"
+                                            />
+                                            <nx-control-messages>
+                                                @for (
+                                                    message of secondary.messages;
+                                                    track message.key
+                                                ) {
+                                                    <nx-control-message
+                                                        [key]="message.key"
+                                                        [text]="message.text | translate"
+                                                    ></nx-control-message>
+                                                }
+                                            </nx-control-messages>
+                                        </nx-form-field>
+                                        <ng-container
+                                            [ngTemplateOutlet]="deleteBtnContainer"
+                                            [ngTemplateOutletContext]="{
+                                                deleteFn: deleteFunctions[key],
+                                                index: $index
+                                            }"
+                                        ></ng-container>
+                                    </div>
+                                }
+                            } @empty {
+                                <span>{{ emptyText[key] | translate }}</span>
+                            }
                         </div>
                     </div>
-                </nx-section>
-            }
-        </nx-block>
+                }
+                <div class="edit-step__block-footer">
+                    <nx-apply-v3
+                        [action]="saveInfoAction"
+                        [resetFn]="reset"
+                        unchangedBehavior="hidden"
+                    ></nx-apply-v3>
+                    <button
+                        nx-reset-button
+                        [resetFn]="back"
+                        [text]="'Back' | translate"
+                    ></button>
+                </div>
+            </form>
+        </div>
+    </cdk-step>
+</nx-information-stepper>
+
+<ng-template
+    #sectionHeader
+    let-text="text"
+    let-addFn="addFn"
+>
+    <div class="edit-step__section-header">
+        <h4>{{ text }}</h4>
+        <button
+            [disabled]="observer.formDisabled()"
+            type="button"
+            data-escape-global-style
+            (click)="addFn()"
+        >
+            <svg-icon [src]="icons.dir + 'plus.svg'"></svg-icon>
+        </button>
     </div>
-}
-
-<ng-template #noSites>
-    <span translate>You have not yet added sites</span>
+    <hr />
 </ng-template>
 
-<ng-template #noPhones>
-    <span translate>You have not yet added phones</span>
-</ng-template>
-
-<ng-template #noEmails>
-    <span translate>You have not yet added emails</span>
-</ng-template>
-
-<ng-template #noCustom>
-    <span translate>You have not yet added custom inputs</span>
+<ng-template
+    #deleteBtnContainer
+    let-deleteFn="deleteFn"
+    let-index="index"
+>
+    <div class="delete-btn-container">
+        <!-- Dummy form field for spacing -->
+        <label nx-label>{{ '\u200b' }}</label>
+        <input
+            nx-input
+            [formControl]="_dummyControl"
+        />
+        <button
+            [disabled]="observer.formDisabled()"
+            type="button"
+            data-escape-global-style
+            (click)="deleteFn(index)"
+        >
+            <svg-icon [src]="icons.dir + 'delete.svg'"></svg-icon>
+        </button>
+    </div>
 </ng-template>

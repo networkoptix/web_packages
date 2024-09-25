@@ -31,7 +31,7 @@ import { NxFormFieldToken } from '../form-field/form-field.token';
 import { NxControlMessageComponent as NxMessage } from './control-message/control-message.component';
 import { NxControlMessagesToken } from './control-messages.token';
 
-type BuiltinMessageKey = keyof typeof LANG.builtinValidatorMsg;
+type InputTypeMessageKey = keyof typeof LANG.builtinValidatorMsg.inputTypes;
 
 /** Container component to manage nx-control-message selection.
  *
@@ -58,12 +58,12 @@ export class NxControlMessagesComponent implements AfterViewInit {
      *
      * Example: `email` => `'Email is required'`
      */
-    required = input<BuiltinMessageKey>();
+    required = input<InputTypeMessageKey>();
     /** Input value type for pattern error message.
      *
      * Example: `email` => `'Email is invalid'`
      */
-    pattern = input<BuiltinMessageKey>();
+    pattern = input<InputTypeMessageKey>();
 
     /** For displaying the number of characters going over the maxlength (which is called requiredLength in this case)
      */

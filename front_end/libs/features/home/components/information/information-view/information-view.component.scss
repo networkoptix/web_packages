@@ -1,4 +1,4 @@
-@use '../information-v2.scss'as info;
+@use '../information.scss'as info;
 
 :host {
     display: inline-block;
@@ -7,6 +7,7 @@
     background-color: var(--block-bg);
     padding: var(--block-padding);
     position: relative;
+    font-size: 0.875rem;
 }
 
 h4 {

@@ -2445,34 +2445,22 @@
         "lightLabel": "{hex} - light{number}",
         "darkLabel": "{hex} - dark{number}"
     },
-    "customValidatorMsg": {
-        "valueRequired": "Value is required",
-        "labelRequired": "Label is required",
-        "siteRequired": "URL is required",
-        "nameRequired": "Name is required",
-        "nameTooLong": "Name length exceeds {chars} characters",
-        "emailRequired": "Email is required",
-        "phoneRequired": "Phone number is required",
-        "siteInvalid": "URL is invalid",
-        "emailInvalid": "Email is invalid",
-        "emailNotUnique": "This email has already been registered",
-        "phoneInvalid": "Phone number is invalid",
-        "phoneNotUnique": "Phone already in use",
-        "overCharLimit": "{ charsOverLimit, plural, one{# character} other{# characters}} over limit"
-    },
     "builtinValidatorMsg": {
-        "email": {
-            "required": "Email is required",
-            "invalid": "Email is invalid"
+        "inputTypes": {
+            "email": {
+                "required": "Email is required",
+                "invalid": "Email is invalid"
+            },
+            "tel": {
+                "required": "Phone number is required",
+                "invalid": "Phone number is invalid"
+            },
+            "url": {
+                "required": "URL is required",
+                "invalid": "URL is invalid"
+            }
         },
-        "tel": {
-            "required": "Phone number is required",
-            "invalid": "Phone number is invalid"
-        },
-        "url": {
-            "required": "URL is required",
-            "invalid": "URL is invalid"
-        }
+        "overCharLimit": "{ charsOverLimit, plural, one{# character} other{# characters}} over limit"
     },
     "updateWebadmin": {
         "downloadError": "Error downloading new WebAdmin build",

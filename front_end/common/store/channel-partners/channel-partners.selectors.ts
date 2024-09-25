@@ -132,12 +132,6 @@ export const selectCurrentPartner = createSelector(
     (partners, id) => partners?.find(partner => partner.id === id),
 );
 
-/** @deprecated */
-export const selectCurrentPartnerSupportInfo = createSelector(
-    selectChannelPartnersState,
-    state => state.currentPartnerSupportInformation,
-);
-
 export const selectCurrentOrganization = createSelector(
     selectRootOrganizations,
     selectCurrentPartnerOrgs,

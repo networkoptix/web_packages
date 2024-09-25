@@ -1,19 +1,19 @@
 <div class="preset-container">
     <nx-control-message
         key="maxlength"
-        [text]="LANG.customValidatorMsg.overCharLimit"
+        [text]="LANG.builtinValidatorMsg.overCharLimit"
         [translateWith]="overMaxLength"
     ></nx-control-message>
     @if (pattern(); as pattern) {
         <nx-control-message
             key="pattern"
-            [text]="LANG.builtinValidatorMsg[pattern].invalid | translate"
+            [text]="LANG.builtinValidatorMsg.inputTypes[pattern].invalid | translate"
         ></nx-control-message>
     }
     @if (required(); as required) {
         <nx-control-message
             key="required"
-            [text]="LANG.builtinValidatorMsg[required].required | translate"
+            [text]="LANG.builtinValidatorMsg.inputTypes[required].required | translate"
         ></nx-control-message>
     }
 </div>
