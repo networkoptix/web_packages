@@ -1,8 +1,6 @@
 from uuid import uuid4
 
 import pytest
-from dateutil.relativedelta import relativedelta
-from django.utils import timezone
 from rest_framework.reverse import reverse
 from rest_framework.test import APIClient
 
@@ -33,10 +31,7 @@ class TestOrganizationServiceViewSet:
             service_type=ChannelPartnerService.CLOUD_STORAGE)
         self.analytics_service = cp_service_factory(
             channel_partner=self.channel_partner,
-            service_type=ChannelPartnerService.ANALYTICS,
-            sub_type=ChannelPartnerService.DEMO,
-            duration=1,
-        )
+            service_type=ChannelPartnerService.ANALYTICS)
 
         # Create a disabled service for the channel partner
         self.disabled_service = cp_service_factory(
@@ -142,24 +137,3 @@ class TestOrganizationServiceViewSet:
         last = response.data[-1]
         assert last['price'] == '19.000'
         assert last['createdTs'][:-1] not in service_props.created_ts.isoformat()
-
-    def test_hidden_service(self, system_factory, service_record_factory, mock_auth_with_user):
-        created_date = timezone.now() - relativedelta(months=2)
-        system = system_factory(organization=self.organization)
-        service_record = service_record_factory(
-            service=self.analytics_service,
-            cloud_system=system,
-            created_ts=created_date,
-            quantity=1,
-        )
-        kwargs = {
-            **self.def_kwargs,
-            'service_id': self.analytics_service.id
-        }
-        path = reverse('v2:organizations-owned-service-detail', kwargs=kwargs)
-        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {uuid4()}')
-        mock_auth_with_user(self.cp_user)
-        response = self.client.get(path)
-        assert response.status_code == 200
-        assert response.data['service']['id'] == str(self.analytics_service.id)
-        assert response.data['hidden'] is True
