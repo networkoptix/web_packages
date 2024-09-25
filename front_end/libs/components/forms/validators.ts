@@ -19,10 +19,10 @@ type PresetValidators = {
     [P in ControlPresets]: () => ValidatorFn[];
 };
 
-export enum InputMaxLength {
-    text = 150,
-    email = 255,
-}
+const INPUT_MAX_LENGTH = {
+    generic: 150,
+    email: 255,
+} as const;
 
 function validatorFactory(...baseValidators: ValidatorFn[]): (required?: boolean) => ValidatorFn[] {
     return (required = true) => {
@@ -41,13 +41,16 @@ export class NxValidators {
         value.trim() ? null : { required: true };
 
     /** Generic text input */
-    static text = validatorFactory(Validators.maxLength(InputMaxLength.text));
+    static text = validatorFactory(Validators.maxLength(INPUT_MAX_LENGTH.generic));
     static email = validatorFactory(
-        Validators.maxLength(InputMaxLength.email),
+        Validators.maxLength(INPUT_MAX_LENGTH.email),
         Validators.pattern(simpleEmailRegex),
     );
     static phone = validatorFactory(Validators.pattern(simplePhoneRegex));
-    static url = validatorFactory(Validators.pattern(simpleURLRegex));
+    static url = validatorFactory(
+        Validators.maxLength(INPUT_MAX_LENGTH.generic),
+        Validators.pattern(simpleURLRegex),
+    );
 
     static forbidden<T>(
         values: (() => T) | T[] | Set<T> | Map<T, unknown>,
