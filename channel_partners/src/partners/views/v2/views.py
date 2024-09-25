@@ -134,6 +134,7 @@ from partners.serializers.v2.serializers import (
     OrganizationSystemsQueryParamsSerializer,
     OrganizationUserSerializer,
     SaaSReportSerializer,
+    ServiceExtendedSerializer,
     ServicePriceHistorySerializer,
     ServiceSerializer,
     SystemBindResponseSerializer,
@@ -1619,12 +1620,12 @@ class CloudSystemViewSet(VersionedViewMixin,
         # Return the serialized data
         return Response(data)
 
-    @extend_schema(responses=ServiceSerializer, extensions={'x-permission': f'{Organization.permissions.access_systems} for Organization'})
+    @extend_schema(responses=ServiceExtendedSerializer, extensions={'x-permission': f'{Organization.permissions.access_systems} for Organization'})
     @action(methods=['get'], detail=True)
     def services(self, request, id):
         system: CloudSystemId = self.get_object()
         services: QuerySet[ChannelPartnerService] = system.organization.all_services.filter(enabled=True)
-        serializer = ServiceSerializer(services, many=True)
+        serializer = ServiceExtendedSerializer(services, many=True)
         return Response(serializer.data)
 
     @extend_schema(

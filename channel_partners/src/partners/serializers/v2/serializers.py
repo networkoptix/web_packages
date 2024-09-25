@@ -1291,6 +1291,23 @@ class ServiceSerializer(serializers.ModelSerializer):
                   'parentServiceId', 'duration', 'enabled']
 
 
+class ServiceExtendedSerializer(ServiceSerializer):
+    expiringAt = serializers.DateTimeField(source='expiring_at', read_only=True)
+    hidden = serializers.SerializerMethodField()
+
+    class Meta:
+        model = ChannelPartnerService
+        fields = ['id', 'type', 'subType', 'state', 'displayName', 'description',
+                  'createdByChannelPartner', 'parameters', 'created',
+                  'parentServiceId', 'duration', 'enabled', 'expiringAt', 'hidden']
+
+    def get_hidden(self, obj: ChannelPartnerService) -> bool:
+        expiring_at = getattr(obj, 'expiring_at', None)
+        if not expiring_at:
+            return False
+        return expiring_at.date() < timezone.now().date()
+
+
 class AvailableChannelPartnerServiceSerializer(serializers.ModelSerializer):
     service = ServiceSerializer(read_only=True)
     price = serializers.DecimalField(decimal_places=3, max_digits=10)
@@ -1305,9 +1322,10 @@ class AvailableOrganizationServiceSerializer(serializers.ModelSerializer):
     service = ServiceSerializer(read_only=True)
     price = serializers.DecimalField(decimal_places=3, max_digits=10)
     created = serializers.DateTimeField(source='created_ts', read_only=True)
+    hidden = serializers.BooleanField(default=False)
 
     class Meta:
-        fields = ['service', 'price', 'created']
+        fields = ['service', 'price', 'created', 'hidden']
         model = ServiceToOrganizationProperties
 
 
