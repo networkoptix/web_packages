@@ -9,10 +9,21 @@ include:
   - front_end/**/*
   - ft/**/*
 
-FT:
+FT / VMS 5.1:
   stage: 'ft (#ask-ft)'
   needs: [ 'cloud-deploy' ]
-  script: [ 'dev-cloud-portal-gitlab' ]
+  script: [ 'dev-cloud-portal-gitlab-vms-5.1' ]
+  tags: [ 'cloud_portal_tests' ]
+  timeout: '180m'
+  rules:
+    - if: !reference [ .functional_tests_required ]
+      # noinspection YAMLSchemaValidation
+      changes: !reference [ .require_testing ]
+
+FT / VMS 6.0:
+  stage: 'ft (#ask-ft)'
+  needs: [ 'cloud-deploy' ]
+  script: [ 'dev-cloud-portal-gitlab-vms-6.0' ]
   tags: [ 'cloud_portal_tests' ]
   timeout: '180m'
   rules:
