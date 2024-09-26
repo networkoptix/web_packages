@@ -66,6 +66,7 @@
         height: 100%;
         padding: 1.5rem;
         min-width: 380px;
+        overflow-y: scroll;
 
         .header {
             padding-bottom: 0;
@@ -160,8 +161,12 @@ nx-hidable {
 
 .path {
     overflow: hidden;
+    text-overflow: ellipsis;
+
     @media screen and (max-width: 520px) {
-        max-width: 180px;
+        &:not(.full-width) {
+            max-width: 180px;
+        }
     }
 }
 

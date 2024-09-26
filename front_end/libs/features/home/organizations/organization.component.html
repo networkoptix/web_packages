@@ -18,6 +18,7 @@
                     <div
                         #pathContainer
                         class="path"
+                        [ngClass]="{ 'full-width': currentTab$$() !== 'systems' }"
                     >
                         @if (routerState.partnerId()) {
                             <a
