@@ -17,24 +17,20 @@ import {
     withEntities,
 } from '@ngrx/signals/entities';
 import { groupBy, isEqual } from 'lodash-es';
+import { Observable, firstValueFrom, from, merge, NEVER, timer } from 'rxjs';
 import {
-    Observable,
     catchError,
     distinctUntilChanged,
-    filter,
-    repeat,
-    map,
-    switchMap,
-    tap,
-    from,
-    firstValueFrom,
-    NEVER,
-    timer,
-    take,
-    skip,
-    merge,
     distinctUntilKeyChanged,
-} from 'rxjs';
+    filter,
+    map,
+    skip,
+    switchMap,
+    take,
+    tap,
+    repeat,
+    retry,
+} from 'rxjs/operators';
 
 import staticLang from '@language_static';
 import type { DraggableItem } from '@pages/home/home.types';
@@ -483,13 +479,12 @@ export const GroupsStore = signalStore(
                             }),
                         );
                     }),
-                    catchError((_, caught) => {
+                    catchError(e => {
                         undo();
-                        return caught;
+                        throw e;
                     }),
-                    repeat({
-                        delay: 30 * 1000,
-                    }),
+                    retry({ delay: 30 * 1000 }),
+                    repeat({ delay: 30 * 1000 }),
                 );
             },
             initializeSystems: (orgId: string, groupId?: string) => {

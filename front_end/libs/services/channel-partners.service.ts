@@ -49,7 +49,10 @@ export class NxChannelPartnersService {
     // }
 
     /* Not associated with a specific partner/org and don't change  */
-    channelPartnerRoles$$ = toSignal(this.cpApi.getChannelPartnerRoles(), { initialValue: [] });
+    channelPartnerRoles$$ = toSignal(this.cpApi.getChannelPartnerRoles(), {
+        initialValue: [],
+        rejectErrors: true,
+    });
     organizationRoles$$ = toSignal(
         this.cpApi.getOrganizationRoles().pipe(
             map(roles => {
@@ -64,7 +67,7 @@ export class NxChannelPartnersService {
                 return sortedRoles;
             }),
         ),
-        { initialValue: [] },
+        { initialValue: [], rejectErrors: true },
     );
 
     /* Channel Partners */

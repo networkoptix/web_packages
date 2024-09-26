@@ -286,6 +286,7 @@ export class NxOrganizationsComponent implements OnInit, OnDestroy {
                             return fetchedOrg;
                         })
                         .catch(err => {
+                            this.routerState.clearHistory();
                             console.error(err);
                         });
                 }),
