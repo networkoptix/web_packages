@@ -1549,7 +1549,7 @@ class ReadOnlyAPIAdmin(CMSAdmin):
     def clear_cache(self, request, queryset):
         try:
             if request.user.is_staff:
-                types_to_clear = set()
+                types_to_clear = set([False])
 
                 for readonly_api in queryset:
                     types_to_clear.add(readonly_api.type)

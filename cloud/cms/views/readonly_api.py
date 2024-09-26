@@ -72,7 +72,7 @@ async def get_readonly_api(request, api_id=None):
 @async_api_view(("GET", "DELETE"))
 @permission_classes((AllowAny, ))
 async def get_readonly_apis(request):
-    type_id = request.GET.get('type', False)
+    type_id = request.GET.get('type', 'VMS')
     api_cache = ReadOnlyAPICache(type_id=type_id)
 
     if request.method == 'DELETE':

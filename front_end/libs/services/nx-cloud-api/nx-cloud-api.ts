@@ -427,7 +427,7 @@ export class NxCloudApiService {
     @staffSWBypass
     @memoizeAsyncPersistent
     getReadOnlyAPIs() {
-        return this.cachedGet<{ data: t.ReadOnlyAPI[] }>(apiBase + '/cms/readonly_apis');
+        return this.cachedGet<{ data: t.ReadOnlyAPI[] }>(apiBase + '/cms/readonly_apis?type=VMS');
     }
 
     @staffSWBypass
