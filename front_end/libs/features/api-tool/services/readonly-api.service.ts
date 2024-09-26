@@ -80,7 +80,7 @@ export class NxReadonlyAPIService {
         firstValueFrom(this.db.getByKey('requestCache', key))
             .then((res: { value: { data: ReadOnlyAPI[] } | undefined }) => processAPIs(res?.value))
             .catch();
-        this.api
+        await this.api
             .getReadOnlyAPIs()
             .toPromise()
             .then(value => {
