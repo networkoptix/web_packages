@@ -143,11 +143,14 @@ export abstract class BaseCloudServiceAPI {
         return this.withFreshSession()(({ accessToken, getFreshAccessToken }) => {
             return request(url, getOptions(accessToken)).pipe(
                 // Retry once with fresh token else raise error.
-                catchError(() =>
-                    getFreshAccessToken().pipe(
-                        switchMap(accessToken => request(url, getOptions(accessToken))),
-                    ),
-                ),
+                catchError(e => {
+                    if (e.status === 401) {
+                        return getFreshAccessToken().pipe(
+                            switchMap(accessToken => request(url, getOptions(accessToken))),
+                        );
+                    }
+                    throw e;
+                }),
             );
         });
     }

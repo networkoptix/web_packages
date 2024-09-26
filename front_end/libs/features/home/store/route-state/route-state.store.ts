@@ -9,7 +9,7 @@ import {
     withMethods,
     withState,
 } from '@ngrx/signals';
-import { addEntity, withEntities } from '@ngrx/signals/entities';
+import { addEntity, removeAllEntities, withEntities } from '@ngrx/signals/entities';
 import { isEqual } from 'lodash-es';
 import { Observable, combineLatest, distinctUntilChanged, map } from 'rxjs';
 
@@ -85,6 +85,9 @@ export const ChannelPartnersRouteState = signalStore(
                     }),
                     takeUntilDestroyed(),
                 );
+            },
+            clearHistory() {
+                patchState(store, removeAllEntities({ collection: 'history' }));
             },
         };
     }),

@@ -297,6 +297,7 @@ export class NxChannelPartnersComponent implements OnInit {
                 const currPartner = partners.find(partner => partner.id === currentPartnerId);
                 if (!currPartner) {
                     this.isValidPartner = false;
+                    this.routerState.clearHistory();
                     return throwError(() => 'Partner not found');
                 }
                 this.store.dispatch(
