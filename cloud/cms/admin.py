@@ -1544,6 +1544,27 @@ class FlagAdmin(WaffleFlagAdmin):
 @admin.register(ReadOnlyAPI)
 class ReadOnlyAPIAdmin(CMSAdmin):
     form = ReadOnlyAPIForm
+    actions = ['clear_cache']
+
+    def clear_cache(self, request, queryset):
+        try:
+            if request.user.is_staff:
+                types_to_clear = set()
+
+                for readonly_api in queryset:
+                    types_to_clear.add(readonly_api.type)
+                    ReadOnlyAPICache(api_id=readonly_api.id).clear_cache()
+
+                for type_id in types_to_clear:
+                    ReadOnlyAPICache(type_id=type_id).clear_cache
+
+                self.message_user(request, f'Readonly API cache cleared for {len(types_to_clear)} types and {queryset.count()} APIs', level=messages.SUCCESS)
+            else:
+                self.message_user(request, 'You do not have permission to clear the cache', level=messages.ERROR)
+
+        except Exception as e:
+            self.message_user(request, f'Error clearing cache: {e}', level=messages.ERROR)
+
 
 @admin.register(ReadOnlyAPIFile)
 class ReadOnlyAPIFileAdmin(CMSAdmin):
