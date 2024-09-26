@@ -357,6 +357,58 @@ class TestSystemServiceQuantitySerializer:
         assert serializer.errors['services'][str(expired_service.id)] == 'Service has expired'
         assert list(serializer.errors['services'].keys()) == [str(expired_service.id)]
 
+    def test_not_expired_services(self,
+                                  channel_partner_factory,
+                                  organization_factory,
+                                  system_factory,
+                                  service_record_factory,
+                                  cp_service_factory,
+                                  arf):
+
+        cp = channel_partner_factory()
+        org = organization_factory(channel_partner=cp)
+        sys = system_factory(
+            organization=org,
+            # created_ts=timezone.now() - timedelta(days=40),
+        )
+        other_sys = system_factory(
+            organization=org,
+        )
+        service_add_date = timezone.now() - timedelta(days=35)
+        regular_service = cp_service_factory(channel_partner=cp)
+        not_expired_service = cp_service_factory(
+            channel_partner=cp,
+            sub_type=ChannelPartnerService.DEMO,
+            duration=1
+        )
+        service_record_factory(
+            service=regular_service,
+            cloud_system=sys,
+            quantity=1,
+            created_ts=service_add_date
+        )
+        service_record_factory(
+            service=not_expired_service,
+            cloud_system=sys,
+            quantity=1,
+        )
+        # expired for other system
+        service_record_factory(
+            service=not_expired_service,
+            cloud_system=other_sys,
+            quantity=1,
+            created_ts=service_add_date
+        )
+        data = {
+            "services": {
+                f"{service.id}": {"quantity": 11}
+                for service in
+                [regular_service, not_expired_service]
+            }
+        }
+        serializer = SystemServiceQuantitySerializer(instance=sys, data=data)
+        assert serializer.is_valid() is True
+
 
 class TestChannelPartnerSerializer:
 

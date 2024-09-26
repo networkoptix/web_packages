@@ -96,7 +96,7 @@ class ServiceQuantityChangeSerializerV3(serializers.Serializer):
             today = datetime.datetime.now(datetime.timezone.utc).date()
             if ChannelPartnerServiceRecord.objects.filter(
                     service=value,
-                    organization_id=self.cloud_system.organization_id,
+                    cloud_system=self.cloud_system,
                     created_ts__lte=today - relativedelta(months=value.duration)
             ).exists():
                 raise exceptions.ValidationError(
