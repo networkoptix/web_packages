@@ -41,7 +41,7 @@ services:
       - ../../src/:/app/app
       - ../../../common/python/:/app/common_python
     working_dir: /app/app
-    command: ["/app/entrypoint.sh", "celery"]
+    command: ["/app/entrypoint.sh", "migratedb celery"]
     environment:
       - LOCAL_ENV=1
       - LOCAL_DOCKER=1
