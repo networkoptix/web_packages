@@ -1,5 +1,12 @@
 #!/bin/bash
 
+function celery_migration_delay() {
+  if [[ $(echo $@ | grep -c 'celery') -eq 1 ]]; then
+    echo "Waiting for Celery to start..."
+    sleep 40
+  fi
+}
+
 WEB_WORKERS=${WEB_WORKERS:-1}
 
 for command in $@
@@ -7,6 +14,7 @@ for command in $@
 do
     case "$command" in
         migratedb)
+            celery_migration_delay $@
             python manage.py migrate
             if [[ $? -ne 0 ]]; then
                 echo "Error: Failed to migrate database"

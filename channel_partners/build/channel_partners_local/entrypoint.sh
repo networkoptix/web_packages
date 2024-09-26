@@ -8,11 +8,20 @@ function check_exit_code() {
   fi
 }
 
+function celery_migration_delay() {
+  if [[ $(echo $@ | grep -c 'celery') -eq 1 ]]; then
+    echo "Waiting for Celery to start..."
+    sleep 40
+  fi
+}
+
 for command in $@
 
 do
     case "$command" in
         migratedb)
+            celery_migration_delay $@
+
             python manage.py migrate
             check_exit_code $?
 
