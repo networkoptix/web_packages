@@ -256,7 +256,7 @@ export const OrgUsersStore = signalStore(
             const updateGroupCache = (groupId: string = ''): void => {
                 const orgId = routerStateStore.organizationId();
                 iif(
-                    () => !!groupId,
+                    () => !!groupId && groupId !== orgId,
                     chpService
                         .getGroupUsersWithAccess(groupId)
                         .pipe(map(users => mapGroupUsers(users))),
@@ -369,6 +369,24 @@ export const OrgUsersStore = signalStore(
                                             ),
                                         );
                                     } else if ([org.id, folder].includes(currentGroupId)) {
+                                        const patches = [currentGroupId, ''].map(groupId => {
+                                            const users =
+                                                store.usersCacheEntityMap()[groupId]?.users;
+                                            const userIndex = users.findIndex(
+                                                ({ email }) => email === user.email,
+                                            );
+                                            if (userIndex !== -1) {
+                                                users[userIndex] = user;
+                                            } else {
+                                                users.push(user);
+                                            }
+                                            return updateEntity(
+                                                { id: currentGroupId, changes: { users } },
+                                                {
+                                                    collection: usersCacheEntity.collection,
+                                                },
+                                            );
+                                        });
                                         patchState(
                                             store,
                                             addEntity(
@@ -378,6 +396,7 @@ export const OrgUsersStore = signalStore(
                                                     collection: currentGroupUsersEntity.collection,
                                                 },
                                             ),
+                                            ...patches,
                                         );
                                     }
                                 },
@@ -389,7 +408,6 @@ export const OrgUsersStore = signalStore(
                         );
                     },
                     removeUser: (orgId: string, email: string, folders: string[] = []) => {
-                        let userInCurrentGroup = true;
                         let user = store.currentGroupUsersEntityMap()[email];
                         // Handles the case when the user is not in the current group. IE not in the root of the org.
                         // This happens when the user is being deleted from the access table.
@@ -398,7 +416,6 @@ export const OrgUsersStore = signalStore(
                                 .usersCacheEntityMap()
                                 [orgId]?.users?.find(u => u.email === email);
                             if (cachedUser) {
-                                userInCurrentGroup = false;
                                 user = cachedUser;
                             }
                         }
@@ -427,33 +444,16 @@ export const OrgUsersStore = signalStore(
                                 group => !folders.includes(group.groupId),
                             );
 
-                            if (userInCurrentGroup) {
-                                return patchState(
-                                    store,
-                                    updateEntity(
-                                        {
-                                            id: user.email,
-                                            changes: {
-                                                groupRoles: user.groupRoles,
-                                            },
-                                        },
-                                        currentGroupUsersEntity,
-                                    ),
+                            const patches = [...(folders ?? orgId), ''].map(groupId => {
+                                const users = store.usersCacheEntityMap()[groupId]?.users;
+                                const userIndex = users.findIndex(u => u.email === email);
+                                users.splice(userIndex, 1);
+                                return updateEntity(
+                                    { id: groupId, changes: { users } },
+                                    usersCacheEntity,
                                 );
-                            }
-
-                            const users = store.usersCacheEntityMap()[orgId]?.users;
-                            const userIndex = users.findIndex(u => u.email === email);
-                            if (userIndex > -1) {
-                                users[userIndex] = user;
-                                patchState(
-                                    store,
-                                    updateEntity(
-                                        { id: orgId, changes: { users } },
-                                        usersCacheEntity,
-                                    ),
-                                );
-                            }
+                            });
+                            patchState(store, ...patches);
                         });
                     },
                     removeUsers: (orgId: string, folder: string, emails: string[]) => {
@@ -752,7 +752,7 @@ export const OrgUsersStore = signalStore(
                     filteredRecords = getUsersByModel(filteredRecords, search, currentOrgName);
                 }
 
-                return filteredRecords as UserRecord[];
+                return [...(filteredRecords as UserRecord[])];
             }),
         }),
     ),

@@ -42,9 +42,8 @@ export class NxUsersAccessTableComponent extends AbstractUserTableDirective {
     currAccessLevel = this.currentOrg$$()?.channelPartnerAccessLevel;
     email$$ = this.routerState.email;
     orgRoles$$ = this.cpService.organizationRoles$$;
-    orgRecords$$ = this.orgUsersStore.usersByGroupSignalFactory();
     accessTableRecords$$ = computed(() => {
-        const orgRecords = this.orgRecords$$();
+        const orgRecords = this.orgUsersStore.usersCacheEntityMap()[''].users as UserRecord[];
         return orgRecords
             .filter(({ email }) => email === this.email$$())
             .flatMap(user => {
