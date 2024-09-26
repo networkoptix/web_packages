@@ -361,6 +361,45 @@ class TestServiceQuantityChangeSerializer:
         assert not serializer.errors[2]
         assert not serializer.errors[3]
 
+    def test_not_expired_services(self,
+                              service_record_factory,
+                              cp_service_factory,
+                              system_factory,
+                              arf):
+        self.channel_partner.monthly_additional_service_limit = None
+        other_system = system_factory(organization=self.organization)
+        service_add_date = timezone.now() - timedelta(days=35)
+        regular_service = cp_service_factory(channel_partner=self.channel_partner)
+        not_expired_service = cp_service_factory(
+            channel_partner=self.channel_partner,
+            sub_type=ChannelPartnerService.DEMO,
+            duration=1
+        )
+        service_record_factory(
+            service=regular_service,
+            cloud_system=self.system,
+            quantity=1,
+            created_ts=service_add_date
+        )
+        service_record_factory(
+            service=not_expired_service,
+            cloud_system=self.system,
+            quantity=1,
+        )
+        service_record_factory(
+            service=not_expired_service,
+            cloud_system=other_system,
+            quantity=1,
+            created_ts=service_add_date
+        )
+        services = [regular_service, not_expired_service]
+        data = [
+            {'serviceId': str(service.id), 'quantity': 11}
+            for service in services
+        ]
+        serializer = ServiceQuantityChangeSerializerV3(cloud_system=self.system, data=data, many=True)
+        assert serializer.is_valid() is True
+
 
 class TestServiceQuantityReadSerializer:
     @pytest.fixture(autouse=True)

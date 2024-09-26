@@ -1141,7 +1141,7 @@ class SystemServiceQuantitySerializer(serializers.ModelSerializer):
             if service.is_expiring and service.duration > 0:
                 is_expired = ChannelPartnerServiceRecord.objects.filter(
                     service=service,
-                    organization_id=self.instance.organization_id,
+                    cloud_system_id=self.instance.id,
                     created_ts__lt=timezone.now() - relativedelta(months=service.duration),
                 ).exists()
                 if is_expired:
