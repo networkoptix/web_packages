@@ -417,8 +417,10 @@ export class NxHeaderComponent implements OnInit {
     private async lazyLoadNewHeader() {
         await import('./new-header/new-header.component').then(m => m.NxNewHeaderComponent);
         const { NxNewHeaderComponent } = await import('./new-header/new-header.component');
-        const compRef = this.newHeaderRef.createComponent(NxNewHeaderComponent);
-        compRef.instance.width = this.windowWidth$;
+        if (this.newHeaderRef) {
+            const compRef = this.newHeaderRef.createComponent(NxNewHeaderComponent);
+            compRef.instance.width = this.windowWidth$;
+        }
     }
 
     updateBreadcrumbSizes = wrapper =>

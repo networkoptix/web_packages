@@ -7,7 +7,6 @@ import { NgxTranslateCutModule } from 'ngx-translate-cut';
 
 import { NxFooterComponent } from '@components/footer/footer.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
-import { NxFocusMeDirective } from '@directives/nx-focus-me';
 import { NxTooltipDirective } from '@directives/nx-tooltip.directive';
 import { ApplyGuard } from '@guards/applyGuard';
 import { AuthGuard } from '@guards/authGuard';
@@ -76,7 +75,6 @@ const appRoutes: Routes = [
         NxAccountSecurityModule,
         PipesModule,
         NxPreLoaderComponent,
-        NxFocusMeDirective,
         NxTooltipDirective,
         NxMenuProjectionDirective,
     ],

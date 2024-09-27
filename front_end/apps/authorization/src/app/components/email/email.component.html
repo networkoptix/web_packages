@@ -65,7 +65,6 @@
                 email
                 nxFocusMe
                 autocomplete="username"
-                [setFocus]="true"
             />
             <div
                 *ngIf="email.invalid && email.dirty && email.touched"
@@ -155,7 +154,6 @@
                 required
                 nxFocusMe
                 autocomplete="username"
-                [setFocus]="true"
             />
             <ng-container *ngIf="login.invalid && login.dirty && login.touched">
                 <p

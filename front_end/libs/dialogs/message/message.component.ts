@@ -10,7 +10,6 @@ import { NxProcessButtonComponent } from '@components/process-button/process-but
 import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
 import type { Message as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
-import { NxFocusMeDirective } from '@directives/nx-focus-me';
 import staticLang from '@language_static';
 import { Translatable } from '@pipes/nx-translate.types';
 import { PipesModule } from '@pipes/pipes.module';
@@ -37,7 +36,6 @@ type Subject = DropdownItem<string>;
         NxGenericDropdownModule,
         NxProcessButtonComponent,
         NxProcessCancelButtonComponent,
-        NxFocusMeDirective,
     ],
 })
 export class MessageModalContent extends ModalBase<DT['return']> implements OnInit {

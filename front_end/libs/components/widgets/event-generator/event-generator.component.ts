@@ -14,7 +14,6 @@ import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-lo
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { NxStepperComponent } from '@components/stepper/stepper.component';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
-import { NxFocusMeDirective } from '@directives/nx-focus-me';
 import { NxTooltipDirective } from '@directives/nx-tooltip.directive';
 import { NxAccountService } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
@@ -48,7 +47,6 @@ interface SystemDropdownItem extends DropdownItem<string> {
         NxProcessButtonComponent,
         NxStepperComponent,
         NxAddSvgSrcDirective,
-        NxFocusMeDirective,
         NxTooltipDirective,
     ],
 })

@@ -1,5 +1,15 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, EventEmitter, Output, model } from '@angular/core';
+import {
+    AfterRenderPhase,
+    ChangeDetectionStrategy,
+    Component,
+    ElementRef,
+    EventEmitter,
+    Output,
+    afterNextRender,
+    model,
+    viewChild,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -29,5 +39,16 @@ export class SharedBookmarkPasswordComponent {
         } else {
             this.passwordError.set(true);
         }
+    }
+
+    passwordInput = viewChild.required<ElementRef<HTMLInputElement>>('passwordInput');
+
+    constructor() {
+        afterNextRender(
+            () => {
+                this.passwordInput().nativeElement.focus();
+            },
+            { phase: AfterRenderPhase.Read },
+        );
     }
 }

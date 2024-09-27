@@ -240,7 +240,6 @@
                 (ngModelChange)="passwordChange(adminPassword)"
                 [ngModel]="machine.state.template.passwordValue"
                 (blur)="passwordChange(adminPassword)"
-                nxFocusMe
             />
             <label
                 *ngIf="machine.state.show.passwordError"
@@ -427,7 +426,6 @@
                 (ngModelChange)="passwordChange(cloudOwnerPassword)"
                 [ngModel]="machine.state.template.passwordValue"
                 (blur)="passwordChange(cloudOwnerPassword)"
-                nxFocusMe
             />
             <label
                 *ngIf="machine.state.show.passwordError"

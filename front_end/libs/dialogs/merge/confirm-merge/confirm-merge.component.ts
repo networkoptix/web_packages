@@ -7,7 +7,6 @@ import { NgxTranslateCutModule } from 'ngx-translate-cut';
 
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
-import { NxFocusMeDirective } from '@directives/nx-focus-me';
 import staticLang from '@language_static';
 import { Process } from '@services/process.service/process';
 import { icons } from '@static-variables';
@@ -28,7 +27,6 @@ import { MergeState } from '../merge.refactor.component.types';
         AngularSvgIconModule,
         NxProcessButtonComponent,
         NxAddSvgSrcDirective,
-        NxFocusMeDirective,
     ],
 })
 export class NxMergeConfirmMergeComponent implements OnChanges {

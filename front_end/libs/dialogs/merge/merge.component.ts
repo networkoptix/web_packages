@@ -16,7 +16,6 @@ import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { ToastType } from '@components/toast-container/toast.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
-import { NxFocusMeDirective } from '@directives/nx-focus-me';
 import { NxUrlValidatorDirective } from '@directives/nx-url-validator';
 import { environment } from '@environments/environment';
 import staticLang from '@language_static';
@@ -66,7 +65,6 @@ interface NxSystemModuleInfo extends NxUserSystemInfo {
         NxRadioComponent,
         NxProcessButtonComponent,
         NxAddSvgSrcDirective,
-        NxFocusMeDirective,
         NxUrlValidatorDirective,
     ],
 })

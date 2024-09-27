@@ -13,18 +13,15 @@ import { NgChanges } from '@utils/ng-changes';
 // directives do support AfterViewInit
 // ... this hook is fired by the parent component
 export class NxFocusMeDirective implements AfterViewInit, OnChanges {
-    @Input() timeout: number = 0;
-    @Input({ transform: booleanAttribute }) setFocus: boolean; // force focus for elements encapsulated
+    @Input({ transform: booleanAttribute }) setFocus: boolean = true; // force focus for elements encapsulated
 
     constructor(private _elementRef: ElementRef<HTMLElement>) {}
 
     ngAfterViewInit(): void {
-        // Timeout is needed for directly navigated pages
-        // ... i.e. desktop client opens /register?....
         if (this.setFocus) {
             setTimeout(() => {
                 this._elementRef.nativeElement.focus();
-            }, this.timeout);
+            });
         }
     }
 
@@ -32,7 +29,7 @@ export class NxFocusMeDirective implements AfterViewInit, OnChanges {
         if (changes.setFocus?.currentValue) {
             setTimeout(() => {
                 this._elementRef.nativeElement.focus();
-            }, this.timeout);
+            });
         }
     }
 }

@@ -11,7 +11,6 @@ import { NxPasswordComponent } from '@components/password-input/password.compone
 import { NxPasswordTagValidationComponent } from '@components/password-input-tag-validation/password-tag-validation.component';
 import { NxPasswordValidationComponent } from '@components/password-input-validation/password-validation.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
-import { NxFocusMeDirective } from '@directives/nx-focus-me';
 import { NxAccountPasswordComponent } from '@pages/account/password/password.component';
 import { PipesModule } from '@pipes/pipes.module';
 
@@ -29,7 +28,6 @@ import { PipesModule } from '@pipes/pipes.module';
         NxPasswordValidationComponent,
         PipesModule,
         NxPreLoaderComponent,
-        NxFocusMeDirective,
     ],
     providers: [],
     declarations: [NxAccountPasswordComponent],
