@@ -35,7 +35,7 @@ class TestLegacyLicensesSerializer:
             service.save()
             self.other_services.append(service)
             trial_service = cp_service_factory(channel_partner=self.cp)
-            trial_service.sub_type = ChannelPartnerService.TRIAL
+            trial_service.sub_type = ChannelPartnerService.CREDIT
             trial_service.created_ts = timezone.now() - timedelta(days=2*i)
             trial_service.save()
             self.trial_services.append(trial_service)
@@ -139,11 +139,11 @@ class TestLegacyLicensesSerializer:
         assert MigrationRecord.objects.all().count() == 3
         migration_record = MigrationRecord.objects.get(license_key=self.licenses[0])
         assert migration_record.service_record.quantity == 30
-        assert migration_record.service_record.service.sub_type == ChannelPartnerService.TRIAL
+        assert migration_record.service_record.service.sub_type == ChannelPartnerService.CREDIT
         assert migration_record.service_record.record_type == ServiceRecordTypes.LICENSE_MIGRATION
         migration_record = MigrationRecord.objects.get(license_key=self.licenses[3])
         assert migration_record.service_record.quantity == 30
-        assert migration_record.service_record.service.sub_type == ChannelPartnerService.TRIAL
+        assert migration_record.service_record.service.sub_type == ChannelPartnerService.CREDIT
         assert migration_record.service_record.record_type == ServiceRecordTypes.LICENSE_MIGRATION
         self.system.refresh_from_db()
         assert self.system.current_services != initial_services

@@ -311,7 +311,7 @@ class TestCloudSystemViewSetMenageLegacyLicenses:
             service.save()
             self.other_services.append(service)
             trial_service = cp_service_factory(channel_partner=self.cp)
-            trial_service.sub_type = ChannelPartnerService.TRIAL
+            trial_service.sub_type = ChannelPartnerService.CREDIT
             trial_service.created_ts = timezone.now() - timedelta(days=2*i)
             trial_service.save()
             self.trial_services.append(trial_service)

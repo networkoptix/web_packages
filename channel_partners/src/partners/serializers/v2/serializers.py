@@ -2167,7 +2167,7 @@ class LegacyLicensesSerializer(serializers.Serializer):
     def get_service(self, system: CloudSystemId):
         service = ChannelPartnerService.objects.filter(
             created_by_channel_partner_id=system.organization.channel_partner_id,
-            sub_type=ChannelPartnerService.TRIAL,
+            sub_type=ChannelPartnerService.CREDIT,
             type=ChannelPartnerService.LOCAL_RECORDING
         ).order_by('created_ts').first()
         if not service:
