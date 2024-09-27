@@ -149,7 +149,11 @@ export class NxChannelPartnersUsersTableComponent extends AbstractUserTableDirec
     }
 
     getDisplayRole(user: UserRecord): string {
-        return user?.roles?.[0] ?? '';
+        const roleId = user?.rolesIds?.[0];
+        return (
+            (this.LANG.channelPartners.usersTable.accessInfo[roleId]?.name || user?.roles?.[0]) ??
+            ''
+        );
     }
 
     showRole(row: UserRecord): boolean {
@@ -184,7 +188,9 @@ export class NxChannelPartnersUsersTableComponent extends AbstractUserTableDirec
                             .singleMessage,
                         {
                             email: user.email,
-                            permission: user.roles[0],
+                            permission:
+                                this.LANG.channelPartners.usersTable.accessInfo[user.rolesIds[0]]
+                                    ?.name || user.roles[0],
                         },
                     ),
                     title: this.LANG.channelPartners.usersTable.deleteDialog.delete,
