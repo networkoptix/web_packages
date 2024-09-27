@@ -479,7 +479,7 @@
     "Description": "설명",
     "Description (optional)": "Description (optional)",
     "Desktop client connection required": "Desktop client connection required",
-    "Destination folder is required": "Destination folder is required",
+    "Destination folder is required": "대상 폴더가 필요합니다.",
     "Detach": "분리",
     "Detach from the System": "시스템에서 분리",
     "Detach server&nbsp;<strong>{ title }</strong>&nbsp;from current system?": "Detach server&nbsp;<strong>{ title }</strong>&nbsp;from current system?",

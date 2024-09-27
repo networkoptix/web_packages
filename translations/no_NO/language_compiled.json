@@ -479,7 +479,7 @@
     "Description": "Beskrivelse",
     "Description (optional)": "Description (optional)",
     "Desktop client connection required": "Tilkobling til skrivebordsklient kreves",
-    "Destination folder is required": "Destination folder is required",
+    "Destination folder is required": "Målmappe er påkrevd",
     "Detach": "Koble fra",
     "Detach from the System": "Koble fra systemet",
     "Detach server&nbsp;<strong>{ title }</strong>&nbsp;from current system?": "Koble server&nbsp;<strong>{ title }</strong>&nbsp;fra gjeldende system?",

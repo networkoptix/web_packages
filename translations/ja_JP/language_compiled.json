@@ -479,7 +479,7 @@
     "Description": "説明",
     "Description (optional)": "説明 (オプション)",
     "Desktop client connection required": "デスクトップクライアントの接続が必要です",
-    "Destination folder is required": "Destination folder is required",
+    "Destination folder is required": "宛先フォルダーは必須です",
     "Detach": "分離",
     "Detach from the System": "システムから分離",
     "Detach server&nbsp;<strong>{ title }</strong>&nbsp;from current system?": "現在のシステムからサーバー&nbsp;<strong>{ title }</strong>&nbsp;を分離しますか?",

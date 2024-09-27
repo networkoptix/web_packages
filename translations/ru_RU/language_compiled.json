@@ -479,7 +479,7 @@
     "Description": "Описание",
     "Description (optional)": "Description (optional)",
     "Desktop client connection required": "Требуется подключение к настольному клиенту",
-    "Destination folder is required": "Destination folder is required",
+    "Destination folder is required": "Требуется указать папку назначения",
     "Detach": "Отсоединить",
     "Detach from the System": "Отсоединить от системы",
     "Detach server&nbsp;<strong>{ title }</strong>&nbsp;from current system?": "Detach server&nbsp;<strong>{ title }</strong>&nbsp;from current system?",
