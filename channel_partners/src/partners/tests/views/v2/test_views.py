@@ -2720,6 +2720,15 @@ class TestGetAuthorizedSystem:
         else:
             assert False, 'Permission denied must be raised'
 
+    def test_disconnected_system(self, arf):
+        self.cloud_system.disconnect_system()
+
+        request = arf.get('/')
+        request.auth = f'Bearer {uuid4()}'
+
+        request.user = self.cp_admin.user
+        with pytest.raises(exceptions.PermissionDenied):
+            get_authorized_system(request, self.cloud_system.system_id)
 
 class TestCloudStorageUsageReport:
 
