@@ -28,7 +28,7 @@ class TestChannelPartnerReportGenerator:
                          ChannelPartnerService.CLOUD_STORAGE,
                          ChannelPartnerService.ANALYTICS]
         subtypes = [ChannelPartnerService.REGULAR,
-                    ChannelPartnerService.TRIAL,
+                    ChannelPartnerService.CREDIT,
                     ChannelPartnerService.DEMO]
         for service_type in service_types:
             for sub_type in subtypes:
@@ -112,7 +112,7 @@ class TestOrganizationReportGenerator:
                          ChannelPartnerService.CLOUD_STORAGE,
                          ChannelPartnerService.ANALYTICS]
         subtypes = [ChannelPartnerService.REGULAR,
-                    ChannelPartnerService.TRIAL,
+                    ChannelPartnerService.CREDIT,
                     ChannelPartnerService.DEMO]
         for service_type in service_types:
             for sub_type in subtypes:

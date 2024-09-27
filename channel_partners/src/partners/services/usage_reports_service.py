@@ -1253,7 +1253,7 @@ class OrganizationReportsService:
         expiring_reports = cls.get_expiring_reports_for_services(
             organization=organization,
             period_start=period_start,
-            services=services.filter(sub_type__in=[ChannelPartnerService.DEMO, ChannelPartnerService.TRIAL]),
+            services=services.filter(sub_type__in=[ChannelPartnerService.DEMO, ChannelPartnerService.CREDIT]),
             generate=generate)
 
         return cls.build_organization_report_from_service_reports(
@@ -1791,7 +1791,7 @@ class ChannelPartnerReportsService:
             services=regular_services,
             generate=generate,
         )
-        expiring_services = services.filter(sub_type__in=[ChannelPartnerService.DEMO, ChannelPartnerService.TRIAL])
+        expiring_services = services.filter(sub_type__in=[ChannelPartnerService.DEMO, ChannelPartnerService.CREDIT])
         logger.debug(
             "Generating expiring channel partner report",
             channel_partner=channel_partner.name,

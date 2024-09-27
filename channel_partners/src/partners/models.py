@@ -2224,16 +2224,16 @@ class ChannelPartnerService(models.Model):
     # Subtypes
     REGULAR = 0
     DEMO = 1
-    TRIAL = 2
+    CREDIT = 2
     SUB_TYPES = (
         (REGULAR, 'Regular'),
         (DEMO, 'Demo'),
-        (TRIAL, 'Trial')
+        (CREDIT, 'Credit')
     )
     SUB_TYPES_CODES = (
         ('regular', REGULAR),
         ('demo', DEMO),
-        ('trial', TRIAL)
+        ('credit', CREDIT)
     )
     SUB_TYPE_TO_CODE_MAP = {val: code for code, val in SUB_TYPES_CODES}
 
@@ -2273,7 +2273,7 @@ class ChannelPartnerService(models.Model):
 
     @property
     def is_expiring(self) -> bool:
-        return self.sub_type in (self.DEMO, self.TRIAL)
+        return self.sub_type in (self.DEMO, self.CREDIT)
 
     def save(self, *args, **kwargs):
         new = self._state.adding
