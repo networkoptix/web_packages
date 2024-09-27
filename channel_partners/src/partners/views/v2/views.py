@@ -1751,6 +1751,10 @@ def get_authorized_system(request, system_id, roles: Iterable | VmsRoles.AnyRole
     if not (hasattr(request, 'user') and request.user.is_authenticated):
         raise exceptions.NotAuthenticated()
     if cloud_system := CloudSystemId.objects.filter(system_id=system_id).first():
+        # If system has no organization then it has been disconnected.
+        # We can return 403, because it is out of a cloud
+        if not cloud_system.organization:
+            raise exceptions.PermissionDenied(detail='Insufficient permissions or system does not exists.')
         # Check if the request has the required VMS roles
         if CdbInternalAuthentication.has_vms_roles(request, system_id, roles):
             return cloud_system

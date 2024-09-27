@@ -199,3 +199,14 @@ class TestSystemUser:
         assert response.data['vmsRoles'] == []
         assert response.data['type'] == None
         assert response.data['email'] == user_email
+
+    def test_disconnected(self):
+        self.client.force_authenticate(user=self.cp_admin.user)
+        self.group_sys.disconnect_system()
+        url_args = {
+            'system_id': str(self.group_sys.system_id),
+            'email': self.group_user.user.email
+        }
+        path = reverse('v2:system_user', kwargs=url_args)
+        response = self.client.get(path)
+        assert response.status_code == 403
