@@ -66,6 +66,11 @@ export class NxRegularServiceDetailsDialog extends ModalBase<DT['return']> {
                 currentPeriodChanges.push(formattedRecord);
             }
         });
+
+        currentPeriodChanges.sort((a, b) => {
+            return new Date(b.changed).getTime() - new Date(a.changed).getTime();
+        });
+
         return [...currentPeriodChanges, previousPeriod];
     });
     totals$$ = computed<RegularServiceDialogTotals>(() => {
