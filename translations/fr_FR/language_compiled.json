@@ -479,7 +479,7 @@
     "Description": "Description",
     "Description (optional)": "Description (facultatif)",
     "Desktop client connection required": "Connexion client de bureau requise",
-    "Destination folder is required": "Destination folder is required",
+    "Destination folder is required": "Le dossier de destination est requis",
     "Detach": "Détacher",
     "Detach from the System": "Détacher du système",
     "Detach server&nbsp;<strong>{ title }</strong>&nbsp;from current system?": "Détacher le serveur&nbsp;<strong>{ title }</strong>&nbsp;du système actuel ?",

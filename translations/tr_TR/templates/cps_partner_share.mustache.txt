@@ -2,4 +2,4 @@ Merhaba, {{message.userFullName}}
 
 {{message.sharer_name}} sizinle "{{message.partner_name}}" kanal partner erişimini paylaştı.
 
-View in %NX_CONNECT_NAME% Portal: %NX_CONNECT_URL%
+%NX_CONNECT_NAME% Portalında görüntüle: %NX_CONNECT_URL%
