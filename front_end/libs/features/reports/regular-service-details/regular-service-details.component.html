@@ -22,7 +22,7 @@
     <nx-pre-loader></nx-pre-loader>
 } @else {
     <div class="service-details-table-wrapper">
-        @if (formattedPartnerRecords$$().length || formattedOrgRecords$$().length) {
+        @if (!hasError()) {
             <div>
                 <nx-regular-service-table
                     [partnerRecords]="formattedPartnerRecords$$()"
