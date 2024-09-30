@@ -18,7 +18,7 @@
                     <div
                         #pathContainer
                         class="path"
-                        [ngClass]="{ 'full-width': currentTab$$() !== 'systems' }"
+                        [ngClass]="{ 'full-width': currentTab$$() !== 'systems' || isMobile }"
                     >
                         @if (routerState.partnerId()) {
                             <a
@@ -35,7 +35,7 @@
                             >
                         }
 
-                        @if (!routerState.partnerId() && !groupsStore.groupsPath$$().length) {
+                        @if (!routerState.partnerId() && groupsStore.groupsPath$$().length) {
                             <a
                                 [routerLink]="routerState.rootGroupLink$$()"
                                 queryParamsHandling="preserve"
@@ -47,21 +47,18 @@
 
                                 {{ currentOrganization$$()!.name }}</a
                             >
-                        } @else {
-                            @for (breadcrumb of path$$(); track breadcrumb.id) {
-                                <a
-                                    [ngStyle]="{ display: 'inline' }"
-                                    [routerLink]="
-                                        breadcrumb.id | mapWith: routerState.getGroupLink$$()
-                                    "
-                                    queryParamsHandling="preserve"
-                                >
-                                    {{ breadcrumb.name }}</a
-                                >
-                            }
+                        }
+                        @for (breadcrumb of path$$(); track breadcrumb.id) {
+                            <a
+                                [ngStyle]="{ display: 'inline' }"
+                                [routerLink]="breadcrumb.id | mapWith: routerState.getGroupLink$$()"
+                                queryParamsHandling="preserve"
+                            >
+                                {{ breadcrumb.name }}</a
+                            >
                         }
                     </div>
-                    @if (canManageSystems$$() && currentTab$$() === 'systems') {
+                    @if (!isMobile && canManageSystems$$() && currentTab$$() === 'systems') {
                         <button
                             (click)="openTutorial()"
                             class="tutorial-link btn btn-clear"

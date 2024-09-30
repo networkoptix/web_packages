@@ -42,26 +42,24 @@
                 Add User
             </button>
         }
-        <div class="filter">
-            <nx-search
-                [(ngModel)]="searchModel"
-                (ngModelChange)="setQuery($event)"
-                layout="search"
-                instant
-            ></nx-search>
+        <nx-search
+            [(ngModel)]="searchModel"
+            (ngModelChange)="setQuery($event)"
+            layout="search"
+            instant
+        ></nx-search>
 
-            <!--            <nx-filter-tags-->
-            <!--                [filters]="filters$$()"-->
-            <!--                (filterChange)="updateFilters($event)"-->
-            <!--            ></nx-filter-tags>-->
+        <!--            <nx-filter-tags-->
+        <!--                [filters]="filters$$()"-->
+        <!--                (filterChange)="updateFilters($event)"-->
+        <!--            ></nx-filter-tags>-->
 
-            <!--            <button-->
-            <!--                class="btn btn-default-clear"-->
-            <!--                (click)="filterRecords()"-->
-            <!--            >-->
-            <!--                <svg-icon [src]="icons.dir + 'filter.svg'"></svg-icon>-->
-            <!--            </button>-->
-        </div>
+        <!--            <button-->
+        <!--                class="btn btn-default-clear"-->
+        <!--                (click)="filterRecords()"-->
+        <!--            >-->
+        <!--                <svg-icon [src]="icons.dir + 'filter.svg'"></svg-icon>-->
+        <!--            </button>-->
     </div>
     <div
         #tableContainer
