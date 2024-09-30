@@ -1,6 +1,11 @@
 import uuid
 
+import pytest
+from dateutil.relativedelta import relativedelta
+from django.utils import timezone
+
 from partners.models import (
+    ChannelPartnerService,
     CloudSystemHistory,
     CloudSystemId,
     OrganizationRoles,
@@ -176,3 +181,89 @@ class TestCloudSystemId:
         assert system.services[str(cp_service_3.id)]['used'] == 0
         assert system.services[str(cp_service_3.id)]['quantity'] == 30
 
+
+class TestCloudSystemIdAllServices:
+    @pytest.fixture(autouse=True)
+    def setup(self,
+              default_channel_partner,
+              channel_partner_factory,
+              organization_factory,
+              system_factory,
+              cp_service_factory,
+              service_record_factory,
+              django_capture_on_commit_callbacks):
+        self.organization = organization_factory(channel_partner=default_channel_partner)
+        self.system = system_factory(organization=self.organization)
+        self.parent_local_recording = cp_service_factory(
+            channel_partner=default_channel_partner,
+            service_type=ChannelPartnerService.LOCAL_RECORDING,
+            sub_type=ChannelPartnerService.REGULAR,
+        )
+        self.creation_date = timezone.now() - relativedelta(months=2)
+        service_record_factory(
+            service=self.parent_local_recording,
+            cloud_system=self.system,
+            created_ts=self.creation_date
+        )
+        self.parent_demo_analytic = cp_service_factory(
+            channel_partner=default_channel_partner,
+            service_type=ChannelPartnerService.ANALYTICS,
+            sub_type=ChannelPartnerService.DEMO,
+            duration=10
+        )
+        service_record_factory(
+            service=self.parent_demo_analytic,
+            cloud_system=self.system,
+            created_ts=self.creation_date
+        )
+        self.parent_demo_expired = cp_service_factory(
+            channel_partner=default_channel_partner,
+            service_type=ChannelPartnerService.CLOUD_STORAGE,
+            sub_type=ChannelPartnerService.DEMO,
+            duration=1
+        )
+        service_record_factory(
+            service=self.parent_demo_expired,
+            cloud_system=self.system,
+            created_ts=self.creation_date
+        )
+        self.service_without_props = cp_service_factory(
+            channel_partner=default_channel_partner,
+            service_type=ChannelPartnerService.CLOUD_STORAGE,
+            sub_type=ChannelPartnerService.REGULAR
+        )
+
+    def test_count(self):
+        assert self.organization.all_services.count() == 4
+
+    def test_regular_service(self):
+        service = self.system.all_services.get(id=self.parent_local_recording.id)
+        assert service.id == self.parent_local_recording.id
+        assert service.type == ChannelPartnerService.LOCAL_RECORDING
+        assert service.sub_type == ChannelPartnerService.REGULAR
+        assert service.duration == 0
+        assert service.expiration_date is None
+
+    def test_demo_analytic_service(self):
+        service = self.system.all_services.get(id=self.parent_demo_analytic.id)
+        assert service.id == self.parent_demo_analytic.id
+        assert service.type == ChannelPartnerService.ANALYTICS
+        assert service.sub_type == ChannelPartnerService.DEMO
+        assert service.duration == 10
+        assert service.expiration_date == self.creation_date + relativedelta(months=10)
+
+    def test_demo_expired_service(self):
+        service = self.system.all_services.get(id=self.parent_demo_expired.id)
+        assert service.id == self.parent_demo_expired.id
+        assert service.type == ChannelPartnerService.CLOUD_STORAGE
+        assert service.sub_type == ChannelPartnerService.DEMO
+        assert service.duration == 1
+        assert service.expiration_date == self.creation_date + relativedelta(months=1)
+
+    def test_service_without_props(self):
+        service = self.system.all_services.get(id=self.service_without_props.id)
+        assert service.id == self.service_without_props.id
+        assert service.type == ChannelPartnerService.CLOUD_STORAGE
+        assert service.sub_type == ChannelPartnerService.REGULAR
+        assert service.duration == 0
+        assert service.expiration_date is None
