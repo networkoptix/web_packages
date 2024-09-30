@@ -3,7 +3,6 @@ import { Component, input } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { NxHintComponent } from '@components/hint/hint.component';
-import { NxQuantityChangeComponent } from '@components/quantity-change/quantity-change.component';
 import { NxBaseTableComponent } from '@components/table/table.component';
 import staticLang from '@language/language_i18n_static.json';
 
@@ -23,13 +22,7 @@ interface HEADER_ITEM {
     selector: 'nx-expiring-service-dialog-table',
     templateUrl: './expiring-service-dialog-table.component.html',
     styleUrls: ['./expiring-service-dialog-table.component.scss'],
-    imports: [
-        TranslateModule,
-        NxBaseTableComponent,
-        CommonModule,
-        NxHintComponent,
-        NxQuantityChangeComponent,
-    ],
+    imports: [TranslateModule, NxBaseTableComponent, CommonModule, NxHintComponent],
     standalone: true,
 })
 export class NxExpiringServiceDialogTable {

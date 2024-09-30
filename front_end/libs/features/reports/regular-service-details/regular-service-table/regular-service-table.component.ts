@@ -6,7 +6,6 @@ import { Observable } from 'rxjs';
 import { NxHintComponent } from '@components/hint/hint.component';
 import { NxBaseTableComponent } from '@components/table/table.component';
 import { NxDialogsService } from '@dialogs/dialogs.service';
-import { NxTooltipV2Directive } from '@directives/tooltip-v2/tooltip-v2.directive';
 import staticLang from '@language/language_i18n_static.json';
 import { NxGroupPathComponent } from '@pages/reports/group-path/group-path.component';
 import { HiddenNameLink } from '@pages/reports/hidden-name-link/hidden-name-link.types';
@@ -39,7 +38,6 @@ const apiPageSize = 1000;
         NxBaseTableComponent,
         CommonModule,
         NxHintComponent,
-        NxTooltipV2Directive,
         NxHiddenNameLinkComponent,
         NxGroupPathComponent,
     ],
