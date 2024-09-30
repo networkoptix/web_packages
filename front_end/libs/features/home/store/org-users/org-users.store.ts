@@ -444,15 +444,23 @@ export const OrgUsersStore = signalStore(
                                 group => !folders.includes(group.groupId),
                             );
 
-                            const patches = [...(folders ?? orgId), ''].map(groupId => {
-                                const users = store.usersCacheEntityMap()[groupId]?.users;
-                                const userIndex = users.findIndex(u => u.email === email);
-                                users.splice(userIndex, 1);
-                                return updateEntity(
-                                    { id: groupId, changes: { users } },
-                                    usersCacheEntity,
-                                );
-                            });
+                            const patches = [...(folders ?? orgId), ''].reduce(
+                                (updates, groupId) => {
+                                    const users = store.usersCacheEntityMap()[groupId]?.users;
+                                    if (users) {
+                                        const userIndex = users.findIndex(u => u.email === email);
+                                        users.splice(userIndex, 1);
+                                        updates.push(
+                                            updateEntity(
+                                                { id: groupId, changes: { users } },
+                                                usersCacheEntity,
+                                            ),
+                                        );
+                                    }
+                                    return updates;
+                                },
+                                [],
+                            );
                             patchState(store, ...patches);
                         });
                     },
