@@ -1753,23 +1753,9 @@
         "weakMessage": "Use numbers, upper and lower case letters and special characters to make your password stronger"
     },
     "placeholderV2Texts": {
-        "noInfo": {
-            "title": "No Information",
-            "message": "You have not yet added any information.",
-            "buttonText": "Add Information"
-        },
-        "noUsers": {
-            "title": "No Users",
-            "message": "You have not yet added any users",
-            "buttonText": "Add User"
-        },
         "noItems": {
             "title": "Folder is empty",
             "message": "You can move systems to this folder, | add new system | or | add new folder"
-        },
-        "nothingFound": {
-            "title": "Nothing found",
-            "message": "Try changing the search parameters"
         }
     },
     "placeholderTexts": {

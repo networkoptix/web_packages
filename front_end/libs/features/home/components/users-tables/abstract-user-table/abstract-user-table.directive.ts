@@ -5,7 +5,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject } from 'rxjs';
 
 import { NxCheckAllContainerDirective } from '@components/checkbox/checkbox-check-all-container.directive';
-import { PAGE_PLACEHOLDER } from '@components/placeholders/pageV2/page-placeholder.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import staticLang from '@language/language_i18n_static.json';
 import { GroupsStore } from '@pages/home/store/groups/groups.store';
@@ -28,7 +27,6 @@ export abstract class AbstractUserTableDirective {
     protected groupsStore = inject(GroupsStore);
     protected permissionStore = inject(PermissionsStore);
     protected routerState = inject(ChannelPartnersRouteState);
-    protected readonly PAGE_PLACEHOLDER = PAGE_PLACEHOLDER;
 
     icons = icons;
     LANG = staticLang;

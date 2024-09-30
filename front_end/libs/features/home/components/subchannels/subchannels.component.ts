@@ -16,9 +16,8 @@ import {
     selectCurrentPartnerId,
     selectCurrentSubChannelPartners,
 } from '@common/store/channel-partners/channel-partners.selectors';
-import { NxPagePlaceholderV2Component } from '@components/placeholders/pageV2/page-placeholder.component';
-import { PAGE_PLACEHOLDER } from '@components/placeholders/pageV2/page-placeholder.types';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
+import { NxPagePlaceholderNothingFoundComponent } from '@components/placeholdersV2/nothing-found/nothing-found-placeholder.component';
 import { NxSearchComponent } from '@components/search/search.component';
 import { NxTagComponent } from '@components/tag/tag.component';
 import { NxDialogsService } from '@dialogs/dialogs.service';
@@ -61,16 +60,15 @@ import { NxCardComponent } from '../card/card.component';
         NxAddSvgSrcDirective,
         NxCardComponent,
         NxTagComponent,
-        NxPagePlaceholderV2Component,
         NxIntersectionObserver,
         NxPreLoaderComponent,
+        NxPagePlaceholderNothingFoundComponent,
     ],
     hostDirectives: [NxThemeAttributeDirective],
 })
 export class NxSubchannelsComponent {
     permissionsStore = inject(PermissionsStore);
     icons = icons;
-    PAGE_PLACEHOLDER = PAGE_PLACEHOLDER;
     canCreatePartners$$ = this.permissionsStore.canCreateSubChannels$$;
     currentPartnerId$ = this.store.select<string>(selectCurrentPartnerId);
     currentPartnerId$$ = toSignal(this.currentPartnerId$);

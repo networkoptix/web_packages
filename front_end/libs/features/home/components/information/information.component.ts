@@ -27,7 +27,7 @@ import {
 import { NxFormFieldModule } from '@components/forms/forms.module';
 import { NxInputComponent } from '@components/forms/input/input.component';
 import { NxValidators } from '@components/forms/validators';
-import { NxPagePlaceholderGenericNewV2Component } from '@components/placeholdersV2/page/page-placeholder.component';
+import { NxPagePlaceholderGenericComponent } from '@components/placeholdersV2/generic-page-placeholder.component';
 import { createAsyncAction } from '@dialogs/async-action-button/create-async-action';
 import { NxThemeAttributeDirective } from '@directives/theme-attribute.directive';
 import LANG from '@language_static';
@@ -85,7 +85,7 @@ enum Steps {
 
         PipesModule,
         forwardRef(() => NxInformationStepperComponent),
-        NxPagePlaceholderGenericNewV2Component,
+        NxPagePlaceholderGenericComponent,
         NxInformationViewComponent,
         NxFormFieldModule,
         NxInputComponent,

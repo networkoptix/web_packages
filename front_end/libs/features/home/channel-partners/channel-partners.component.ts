@@ -38,11 +38,10 @@ import {
     selectCurrentParentPartnerForChild,
 } from '@common/store/channel-partners/channel-partners.selectors';
 import { NxAlertBlockComponent } from '@components/content-block/alert/block.component';
-import { NxPagePlaceholderV2Component } from '@components/placeholders/pageV2/page-placeholder.component';
-import { PAGE_PLACEHOLDER } from '@components/placeholders/pageV2/page-placeholder.types';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
-import { NxPagePlaceholderNoAccessComponent } from '@components/placeholdersV2/page/no-access/page-placeholder.component';
-import { NxPagePlaceholderGenericNewV2Component } from '@components/placeholdersV2/page/page-placeholder.component';
+import { NxPagePlaceholderGenericComponent } from '@components/placeholdersV2/generic-page-placeholder.component';
+import { NxPagePlaceholderNoAccessComponent } from '@components/placeholdersV2/no-access/no-access-page-placeholder.component';
+import { NxPagePlaceholderNothingFoundComponent } from '@components/placeholdersV2/nothing-found/nothing-found-placeholder.component';
 import { NxSearchComponent } from '@components/search/search.component';
 import { NxTabsComponent } from '@components/tabs/tabs.component';
 import { Tab } from '@components/tabs/tabs.types';
@@ -92,17 +91,16 @@ import { ChannelPartnersRouteState } from '../store/route-state/route-state.stor
         NxTagComponent,
         PipesModule,
         NxResizeObserver,
-        NxPagePlaceholderV2Component,
         NxPagePlaceholderNoAccessComponent,
-        NxPagePlaceholderGenericNewV2Component,
         NxAlertBlockComponent,
         NxIntersectionObserver,
+        NxPagePlaceholderGenericComponent,
+        NxPagePlaceholderNothingFoundComponent,
     ],
 })
 export class NxChannelPartnersComponent implements OnInit {
     icons = icons;
     LANG = staticLang;
-    PAGE_PLACEHOLDER = PAGE_PLACEHOLDER;
     ChannelPartnerRoleIds = ChannelPartnerRoleIds;
 
     permissionStore = inject(PermissionsStore);

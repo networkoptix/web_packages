@@ -32,11 +32,12 @@ import {
 import { NxAlertBlockComponent } from '@components/content-block/alert/block.component';
 import { NxHidableModule } from '@components/hidable/hidable.module';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
-import { NxPagePlaceholderGenericNewV2Component } from '@components/placeholdersV2/page/page-placeholder.component';
+import { NxPagePlaceholderGenericComponent } from '@components/placeholdersV2/generic-page-placeholder.component';
 import { NxRibbonStandaloneComponent } from '@components/ribbon/ribbon-standalone.component';
 import { NxTabsComponent } from '@components/tabs/tabs.component';
 import { Tab } from '@components/tabs/tabs.types';
 import { NxTagComponent } from '@components/tag/tag.component';
+import { NxTutorialDialogComponent } from '@dialogs/channel-partners/tutorial-dialog/tutorial-dialog.component';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import staticLang from '@language_static';
@@ -86,9 +87,10 @@ interface SidebarSettings {
         PipesModule,
         NxHidableModule,
         NxAlertBlockComponent,
-        NxPagePlaceholderGenericNewV2Component,
+        NxTutorialDialogComponent,
         NxRibbonStandaloneComponent,
         NxMenuProjectionDirective,
+        NxPagePlaceholderGenericComponent,
     ],
 })
 export class NxOrganizationsComponent implements OnInit, OnDestroy {

@@ -136,14 +136,11 @@
     } @else {
         <div class="nothing-found-placeholder">
             @if (searching()) {
-                <nx-page-placeholder-v2
-                    [type]="PAGE_PLACEHOLDER.NOTHING_FOUND"
-                ></nx-page-placeholder-v2>
+                <nx-nothing-found-placeholder></nx-nothing-found-placeholder>
             } @else {
-                <nx-page-placeholder-v2
-                    [type]="PAGE_PLACEHOLDER.NO_USERS"
+                <nx-page-placeholder-no-users
                     [clickFn]="newUserDialog"
-                ></nx-page-placeholder-v2>
+                ></nx-page-placeholder-no-users>
             }
         </div>
     }

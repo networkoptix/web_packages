@@ -17,10 +17,9 @@ import {
 } from '@common/store/channel-partners/channel-partners.selectors';
 import { ActionItems } from '@components/dropdowns/three-dot/three-dot.component.types';
 import { NxHidableModule } from '@components/hidable/hidable.module';
-import { NxPagePlaceholderV2Component } from '@components/placeholders/pageV2/page-placeholder.component';
-import { PAGE_PLACEHOLDER } from '@components/placeholders/pageV2/page-placeholder.types';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
-import { NxPagePlaceholderNoItemsComponent } from '@components/placeholdersV2/page/no-items/page-placeholder.component';
+import { NxPagePlaceholderNoItemsComponent } from '@components/placeholdersV2/no-items/no-items-page-placeholder.component';
+import { NxPagePlaceholderNothingFoundComponent } from '@components/placeholdersV2/nothing-found/nothing-found-placeholder.component';
 import { NxSearchComponent } from '@components/search/search.component';
 import { NxSearchHighlightComponent } from '@components/search-highlight/search-highlight.component';
 import { NxTagComponent } from '@components/tag/tag.component';
@@ -75,7 +74,7 @@ import { NxNoSystemsCardsComponent } from '../../components/no-systems/no-system
         NxSearchHighlightComponent,
         NxHidableModule,
         NxResizeObserver,
-        NxPagePlaceholderV2Component,
+        NxPagePlaceholderNothingFoundComponent,
     ],
     hostDirectives: [NxThemeAttributeDirective],
 })
@@ -86,7 +85,6 @@ export class NxOrganizationCardContainerComponent {
 
     LANG = staticLang;
     icons = icons;
-    PAGE_PLACEHOLDER = PAGE_PLACEHOLDER;
     searchConfig = searchConfig;
     @Input({ transform: booleanAttribute }) inRoot: boolean;
 

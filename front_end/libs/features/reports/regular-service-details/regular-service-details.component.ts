@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
-import { NxPagePlaceholderNoReportsComponent } from '@components/placeholdersV2/page/no-reports/no-reports-page-placeholder.component';
+import { NxPagePlaceholderNoReportsComponent } from '@components/placeholdersV2/no-reports/no-reports-page-placeholder.component';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { EntityType } from '@libs/features/reports/reports.types';
 import { icons } from '@static-variables';

@@ -4,11 +4,12 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { NgxTranslateCutModule } from 'ngx-translate-cut';
 
-import { NxPagePlaceholderGenericNewV2Component } from '@components/placeholdersV2/page/page-placeholder.component';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import staticLang from '@language_static';
 import { PipesModule } from '@pipes/pipes.module';
 import { icons } from '@static-variables';
+
+import { NxPagePlaceholderGenericComponent } from '../generic-page-placeholder.component';
 
 /* Usage
 
@@ -16,8 +17,8 @@ import { icons } from '@static-variables';
 
 @Component({
     selector: 'nx-page-placeholder-no-items',
-    templateUrl: 'page-placeholder.component.html',
-    styleUrls: ['page-placeholder.component.scss'],
+    templateUrl: 'no-items-page-placeholder.component.html',
+    styleUrls: ['no-items-page-placeholder.component.scss'],
     standalone: true,
     imports: [
         CommonModule,
@@ -26,7 +27,7 @@ import { icons } from '@static-variables';
         PipesModule,
         NgxTranslateCutModule,
         NxAddSvgSrcDirective,
-        NxPagePlaceholderGenericNewV2Component,
+        NxPagePlaceholderGenericComponent,
     ],
 })
 export class NxPagePlaceholderNoItemsComponent {

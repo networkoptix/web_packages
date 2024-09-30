@@ -11,9 +11,7 @@
     >
         @if (!totalResults$$()) {
             <div class="no-search-results">
-                <nx-page-placeholder-v2
-                    [type]="PAGE_PLACEHOLDER.NOTHING_FOUND"
-                ></nx-page-placeholder-v2>
+                <nx-nothing-found-placeholder></nx-nothing-found-placeholder>
             </div>
         } @else {
             @for (

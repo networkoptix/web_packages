@@ -3,19 +3,16 @@ import { Component, Input } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { NxPagePlaceholderGenericNewV2Component } from '@components/placeholdersV2/page/page-placeholder.component';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
-import staticLang from '@language_static';
 import { PipesModule } from '@pipes/pipes.module';
 import { icons } from '@static-variables';
 
-/* Usage
+import { NxPagePlaceholderGenericComponent } from '../generic-page-placeholder.component';
 
- */
-
+/** @deprecated */
 @Component({
-    selector: 'nx-page-placeholder-no-users',
-    templateUrl: 'page-placeholder.component.html',
+    selector: 'nx-page-placeholder-no-info',
+    templateUrl: 'no-info-page-placeholder.component.html',
     standalone: true,
     imports: [
         CommonModule,
@@ -23,14 +20,11 @@ import { icons } from '@static-variables';
         AngularSvgIconModule,
         PipesModule,
         NxAddSvgSrcDirective,
-        NxPagePlaceholderGenericNewV2Component,
+        NxPagePlaceholderGenericComponent,
     ],
 })
-export class NxPagePlaceholderNoUsersComponent {
+export class NxPagePlaceholderNoInfoComponent {
     @Input() clickFn: () => void;
-
-    LANG = staticLang;
-
     icons = icons;
 
     clickHandler(event: Event): void {

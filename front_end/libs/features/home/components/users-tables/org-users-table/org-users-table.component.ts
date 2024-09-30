@@ -6,6 +6,8 @@ import { NgxTranslateCutModule } from 'ngx-translate-cut';
 import * as cpActions from '@common/store/channel-partners/channel-partners.actions';
 import { NxCheckAllContainerDirective } from '@components/checkbox/checkbox-check-all-container.directive';
 import { NxCheckAllDirective } from '@components/checkbox/checkbox-check-all.directive';
+import { NxPagePlaceholderNoUsersComponent } from '@components/placeholdersV2/no-users/no-users-page-placeholder.component';
+import { NxPagePlaceholderNothingFoundComponent } from '@components/placeholdersV2/nothing-found/nothing-found-placeholder.component';
 import { NxSearchHighlightComponent } from '@components/search-highlight/search-highlight.component';
 import { NxSelectV2Module } from '@components/select-v2/select-v2.module';
 import { DIALOG_SIZE } from '@dialogs/dialog-config-v2';
@@ -31,6 +33,8 @@ import { AbstractUserTableDirective } from '../abstract-user-table/abstract-user
         NxSearchHighlightComponent,
         NxTooltipV2Directive,
         NgxTranslateCutModule,
+        NxPagePlaceholderNothingFoundComponent,
+        NxPagePlaceholderNoUsersComponent,
     ],
 })
 export class NxOrgUsersTableComponent extends AbstractUserTableDirective {

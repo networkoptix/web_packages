@@ -5,7 +5,7 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { Observable } from 'rxjs';
 
 import { NxHintComponent } from '@components/hint/hint.component';
-import { NxPagePlaceholderNoReportsComponent } from '@components/placeholdersV2/page/no-reports/no-reports-page-placeholder.component';
+import { NxPagePlaceholderNoReportsComponent } from '@components/placeholdersV2/no-reports/no-reports-page-placeholder.component';
 import { NxBaseTableComponent } from '@components/table/table.component';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import staticLang from '@language/language_i18n_static.json';

@@ -5,7 +5,8 @@ import { escape } from 'lodash-es';
 
 import { NxCheckAllContainerDirective } from '@components/checkbox/checkbox-check-all-container.directive';
 import { NxCheckAllDirective } from '@components/checkbox/checkbox-check-all.directive';
-import { NxPagePlaceholderV2Component } from '@components/placeholders/pageV2/page-placeholder.component';
+import { NxPagePlaceholderNoUsersComponent } from '@components/placeholdersV2/no-users/no-users-page-placeholder.component';
+import { NxPagePlaceholderNothingFoundComponent } from '@components/placeholdersV2/nothing-found/nothing-found-placeholder.component';
 import { NxSelectV2Module } from '@components/select-v2/select-v2.module';
 import { NxTooltipV2Directive } from '@directives/tooltip-v2/tooltip-v2.directive';
 import { UserRecord } from '@pages/home/components/users/channel-partner-users/channel-partner-users.types';
@@ -17,7 +18,6 @@ import { paramModel } from '@utils/signals';
 
 import { StranglerImports } from '../abstract-user-table/abstract-user-table-imports';
 import { AbstractUserTableDirective } from '../abstract-user-table/abstract-user-table.directive';
-
 @Component({
     selector: 'nx-users-access-table',
     templateUrl: './access-table.component.html',
@@ -28,11 +28,12 @@ import { AbstractUserTableDirective } from '../abstract-user-table/abstract-user
     standalone: true,
     imports: [
         StranglerImports,
-        NxPagePlaceholderV2Component,
         NxCheckAllContainerDirective,
         NxCheckAllDirective,
         NxSelectV2Module,
         NxTooltipV2Directive,
+        NxPagePlaceholderNothingFoundComponent,
+        NxPagePlaceholderNoUsersComponent,
     ],
 })
 export class NxUsersAccessTableComponent extends AbstractUserTableDirective {
