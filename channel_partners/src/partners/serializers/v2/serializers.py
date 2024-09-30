@@ -93,6 +93,7 @@ from tools.helpers import (
     forward_cdb_resp,
     get_license_server_client,
     get_path_from_parent,
+    get_today,
 )
 from tools.serializers import (
     AccessMatrixMixin,
@@ -1290,6 +1291,23 @@ class ServiceSerializer(serializers.ModelSerializer):
                   'createdByChannelPartner', 'parameters', 'created',
                   'parentServiceId', 'duration', 'enabled']
 
+
+class ServiceExtendedSerializer(ServiceSerializer):
+    expirationDate = serializers.DateTimeField(source='expiration_date', read_only=True)
+    hidden = serializers.SerializerMethodField()
+
+    class Meta:
+        model = ChannelPartnerService
+        fields = ['id', 'type', 'subType', 'state', 'displayName', 'description',
+                  'createdByChannelPartner', 'parameters', 'created',
+                  'parentServiceId', 'duration', 'enabled', 'expirationDate', 'hidden']
+
+    def get_hidden(self, obj: ChannelPartnerService) -> bool:
+        if not hasattr(obj, 'expiration_date'):
+            # Avoid crashing if the object does not have the expiration_date attribute
+            logger.error("improper_usage", reason="Object must have expiration_date annotated",id=obj.id)
+            return False
+        return obj.expiration_date.date() < get_today() if obj.expiration_date else False
 
 class AvailableChannelPartnerServiceSerializer(serializers.ModelSerializer):
     service = ServiceSerializer(read_only=True)

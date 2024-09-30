@@ -731,6 +731,13 @@ class CloudSystemId(
             for service_id, values in self.services.items()
         ]
 
+    @property
+    def all_services(self) -> QuerySet['ChannelPartnerService']:
+        queryset = ChannelPartnerService.objects.filter(
+            Q(system_properties__cloud_system=self) | Q(system_properties__isnull=True),
+            created_by_channel_partner_id=self.organization.channel_partner_id
+        ).annotate(expiration_date=F('system_properties__expiration_date'))
+        return queryset
 
     @property
     def services(self) -> Dict[str, ServiceUsageDict]:
@@ -2312,9 +2319,14 @@ class ChannelPartnerServiceRecord(models.Model):
     record_type = models.IntegerField(choices=ServiceRecordTypes.CHOICES, default=ServiceRecordTypes.REGULAR)
 
     def save(self, *args, **kwargs):
-        if self._state.adding and not self.organization:
+        new = self._state.adding
+        if new and not self.organization:
             self.organization = self.cloud_system.organization
         super().save(*args, **kwargs)
+
+        # setting expiration date for new records
+        if new:
+            ServiceToSystemProperties.add_new_record(self)
 
     @property
     def automated(self) -> bool:
@@ -3127,3 +3139,53 @@ class ChannelPartnerPriceChange(models.Model):
     service_properties = models.ForeignKey(ServiceToSubChannelProperties, on_delete=models.PROTECT)
     price = models.DecimalField(null=True, max_digits=10, decimal_places=3)
     created_ts = models.DateTimeField(null=False, default=timezone.now)
+
+
+class ServiceToSystemProperties(models.Model):
+    service = models.ForeignKey(ChannelPartnerService, on_delete=models.PROTECT, related_name='system_properties')
+    cloud_system = models.ForeignKey(CloudSystemId, on_delete=models.PROTECT, related_name='service_properties')
+    expiration_date = models.DateTimeField(null=True)
+
+    class Meta:
+        constraints = [
+            models.constraints.UniqueConstraint(fields=['service', 'cloud_system'],
+                                                name='unique_service_system_properties')
+        ]
+
+    @classmethod
+    def add_new_record(cls, service_record: ChannelPartnerServiceRecord):
+        if (
+                service_record.record_type in (ServiceRecordTypes.REGULAR, ServiceRecordTypes.LICENSE_MIGRATION)
+                and service_record.service.sub_type != ChannelPartnerService.REGULAR
+                and service_record.service.duration
+        ):
+            ServiceToSystemProperties._set_service_expiration_date(
+                service_id=service_record.service_id,
+                cloud_system_id=service_record.cloud_system_id,
+                expiration_date=service_record.created_ts + relativedelta(months=service_record.service.duration)
+            )
+
+    @classmethod
+    def _set_service_expiration_date(
+            cls,
+            service_id: uuid.UUID,
+            cloud_system_id: uuid.UUID,
+            expiration_date: datetime,
+    ):
+        """
+        Set service expiration date.
+        Note! Do not use this method directly, use it only in the context of ServiceRecord save method.
+        Args:
+            service_id: uuid.UUID
+            cloud_system_id: uuid.UUID
+            expiration_date: datetime
+        """
+        if props := cls.objects.filter(service_id=service_id, cloud_system_id=cloud_system_id).first():
+            if props.expiration_date:
+                # date is already set
+                return
+        else:
+            props = cls(service_id=service_id, cloud_system_id=cloud_system_id)
+        props.expiration_date = expiration_date
+        props.save()
+

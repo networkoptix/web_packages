@@ -121,6 +121,11 @@ class TestCloudSystemViewSetRetrieve:
         caches['local'].clear()
 
     def test_returned_services_count(self, cloud_test_host, mock_auth_with_user):
+        serializer_fields = {
+            'id', 'type', 'subType', 'state', 'displayName', 'description',
+            'createdByChannelPartner', 'parameters', 'created',
+            'parentServiceId', 'duration', 'enabled', 'expirationDate', 'hidden'
+        }
 
         # Authenticating the user
         mock_auth_with_user(self.sub_cp_user.user)
@@ -137,6 +142,8 @@ class TestCloudSystemViewSetRetrieve:
 
         assert response.status_code == 200
         assert len(response.data) == 1
+        assert set(response.data[0].keys()) == serializer_fields
+
 
     def test_token_200_group_user(self, mock_cdb_token_introspect):
         mock_cdb_token_introspect(user=self.group_admin.user, system=self.group_system, system_role=None)
