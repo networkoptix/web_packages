@@ -114,7 +114,7 @@ nx-hidable {
         @include typography.light14light16;
         color: var(--channel-partner-back-button-text-color) !important;
         position: relative;
-        margin-right: 1em;
+        margin-right: 1.5em;
         align-items: center;
         display: inline-flex;
         text-decoration: none;
@@ -126,10 +126,9 @@ nx-hidable {
             &::after {
                 pointer-events: none;
                 position: absolute;
-                left: -1em;
+                left: -.75em;
                 content: '/';
             }
-            margin-left: 1em;
         }
         &:hover {
             color: var(--channel-partner-back-button-hover) !important;

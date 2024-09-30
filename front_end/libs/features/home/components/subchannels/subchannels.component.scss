@@ -23,7 +23,11 @@
 }
 
 .actions {
-    padding: 0 24px 1rem 4px; // accommodate for :focus outline - and align
+    @media screen and (max-width: 520px) {
+        nx-search {
+            width: 50% !important;
+        }
+    }
 
     &.search {
         justify-content: end;

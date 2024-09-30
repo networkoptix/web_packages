@@ -18,6 +18,7 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
+import { DeviceDetectorService } from 'ngx-device-detector';
 import { distinctUntilChanged, firstValueFrom, map } from 'rxjs';
 import { delay, switchMap } from 'rxjs/operators';
 
@@ -98,6 +99,7 @@ export class NxOrganizationsComponent implements OnInit, OnDestroy {
     icons = icons;
     State = State;
     useNewCloud = useNewCloud();
+    deviceService = inject(DeviceDetectorService);
     permissionsStore = inject(PermissionsStore);
     parentPartner$$ = this.store.selectSignal(selectCurrentParentPartnerForChild);
     groupsStore = inject(GroupsStore);
@@ -105,6 +107,7 @@ export class NxOrganizationsComponent implements OnInit, OnDestroy {
     currentTab$$ = channelPartnersLastPath();
     breadcrumbIconStyle = { 'width.px': '20', 'height.px': '20', 'margin-right.px': '4' } as const;
     isValidOrg = false;
+    isMobile: boolean = false;
 
     hasSupportInfo$$ = computed(() => {
         return Object.values(this.parentPartner$$()?.supportInformation || []).some(
@@ -122,12 +125,31 @@ export class NxOrganizationsComponent implements OnInit, OnDestroy {
             name: this.currentOrganization$$()?.name,
             id: this.routerState.rootGroupLink$$(),
         };
-        const width = this.windowWidth$$();
-        const mobileWidth = 520;
-        if (width < mobileWidth) {
+        const inPartner = !!this.routerState.partnerId();
+        const directParent = path.at(-2);
+        if (this.isMobile) {
+            if (inPartner) {
+                if (path.length === 2) {
+                    return [{ name: '...', id: this.routerState.rootGroupLink$$() }, directParent];
+                } else if (path.length > 2) {
+                    return [{ name: '...', id: path.at(-3)!.id }, directParent];
+                } else {
+                    return [orgBreadcrumb];
+                }
+            }
+            if (path.length > 2) {
+                return [{ name: '...', id: path.at(-3)!.id }, directParent];
+            }
+            if (!inPartner && !directParent) {
+                return [];
+            }
             return [path.at(-2) ?? orgBreadcrumb];
         }
-        return [orgBreadcrumb, ...path];
+        const slicedPath = path.slice(0, -1);
+        if (inPartner) {
+            return [orgBreadcrumb, ...slicedPath];
+        }
+        return slicedPath;
     });
 
     @HostListener('window:resize', ['$event'])
@@ -252,6 +274,7 @@ export class NxOrganizationsComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
+        this.isMobile = this.deviceService.isMobile() || this.deviceService.isTablet();
         if (!this.routerState.state$$().partnerId) {
             this.store.dispatch(CPActions.setCurrentPartnerId({ currentPartnerId: null }));
         }

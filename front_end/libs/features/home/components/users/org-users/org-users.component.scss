@@ -1,7 +1,3 @@
-.org-users-body {
-  overflow-y: auto;
-}
-
 .actions {
     .selected-users {
         display: flex;
@@ -17,36 +13,14 @@
                 }
             }
         }
-  
-        button {
-            color: var(--svg-std-icon-fill);
+    }
 
-            .icon-with-fill {
-                fill: var(--svg-std-icon-fill);
-            }
+    button {
+        color: var(--svg-std-icon-fill);
+
+        .icon-with-fill {
+            fill: var(--svg-std-icon-fill);
         }
     }
-    .filter {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        margin-left: auto;
-        gap: 4px;
-
-        .text {
-            svg {
-                .st0 {
-                    stroke: var(--btn-close-bg);
-                }
-            }
-        }
-
-        button {
-            color: var(--svg-std-icon-fill);
-
-            .icon-with-fill {
-                fill: var(--svg-std-icon-fill);
-            }
-        }
-    }
+    
 }

@@ -131,6 +131,12 @@ nx-search {
     justify-content: space-between;
     padding-bottom: 16px;
 
+    @media screen and (max-width: 520px) {
+        nx-search {
+            width: 55%;
+        }
+    }
+
     .input {
         display: flex;
         align-items: center;
