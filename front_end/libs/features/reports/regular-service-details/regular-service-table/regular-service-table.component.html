@@ -16,7 +16,7 @@
                 [attr.id]="head.name"
                 [style.justify-content]="head.align || 'flex-end'"
             >
-                <span>{{ head.value }}</span>
+                <span>{{ head.value | translate }}</span>
                 @if (head.tooltip) {
                     <span class="hint-icon">
                         <nx-hint [tooltipText]="head.tooltip | translate"></nx-hint
