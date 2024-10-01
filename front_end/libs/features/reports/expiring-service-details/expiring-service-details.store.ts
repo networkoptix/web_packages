@@ -51,8 +51,11 @@ const initialState: ExpiringServiceDetailsState = {
 };
 
 function formatDate(date: string, dateTimeFormat: NxDateTimeFormatService): string {
-    const [year, month, day] = date.split('-').map(d => Number(d));
-    return dateTimeFormat.mediumDateString(new Date(year, month - 1, day));
+    if (date) {
+        const [year, month, day] = date.split('-').map(d => Number(d));
+        return dateTimeFormat.mediumDateString(new Date(year, month - 1, day));
+    }
+    return '';
 }
 
 function formatExpirations(expirations: string[], dateTimeFormat: NxDateTimeFormatService): string {

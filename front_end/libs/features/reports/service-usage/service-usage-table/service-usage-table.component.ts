@@ -66,7 +66,7 @@ export class NxServiceUsageTableComponent {
     startTs = input<string>('');
 
     selectService(serviceId: string, serviceType: ServiceType): void {
-        const isExpiringService = [ServiceType.demo, ServiceType.trial].includes(serviceType);
+        const isExpiringService = [ServiceType.demo, ServiceType.credit].includes(serviceType);
         const serviceDetailsSegment = isExpiringService
             ? 'expiring-service-details'
             : 'regular-service-details';
