@@ -530,7 +530,7 @@ html[data-theme="light"], .theme-override[data-theme="light"] {
     --table-alt-row-bg : var(--additional_light1, #{$additional_light1});
     --table-row-hover-bg : rgba(var(--brand-core--rgb), .1);
     --table-row-selected-bg : var(--light16, #{$light16});
-    --table-row-selected-color : var(--light1, #{$light1});
+    --table-row-selected-color : var(--dark1, #{$dark1});
 
     --dynamic-table-row-hover-bg : var(--light16) !important;
 
