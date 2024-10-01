@@ -192,9 +192,7 @@ export class NxChannelPartnersUsersTableComponent extends AbstractUserTableDirec
                             .singleMessage,
                         {
                             email: user.email,
-                            permission:
-                                this.LANG.channelPartners.usersTable.accessInfo[user.rolesIds[0]]
-                                    ?.name || user.roles[0],
+                            permission: this.getDisplayRole(user),
                         },
                     ),
                     title: this.LANG.channelPartners.usersTable.deleteDialog.delete,
@@ -238,6 +236,7 @@ export class NxChannelPartnersUsersTableComponent extends AbstractUserTableDirec
             return;
         }
         const selectedUsers = this.selectedCount$$();
+        const selectedUser = this.selectedUsers$$()[0];
         const message =
             selectedUsers > 1
                 ? this.translateService.instant(
@@ -248,8 +247,8 @@ export class NxChannelPartnersUsersTableComponent extends AbstractUserTableDirec
                       this.LANG.channelPartners.usersTable.deleteDialog.channelPartner
                           .singleMessage,
                       {
-                          email: this.selectedUsers$$()[0].email,
-                          permission: this.selectedUsers$$()[0].roles[0],
+                          email: selectedUser.email,
+                          permission: this.getDisplayRole(selectedUser),
                       },
                   );
         this.dialogService
