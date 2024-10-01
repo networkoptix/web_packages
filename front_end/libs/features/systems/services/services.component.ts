@@ -116,7 +116,10 @@ export class NxServicesComponent {
             .pipe(
                 tap(([report, services]) => {
                     this.partnerId = report.channelPartner.id;
-                    this.data.set({ services, quantities: report.services });
+                    this.data.set({
+                        services: services.filter(service => !service.hidden),
+                        quantities: report.services,
+                    });
                 }),
                 switchMap(([report]) =>
                     channelPartnersApi.getChannelPartner(report.channelPartner.id),
@@ -153,7 +156,10 @@ export class NxServicesComponent {
             .then(res => {
                 if (res) {
                     const [services, quantities, monthlyServiceCap] = res;
-                    this.data.set({ services, quantities });
+                    this.data.set({
+                        quantities,
+                        services: services.filter(service => !service.hidden),
+                    });
                     this.monthlyServiceCap = monthlyServiceCap;
                 }
                 this.selectedRow = null;

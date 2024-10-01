@@ -269,6 +269,7 @@ export interface SystemService {
     createdByChannelPartner: string;
     parameters: Record<string, string | number>;
     created: string;
+    hidden: boolean;
 }
 /* Groups */
 /** `/organizations/{orgId}/groups_structure/` */

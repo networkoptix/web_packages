@@ -136,18 +136,6 @@ const lazyRoutes: Routes = [
                         },
                     },
                     {
-                        path: 'services-placeholder',
-                        loadComponent: () =>
-                            import('@pages/systems/services-placeholder/services.component').then(
-                                c => c.NxServicesPlaceholderComponent,
-                            ),
-                        canMatch: [FeatureGuardMatch],
-                        title: SystemTitleResolver,
-                        data: {
-                            flag: FeatureFlagStrings.channelPartnersChangeServicesUI,
-                        },
-                    },
-                    {
                         path: 'health',
                         loadChildren: () =>
                             import('@pages/health/health.module').then(m => m.NxHealthModule),
