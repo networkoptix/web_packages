@@ -1,5 +1,5 @@
 Hei, {{message.userFullName}}
 
-{{message.sharer_name}} har delt tilgang til kanalpartner "{{message.partner_name}}" med deg. For å se og administrere den, opprett en konto på %NX_CONNECT_NAME% ved å bruke din nåværende e-postadresse og følg ytterligere instruksjoner.
+{{message.sharer_name}} har delt tilgang til kanalpartner "{{message.partner_name}}" med deg. For å se og administrere den, opprett en konto på %CLOUD_NAME% ved å bruke din nåværende e-postadresse og følg ytterligere instruksjoner.
 
-Opprett konto: %NX_CONNECT_URL%/authorize/register/
+Opprett konto: {{ config.portal_url }}/authorize/register/

@@ -1,5 +1,5 @@
 Witaj {{message.userFullName}}
 
-{{message.sharer_name}} udostępnił Ci dostęp do kanału partnera"{{message.partner_name}}". To view and manage it, please create account on %NX_CONNECT_NAME% using your current email address and follow further instructions.
+{{message.sharer_name}} udostępnił Ci dostęp do kanału partnera"{{message.partner_name}}". To view and manage it, please create account on %CLOUD_NAME% using your current email address and follow further instructions.
 
-Create Account: %NX_CONNECT_URL%/authorize/register/
+Create Account: {{ config.portal_url }}/authorize/register/

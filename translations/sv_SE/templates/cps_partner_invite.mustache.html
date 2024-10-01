@@ -1,7 +1,7 @@
 <h1>Hej, {{message.userFullName}}</h1>
 
 <p>
-    {{message.sharer_name}} har delat åtkomst till kanalpartner "{{message.partner_name}}" med dig. För att se och hantera det, skapa ett konto på %NX_CONNECT_NAME% med din nuvarande e-postadress och följ ytterligare instruktioner.
+    {{message.sharer_name}} har delat åtkomst till kanalpartner "{{message.partner_name}}" med dig. För att se och hantera det, skapa ett konto på %CLOUD_NAME% med din nuvarande e-postadress och följ ytterligare instruktioner.
 </p>
 
-<a class="btn" href="%NX_CONNECT_URL%/authorize/register/">Skapa konto</a>
+<a class="btn" href="{{ config.portal_url }}/authorize/register/">Skapa konto</a>

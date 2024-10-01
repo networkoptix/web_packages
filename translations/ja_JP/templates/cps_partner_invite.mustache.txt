@@ -1,5 +1,5 @@
 {{message.userFullName}} さん、こんにちは。
 
-{{message.sharer_name}} が、チャネルパートナー "{{message.partner_name}}" へのアクセスを共有しました。 表示および管理を行うには、このメールアドレスを使用して %NX_CONNECT_NAME% にアカウントを作成し、続く指示に従ってください。
+{{message.sharer_name}} が、チャネルパートナー "{{message.partner_name}}" へのアクセスを共有しました。 表示および管理を行うには、このメールアドレスを使用して %CLOUD_NAME% にアカウントを作成し、続く指示に従ってください。
 
-アカウントの作成: %NX_CONNECT_URL%/authorize/register/
+アカウント作成: {{ config.portal_url }}/authorize/register/

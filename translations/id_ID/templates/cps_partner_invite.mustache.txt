@@ -1,5 +1,5 @@
 Halo, {{message.userFullName}}
 
-{{message.sharer_name}} telah berbagi akses ke channel partner "{{message.partner_name}}" dengan Anda. Untuk melihat dan mengelolanya, silakan buat akun di %NX_CONNECT_NAME% menggunakan alamat email Anda saat ini dan ikuti petunjuk selanjutnya.
+{{message.sharer_name}} telah berbagi akses ke channel partner "{{message.partner_name}}" dengan Anda. Untuk melihat dan mengelolanya, silakan buat akun di %CLOUD_NAME% menggunakan alamat email Anda saat ini dan ikuti instruksi selanjutnya.
 
-Buat Akun: %NX_CONNECT_URL%/authorize/register/
+Buat Akun: {{ config.portal_url }}/otorisasi/daftar/

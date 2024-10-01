@@ -1,7 +1,7 @@
 <h1>Merhaba, {{message.userFullName}}</h1>
 
 <p>
-    {{message.sharer_name}} sizinle "{{message.partner_name}}" partnerine erişimi paylaştı. Görüntülemek ve yönetmek için lütfen mevcut e-posta adresinizi kullanarak %NX_CONNECT_NAME% adresinde hesap oluşturun ve talimatları izleyin.
+    {{message.sharer_name}} sizinle "{{message.partner_name}}" partnerine erişimi paylaştı. Görüntülemek ve yönetmek için lütfen mevcut e-posta adresinizi kullanarak %CLOUD_NAME% üzerinde hesap oluşturun ve diğer talimatları izleyin.
 </p>
 
-<a class="btn" href="%NX_CONNECT_URL%/authorize/register/">Hesap Oluştur</a>
+<a class="btn" href="{{ config.portal_url }}/authorize/register/">Hesap Oluştur</a>
