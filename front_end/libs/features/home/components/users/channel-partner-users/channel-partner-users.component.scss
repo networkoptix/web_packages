@@ -17,17 +17,6 @@
     }
 }
 
-.actions {
-    button {
-        background: none;
-        border: 1px var(--input-border-color) solid;
-
-        .icon-with-stroke {
-            stroke: var(--svg-table-button);
-        }
-    }
-}
-
 .selected-users {
     display: flex;
     align-items: center;

@@ -494,7 +494,7 @@ html[data-theme="light-gray"], .theme-override[data-theme="light-gray"] {
     --table-alt-row-bg: #{$additional_gray_light1};
     --table-row-hover-bg: rgba(var(--brand-core--rgb), .1);
     --table-row-selected-bg: #{$light_gray_16};
-    --table-row-selected-color: #{$light_gray_1};
+    --table-row-selected-color: #{$dark_gray_1};
 
     --promo-tile-bg: #{$light_gray_3};
     --promo-tile-h4-color: #{$dark_gray_9};
