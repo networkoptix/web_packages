@@ -375,7 +375,7 @@ export enum EntityType {
 
 export enum ServiceType {
     regular = 'regular',
-    trial = 'trial',
+    credit = 'credit',
     demo = 'demo',
 }
 
