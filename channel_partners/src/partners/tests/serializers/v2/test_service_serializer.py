@@ -50,6 +50,27 @@ class TestServiceSerializer:
         assert serializer.data['subType'] == 'demo'
         assert serializer.data['duration'] == 10
 
+    def test_too_many_params(self):
+        service = ChannelPartnerService.objects.get(parent_service=self.parent_local_recording)
+        data = {
+            "id": service.id,
+            "createdByChannelPartner": self.cp.id,
+            "parentServiceId": self.parent_local_recording.id,
+            "type": "local_recording",
+            "subType": "regular",
+            "duration": 0,
+            "state": "active",
+            "displayName": "Test Service",
+            "parameters": {
+                "key": 'value1'*3000,
+            }
+        }
+
+        serializer = ServiceSerializer(data=data)
+        assert serializer.is_valid() == False
+        assert serializer.errors['parameters'][0] == 'JSON size exceeds the maximum allowed size of 3000 bytes.'
+
+
 
 
 class TestServiceExtendedSerializer:

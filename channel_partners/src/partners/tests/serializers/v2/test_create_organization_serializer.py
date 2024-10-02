@@ -46,6 +46,17 @@ class TestCreateOrganizationSerializer:
         self.notification_mock = mocker.patch(
             "partners.tasks.notification.added_organization_role_task.apply_async")
 
+    def test_attributes_too_long(self):
+        data = {
+            **self.valid,
+            "attributes": {
+                "additionalProp1": "a" * 3000,
+            }
+        }
+        serializer = CreateOrganizationSerializer(data=data, context=self.context)
+        assert serializer.is_valid() is False
+        assert serializer.errors['attributes'][0] == 'JSON size exceeds the maximum allowed size of 3000 bytes.'
+
     def test_valid(self):
         serializer = CreateOrganizationSerializer(data=self.valid, context=self.context)
         assert serializer.is_valid()
