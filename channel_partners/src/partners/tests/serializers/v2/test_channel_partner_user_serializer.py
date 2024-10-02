@@ -156,6 +156,66 @@ class TestChannelPartnerUserSerializer:
         }, "Attributes should be updated correctly"
         self.mock_notification.assert_called_once()
 
+    def test_create_attribute_too_long(self):
+
+        relation = create_relation(
+            self.user.email,
+            'New Title',
+            self.cp_admin_role,
+            {'key1': 'value1'},
+            self.context
+        )
+
+        data = {
+            'email': self.user.email,
+            'title': 'New Title',
+            "roleId": self.cp_admin_role,
+            'attributes': {'key1': 'a' * 3000}
+        }
+
+        serializer = ChannelPartnerUserSerializer(
+            data=data,
+            context=self.context)
+
+        assert serializer.is_valid() is False
+        assert serializer.errors['attributes'][0] == 'JSON size exceeds the maximum allowed size of 3000 bytes.'
+
+    def test_update_attribute_too_long(self):
+        relation = create_relation(
+            self.user.email,
+            'New Title',
+            self.cp_admin_role,
+            {'key1': 'value1'},
+            self.context
+        )
+
+        data = {
+            'email': self.user.email,
+            'title': 'New Title',
+            "roleId": self.cp_admin_role,
+            'attributes': {'key1': 'value1'}
+        }
+
+        serializer = ChannelPartnerUserSerializer(
+            data=data,
+            context=self.context)
+
+        assert serializer.is_valid() is True
+        serializer.save()
+
+        for iteration in range(1, 147):
+            data['attributes'][f'key{iteration}'] = f'value{iteration}'
+        serializer = ChannelPartnerUserSerializer(data=data, context=self.context)
+        serializer.is_valid()
+        serializer.save()
+
+
+        data['attributes'][f'key148'] = 'value148'
+        serializer = ChannelPartnerUserSerializer(data=data, context=self.context)
+        serializer.is_valid()
+        assert serializer.is_valid() is False
+        assert serializer.errors['attributes'][0] == 'JSON size exceeds the maximum allowed size of 3000 bytes.'
+
 
     def test_unset_attribute(self, cp_user_factory):
         relation = cp_user_factory(email=self.user.email, channel_partner=self.nx_cp)

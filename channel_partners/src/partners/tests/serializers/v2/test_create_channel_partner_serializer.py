@@ -71,6 +71,17 @@ class TestCreateChannelPartnerSerializer:
         self.notification_mock = mocker.patch(
             "partners.tasks.notification.added_channel_partner_role_task.apply_async")
 
+    def test_attributes_too_long(self):
+        data = {
+            **self.valid,
+            "attributes": {
+                "additionalProp1": "a" * 3000,
+            }
+        }
+        serializer = CreateChannelPartnerSerializer(data=data, context=self.context)
+        assert serializer.is_valid() is False
+        assert serializer.errors['attributes'][0] == 'JSON size exceeds the maximum allowed size of 3000 bytes.'
+
     def test_valid(self):
         serializer = CreateChannelPartnerSerializer(data=self.valid, context=self.context)
         assert serializer.is_valid()

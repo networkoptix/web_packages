@@ -88,7 +88,10 @@ from partners.utils.cache_keys import (
     direct_organization_children_count,
 )
 from partners.utils.context_vars import get_context_vars
-from partners.validators import validate_active_organization
+from partners.validators import (
+    validate_active_organization,
+    validate_dict_max_size,
+)
 from tools.helpers import (
     forward_cdb_resp,
     get_license_server_client,
@@ -242,8 +245,13 @@ class ChannelPartnerSerializer(AccessMatrixMixin, FieldAccessModelSerializer):
     effectiveState = CodeChoiceField(source='effective_state', choices=ChannelPartnerStates.STATE_CODES, read_only=True)
     parentChannelPartner = serializers.PrimaryKeyRelatedField(source='parent_channel_partner', read_only=True)
     monthlyAdditionalServiceLimit = serializers.IntegerField(source='monthly_additional_service_limit')
-    attributes = serializers.DictField(allow_empty=True, allow_null=True, required=False,
-                                       help_text='Set any custom properties. Pass value "*unset*" to remove a key.')
+    attributes = serializers.DictField(
+        allow_empty=True,
+        allow_null=True,
+        required=False,
+        help_text='Set any custom properties. Pass value "*unset*" to remove a key.',
+        validators=[validate_dict_max_size]
+    )
     supportInformation = SupportInformationSerializer(source='support_information', default={}, required=False,
                                                       read_only=False)
     created = serializers.DateTimeField(source='created_ts', read_only=True)
@@ -342,8 +350,13 @@ class ChannelPartnerSerializer(AccessMatrixMixin, FieldAccessModelSerializer):
 class CreateChannelPartnerSerializer(serializers.ModelSerializer):
     parentChannelPartner = serializers.PrimaryKeyRelatedField(source='parent_channel_partner', required=True,
                                                               queryset=ChannelPartner.objects.all())
-    attributes = serializers.DictField(allow_empty=True, allow_null=True, required=False,
-                                       help_text='Set any custom properties. Pass value "*unset*" to remove a key.')
+    attributes = serializers.DictField(
+        allow_empty=True,
+        allow_null=True,
+        required=False,
+        help_text='Set any custom properties. Pass value "*unset*" to remove a key.',
+        validators=[validate_dict_max_size]
+    )
     monthlyAdditionalServiceLimit = serializers.IntegerField(source='monthly_additional_service_limit', required=False)
     supportInformation = SupportInformationSerializer(source='support_information', default={}, required=False)
     firstAdminEmail = serializers.EmailField(required=False, max_length=255)
@@ -409,8 +422,13 @@ class OrganizationSerializer(AccessMatrixMixin, FieldAccessModelSerializer):
         choices=OrganizationRoles.CPAL_CHOICES,
         required=False, allow_null=True,
         source='channel_partner_access_level_id')
-    attributes = serializers.DictField(allow_empty=True, allow_null=True, required=False,
-                                       help_text='Set any custom properties. Pass value "\*unset\*" to remove a key.')
+    attributes = serializers.DictField(
+        allow_empty=True,
+        allow_null=True,
+        required=False,
+        help_text='Set any custom properties. Pass value "\*unset\*" to remove a key.',
+        validators=[validate_dict_max_size]
+    )
     currentServices = serializers.DictField(source='current_services', read_only=True)
     ownPermissions = serializers.SerializerMethodField(method_name='get_permissions_list', read_only=True)
     ownRolesIds = serializers.SerializerMethodField(method_name='get_roles_list', read_only=True)
@@ -480,8 +498,13 @@ class OrganizationSerializer(AccessMatrixMixin, FieldAccessModelSerializer):
 
 class CreateOrganizationSerializer(serializers.ModelSerializer):
     channelPartner = serializers.PrimaryKeyRelatedField(source='channel_partner', queryset=ChannelPartner.objects.all())
-    attributes = serializers.DictField(allow_empty=True, allow_null=True, required=False,
-                                       help_text='Set any custom properties. Pass value "*unset*" to remove a key.')
+    attributes = serializers.DictField(
+        allow_empty=True,
+        allow_null=True,
+        required=False,
+        help_text='Set any custom properties. Pass value "*unset*" to remove a key.',
+        validators=[validate_dict_max_size]
+    )
     firstAdminEmail = serializers.EmailField(required=False, max_length=255)
 
     class Meta:
@@ -615,7 +638,9 @@ class ChannelPartnerUserSerializer(serializers.ModelSerializer):
     title = serializers.CharField(required=False, default='', allow_blank=True)
     attributes = serializers.DictField(
         allow_empty=True, allow_null=True, required=False,
-        help_text='Set any custom properties. Pass value "*unset*" to remove a key.')
+        help_text='Set any custom properties. Pass value "*unset*" to remove a key.',
+        validators=[validate_dict_max_size]
+    )
 
     class Meta:
         model = ChannelPartnerToUser
@@ -1284,6 +1309,7 @@ class ServiceSerializer(serializers.ModelSerializer):
     duration = serializers.IntegerField(default=0)
     displayName = serializers.CharField(source='name')
     created = serializers.DateTimeField(source='created_ts', read_only=True)
+    parameters = serializers.DictField(validators=[validate_dict_max_size])
 
     class Meta:
         model = ChannelPartnerService
@@ -1404,7 +1430,7 @@ class SystemBindResponseSerializer(serializers.Serializer):
     version = serializers.CharField()
     registrationTime = serializers.CharField()
     system2faEnabled = serializers.BooleanField()
-    attributes = serializers.ListField(child=serializers.DictField())
+    attributes = serializers.ListField(child=serializers.DictField(), validators=[validate_dict_max_size])
     organizationId = serializers.CharField()
 
 
@@ -2041,11 +2067,17 @@ class RequestConfirmationBaseSerializer(serializers.ModelSerializer):
     def changes(self, instance, validated_data):
         raise NotImplementedError("Please override this method due to requested changes.")
 
+    def validate_changes(self, value):
+        validate_dict_max_size(value)
+        return value
+
     def update(self, instance, validated_data):
+        changes = self.changes(instance, validated_data)
+        self.validate_changes(changes)
         confirmation = ActionConfirmation.objects.create(
             action=self.action,
             target_id=instance.id,
-            changes=self.changes(instance, validated_data),
+            changes=changes,
             created_by=self.context['request'].user.email
         )
         # dirty hack to reuse serializer for response with serializer.data

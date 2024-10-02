@@ -77,6 +77,7 @@ from partners.utils.db import (
     ReplaceAncestors,
     ToArray,
 )
+from partners.validators import validate_dict_max_size
 from tools.helpers import (
     get_path_from_parent,
     get_period_start,
@@ -388,10 +389,10 @@ class CloudSystemId(
                                 default=ChannelPartnerStates.ACTIVE)
     effective_state = models.IntegerField(choices=ChannelPartnerStates.STATE_CHOICES,
                                           blank=False, default=ChannelPartnerStates.ACTIVE)
-    current_services = models.JSONField(default=dict)
+    current_services = models.JSONField(default=dict, validators=[validate_dict_max_size])
     last_usage_check = models.DateTimeField(default=timezone.now)
     last_usage_report = models.DateTimeField(default=timezone.now)
-    security_statuses = models.JSONField(default=dict)
+    security_statuses = models.JSONField(default=dict, validators=[validate_dict_max_size])
     created_ts = models.DateTimeField(auto_now_add=True)
     path = ArrayField(base_field=models.UUIDField(null=False), null=True)
     system_state = models.IntegerField(
@@ -609,6 +610,7 @@ class CloudSystemId(
                 CloudSystemId.invalidate_groups_system_counters(old_path)
 
             self.update_state()
+
             super().save(*args, **kwargs)
             transaction.on_commit(lambda: on_cloud_system_saved(
                 self.__class__,
@@ -895,7 +897,7 @@ class ChannelPartner(
                                           blank=False, default=ChannelPartnerStates.ACTIVE)
     cloud_host = models.ForeignKey(CloudHost, on_delete=models.CASCADE)
     monthly_additional_service_limit = models.BigIntegerField(default=None, null=True, blank=True)
-    attributes = models.JSONField(blank=True, default=dict)
+    attributes = models.JSONField(blank=True, default=dict, validators=[validate_dict_max_size])
     support_information = models.JSONField(blank=True, default=dict)
     created_ts = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)
@@ -927,6 +929,7 @@ class ChannelPartner(
             (ChannelPartnerPermissions.add_remove_service_quantities,
              'Change the quantity of services for child organizations')
         ]
+
         indexes = [
             GinIndex(name="channelpartner_path_gin", fields=['path'], opclasses=['array_ops'])
         ]
@@ -953,6 +956,7 @@ class ChannelPartner(
                     obj.attributes[key] = val
         else:
             obj.attributes = attributes
+        validate_dict_max_size(obj.attributes)
         obj.save()
         self.refresh_from_db()
 
@@ -1138,6 +1142,7 @@ class ChannelPartner(
                 if self.parent_channel_partner_id:
                     self.path = get_path_from_parent(self.parent_channel_partner)
             updated_descendants = self.update_state()
+
             super().save(*args, **kwargs)
 
             if self.parent_channel_partner and new:
@@ -1333,7 +1338,7 @@ class ChannelPartnerToUser(models.Model):
     user = models.ForeignKey(CloudUser, on_delete=models.CASCADE)
     roles = ArrayField(base_field=models.UUIDField(), default=list)
     title = models.CharField(max_length=100, blank=True)
-    attributes = models.JSONField(blank=True, default=dict)
+    attributes = models.JSONField(blank=True, default=dict, validators=[validate_dict_max_size])
     last_modified = models.DateTimeField(auto_now=True)
     created_ts = models.DateTimeField(auto_now_add=True)
 
@@ -1348,6 +1353,7 @@ class ChannelPartnerToUser(models.Model):
     def save(
         self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
+
         new_user_relation = False
         if self._state.adding:
             if not self.user.has_relationship():
@@ -1388,6 +1394,7 @@ class ChannelPartnerToUser(models.Model):
                     obj.attributes[key] = val
         else:
             obj.attributes = attributes
+        validate_dict_max_size(obj.attributes)
         obj.save()
         self.refresh_from_db()
 
@@ -1505,7 +1512,7 @@ class Organization(
         on_delete=models.SET_NULL)
     created_ts = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)
-    attributes = models.JSONField(default=dict, blank=True)
+    attributes = models.JSONField(default=dict, blank=True, validators=[validate_dict_max_size])
     path = ArrayField(base_field=models.UUIDField(null=False), null=True)
 
     objects = ExternalIdTargetManager()
@@ -1533,6 +1540,7 @@ class Organization(
     permissions = OrganizationPermissions
 
     def save(self, *args, **kwargs):
+
         new = self._state.adding
         name_changed = not new and self.name != self.get_audit_history("name", idx=0)
         old_name = self.get_audit_history("name", idx=0)
@@ -1549,6 +1557,7 @@ class Organization(
                     self.path = get_path_from_parent(self.channel_partner)
                 self.invalidate_channel_partner_org_count(self.channel_partner)
             state_changed = self.update_state()
+
             super().save(*args, **kwargs)
             if name_changed:
                 from partners.tasks.notification import (
@@ -1606,6 +1615,8 @@ class Organization(
                     obj.attributes[key] = val
         else:
             obj.attributes = attributes
+
+        validate_dict_max_size(obj.attributes)
         obj.save()
         self.refresh_from_db()
 
@@ -2250,7 +2261,7 @@ class ChannelPartnerService(models.Model):
     state = models.IntegerField(choices=STATES, default=ACTIVE)
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
-    parameters = models.JSONField(default=dict, blank=True)
+    parameters = models.JSONField(default=dict, blank=True, validators=[validate_dict_max_size])
     parent_service = models.ForeignKey('ChannelPartnerService', blank=True, null=True, on_delete=models.CASCADE)
     created_ts = models.DateTimeField(auto_now_add=True)
     sub_type = models.IntegerField(choices=SUB_TYPES, default=REGULAR)
@@ -2917,7 +2928,7 @@ class ActionConfirmation(models.Model):
     state = models.IntegerField(choices=ConfirmationState.choices, default=ConfirmationState.PENDING)
     action = models.IntegerField(choices=ConfirmationActionType.choices)
     target_id = models.UUIDField()
-    changes = models.JSONField(null=True)
+    changes = models.JSONField(null=True, validators=[validate_dict_max_size])
     code = models.CharField(max_length=40, default=gen_confirmation_code)
     created_ts = models.DateTimeField(auto_now_add=True)
     created_by = models.EmailField()
@@ -2926,12 +2937,14 @@ class ActionConfirmation(models.Model):
     def save(
         self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
+
         new = self._state.adding
         if new:
             ActionConfirmation.objects.filter(
                 action=self.action, target_id=self.target_id,
                 state=self.ConfirmationState.PENDING, created_by=self.created_by
             ).update(state=self.ConfirmationState.EXPIRED)
+
         super().save(force_insert=force_insert, force_update=force_update,
                      using=using, update_fields=update_fields)
 
