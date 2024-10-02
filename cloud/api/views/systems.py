@@ -14,7 +14,8 @@ from cloud.controllers import cloud_api, cloud_gateway
 from cloud.controllers.cloud_api import Auth
 from nx_drf.drf_async import async_api_view
 from cloud.helpers.exceptions import api_success, require_params, \
-     APINotAuthorisedException, APIRequestException, ErrorCodes, APIException, APIInternalException
+    APIException, APIInternalException, APILogicException, \
+    APINotAuthorisedException, APIRequestException, ErrorCodes
 from api.serializers import *
 
 
@@ -419,10 +420,15 @@ async def toggle2fa(request):
     data = await sync_to_async(cloud_api.System.update, thread_sensitive=False)(
         request, system_id, mfa_code, not twofa_enabled
     )
-    await sync_to_async(Auth.verify_2fa_code, thread_sensitive=False)(
-        mfa_code, request.session.get("access_token"))
-    AccountCache.delete(request)
-    request.session["has2fa"] = True
+
+    try:
+        await sync_to_async(Auth.verify_2fa_code, thread_sensitive=False)(
+            mfa_code, request.session.get("access_token"))
+        AccountCache.delete(request)
+        request.session["has2fa"] = True
+    except APILogicException:
+        pass
+
     return api_success(data)
 
 
