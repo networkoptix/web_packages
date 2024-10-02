@@ -69,10 +69,11 @@ export class NxServicesComponent {
 
     private rows = computed<Row[]>(() => {
         const { services, quantities } = this.data();
-        return services.map(({ id, type, displayName }) => {
+        return services.map(({ id, subType, type, displayName }) => {
             const quantity = quantities[id] ?? { quantity: 0, used: 0 };
             return {
                 id,
+                subType,
                 type,
                 displayName,
                 ...quantity,

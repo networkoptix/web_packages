@@ -263,6 +263,7 @@ export type ServiceQuantities = Record<string, ServiceQuantity>;
 export interface SystemService {
     id: string;
     type: string;
+    subType: ServiceType;
     state: string;
     displayName: string;
     description: string;

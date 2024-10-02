@@ -13,6 +13,7 @@ import { NxProcessCancelButtonComponent } from '@components/process-cancel-Butto
 import type { ChangeService as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
 import { NxCloudApiService } from '@services/nx-cloud-api';
+import { ServiceType } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { NxProcessService } from '@services/process.service';
 import type { Process } from '@services/process.service/process';
 import { icons } from '@static-variables';
@@ -68,7 +69,9 @@ export class NxChangeServiceModalContent extends ModalBase<DT['return']> {
         super(dialogRef);
         this.service = service;
         const { monthlyServiceCap } = partner;
-        if (monthlyServiceCap === null) {
+        if (service.subType === ServiceType.credit) {
+            this.numericMax = service.quantity;
+        } else if (monthlyServiceCap === null) {
             this.numericMax = Number.POSITIVE_INFINITY;
         } else if (monthlyServiceCap < 0) {
             this.numericMax = service.quantity;
