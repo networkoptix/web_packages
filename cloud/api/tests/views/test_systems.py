@@ -398,7 +398,7 @@ class TestSystemViews:
         assert response.data == self.sample_data
 
     @pytest.mark.asyncio
-    async def test_toggle2fa(self, arf, mocker):
+    async def test_toggle2fa_with_totp(self, arf, mocker):
         cur_fa = False
         system_data = {'systems': [
             {'id': self.slave_system_id, "system2faEnabled": False},
@@ -435,6 +435,53 @@ class TestSystemViews:
         assert response.status_code == status.HTTP_200_OK
         assert response.data['system2faEnabled'] is (not cur_fa)
         assert response.data['mfaCode'] == req_data['mfaCode']
+        assert request.session['has2fa'] is True
+
+    @pytest.mark.asyncio
+    async def test_toggle2fa_with_backup_code(self, arf, mocker):
+        cur_fa = False
+        system_data = {'systems': [
+            {'id': self.slave_system_id, "system2faEnabled": False},
+            {'id': self.system_id, "system2faEnabled": cur_fa}
+        ]}
+        req_data = {
+            'systemId': self.system_id,
+            'mfaCode': '1234'
+        }
+        response_data = {
+            'system2faEnabled': not cur_fa,
+            'mfaCode': '1234'
+        }
+        system_get_mock = mocker.patch.object(cloud_api.System, 'get')
+        system_get_mock.return_value = system_data
+
+        system_update_mock = mocker.patch.object(cloud_api.System, 'update')
+        system_update_mock.return_value = response_data
+
+        logic_exception = APILogicException('Wrong totp', 'invalidTotp', error_data={
+            "errorClass": "internalError",
+            "errorDetail": "119",
+            "errorText": "Wrong totp",
+            "resultCode": "invalidTotp"
+        })
+
+        mock_verify_2fa = mocker.patch.object(cloud_api.Auth, 'verify_2fa_code', side_effect=logic_exception)
+
+        request = arf.post('/api/systems/toggle2fa', data=req_data)
+        request.session = self.session
+        request.session['has2fa'] = False
+        request.user = self.user
+
+        response = await toggle2fa(request)
+
+        system_get_mock.assert_called()
+        system_update_mock.assert_called()
+        mock_verify_2fa.assert_called()
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data['system2faEnabled'] is (not cur_fa)
+        assert response.data['mfaCode'] == req_data['mfaCode']
+        assert request.session['has2fa'] is False
+
 
     @pytest.mark.asyncio
     async def test_proxy(self, arf, mocker):
