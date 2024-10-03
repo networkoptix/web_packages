@@ -562,7 +562,7 @@
     "Enter password to continue.": "続行するにはパスワードを入力してください。",
     "Enter password to owner's account in <strong>{secondarySystem}</strong>": "<strong>{secondarySystem}</strong> のオーナーアカウントのパスワードを入力してください",
     "Enter server address": "サーバーのアドレスを入力してください",
-    "Enter the following parameters into authentication app to link it to your %CLOUD_NAME% account.": "次のパラメーターを認証アプリに入力して、 %CLOUD_NAME% アカウントにリンクします。",
+    "Enter the following parameters into authentication app to link it to your %CLOUD_NAME% account.": "次のパラメーターを認証アプリに入力して、 %CLOUD_NAME% アカウントにリンクさせてください。",
     "Enter valid URL": "有効な URL を入力してください",
     "Enter verification code": "確認コードを入力してください",
     "Enter your account password to continue": "続行するにはアカウントのパスワードを入力してください",
