@@ -25,10 +25,6 @@ environments
 # Code copied from original package and patched
 libs/ngx-translate-patch/**
 
-# Automatically generated
-type-lint-error-count.js
-non-control-flow-templates.js
-
 # Keeping as reference while refactoring view, will eventually delete
 libs/features/systems/view/vms-client/submodules/vms/datatypes/TestCamera.ts
 libs/features/systems/view/vms-client/submodules/vms/testMediaServers.ts

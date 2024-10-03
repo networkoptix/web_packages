@@ -1,7 +1,5 @@
 /**
  * @fileoverview
- *
- * @author
  */
 
 import { createRule } from './utils';

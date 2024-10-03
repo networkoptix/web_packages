@@ -1,6 +1,7 @@
 const { showOptionalWarnings } = require('./eslintrc-options.json');
-const nonControlFlowTemplates = require('./non-control-flow-templates');
-const typeLintErrorCount = require('./type-lint-error-count');
+const controlFlowBlacklist = require('./linting/control-flow-blacklist');
+const globalStyleBlacklist = require('./linting/global-style-blacklist');
+const typeLintBlacklist = require('./linting/type-lint-blacklist');
 
 const lintTaskRunner = process.env.NX_TASK_TARGET_TARGET === 'lint';
 
@@ -234,7 +235,7 @@ module.exports = {
                 // Deprecated
                 'libs/*/process*/**',
 
-                ...Object.keys(typeLintErrorCount),
+                ...typeLintBlacklist,
             ],
             extends: ['plugin:@typescript-eslint/recommended'],
             rules: {
@@ -458,19 +459,43 @@ module.exports = {
         /* Only allow non-$$-suffixed signals in components exclusively using control flow,
         since old directives (*ngIf, *ngFor, etc.) cannot detect constant conditions while
         control flow can. New components should be only using control flow. */
-        {
-            files: nonControlFlowTemplates.map(t => t.replace('.html', '.ts')),
-            rules: {
-                'nx/signal-naming-convention': 'error',
-            },
-        },
+        ...(controlFlowBlacklist.length
+            ? [
+                  /* Zero length files errors */
+                  {
+                      files: controlFlowBlacklist.map(t =>
+                          t
+                              .replace('/*inline-template-*.component.html', '')
+                              .replace('.html', '.ts'),
+                      ),
+                      rules: {
+                          'nx/signal-naming-convention': 'error',
+                      },
+                  },
+              ]
+            : []),
         {
             files: ['*.component.html'],
-            excludedFiles: nonControlFlowTemplates.map(t =>
-                t.endsWith('.html') ? t : `${t}/*inline-template-*.component.html `,
-            ),
+            excludedFiles: controlFlowBlacklist,
             rules: {
                 '@angular-eslint/template/prefer-control-flow': 'error',
+            },
+        },
+
+        {
+            files: ['*.component.html'],
+            excludedFiles: [
+                // Development stopped
+                'libs/features/dashboard/**',
+                '**/*widget*/**',
+
+                // Unused
+                'libs/features/debug/**',
+
+                ...globalStyleBlacklist,
+            ],
+            rules: {
+                'nx/template/no-global-style-class': 'error',
             },
         },
     ],
