@@ -108,6 +108,11 @@ class ServiceQuantityChangeSerializerV3(serializers.Serializer):
     def validate(self, attrs: dict):
         quantity = attrs['quantity']
         service = attrs['serviceId']
+        if service.sub_type == ChannelPartnerService.CREDIT and quantity > 0:
+            raise exceptions.ValidationError(
+                detail={'quantity': f'Service {service.id} is credit service, quantity cannot be increased.'},
+                code=ErrorCodes.credit_service_increased,
+            )
         cleaned_record = {
             'service': service,
             'cloud_system': self.cloud_system,

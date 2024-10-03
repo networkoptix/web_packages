@@ -409,6 +409,52 @@ class TestSystemServiceQuantitySerializer:
         serializer = SystemServiceQuantitySerializer(instance=sys, data=data)
         assert serializer.is_valid() is True
 
+    def test_demo_service_decrease(self, channel_partner_factory, organization_factory, system_factory,
+                  cp_service_factory, service_record_factory, arf, cp_user_factory):
+        cp = channel_partner_factory()
+        cp.save()
+        org = organization_factory(channel_partner=cp)
+        system = system_factory(organization=org)
+        demo_service = cp_service_factory(channel_partner=cp, sub_type=ChannelPartnerService.DEMO)
+        data = {
+            "services": {
+                f"{demo_service.id}": {"quantity": 11}
+            }
+        }
+        ser = SystemServiceQuantitySerializer(instance=system, data=data)
+        assert ser.is_valid(raise_exception=False) is True
+
+    def test_credit_service_increase(self, channel_partner_factory, organization_factory, system_factory,
+                  cp_service_factory, service_record_factory, arf, cp_user_factory):
+        cp = channel_partner_factory()
+        cp.save()
+        org = organization_factory(channel_partner=cp)
+        system = system_factory(organization=org)
+        demo_service = cp_service_factory(channel_partner=cp, sub_type=ChannelPartnerService.CREDIT)
+        data = {
+            "services": {
+                f"{demo_service.id}": {"quantity": 11}
+            }
+        }
+        ser = SystemServiceQuantitySerializer(instance=system, data=data)
+        assert ser.is_valid(raise_exception=False) is False
+        assert ser.errors['services'][str(demo_service.id)] == 'Credit service quantity cannot be increased.'
+
+    def test_credit_service_decrease(self, channel_partner_factory, organization_factory, system_factory,
+                  cp_service_factory, service_record_factory, arf, cp_user_factory):
+        cp = channel_partner_factory()
+        cp.save()
+        org = organization_factory(channel_partner=cp)
+        system = system_factory(organization=org)
+        demo_service = cp_service_factory(channel_partner=cp, sub_type=ChannelPartnerService.CREDIT)
+        data = {
+            "services": {
+                f"{demo_service.id}": {"quantity": -11}
+            }
+        }
+        ser = SystemServiceQuantitySerializer(instance=system, data=data)
+        assert ser.is_valid(raise_exception=False) is True
+
 
 class TestChannelPartnerSerializer:
 

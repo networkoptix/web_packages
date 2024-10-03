@@ -50,7 +50,7 @@ class TestCloudSystemViewSetServiceQuantityV3:
         self.disabled_service = cp_service_factory(channel_partner=self.channel_partner, is_enabled=False)
         self.expired_service = cp_service_factory(
             channel_partner=self.channel_partner,
-            sub_type=ChannelPartnerService.CREDIT,
+            sub_type=ChannelPartnerService.DEMO,
             duration=1,
         )
         service_record_factory(self.local_recording_service, cloud_system=self.system, quantity=self.quantity)

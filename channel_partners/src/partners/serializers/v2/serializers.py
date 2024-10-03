@@ -1146,6 +1146,7 @@ class SystemServiceQuantitySerializer(serializers.ModelSerializer):
         services = self._get_services_from_value(value)
         self._check_service_enabled(value)
         self._check_expired_services(services)
+        self._check_credit_service_increased(value)
         new_records, types_changes = self._calculate_service_changes(services, existing_services)
 
         self._check_monthly_limits(types_changes)
@@ -1220,6 +1221,27 @@ class SystemServiceQuantitySerializer(serializers.ModelSerializer):
                 errors[service_id] = 'Service is disabled'
         if errors:
             raise exceptions.ValidationError(detail={'disabled': errors})
+
+    def _check_credit_service_increased(self, value: dict):
+        """
+        Check if the services is credit. If it is, increasing the quantity is not allowed.
+
+        Args:
+            value (dict): A dictionary containing service IDs as keys and service quantities as values.
+
+        Raises:
+            ValidationError: If any service is disabled, including the service IDs and error messages.
+        """
+        errors = {}
+        for service_id, attrs in value.items():
+            service = ChannelPartnerService.objects.get(id=service_id)
+            if service and not service.sub_type == ChannelPartnerService.CREDIT:
+                continue
+            quantity = attrs.get('quantity', 0)
+            if quantity > 0:
+                errors[service_id] = 'Credit service quantity cannot be increased.'
+        if errors:
+            raise exceptions.ValidationError(detail=errors)
 
     def _check_service_existence(self, service_id: str) -> str:
         """Check if the given service exists and is created by the system's channel partner."""

@@ -36,6 +36,16 @@ class TestServiceQuantityChangeSerializer:
             channel_partner=self.channel_partner,
             service_type=ChannelPartnerService.LOCAL_RECORDING,
         )
+        self.local_recording_service_demo = cp_service_factory(
+            channel_partner=self.channel_partner,
+            service_type=ChannelPartnerService.LOCAL_RECORDING,
+            sub_type=ChannelPartnerService.DEMO,
+        )
+        self.local_recording_service_credit = cp_service_factory(
+            channel_partner=self.channel_partner,
+            service_type=ChannelPartnerService.LOCAL_RECORDING,
+            sub_type=ChannelPartnerService.CREDIT,
+        )
         self.analytics_service = cp_service_factory(
             channel_partner=self.channel_partner,
             service_type=ChannelPartnerService.ANALYTICS,
@@ -72,6 +82,23 @@ class TestServiceQuantityChangeSerializer:
         assert len(serializer.validated_data) == 1
         assert serializer.validated_data[0]['service'] == self.local_recording_service
         assert serializer.validated_data[0]['quantity'] == 2
+
+    def test_valid_data_demo_service(self):
+        data = [
+            {
+                'serviceId': self.local_recording_service_demo.id,
+                'quantity': 12,
+            }
+        ]
+        serializer = ServiceQuantityChangeSerializerV3(
+            cloud_system=self.system,
+            data=data,
+            many=True,
+        )
+        assert serializer.is_valid()
+        assert len(serializer.validated_data) == 1
+        assert serializer.validated_data[0]['service'] == self.local_recording_service_demo
+        assert serializer.validated_data[0]['quantity'] == 12
 
     def test_valid_data_multiple(self):
         data = [
@@ -190,6 +217,35 @@ class TestServiceQuantityChangeSerializer:
         )
         assert not serializer.is_valid()
         assert serializer.errors[0]['serviceId'][0].code == ErrorCodes.service_disabled
+
+    def test_invalid_data_credit_service_increased(self):
+        data = [
+            {
+                'serviceId': self.local_recording_service_credit.id,
+                'quantity': 26,
+            },
+        ]
+        serializer = ServiceQuantityChangeSerializerV3(
+            cloud_system=self.system,
+            data=data,
+            many=True,
+        )
+        assert not serializer.is_valid()
+        assert serializer.errors[0]['quantity'][0].code == ErrorCodes.credit_service_increased
+
+    def test_invalid_data_credit_service_decreased(self):
+        data = [
+            {
+                'serviceId': self.local_recording_service_credit.id,
+                'quantity': -26,
+            },
+        ]
+        serializer = ServiceQuantityChangeSerializerV3(
+            cloud_system=self.system,
+            data=data,
+            many=True,
+        )
+        assert serializer.is_valid()
 
     def test_invalid_data_other_partner_service(self, channel_partner_factory, cp_service_factory):
         channel_partner = channel_partner_factory()
