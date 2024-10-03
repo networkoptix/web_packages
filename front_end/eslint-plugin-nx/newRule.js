@@ -29,16 +29,9 @@ if (!/^[a-z]+(-[a-z]+)*$/.test(newRuleName.replace(/^template_/, ''))) {
 const ruleFile = fs.readFileSync('./src/rules/rule-template.ts', 'utf8');
 fs.writeFileSync(`./src/rules/${newRuleName}.ts`, ruleFile.replace(/rule-name/g, newRuleName));
 
-const expectError = '// @ts-expect-error: @typescript-eslint tester only expects TS parser';
-let testFile = fs
+const testFile = fs
     .readFileSync('./src/tests/test-template.ts', 'utf8')
     .replace(/rule-name/g, newRuleName);
-if (/^template_/.test(newRuleName)) {
-    testFile = testFile.replace(
-        "parser: '@typescript-eslint/parser'",
-        `${expectError}\n${' '.repeat(4)}parser: '@angular-eslint/template-parser'`,
-    );
-}
 fs.writeFileSync(`./src/tests/${newRuleName}.test.ts`, testFile);
 
 console.log(`New rule ${newRuleName} successfully created.`);
