@@ -4,7 +4,7 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import { animationFrameScheduler, interval, Subject } from 'rxjs';
 
 import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
-import { int, float, ms, px, CanvasGeometry } from '@vms-client/utils/type-aliases';
+import { CanvasGeometry, float, int, ms, px } from '@vms-client/utils/type-aliases';
 
 import { TimeRange } from './TimeRange';
 import { cfg } from './timeline.config';

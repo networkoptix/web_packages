@@ -1,6 +1,7 @@
-import { DOCUMENT, CommonModule } from '@angular/common';
+import { CommonModule, DOCUMENT } from '@angular/common';
 import {
     AfterViewInit,
+    booleanAttribute,
     Component,
     ElementRef,
     Inject,
@@ -8,7 +9,6 @@ import {
     OnInit,
     ViewChild,
     ViewEncapsulation,
-    booleanAttribute,
 } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';

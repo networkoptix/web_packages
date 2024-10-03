@@ -1,11 +1,11 @@
 import {
     Component,
+    computed,
     ElementRef,
     HostBinding,
     HostListener,
     Inject,
     Input,
-    computed,
 } from '@angular/core';
 import { Observable } from 'rxjs';
 

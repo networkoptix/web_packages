@@ -1,4 +1,4 @@
-import { SECOND, MINUTE, HOUR, DAY } from '../regularLengthIntervals';
+import { DAY, HOUR, MINUTE, SECOND } from '../regularLengthIntervals';
 
 export const MIN_WEIGHT = 0;
 export const MAX_WEIGHT = 4;

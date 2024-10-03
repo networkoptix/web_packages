@@ -1,5 +1,6 @@
 import { CdkDragMove, DragDropModule } from '@angular/cdk/drag-drop';
 import {
+    booleanAttribute,
     Component,
     ElementRef,
     EventEmitter,
@@ -9,7 +10,6 @@ import {
     Output,
     Renderer2,
     ViewChild,
-    booleanAttribute,
 } from '@angular/core';
 
 import { NgChanges } from '@utils/ng-changes';

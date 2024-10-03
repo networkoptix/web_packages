@@ -6,13 +6,13 @@ import {
     RouterStateSnapshot,
 } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { Observable, map, of, switchMap } from 'rxjs';
+import { map, Observable, of, switchMap } from 'rxjs';
 import { filter, take } from 'rxjs/operators';
 
 import * as cpActions from '@common/store/channel-partners/channel-partners.actions';
 import {
-    selectCurrentOrgId,
     selectCurrentOrganization,
+    selectCurrentOrgId,
     selectCurrentPartnerId,
     selectHasStoreLoaded,
 } from '@common/store/channel-partners/channel-partners.selectors';

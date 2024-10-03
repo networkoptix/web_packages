@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
 import {
+    booleanAttribute,
     ChangeDetectionStrategy,
     Component,
-    EventEmitter,
-    Output,
-    booleanAttribute,
     computed,
+    EventEmitter,
     input,
+    Output,
 } from '@angular/core';
 import { LetDirective } from '@ngrx/component';
 import { TranslateModule } from '@ngx-translate/core';

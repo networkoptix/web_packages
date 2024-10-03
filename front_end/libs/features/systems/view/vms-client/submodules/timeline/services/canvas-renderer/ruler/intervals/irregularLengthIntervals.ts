@@ -1,5 +1,5 @@
 import { IrregularLengthInterval } from './IrregularLengthInterval';
-import { SECOND, MINUTE, HOUR } from './regularLengthIntervals';
+import { HOUR, MINUTE, SECOND } from './regularLengthIntervals';
 
 // assert ordered
 export const irregularLengthIntervals: Array<IrregularLengthInterval> = [

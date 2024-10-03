@@ -1,11 +1,11 @@
 import {
     ChangeDetectionStrategy,
     Component,
+    computed,
     ElementRef,
+    input,
     OnDestroy,
     SkipSelf,
-    computed,
-    input,
 } from '@angular/core';
 
 import { NxFormObserverDirective } from '@components/forms/form-observer.directive';

@@ -1,12 +1,12 @@
 import { Component, Input, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { startCase, isEqual } from 'lodash-es';
+import { isEqual, startCase } from 'lodash-es';
 import {
-    firstValueFrom,
     BehaviorSubject,
     combineLatest,
     distinctUntilChanged,
+    firstValueFrom,
     map,
     shareReplay,
     switchMap,

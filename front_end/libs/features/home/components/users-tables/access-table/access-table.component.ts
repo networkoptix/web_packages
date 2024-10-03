@@ -1,4 +1,4 @@
-import { Component, Output, ViewChild, computed, forwardRef, inject } from '@angular/core';
+import { Component, computed, forwardRef, inject, Output, ViewChild } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { escape } from 'lodash-es';
@@ -14,7 +14,7 @@ import { HEADER_ITEM } from '@pages/home/home.types';
 import { ChannelPartnersRouteState } from '@pages/home/store/route-state/route-state.store';
 import { OrgRoleIds } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { selectCurrentOrganization } from '@store/channel-partners/channel-partners.selectors';
-import { caseInsensitiveSearch, alphaNumericSort } from '@utils/general';
+import { alphaNumericSort, caseInsensitiveSearch } from '@utils/general';
 import { paramModel } from '@utils/signals';
 
 import { StranglerImports } from '../abstract-user-table/abstract-user-table-imports';

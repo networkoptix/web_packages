@@ -1,12 +1,12 @@
 import {
     Component,
-    ViewEncapsulation,
-    Input,
-    Output,
     EventEmitter,
     HostListener,
-    ViewChild,
     Inject,
+    Input,
+    Output,
+    ViewChild,
+    ViewEncapsulation,
 } from '@angular/core';
 import { DateAdapter } from '@angular/material/core';
 import { DateRange as DR, MatCalendar } from '@angular/material/datepicker';

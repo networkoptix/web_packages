@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
 import {
     Component,
+    computed,
     ElementRef,
     Inject,
+    input,
     TemplateRef,
     ViewChild,
-    computed,
-    input,
 } from '@angular/core';
 
 import { environment } from '@environments/environment';

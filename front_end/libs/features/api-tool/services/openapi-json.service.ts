@@ -1,9 +1,9 @@
-import { Injectable, inject } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { cloneDeep } from 'lodash-es';
 import { NgxIndexedDBService } from 'ngx-indexed-db';
-import { BehaviorSubject, Subject, firstValueFrom } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, Subject } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
 import type { MenuNodeWithParent } from '@components/developers-menu/developers-menu-types';
@@ -34,13 +34,13 @@ import type { APIDoc, APIInfo } from '../api-tool-types';
 
 import {
     APIData,
-    Store,
-    EmitInfo,
     APIType,
-    ServerInfo,
-    ReadOnlyAPIStore,
+    EmitInfo,
     FetchedJSONs,
     MarkdownIndex,
+    ReadOnlyAPIStore,
+    ServerInfo,
+    Store,
 } from './api-tool-service-types';
 import { NxAPIToolSystemService } from './api-tool-system.service';
 import { NxReadonlyAPIService } from './readonly-api.service';

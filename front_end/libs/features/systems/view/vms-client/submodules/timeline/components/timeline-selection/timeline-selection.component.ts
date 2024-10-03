@@ -1,12 +1,12 @@
 import { DOCUMENT } from '@angular/common';
 import {
-    Component,
-    OnInit,
-    HostListener,
-    ElementRef,
-    ViewChild,
     AfterViewInit,
+    Component,
+    ElementRef,
+    HostListener,
     Inject,
+    OnInit,
+    ViewChild,
 } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import dateFormat from 'dateformat';

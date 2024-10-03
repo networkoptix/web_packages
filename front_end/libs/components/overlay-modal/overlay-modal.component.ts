@@ -1,8 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { Router, NavigationEnd } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { LocalStorageService } from 'ngx-webstorage';
-import { firstValueFrom, Subject, BehaviorSubject, interval, empty } from 'rxjs';
+import { BehaviorSubject, empty, firstValueFrom, interval, Subject } from 'rxjs';
 import { distinctUntilChanged, switchMap } from 'rxjs/operators';
 
 import { environment } from '@environments/environment';

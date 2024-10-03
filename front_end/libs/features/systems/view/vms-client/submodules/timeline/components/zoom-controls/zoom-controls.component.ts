@@ -1,9 +1,9 @@
-import { Component, OnInit, HostListener, effect } from '@angular/core';
+import { Component, effect, HostListener, OnInit } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { animationFrameScheduler, interval } from 'rxjs';
 
 import { PlaybackService } from '@vms-client/submodules/playback/services/playback.service';
-import { VmsState, VMS_MODE } from '@vms-client/submodules/vms/datatypes/VmsState';
+import { VMS_MODE, VmsState } from '@vms-client/submodules/vms/datatypes/VmsState';
 import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
 import { float, int, ms } from '@vms-client/utils/type-aliases';
 

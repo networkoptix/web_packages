@@ -1,12 +1,12 @@
 import { DOCUMENT } from '@angular/common';
 import {
     Component,
+    effect,
     Inject,
     Input,
-    OnInit,
     OnDestroy,
+    OnInit,
     ViewEncapsulation,
-    effect,
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';

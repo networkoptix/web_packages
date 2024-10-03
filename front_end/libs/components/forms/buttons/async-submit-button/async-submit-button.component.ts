@@ -2,14 +2,14 @@ import { CommonModule } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
+    computed,
     ElementRef,
+    input,
     OnDestroy,
     Optional,
     Output,
-    SkipSelf,
-    computed,
-    input,
     signal,
+    SkipSelf,
 } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';

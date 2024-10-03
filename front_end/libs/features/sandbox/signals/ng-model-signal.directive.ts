@@ -1,4 +1,4 @@
-import { effect, forwardRef, signal, Directive, inject, computed } from '@angular/core';
+import { computed, Directive, effect, forwardRef, inject, signal } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { isEqual } from 'lodash-es';
 

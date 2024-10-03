@@ -2,14 +2,14 @@ import { CdkMenuModule } from '@angular/cdk/menu';
 import { CommonModule } from '@angular/common';
 import {
     Component,
-    OnInit,
-    DestroyRef,
-    inject,
     computed,
-    HostBinding,
+    DestroyRef,
     effect,
-    untracked,
+    HostBinding,
+    inject,
+    OnInit,
     signal,
+    untracked,
 } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
@@ -17,7 +17,7 @@ import { RouterModule } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-import { NEVER, combineLatest, combineLatestWith, throwError } from 'rxjs';
+import { combineLatest, combineLatestWith, NEVER, throwError } from 'rxjs';
 import {
     debounceTime,
     distinctUntilChanged,
@@ -29,13 +29,13 @@ import {
 
 import * as CPActions from '@common/store/channel-partners/channel-partners.actions';
 import {
+    selectArePartnerOrgsLoading,
+    selectBanner,
     selectChannelPartners,
+    selectCurrentParentPartnerForChild,
     selectCurrentPartner,
     selectCurrentPartnerOrgs,
     selectCurrentPartnerParent,
-    selectArePartnerOrgsLoading,
-    selectBanner,
-    selectCurrentParentPartnerForChild,
 } from '@common/store/channel-partners/channel-partners.selectors';
 import { NxAlertBlockComponent } from '@components/content-block/alert/block.component';
 import { NxPagePlaceholderV2Component } from '@components/placeholders/pageV2/page-placeholder.component';
@@ -59,12 +59,12 @@ import { PipesModule } from '@pipes/pipes.module';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
 import {
     ChannelPartner,
-    Organization,
     ChannelPartnerRoleIds,
+    Organization,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { alphaNumericSortByName, caseInsensitiveSearch } from '@utils/general';
 import { paramSignal } from '@utils/signals';
-import { search as searchConfig, icons } from '@variables/static-variables';
+import { icons, search as searchConfig } from '@variables/static-variables';
 
 import { NxCardComponent } from '../components/card/card.component';
 import { ChannelPartnersRouteState } from '../store/route-state/route-state.store';

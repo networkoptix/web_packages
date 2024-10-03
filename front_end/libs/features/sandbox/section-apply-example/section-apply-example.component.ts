@@ -3,7 +3,7 @@ import { Component, ViewChild, ViewContainerRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { NxApplyService } from '@services/apply.service';
-import { Watcher, SectionWatcher } from '@services/apply.service/watcher';
+import { SectionWatcher, Watcher } from '@services/apply.service/watcher';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 

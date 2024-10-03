@@ -1,13 +1,13 @@
 import {
     Component,
-    OnDestroy,
     ElementRef,
-    ViewChild,
-    Input,
-    Output,
     EventEmitter,
-    OnChanges,
     Inject,
+    Input,
+    OnChanges,
+    OnDestroy,
+    Output,
+    ViewChild,
     ViewEncapsulation,
 } from '@angular/core';
 import { Observable, Subject } from 'rxjs';

@@ -1,11 +1,11 @@
 import { CommonModule, Location } from '@angular/common';
-import { Component, Output, EventEmitter, Inject, OnInit, Input } from '@angular/core';
+import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { QueryParamsHandling, RouterModule } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { cloneDeep, last } from 'lodash-es';
-import { timer, Subject, BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject, timer } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
@@ -21,7 +21,7 @@ import { icons } from '@static-variables';
 import { highlight } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 
-import type { MenuNodeWithParent, ClickEvent, RelatedLinks } from './developers-menu-types';
+import type { ClickEvent, MenuNodeWithParent, RelatedLinks } from './developers-menu-types';
 
 @UntilDestroy()
 @Component({

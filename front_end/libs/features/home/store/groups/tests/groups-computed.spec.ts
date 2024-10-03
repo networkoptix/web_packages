@@ -8,11 +8,11 @@ import { mapToSystemItem, sortGroups } from '../groups-utils';
 import { GroupFlatItem } from '../groups.types';
 
 import {
-    setupGroupsStore,
-    generateGroups,
-    sample,
-    generateSystemsByOrgOrGroup,
     findItem,
+    generateGroups,
+    generateSystemsByOrgOrGroup,
+    sample,
+    setupGroupsStore,
 } from './groups-test-helpers';
 
 describe('Groups Store: Computed signals', () => {

@@ -1,13 +1,13 @@
-import { CdkDropList, CdkDragEnter, moveItemInArray, CdkDragDrop } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, CdkDragEnter, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
 import { HttpClient } from '@angular/common/http';
 import {
     Component,
-    ViewChildren,
-    QueryList,
+    ElementRef,
     HostListener,
     Inject,
-    ElementRef,
+    QueryList,
     ViewChild,
+    ViewChildren,
 } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -15,7 +15,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { last } from 'lodash-es';
 import { CookieService } from 'ngx-cookie-service';
 import { Subject } from 'rxjs';
-import { startWith, switchMap, debounceTime } from 'rxjs/operators';
+import { debounceTime, startWith, switchMap } from 'rxjs/operators';
 import { v4 as uuid } from 'uuid';
 
 import { NxDynamicWidgetComponent } from '@components/dynamic-widget/dynamic-widget.component';

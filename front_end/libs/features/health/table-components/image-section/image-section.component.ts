@@ -2,10 +2,10 @@ import {
     AfterViewInit,
     Component,
     ElementRef,
+    Inject,
     Input,
     OnChanges,
     ViewChild,
-    Inject,
 } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { fromEvent, Observable, Subscription } from 'rxjs';

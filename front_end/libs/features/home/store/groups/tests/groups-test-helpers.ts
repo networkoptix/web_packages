@@ -1,4 +1,4 @@
-import { Injectable, inject, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { patchState } from '@ngrx/signals';
 import { setEntities } from '@ngrx/signals/entities';

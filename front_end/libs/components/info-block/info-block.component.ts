@@ -8,11 +8,11 @@ import { PipesModule } from '@pipes/pipes.module';
 import { icons } from '@static-variables';
 
 import {
-    InfoBlockStyle,
-    InfoBlockSize,
-    InfoLineStyle,
     InfoBlockColumns,
     InfoBlockSections,
+    InfoBlockSize,
+    InfoBlockStyle,
+    InfoLineStyle,
 } from './info-block.component.types';
 
 @Component({

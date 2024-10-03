@@ -1,10 +1,10 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 import { TimelineSelectionService } from '@vms-client/submodules/timeline/services/timeline.selection.service';
 import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
 
-import { PlaybackState, PLAYBACK_MODE } from '../../datatypes/PlaybackState';
+import { PLAYBACK_MODE, PlaybackState } from '../../datatypes/PlaybackState';
 import { PlaybackService } from '../../services/playback.service';
 
 @UntilDestroy()

@@ -1,4 +1,4 @@
-import { InjectionToken, computed, inject } from '@angular/core';
+import { computed, inject, InjectionToken } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import {
     patchState,
@@ -11,7 +11,7 @@ import {
 } from '@ngrx/signals';
 import { addEntity, removeAllEntities, withEntities } from '@ngrx/signals/entities';
 import { isEqual } from 'lodash-es';
-import { Observable, combineLatest, distinctUntilChanged, map } from 'rxjs';
+import { combineLatest, distinctUntilChanged, map, Observable } from 'rxjs';
 
 import { NxChannelPartnersService } from '@services/channel-partners.service';
 

@@ -1,5 +1,5 @@
 import { CdkDrag, CdkDragStart } from '@angular/cdk/drag-drop';
-import { Component, ElementRef, EventEmitter, Output, Input, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 import { images } from '@static-variables';

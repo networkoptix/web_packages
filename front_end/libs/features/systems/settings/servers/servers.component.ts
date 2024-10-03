@@ -1,14 +1,14 @@
 import {
+    booleanAttribute,
     Component,
-    OnDestroy,
-    OnInit,
-    ViewContainerRef,
     Inject,
     Input,
-    Optional,
     OnChanges,
+    OnDestroy,
+    OnInit,
+    Optional,
     signal,
-    booleanAttribute,
+    ViewContainerRef,
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';

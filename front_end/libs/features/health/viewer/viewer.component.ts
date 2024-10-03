@@ -1,12 +1,12 @@
 import { DOCUMENT } from '@angular/common';
 import {
     Component,
+    effect,
+    ElementRef,
     Inject,
     OnInit,
-    ViewEncapsulation,
     ViewChild,
-    ElementRef,
-    effect,
+    ViewEncapsulation,
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -28,7 +28,7 @@ import { NxSystemAPI } from '@services/system-legacy-api.service';
 import type { NxSystem } from '@services/system.service/system';
 import { NxUriService } from '@services/uri.service';
 import { WINDOW } from '@services/window-provider';
-import { icons, healthMonitoring } from '@static-variables';
+import { healthMonitoring, icons } from '@static-variables';
 import { GridBreakpoints } from '@styles/theme-variables-common';
 
 import { NxHealthService } from '../health.service';

@@ -1,11 +1,11 @@
 import {
+    booleanAttribute,
     Component,
     ElementRef,
     Inject,
     Input,
     OnChanges,
     TemplateRef,
-    booleanAttribute,
 } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';

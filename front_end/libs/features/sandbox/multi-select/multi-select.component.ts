@@ -17,7 +17,7 @@ import { NxMatLikeGenericDropdownModule } from '@components/mat-like-components/
 import { NxSelectV2ItemComponent } from '@components/select-v2/items/select-item/select-item.component';
 import { NxSelectV2Component } from '@components/select-v2/select-v2.component';
 
-import { DropdownConfiguration, ComplicatedObject } from './multy-select.component.types';
+import { ComplicatedObject, DropdownConfiguration } from './multy-select.component.types';
 
 @Component({
     selector: 'multi-select',

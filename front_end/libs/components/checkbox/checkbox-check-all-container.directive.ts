@@ -1,6 +1,6 @@
-import { Directive, ContentChild, ContentChildren, effect, QueryList } from '@angular/core';
+import { ContentChild, ContentChildren, Directive, effect, QueryList } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { Subject, combineLatest, map, startWith, switchMap } from 'rxjs';
+import { combineLatest, map, startWith, Subject, switchMap } from 'rxjs';
 
 import { NxCheckAllDirective } from './checkbox-check-all.directive';
 import { NxCheckboxComponent } from './checkbox.component';

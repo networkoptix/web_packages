@@ -15,7 +15,7 @@ import * as staticLang from '@language_static';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { icons, apiBase } from '@static-variables';
+import { apiBase, icons } from '@static-variables';
 
 @UntilDestroy()
 @Component({

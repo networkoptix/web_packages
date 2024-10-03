@@ -8,7 +8,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { BehaviorSubject, Subject, timer } from 'rxjs';
-import { debounceTime, map, shareReplay, switchMap, tap, retry, scan } from 'rxjs/operators';
+import { debounceTime, map, retry, scan, shareReplay, switchMap, tap } from 'rxjs/operators';
 
 import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';

@@ -1,18 +1,18 @@
 import {
+    computed,
     DestroyRef,
     Directive,
     Host,
+    input,
     Input,
     OnInit,
     Output,
-    computed,
-    input,
     signal,
 } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { FormGroup, FormGroupDirective, isFormArray, isFormGroup } from '@angular/forms';
 import { size } from 'lodash-es';
-import { Observable, Subject, combineLatest, map } from 'rxjs';
+import { combineLatest, map, Observable, Subject } from 'rxjs';
 
 import { writeOnlySignal } from '@utils/nx';
 

@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Observable, map } from 'rxjs';
+import { map, Observable } from 'rxjs';
 
 import { NxMenuService } from '@menu/menu.service';
 import { NxSystem } from '@services/system.service/system';

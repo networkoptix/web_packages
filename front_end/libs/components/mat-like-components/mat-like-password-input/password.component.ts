@@ -1,24 +1,24 @@
 import { CommonModule } from '@angular/common';
 import {
     Component,
-    OnInit,
-    Input,
-    forwardRef,
-    ViewChild,
     ElementRef,
+    forwardRef,
+    Input,
+    OnInit,
     TemplateRef,
+    ViewChild,
     ViewContainerRef,
 } from '@angular/core';
 import {
     ControlValueAccessor,
-    NG_VALUE_ACCESSOR,
+    FormControl,
+    FormsModule,
     NG_VALIDATORS,
-    Validator,
+    NG_VALUE_ACCESSOR,
+    NgForm,
     NgModel,
     ValidationErrors,
-    FormControl,
-    NgForm,
-    FormsModule,
+    Validator,
 } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';

@@ -2,10 +2,10 @@ import { CommonModule } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
-    OnInit,
-    Output,
     effect,
     input,
+    OnInit,
+    Output,
     signal,
 } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';

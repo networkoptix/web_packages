@@ -3,20 +3,20 @@ import {
     AfterContentInit,
     ChangeDetectionStrategy,
     Component,
+    computed,
     ContentChild,
     DestroyRef,
-    OnDestroy,
-    Optional,
-    SkipSelf,
-    computed,
     effect,
     forwardRef,
     input,
+    OnDestroy,
+    Optional,
     signal,
+    SkipSelf,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormGroupDirective, NgControl } from '@angular/forms';
-import { merge, filter, tap } from 'rxjs';
+import { filter, merge, tap } from 'rxjs';
 
 import { NxThemeAttributeDirective } from '@directives/theme-attribute.directive';
 
@@ -24,7 +24,7 @@ import { NxControlMessagesComponent as NxMessages } from '../control-messages/co
 import { NxFormObserverDirective } from '../form-observer.directive';
 import { NxLabelComponent } from '../label/label.component';
 
-import { ControlState, ErrorMatcherFn, errorMatcherFactory } from './error-state-matcher';
+import { ControlState, errorMatcherFactory, ErrorMatcherFn } from './error-state-matcher';
 import { NxFormFieldControlDirective as NxControlDirective } from './form-field-control.directive';
 import { NxFormFieldToken } from './form-field.token';
 

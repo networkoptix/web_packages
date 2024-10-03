@@ -3,10 +3,10 @@ import { isRequiresTranscoding } from 'nx-open-web/packages/webrtc-stream-manage
 
 import { ResourceNode, ResourceType } from '@components/layout-grid/layout-grid.types';
 import staticLang from '@language_static';
-import { WebPages, WebPage } from '@services/system-api.types';
+import { WebPage, WebPages } from '@services/system-api.types';
 import {
-    NxSystemCamera,
     CameraStatus,
+    NxSystemCamera,
     RecordingStatus,
 } from '@services/system.service/camera-manager/camera-manager-types';
 import { NxSystemServer } from '@services/system.service/system-server-types';

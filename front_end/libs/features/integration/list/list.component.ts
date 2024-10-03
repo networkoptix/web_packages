@@ -1,4 +1,4 @@
-import { Component, OnDestroy, Input, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
 import { NxRibbonService } from '@components/ribbon/ribbon.service';

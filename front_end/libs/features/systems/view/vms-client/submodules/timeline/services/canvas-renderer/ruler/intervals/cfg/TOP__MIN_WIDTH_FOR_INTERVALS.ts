@@ -1,4 +1,4 @@
-import { SECOND, MINUTE, DAY } from '../regularLengthIntervals';
+import { DAY, MINUTE, SECOND } from '../regularLengthIntervals';
 
 export const TOP__MIN_WIDTH_FOR_INTERVALS = {
     [SECOND]: 200,

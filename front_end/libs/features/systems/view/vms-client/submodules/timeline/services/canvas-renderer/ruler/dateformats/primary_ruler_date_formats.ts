@@ -1,10 +1,10 @@
 import {
-    SECOND,
-    MINUTE,
-    HOUR,
     DAY,
-    ROUGH_YEAR,
+    HOUR,
+    MINUTE,
     ROUGH_MONTH,
+    ROUGH_YEAR,
+    SECOND,
 } from '../intervals/regularLengthIntervals';
 
 import { LABEL_FORMATS as LF } from './label_formats';

@@ -1,20 +1,20 @@
 import { CommonModule } from '@angular/common';
 import {
     Component,
-    Input,
-    forwardRef,
-    EventEmitter,
-    Output,
     ElementRef,
+    EventEmitter,
+    forwardRef,
+    Input,
+    Output,
     ViewChild,
 } from '@angular/core';
 import {
-    NgForm,
+    FormControl,
     NG_VALIDATORS,
     NG_VALUE_ACCESSOR,
-    FormControl,
-    Validator,
+    NgForm,
     ValidationErrors,
+    Validator,
 } from '@angular/forms';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { escapeRegExp } from 'lodash-es';

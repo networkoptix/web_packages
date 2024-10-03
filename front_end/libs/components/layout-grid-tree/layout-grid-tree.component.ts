@@ -23,7 +23,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { cloneDeep, isEqual } from 'lodash-es';
 import { TourMatMenuModule, TourService } from 'ngx-ui-tour-md-menu';
-import { BehaviorSubject, Subject, combineLatest, of, timer, firstValueFrom } from 'rxjs';
+import { BehaviorSubject, combineLatest, firstValueFrom, of, Subject, timer } from 'rxjs';
 import {
     delay,
     distinctUntilChanged,
@@ -40,8 +40,8 @@ import { v4 as uuid } from 'uuid';
 
 import { NxContextMenu } from '@components/context-menu/context-menu';
 import {
-    MenuItem,
     BaseMenuItem,
+    MenuItem,
     MenuItemsOrMenuItemsFactory,
 } from '@components/context-menu/context-menu.types';
 import { EditableModule } from '@components/editable/editable.module';

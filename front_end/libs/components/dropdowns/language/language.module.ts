@@ -7,7 +7,7 @@ import { NxArrowNavDirective } from '@directives/nx-arrow-nav';
 import { NxClickElsewhereDirective } from '@directives/nx-click-elsewhere';
 import { PipesModule } from '@pipes/pipes.module';
 
-import { NxLanguageDropdown, NxHeaderLanguageDropdown } from './language.component';
+import { NxHeaderLanguageDropdown, NxLanguageDropdown } from './language.component';
 
 @NgModule({
     imports: [

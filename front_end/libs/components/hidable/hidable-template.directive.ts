@@ -1,4 +1,4 @@
-import { Directive, HostBinding, Input, booleanAttribute } from '@angular/core';
+import { booleanAttribute, Directive, HostBinding, Input } from '@angular/core';
 
 /**
  * Directive to mark an element as the element to be shown when the NxHidableComponent

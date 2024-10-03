@@ -1,18 +1,18 @@
 import {
     Component,
+    ElementRef,
+    Inject,
+    Injector,
+    OnDestroy,
     OnInit,
     Renderer2,
     ViewChild,
-    ElementRef,
-    Inject,
-    OnDestroy,
-    Injector,
 } from '@angular/core';
 import { ActivatedRoute, ActivatedRouteSnapshot, NavigationEnd, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { isEqual } from 'lodash-es';
-import { firstValueFrom, BehaviorSubject, combineLatest, from, Observable, of } from 'rxjs';
-import { switchMap, tap, map, filter, startWith, catchError } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, firstValueFrom, from, Observable, of } from 'rxjs';
+import { catchError, filter, map, startWith, switchMap, tap } from 'rxjs/operators';
 
 import type {
     ClickEvent,

@@ -1,15 +1,15 @@
 import { Location } from '@angular/common';
 import {
+    AfterViewInit,
     Component,
-    Input,
-    Output,
+    ElementRef,
     EventEmitter,
+    Input,
     OnChanges,
     OnInit,
-    ViewEncapsulation,
+    Output,
     ViewChild,
-    ElementRef,
-    AfterViewInit,
+    ViewEncapsulation,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';

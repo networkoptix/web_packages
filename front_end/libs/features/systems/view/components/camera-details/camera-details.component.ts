@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnChanges, Inject } from '@angular/core';
+import { Component, EventEmitter, Inject, Input, OnChanges, Output } from '@angular/core';
 import { ClipboardService } from 'ngx-clipboard';
 
 import staticLang from '@language_static';

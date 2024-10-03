@@ -1,12 +1,12 @@
 import {
+    booleanAttribute,
     Component,
-    Input,
-    forwardRef,
+    ElementRef,
     EventEmitter,
+    forwardRef,
+    Input,
     Output,
     ViewChild,
-    ElementRef,
-    booleanAttribute,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 

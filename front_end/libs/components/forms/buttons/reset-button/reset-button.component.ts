@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, SkipSelf, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, SkipSelf } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 
 import type { NxFormResetFn } from '@components/forms/apply-v3/apply-v3.types';

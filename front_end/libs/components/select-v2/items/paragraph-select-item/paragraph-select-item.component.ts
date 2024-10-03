@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, ViewChild, forwardRef } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, forwardRef, ViewChild } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 import { NxThemeAttributeDirective } from '@directives/theme-attribute.directive';

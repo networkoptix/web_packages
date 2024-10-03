@@ -1,9 +1,9 @@
-import { Injectable, inject } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { cloneDeep } from 'lodash-es';
 import { NgxIndexedDBService } from 'ngx-indexed-db';
-import { firstValueFrom, BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, Subject } from 'rxjs';
 
 import { MenuNodeWithParent } from '@components/developers-menu/developers-menu-types';
 import { NxCloudApiService } from '@services/nx-cloud-api';
@@ -20,14 +20,14 @@ import { useBrandingVariables } from '@utils/nx';
 
 import {
     addAPIInfoNodesToMenu,
-    mergeAPIDocs,
-    prepareSwaggerAPIDoc,
     addSeperator,
     generateMenu,
+    mergeAPIDocs,
+    prepareSwaggerAPIDoc,
 } from '../api-file-utils';
 import { APIDoc } from '../api-tool-types';
 
-import type { EmitInfo, Store, ReadOnlyAPIStore, MarkdownIndex } from './api-tool-service-types';
+import type { EmitInfo, MarkdownIndex, ReadOnlyAPIStore, Store } from './api-tool-service-types';
 
 @UntilDestroy()
 @Injectable()

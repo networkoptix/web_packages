@@ -2,13 +2,13 @@ import { DOCUMENT } from '@angular/common';
 import {
     Component,
     DestroyRef,
+    effect,
+    inject,
     Inject,
     OnInit,
     Renderer2,
     ViewChild,
     ViewContainerRef,
-    effect,
-    inject,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {

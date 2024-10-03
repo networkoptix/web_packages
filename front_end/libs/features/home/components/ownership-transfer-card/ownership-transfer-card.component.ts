@@ -3,7 +3,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import staticLang from '@language_static';
-import { images, icons } from '@static-variables';
+import { icons, images } from '@static-variables';
 
 // Usage
 // <nx-ownership-transfer-card [username]="systemOwner" (canTransfer)="handleTransfer($event: boolean)">

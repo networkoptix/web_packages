@@ -35,9 +35,9 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { cloneDeep, flatten, groupBy, isEqual, mapValues, pick, values } from 'lodash-es';
 import { TourMatMenuModule, TourService } from 'ngx-ui-tour-md-menu';
 import {
-    firstValueFrom,
     BehaviorSubject,
     combineLatest,
+    firstValueFrom,
     forkJoin,
     from,
     fromEvent,
@@ -79,8 +79,8 @@ import { NxResizeObserver } from '@directives/resize/nx-resize.directive';
 import staticLang from '@language_static';
 import {
     ConnectionError,
-    WebRTCStreamManager,
     isRequiresTranscoding,
+    WebRTCStreamManager,
 } from '@openLibs/webrtc-stream-manager';
 import { NxImageComponent } from '@pages/health/table-components/image/image.component';
 import { Translatable } from '@pipes/nx-translate.types';

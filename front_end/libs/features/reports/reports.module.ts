@@ -1,4 +1,4 @@
-import { NgModule, inject } from '@angular/core';
+import { inject, NgModule } from '@angular/core';
 import { Router, RouterModule, Routes } from '@angular/router';
 
 import { nxConfig } from '@services/nx-config/config';

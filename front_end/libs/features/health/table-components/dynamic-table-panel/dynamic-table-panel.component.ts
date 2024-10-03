@@ -9,9 +9,9 @@ import {
 } from '@angular/core';
 
 import {
+    InfoBlockLine,
     InfoBlockSection,
     InfoBlockSections,
-    InfoBlockLine,
 } from '@components/info-block/info-block.component.types';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 

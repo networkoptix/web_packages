@@ -4,7 +4,7 @@ import { ChangeDetectorRef, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { BehaviorSubject, defer, Subject } from 'rxjs';
-import { debounceTime, switchMap, shareReplay, map, filter } from 'rxjs/operators';
+import { debounceTime, filter, map, shareReplay, switchMap } from 'rxjs/operators';
 
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';

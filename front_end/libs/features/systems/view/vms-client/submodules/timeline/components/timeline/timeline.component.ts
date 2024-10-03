@@ -1,13 +1,13 @@
 import {
-    Component,
-    OnInit,
-    ElementRef,
-    ViewChild,
     AfterViewInit,
-    OnDestroy,
+    Component,
+    ElementRef,
     HostListener,
     Inject,
     Input,
+    OnDestroy,
+    OnInit,
+    ViewChild,
 } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { DeviceDetectorService } from 'ngx-device-detector';
@@ -19,8 +19,8 @@ import { NxSystemService } from '@services/system.service/system.service';
 import { WINDOW } from '@services/window-provider';
 import { WebClientUxService } from '@view/services/webclient-ux.service';
 import { PlaybackService } from '@vms-client/submodules/playback/services/playback.service';
-import { calcScreenX, calcOffsetX, calcOffsetY } from '@vms-client/utils/calculate-coordinates';
-import { px, ms } from '@vms-client/utils/type-aliases';
+import { calcOffsetX, calcOffsetY, calcScreenX } from '@vms-client/utils/calculate-coordinates';
+import { ms, px } from '@vms-client/utils/type-aliases';
 
 import { TimelineCanvasRendererService } from '../../services/canvas-renderer/timeline.canvas-renderer.service';
 import { TimelineSelectionService } from '../../services/timeline.selection.service';

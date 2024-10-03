@@ -2,11 +2,11 @@ import { CommonModule } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
+    computed,
     ElementRef,
     Inject,
-    SkipSelf,
-    computed,
     input,
+    SkipSelf,
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 

@@ -1,13 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, forwardRef, ViewEncapsulation } from '@angular/core';
+import { Component, forwardRef, Input, ViewEncapsulation } from '@angular/core';
 import {
     ControlValueAccessor,
-    NG_VALUE_ACCESSOR,
-    NG_VALIDATORS,
-    Validator,
     FormControl,
-    ValidationErrors,
     FormsModule,
+    NG_VALIDATORS,
+    NG_VALUE_ACCESSOR,
+    ValidationErrors,
+    Validator,
 } from '@angular/forms';
 
 import { NxFocusMeDirective } from '@directives/nx-focus-me';

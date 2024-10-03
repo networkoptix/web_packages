@@ -1,12 +1,12 @@
 import { memoize } from 'lodash-es';
 
 import {
-    ResourceType,
     BaseResourceNode,
-    ResourceNodeMap,
-    ResourceTypeAssertMap,
-    ResourceParentNodeMap,
     ResourceLeafNodeMap,
+    ResourceNodeMap,
+    ResourceParentNodeMap,
+    ResourceType,
+    ResourceTypeAssertMap,
 } from './layout-grid.types';
 
 /**

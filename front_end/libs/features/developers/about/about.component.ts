@@ -1,7 +1,7 @@
 import { Component, Injector } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { firstValueFrom, BehaviorSubject, SubscriptionLike } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, SubscriptionLike } from 'rxjs';
 import { filter, tap } from 'rxjs/operators';
 
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
@@ -19,10 +19,10 @@ import { NxHeaderService } from '@services/nx-header.service';
 import { NxPageService } from '@services/page.service';
 
 import {
-    AboutStructure,
-    AboutTemplates,
     AboutNode,
+    AboutStructure,
     AboutStructureNode,
+    AboutTemplates,
 } from './about.component.types';
 
 @UntilDestroy({ checkProperties: true, blackList: ['aboutStructure$'] })

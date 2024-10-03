@@ -3,7 +3,7 @@ import staticLang from '@language_static';
 import { setupComponent } from '../src/setup';
 
 import { NxInfoBlockComponent } from './info-block.component';
-import { InfoBlockSection, InfoBlockLine } from './info-block.component.types';
+import { InfoBlockLine, InfoBlockSection } from './info-block.component.types';
 
 const setupInfoBlockComponent = (): ReturnType<typeof setupComponent<NxInfoBlockComponent>> => {
     NxInfoBlockComponent.prototype.sectionsOrColumns = [

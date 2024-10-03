@@ -17,12 +17,12 @@ import { ms, percentage } from '@vms-client/utils/type-aliases';
 
 import { assertNever } from '../../../utils';
 import {
-    PLAYBACK_MODE,
-    PlaybackState,
-    createInitialStoppedState,
+    ArchivePlaybackState,
     createInitialArchiveState,
     createInitialLiveState,
-    ArchivePlaybackState,
+    createInitialStoppedState,
+    PLAYBACK_MODE,
+    PlaybackState,
 } from '../datatypes/PlaybackState';
 
 @UntilDestroy()

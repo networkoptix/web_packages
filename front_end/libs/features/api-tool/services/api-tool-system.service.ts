@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { isEqual, cloneDeep } from 'lodash-es';
+import { cloneDeep, isEqual } from 'lodash-es';
 import { NgxIndexedDBService } from 'ngx-indexed-db';
-import { firstValueFrom, BehaviorSubject, of, Subject, Subscription } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, of, Subject, Subscription } from 'rxjs';
 import {
     catchError,
     delay,

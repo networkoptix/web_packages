@@ -4,13 +4,13 @@ import { setEntities } from '@ngrx/signals/entities';
 import { mapToSystemItem } from '../groups-utils';
 
 import {
-    setupGroupsStore,
-    uuid,
+    findItem,
+    generateGroup,
     generateGroups,
     populateStore,
     sample,
-    generateGroup,
-    findItem,
+    setupGroupsStore,
+    uuid,
 } from './groups-test-helpers';
 
 describe('GroupsStore: Base Methods', () => {

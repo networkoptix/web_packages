@@ -1,6 +1,6 @@
 import { inject } from '@angular/core';
-import { CanActivateFn, ActivatedRouteSnapshot, Router } from '@angular/router';
-import { Observable, catchError, firstValueFrom, from, iif, map, switchMap } from 'rxjs';
+import { ActivatedRouteSnapshot, CanActivateFn, Router } from '@angular/router';
+import { catchError, firstValueFrom, from, iif, map, Observable, switchMap } from 'rxjs';
 
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { NxSystemsService } from '@services/systems.service';

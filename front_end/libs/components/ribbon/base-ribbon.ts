@@ -1,4 +1,4 @@
-import { Signal, effect, inject } from '@angular/core';
+import { effect, inject, Signal } from '@angular/core';
 
 import { Translatable } from '@pipes/nx-translate.types';
 import { NxHeaderService } from '@services/nx-header.service';

@@ -3,7 +3,7 @@ import dateFormat from 'dateformat';
 
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
-import { ms, int, px } from '@vms-client/utils/type-aliases';
+import { int, ms, px } from '@vms-client/utils/type-aliases';
 
 import { cfg } from '../../timeline.config';
 import { TimelineService } from '../../timeline.service';

@@ -1,25 +1,25 @@
 import { CommonModule } from '@angular/common';
 import {
+    booleanAttribute,
     Component,
-    Input,
-    Output,
     EventEmitter,
     forwardRef,
-    OnInit,
-    ViewEncapsulation,
-    OnChanges,
-    booleanAttribute,
     input,
+    Input,
+    OnChanges,
+    OnInit,
+    Output,
+    ViewEncapsulation,
 } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import {
-    NG_VALUE_ACCESSOR,
     ControlValueAccessor,
-    NG_VALIDATORS,
     FormControl,
-    Validator,
-    ValidationErrors,
     FormsModule,
+    NG_VALIDATORS,
+    NG_VALUE_ACCESSOR,
+    ValidationErrors,
+    Validator,
 } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 
