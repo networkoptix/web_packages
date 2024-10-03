@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, booleanAttribute, computed, input } from '@angular/core';
+import { booleanAttribute, Component, computed, input } from '@angular/core';
 import { random } from 'lodash-es';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 

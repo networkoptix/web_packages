@@ -3,13 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import {
     ChangeDetectionStrategy,
     Component,
-    OnInit,
     computed,
-    input,
-    signal,
     inject,
+    input,
+    OnInit,
+    signal,
 } from '@angular/core';
-import { Observable, firstValueFrom, map, shareReplay } from 'rxjs';
+import { firstValueFrom, map, Observable, shareReplay } from 'rxjs';
 
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxAppStateService } from '@services/nx-app-state.service';

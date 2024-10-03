@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, SkipSelf, computed, input } from '@angular/core';
+import { Component, computed, input, SkipSelf } from '@angular/core';
 
 import { NxFormObserverDirective } from '@components/forms/form-observer.directive';
 import { AsyncAction } from '@dialogs/async-action-button/create-async-action';

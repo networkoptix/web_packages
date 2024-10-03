@@ -1,11 +1,11 @@
 import {
     ChangeDetectionStrategy,
     Component,
+    computed,
     ContentChildren,
+    forwardRef,
     HostListener,
     QueryList,
-    computed,
-    forwardRef,
     signal,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';

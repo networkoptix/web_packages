@@ -1,11 +1,11 @@
 import {
     Component,
-    OnInit,
-    Input,
-    ViewChild,
     ElementRef,
+    Input,
     OnChanges,
     OnDestroy,
+    OnInit,
+    ViewChild,
 } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation, input } from '@angular/core';
+import { Component, input, OnInit, ViewEncapsulation } from '@angular/core';
 
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxDateTimeFormatService } from '@services/datetime-format.service';

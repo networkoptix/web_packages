@@ -1,13 +1,13 @@
 import { CommonModule } from '@angular/common';
 import {
     Component,
-    OnDestroy,
     ElementRef,
-    ViewChild,
-    Input,
-    Output,
     EventEmitter,
+    Input,
     OnChanges,
+    OnDestroy,
+    Output,
+    ViewChild,
     ViewEncapsulation,
 } from '@angular/core';
 import { Observable, Subject } from 'rxjs';

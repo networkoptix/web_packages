@@ -22,10 +22,10 @@ import { MenuItemsOrMenuItemsFactory } from '@components/context-menu/context-me
 import { EditableModule } from '@components/editable/editable.module';
 import { NxMonitoringGraphComponent } from '@components/graph/graph.component';
 import {
-    assertResourceOfType,
-    assertResourceBaseNode,
-    assertOtherSystemsBaseNode,
     assertIsNoResultsNode,
+    assertOtherSystemsBaseNode,
+    assertResourceBaseNode,
+    assertResourceOfType,
 } from '@components/layout-grid/layout-grid.type-guards';
 import {
     BaseResourceNode,

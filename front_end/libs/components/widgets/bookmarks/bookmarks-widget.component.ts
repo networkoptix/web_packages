@@ -3,7 +3,7 @@ import { ChangeDetectorRef, Component } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { Observable, Subject } from 'rxjs';
-import { debounceTime, switchMap, shareReplay, map, tap, catchError } from 'rxjs/operators';
+import { catchError, debounceTime, map, shareReplay, switchMap, tap } from 'rxjs/operators';
 
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';

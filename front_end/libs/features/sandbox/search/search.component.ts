@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
+import { Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { range } from 'lodash-es';
-import { timer, map } from 'rxjs';
+import { map, timer } from 'rxjs';
 import { v4 as uuid } from 'uuid';
 
 import { NxAutoCompleteItemComponent } from '@components/autocomplete/autocomplete-item/autocomplete-item.component';

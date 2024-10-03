@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit, ViewEncapsulation, booleanAttribute } from '@angular/core';
+import { booleanAttribute, Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';

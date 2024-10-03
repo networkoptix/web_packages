@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { Input, Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import dateFormat from 'dateformat';
 import { timer } from 'rxjs';
 import { map } from 'rxjs/operators';

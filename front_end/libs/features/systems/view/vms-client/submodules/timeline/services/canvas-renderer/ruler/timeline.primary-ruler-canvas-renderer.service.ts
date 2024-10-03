@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import dateFormat from 'dateformat';
 
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { ms, int, px } from '@view/datatypes/type-aliases';
+import { int, ms, px } from '@view/datatypes/type-aliases';
 import { VideoManagementSystemService } from '@view/services/vms.service';
 
 import { cfg } from '../../timeline.config';

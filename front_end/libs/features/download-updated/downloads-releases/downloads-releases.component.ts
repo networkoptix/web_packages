@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, effect, Input, AfterViewInit, inject } from '@angular/core';
+import { AfterViewInit, Component, effect, inject, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';

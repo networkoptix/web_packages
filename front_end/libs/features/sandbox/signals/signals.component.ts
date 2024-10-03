@@ -5,9 +5,9 @@ import { map, skip, startWith, switchMap, take, timer } from 'rxjs';
 
 import {
     bindSignals,
+    createBoundSignal,
     paramModel,
     paramSignal,
-    createBoundSignal,
     pipeSignal,
 } from '@utils/signals';
 

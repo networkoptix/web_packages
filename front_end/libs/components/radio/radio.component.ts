@@ -1,21 +1,21 @@
 import { CommonModule } from '@angular/common';
 import {
+    booleanAttribute,
     Component,
-    Input,
-    Output,
     EventEmitter,
     forwardRef,
+    Input,
     OnInit,
-    ViewEncapsulation,
+    Output,
     ViewChild,
-    booleanAttribute,
+    ViewEncapsulation,
 } from '@angular/core';
 import {
-    NG_VALUE_ACCESSOR,
     ControlValueAccessor,
-    Validator,
-    ValidationErrors,
     FormControl,
+    NG_VALUE_ACCESSOR,
+    ValidationErrors,
+    Validator,
 } from '@angular/forms';
 
 /* Usage

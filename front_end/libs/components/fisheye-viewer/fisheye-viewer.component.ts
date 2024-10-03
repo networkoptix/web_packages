@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, computed, effect, inject, input, signal } from '@angular/core';
+import { Component, computed, effect, ElementRef, inject, input, signal } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { isEqual } from 'lodash-es';
 

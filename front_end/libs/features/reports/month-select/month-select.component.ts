@@ -3,10 +3,10 @@ import { CommonModule } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
+    computed,
     ElementRef,
     Input,
     Output,
-    computed,
     signal,
 } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';

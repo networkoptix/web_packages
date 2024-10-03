@@ -1,4 +1,4 @@
-import type { BaseGroupsItem, BaseGroupItem, SystemInfo } from '../home.types';
+import type { BaseGroupItem, BaseGroupsItem, SystemInfo } from '../home.types';
 
 export interface Connected {
     action: 'connected';

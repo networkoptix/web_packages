@@ -1,13 +1,13 @@
 import {
-    Component,
-    ViewEncapsulation,
-    Input,
-    forwardRef,
-    Directive,
-    Output,
-    EventEmitter,
     booleanAttribute,
+    Component,
+    Directive,
+    EventEmitter,
+    forwardRef,
+    Input,
+    Output,
     signal,
+    ViewEncapsulation,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { LocalStorageService } from 'ngx-webstorage';

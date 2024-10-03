@@ -1,7 +1,7 @@
 import { ServerStatus } from '@services/system.service/camera-manager/camera-manager-types';
 
 import { generateServers } from './mocks/servers-mocks';
-import { parseServers, getServerStatus } from './parse-servers';
+import { getServerStatus, parseServers } from './parse-servers';
 
 describe('parseServers', () => {
     it('should parse servers correctly', () => {

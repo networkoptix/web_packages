@@ -1,5 +1,5 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { icons } from '@variables/static-variables';

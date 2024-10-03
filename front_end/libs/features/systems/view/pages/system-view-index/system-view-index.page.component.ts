@@ -1,13 +1,13 @@
 import {
     Component,
-    OnInit,
-    OnDestroy,
-    ElementRef,
-    HostListener,
-    Renderer2,
-    HostBinding,
     effect,
+    ElementRef,
+    HostBinding,
+    HostListener,
     Input,
+    OnDestroy,
+    OnInit,
+    Renderer2,
 } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -23,7 +23,7 @@ import staticLang from '@language_static';
 import { nxConfig } from '@services/nx-config/config';
 import { DeviceType } from '@services/system.service/camera-manager/camera-manager-types';
 import type { NxSystem } from '@services/system.service/system';
-import type { ViewBaseServer, ViewBaseCamera } from '@services/system.service/types/servers.types';
+import type { ViewBaseCamera, ViewBaseServer } from '@services/system.service/types/servers.types';
 import { NxSystemsService } from '@services/systems.service';
 import { NxToastService } from '@services/toast.service';
 import { icons } from '@static-variables';
@@ -33,7 +33,7 @@ import type { ms } from '@view/datatypes/type-aliases';
 import { VideoManagementSystemService } from '@view/services/vms.service';
 import { TimelineService } from '@vms-client/submodules/timeline/services/timeline.service';
 
-import { ViewCamera, CAMERA_STATUS } from '../../datatypes/Camera';
+import { CAMERA_STATUS, ViewCamera } from '../../datatypes/Camera';
 import type { ViewMediaServer } from '../../datatypes/IMediaServer';
 import type { BaseTimeRange } from '../../datatypes/TimeRange';
 import { newBaseTimeRange } from '../../datatypes/TimeRange';

@@ -1,9 +1,9 @@
 import { inject } from '@angular/core';
 import {
-    CanActivateFn,
     ActivatedRouteSnapshot,
-    RouterStateSnapshot,
+    CanActivateFn,
     Router,
+    RouterStateSnapshot,
 } from '@angular/router';
 
 import { ChannelPartnersRouteState } from '../store/route-state/route-state.store';

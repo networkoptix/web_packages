@@ -1,6 +1,6 @@
 import { int, ms } from '@view/datatypes/type-aliases';
 
-import { TimeRangeUtils, newBaseTimeRange, BaseTimeRange } from './TimeRange';
+import { BaseTimeRange, newBaseTimeRange, TimeRangeUtils } from './TimeRange';
 
 function getNextRecord(archive: BaseTimeRange[], t: ms): BaseTimeRange | null {
     // binary search approach:

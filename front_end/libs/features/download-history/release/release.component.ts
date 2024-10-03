@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 import staticLang from '@language_static';
 import type { Downloads } from '@services/nx-cloud-api/nx-cloud-api.types';

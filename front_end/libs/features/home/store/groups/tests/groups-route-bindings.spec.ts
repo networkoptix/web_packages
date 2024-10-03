@@ -1,4 +1,4 @@
-import { setupGroupsStore, generateIds, uuid, sample } from './groups-test-helpers';
+import { generateIds, sample, setupGroupsStore, uuid } from './groups-test-helpers';
 
 describe('Groups Store: Route Bindings', () => {
     describe('param state bindings', () => {

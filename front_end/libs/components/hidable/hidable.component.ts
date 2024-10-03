@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, effect, inject } from '@angular/core';
-import { BehaviorSubject, animationFrameScheduler, debounceTime, map, merge } from 'rxjs';
+import { animationFrameScheduler, BehaviorSubject, debounceTime, map, merge } from 'rxjs';
 
 import { NxResizeObserver } from '@directives/resize/nx-resize.directive';
 import { Size } from '@directives/resize/nx-resize.directive.types';

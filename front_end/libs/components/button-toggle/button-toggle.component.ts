@@ -2,12 +2,12 @@ import { CommonModule } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
+    computed,
     ElementRef,
     Inject,
+    input,
     ViewChild,
     ViewEncapsulation,
-    computed,
-    input,
 } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';

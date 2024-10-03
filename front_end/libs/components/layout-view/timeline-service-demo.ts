@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
-import { uniq, isEqual } from 'lodash-es';
-import { map, distinctUntilChanged, switchMap, filter } from 'rxjs';
+import { isEqual, uniq } from 'lodash-es';
+import { distinctUntilChanged, filter, map, switchMap } from 'rxjs';
 
 import { assertResourceOfType } from '@components/layout-grid/layout-grid.type-guards';
 import { LayoutSelectionStore } from '@services/layout-state/store/layout-selection.store';

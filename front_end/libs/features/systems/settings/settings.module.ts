@@ -1,14 +1,14 @@
 import { CommonModule } from '@angular/common';
-import { NgModule, inject } from '@angular/core';
+import { inject, NgModule } from '@angular/core';
 import {
     ActivatedRouteSnapshot,
     CanActivateFn,
+    createUrlTreeFromSnapshot,
     Router,
     RouterModule,
     RouterStateSnapshot,
     Routes,
     type UrlTree,
-    createUrlTreeFromSnapshot,
 } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';

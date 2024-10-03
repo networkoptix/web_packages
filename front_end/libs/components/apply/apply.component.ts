@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, forwardRef, Input, HostListener, ViewChild, HostBinding } from '@angular/core';
+import { Component, forwardRef, HostBinding, HostListener, Input, ViewChild } from '@angular/core';
 import { NG_VALUE_ACCESSOR, NgForm } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 

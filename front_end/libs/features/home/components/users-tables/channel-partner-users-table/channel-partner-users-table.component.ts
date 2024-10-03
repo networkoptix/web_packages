@@ -1,4 +1,4 @@
-import { Component, Output, computed, inject, input } from '@angular/core';
+import { Component, computed, inject, input, Output } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 

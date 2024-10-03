@@ -1,14 +1,14 @@
 import { CommonModule } from '@angular/common';
 import {
     Component,
-    ElementRef,
-    Input,
-    ViewEncapsulation,
-    inject,
     effect,
-    viewChild,
-    untracked,
+    ElementRef,
+    inject,
     input,
+    Input,
+    untracked,
+    viewChild,
+    ViewEncapsulation,
 } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';

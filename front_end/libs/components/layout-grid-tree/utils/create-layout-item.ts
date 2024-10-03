@@ -7,7 +7,7 @@ import {
     ResourceLeafNode,
 } from '@components/layout-grid/layout-grid.types';
 import { LayoutItem } from '@services/system-api.types/layouts.types';
-import { dirtyId, cleanId } from '@utils/general';
+import { cleanId, dirtyId } from '@utils/general';
 
 export const findOtherSiteCamera = (
     items: LayoutResourceTree['otherSystems'],

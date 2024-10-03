@@ -2,22 +2,22 @@ import { DomPortal, PortalModule } from '@angular/cdk/portal';
 import { CommonModule } from '@angular/common';
 import {
     AfterViewInit,
+    booleanAttribute,
     ChangeDetectionStrategy,
     Component,
+    computed,
     ContentChildren,
+    effect,
     ElementRef,
+    forwardRef,
     HostBinding,
     Inject,
-    QueryList,
-    SkipSelf,
-    ViewChildren,
-    booleanAttribute,
-    computed,
-    effect,
-    forwardRef,
     input,
+    QueryList,
     signal,
+    SkipSelf,
     untracked,
+    ViewChildren,
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 

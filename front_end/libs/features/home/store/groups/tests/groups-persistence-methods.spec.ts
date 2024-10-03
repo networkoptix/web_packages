@@ -1,7 +1,7 @@
 import { patchState } from '@ngrx/signals';
 import { setEntities } from '@ngrx/signals/entities';
 import { random } from 'lodash-es';
-import { Observable, firstValueFrom, of } from 'rxjs';
+import { firstValueFrom, Observable, of } from 'rxjs';
 
 import staticLang from '@language_static';
 import { TranslateObject } from '@pipes/nx-translate.types';
@@ -15,13 +15,13 @@ import {
 import { mapToSystemItem } from '../groups-utils';
 
 import {
-    setupGroupsStore,
-    sample,
-    generateIds,
-    generateGroupsAndSystems,
-    generateGroup,
     findItem,
+    generateGroup,
+    generateGroupsAndSystems,
+    generateIds,
     populateStore,
+    sample,
+    setupGroupsStore,
 } from './groups-test-helpers';
 
 const {

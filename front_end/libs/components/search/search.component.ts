@@ -1,23 +1,23 @@
 import { Direction } from '@angular/cdk/bidi';
 import { CommonModule } from '@angular/common';
 import {
-    Component,
-    OnInit,
-    Input,
-    forwardRef,
-    ViewEncapsulation,
-    EventEmitter,
-    Output,
     booleanAttribute,
+    Component,
+    EventEmitter,
+    forwardRef,
     input,
+    Input,
+    OnInit,
+    Output,
+    ViewEncapsulation,
 } from '@angular/core';
-import { NG_VALUE_ACCESSOR, ControlValueAccessor, FormsModule } from '@angular/forms';
+import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-import { isEqual, cloneDeep } from 'lodash-es';
-import { Subject, from } from 'rxjs';
+import { cloneDeep, isEqual } from 'lodash-es';
+import { from, Subject } from 'rxjs';
 import { debounceTime, switchMap } from 'rxjs/operators';
 import { v4 as uuid } from 'uuid';
 

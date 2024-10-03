@@ -1,6 +1,6 @@
 import { CdkMenuModule } from '@angular/cdk/menu';
 import { CommonModule } from '@angular/common';
-import { Component, DestroyRef, inject, computed, signal } from '@angular/core';
+import { Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterOutlet } from '@angular/router';
@@ -8,7 +8,7 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-import { NEVER, debounceTime, distinctUntilChanged, filter, map, mergeWith, switchMap } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, map, mergeWith, NEVER, switchMap } from 'rxjs';
 
 import * as CPActions from '@common/store/channel-partners/channel-partners.actions';
 import {

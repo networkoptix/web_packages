@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { toGamut, formatCss, converter, differenceEuclidean } from 'culori';
+import { converter, differenceEuclidean, formatCss, toGamut } from 'culori';
 
 import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
 import { NxSwitchComponent } from '@components/switch/switch.component';

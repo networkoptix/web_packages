@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ViewEncapsulation, inject } from '@angular/core';
+import { Component, inject, ViewEncapsulation } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterModule } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';

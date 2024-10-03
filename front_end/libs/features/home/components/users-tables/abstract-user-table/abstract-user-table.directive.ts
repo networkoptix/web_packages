@@ -1,4 +1,4 @@
-import { Directive, ViewChild, inject } from '@angular/core';
+import { Directive, inject, ViewChild } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';

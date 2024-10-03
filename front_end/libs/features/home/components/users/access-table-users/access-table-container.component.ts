@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, ViewChild, computed, OnDestroy } from '@angular/core';
+import { Component, computed, Input, OnDestroy, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';

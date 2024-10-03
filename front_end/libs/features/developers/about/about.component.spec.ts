@@ -4,11 +4,11 @@ import { BehaviorSubject } from 'rxjs';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { HelperMockProvider } from '@mocks/helpers.test';
 import {
-    landingRoute,
     // docMenuMap,
-    menuStructure,
     documentation,
     introNode,
+    landingRoute,
+    menuStructure,
     routeLandingMock,
 } from '@mocks/knowledge_base_landing.mock';
 import { setupComponent } from '@pages/src/setup';

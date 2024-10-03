@@ -1,14 +1,14 @@
 import { CommonModule } from '@angular/common';
 import {
+    booleanAttribute,
     Component,
+    effect,
     ElementRef,
     Input,
     OnInit,
+    signal,
     ViewChild,
     ViewEncapsulation,
-    booleanAttribute,
-    signal,
-    effect,
 } from '@angular/core';
 
 /* Usage

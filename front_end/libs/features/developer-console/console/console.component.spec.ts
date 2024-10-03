@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { DebugElement, Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, DebugElement, EventEmitter, Input, Output } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, of } from 'rxjs';

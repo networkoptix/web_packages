@@ -1,4 +1,4 @@
-import { ElementRef, computed, effect, inject, signal, untracked } from '@angular/core';
+import { computed, effect, ElementRef, inject, signal, untracked } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { chartCartesian } from '@d3fc/d3fc-chart';
 import * as d3 from 'd3';
@@ -15,19 +15,19 @@ import { NxSystemCamera } from '@services/system.service/camera-manager/camera-m
 
 import { TimelineDataModel } from './timeline-data-model';
 import {
-    formatYear,
-    formatMinorMonth,
-    formatMonth,
-    formatMinorDay,
     formatDay,
-    formatMinorMinute,
-    formatMinute,
-    formatMinorSecond,
-    formatSecond,
-    formatMinorMillisecond,
+    formatMinorDay,
     formatMinorHour,
+    formatMinorMillisecond,
+    formatMinorMinute,
+    formatMinorMonth,
+    formatMinorSecond,
     formatMinorWeek,
     formatMinorYear,
+    formatMinute,
+    formatMonth,
+    formatSecond,
+    formatYear,
 } from './timeline-datatime-format';
 
 // const DAYS7_IN_MS = 604800000;

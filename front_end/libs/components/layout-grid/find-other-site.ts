@@ -1,5 +1,5 @@
 import { assertResourceOfType } from './layout-grid.type-guards';
-import { ResourceNode, ResourceLeafNodeMap, ResourceType } from './layout-grid.types';
+import { ResourceLeafNodeMap, ResourceNode, ResourceType } from './layout-grid.types';
 
 export const findOtherSite = (
     id: string,

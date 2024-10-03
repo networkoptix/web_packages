@@ -1,12 +1,12 @@
 import {
-    Component,
-    OnInit,
-    ElementRef,
-    ViewChild,
     AfterViewInit,
-    OnDestroy,
+    Component,
+    ElementRef,
     HostListener,
     Input,
+    OnDestroy,
+    OnInit,
+    ViewChild,
 } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { DeviceDetectorService } from 'ngx-device-detector';
@@ -15,11 +15,11 @@ import { debounceTime, startWith } from 'rxjs/operators';
 
 import { nxConfig } from '@services/nx-config/config';
 import { NxSystemService } from '@services/system.service/system.service';
-import { px, ms } from '@view/datatypes/type-aliases';
+import { ms, px } from '@view/datatypes/type-aliases';
 import { PlaybackService } from '@view/services/playback.service';
 import { WebClientUxService } from '@view/services/webclient-ux.service';
 
-import { calcScreenX, calcOffsetX, calcOffsetY } from '../../calculate-coordinates';
+import { calcOffsetX, calcOffsetY, calcScreenX } from '../../calculate-coordinates';
 import { TimelineCanvasRendererService } from '../../services/canvas-renderer/timeline.canvas-renderer.service';
 import { TimelineSelectionService } from '../../services/timeline.selection.service';
 import { TimelineService } from '../../services/timeline.service';

@@ -1,28 +1,28 @@
-import { Component, Inject, ViewContainerRef, Input, OnInit, inject } from '@angular/core';
+import { Component, inject, Inject, Input, OnInit, ViewContainerRef } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
-    combineLatest,
     BehaviorSubject,
-    Subject,
+    combineLatest,
     defer,
-    of,
-    timer,
-    Observable,
     firstValueFrom,
+    Observable,
+    of,
+    Subject,
+    timer,
 } from 'rxjs';
 import {
-    map,
-    takeUntil,
-    delay,
-    retryWhen,
-    distinctUntilChanged,
     bufferCount,
     concatMap,
+    delay,
+    distinctUntilChanged,
     filter,
-    tap,
+    map,
+    retryWhen,
+    startWith,
     switchMap,
     take,
-    startWith,
+    takeUntil,
+    tap,
 } from 'rxjs/operators';
 
 import type { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
@@ -38,11 +38,11 @@ import { Process } from '@services/process.service/process';
 import type { ChangedIdReturned } from '@services/system-api.types';
 import type { RebuildArchiveResponse } from '@services/system-api.types/servers.types';
 import {
-    STORAGE_STATUS,
-    Storage,
-    STORAGE_TYPES,
     CurrentStorageState,
     MODE,
+    Storage,
+    STORAGE_STATUS,
+    STORAGE_TYPES,
 } from '@services/system.service/storage-manager/storage';
 import { UpdateTriggers } from '@services/system.service/storage-manager/storage-state';
 import type { NxSystem } from '@services/system.service/system';

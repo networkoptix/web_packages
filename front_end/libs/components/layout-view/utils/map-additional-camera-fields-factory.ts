@@ -1,8 +1,8 @@
 import { NxSystemCameraWithMappedFields } from '@components/layout-grid/layout-grid.types';
 import { isRequiresTranscoding } from '@openLibs/webrtc-stream-manager';
 import {
-    NxSystemCamera,
     CameraStatus,
+    NxSystemCamera,
     RecordingStatus,
 } from '@services/system.service/camera-manager/camera-manager-types';
 import { NxSystemServer } from '@services/system.service/types/servers.types';

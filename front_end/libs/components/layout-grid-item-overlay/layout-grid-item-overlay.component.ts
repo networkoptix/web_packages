@@ -25,18 +25,18 @@ import { TourMatMenuModule } from 'ngx-ui-tour-md-menu';
 import { WebRTCStreamManager } from 'nx-open-web/packages/webrtc-stream-manager';
 import {
     distinctUntilChanged,
-    map,
-    switchMap,
     EMPTY,
-    interval,
     finalize,
-    startWith,
-    tap,
-    fromEvent,
-    sampleTime,
-    merge,
-    timer,
     firstValueFrom,
+    fromEvent,
+    interval,
+    map,
+    merge,
+    sampleTime,
+    startWith,
+    switchMap,
+    tap,
+    timer,
 } from 'rxjs';
 
 import { NxContextMenu } from '@components/context-menu/context-menu';

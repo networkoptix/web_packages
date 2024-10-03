@@ -1,4 +1,4 @@
-import { deg, rad, px } from './types';
+import { deg, px, rad } from './types';
 
 function degToRad(x: deg): rad {
     return (Math.PI / 180) * x;

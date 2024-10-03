@@ -20,7 +20,7 @@ import { NxSelectV2ItemComponent } from '@components/select-v2/items/select-item
 import { NxMultiSelectV2Component } from '@components/select-v2/multi-select-v2.component';
 import { NxSelectV2Component } from '@components/select-v2/select-v2.component';
 
-import { DropdownConfiguration, ComplicatedObject } from './multy-select.component.types';
+import { ComplicatedObject, DropdownConfiguration } from './multy-select.component.types';
 
 @Component({
     selector: 'multi-select',

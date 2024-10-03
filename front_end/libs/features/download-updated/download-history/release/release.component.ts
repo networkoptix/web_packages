@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 
 import staticLang from '@language_static';

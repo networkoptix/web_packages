@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
 import {
+    booleanAttribute,
     Component,
+    computed,
     ElementRef,
     Input,
-    ViewChild,
-    booleanAttribute,
-    computed,
     signal,
+    ViewChild,
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';

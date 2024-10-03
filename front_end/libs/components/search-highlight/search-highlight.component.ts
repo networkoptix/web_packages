@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnChanges, booleanAttribute } from '@angular/core';
+import { booleanAttribute, Component, Input, OnChanges } from '@angular/core';
 import { escapeRegExp } from 'lodash-es';
 
 import type { NgChanges } from '@utils/ng-changes';

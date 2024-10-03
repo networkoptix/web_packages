@@ -1,11 +1,11 @@
 import {
     Component,
+    computed,
     HostBinding,
     HostListener,
     Inject,
-    Input,
-    computed,
     input,
+    Input,
 } from '@angular/core';
 
 import { BaseFilterComponent } from '../base-filter.component';

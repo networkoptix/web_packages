@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';
 import { CookieService } from 'ngx-cookie-service';
-import { Subject, firstValueFrom, timer } from 'rxjs';
+import { firstValueFrom, Subject, timer } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { NxContentBlockComponent } from '@components/content-block/content-block.component';

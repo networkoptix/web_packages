@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, input } from '@angular/core';
+import { Component, input, ViewEncapsulation } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 
 import staticLang from '@language_static';

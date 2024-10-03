@@ -1,7 +1,7 @@
 import {
-    OverlayRef,
-    FlexibleConnectedPositionStrategy,
     ConnectedOverlayPositionChange,
+    FlexibleConnectedPositionStrategy,
+    OverlayRef,
 } from '@angular/cdk/overlay';
 import { Observable, Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';

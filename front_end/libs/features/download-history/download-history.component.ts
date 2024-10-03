@@ -1,5 +1,5 @@
 import { isPlatformBrowser } from '@angular/common';
-import { Component, OnInit, Inject, PLATFORM_ID, Injector } from '@angular/core';
+import { Component, Inject, Injector, OnInit, PLATFORM_ID } from '@angular/core';
 import { ActivatedRoute, ActivationEnd, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { startCase } from 'lodash-es';
@@ -12,7 +12,7 @@ import { NxAccountService } from '@services/account.service';
 import { isAccount } from '@services/account.service/account';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
-import type { BuildHistory, Build, Downloads } from '@services/nx-cloud-api/nx-cloud-api.types';
+import type { Build, BuildHistory, Downloads } from '@services/nx-cloud-api/nx-cloud-api.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxPageService } from '@services/page.service';

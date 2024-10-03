@@ -1,4 +1,4 @@
-import type { float, ms, px, CanvasGeometry } from '@view/datatypes/type-aliases';
+import type { CanvasGeometry, float, ms, px } from '@view/datatypes/type-aliases';
 
 import type { TimeRange } from './TimeRange';
 

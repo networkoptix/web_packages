@@ -1,4 +1,4 @@
-import { px, pxPerSecond, color } from './types';
+import { color, px, pxPerSecond } from './types';
 
 function drawWithClipRect(
     ctx: CanvasRenderingContext2D,

@@ -4,8 +4,6 @@ import { patchState, signalStore, type, withMethods } from '@ngrx/signals';
 import { removeAllEntities, setAllEntities, setEntity, withEntities } from '@ngrx/signals/entities';
 import { memoize } from 'lodash-es';
 import {
-    Observable,
-    Subject,
     catchError,
     combineLatest,
     debounce,
@@ -14,11 +12,13 @@ import {
     identity,
     map,
     merge,
+    Observable,
     of,
     repeat,
     retry,
     shareReplay,
     startWith,
+    Subject,
     switchMap,
     tap,
     timer,

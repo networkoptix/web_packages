@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, ElementRef, ViewChild, HostListener } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { animationFrameScheduler, interval } from 'rxjs';

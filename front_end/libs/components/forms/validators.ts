@@ -1,4 +1,4 @@
-import { FormArray, FormControl, ValidatorFn, Validators, isFormArray } from '@angular/forms';
+import { FormArray, FormControl, isFormArray, ValidatorFn, Validators } from '@angular/forms';
 import { identity } from 'lodash-es';
 
 import { simpleEmailRegex, simplePhoneRegex, simpleURLRegex } from '@static-variables';

@@ -12,7 +12,7 @@ import { NxCloudApiService } from '@services/nx-cloud-api';
 import { FeatureFlagKeys, FeatureFlagType } from '@services/nx-config/base-config';
 import { nxConfig } from '@services/nx-config/config';
 import { DynamicConfig } from '@services/nx-config/dynamic-config';
-import { getBetaConfig, extractChildGroups } from '@utils/beta-features';
+import { extractChildGroups, getBetaConfig } from '@utils/beta-features';
 import { BaseBetaGroup, BetaConfiguration, hasFeatureFlags } from '@utils/beta-features/beta.types';
 import _noBetaFeaturesAvailable from '@utils/beta-features/no-beta.config.json';
 

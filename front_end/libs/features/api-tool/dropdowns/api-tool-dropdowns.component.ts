@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { NgxIndexedDBService } from 'ngx-indexed-db';
 import { firstValueFrom } from 'rxjs';

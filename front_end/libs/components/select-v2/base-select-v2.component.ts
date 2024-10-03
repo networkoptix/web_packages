@@ -2,21 +2,21 @@ import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
 import { CdkPortal } from '@angular/cdk/portal';
 import {
     Component,
+    computed,
     ContentChildren,
+    effect,
     ElementRef,
     HostListener,
     Input,
-    QueryList,
-    ViewChild,
-    signal,
-    computed,
     model,
-    WritableSignal,
-    effect,
     output,
+    QueryList,
+    signal,
+    ViewChild,
+    WritableSignal,
 } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
-import { take, Observable } from 'rxjs';
+import { Observable, take } from 'rxjs';
 
 import { icons } from '@static-variables';
 import { scrollItemIntoView } from '@utils/general';

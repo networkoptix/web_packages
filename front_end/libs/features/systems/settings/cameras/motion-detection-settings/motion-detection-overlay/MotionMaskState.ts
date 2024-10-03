@@ -1,8 +1,8 @@
 import { ElementRef, EventEmitter } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
-import { takeUntil, skip } from 'rxjs/operators';
+import { skip, takeUntil } from 'rxjs/operators';
 
-import { Mask, Area, AreaTuple } from './motion-detection-types';
+import { Area, AreaTuple, Mask } from './motion-detection-types';
 
 export class MotionMaskState {
     static readonly matrixColumns = 44;

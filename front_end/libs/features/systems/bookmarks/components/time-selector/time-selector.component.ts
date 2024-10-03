@@ -1,12 +1,12 @@
 import {
     Component,
-    OnInit,
-    Input,
-    Output,
-    EventEmitter,
-    ViewChild,
     ElementRef,
+    EventEmitter,
+    Input,
     OnChanges,
+    OnInit,
+    Output,
+    ViewChild,
 } from '@angular/core';
 import { escapeRegExp } from 'lodash-es';
 import type { BehaviorSubject } from 'rxjs';

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ViewEncapsulation, input } from '@angular/core';
+import { Component, input, ViewEncapsulation } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { AngularSvgIconModule } from 'angular-svg-icon';

@@ -116,12 +116,6 @@ module.exports = {
                         alphabetize: { order: 'asc' },
                     },
                 ],
-            },
-        },
-        {
-            files: ['*.?(m)js', '*.ts'],
-            excludedFiles: ['libs/components/**', 'libs/features/**'],
-            rules: {
                 'sort-imports': [
                     'error',
                     {

@@ -4,18 +4,18 @@ import { CdkConnectedOverlay, CdkOverlayOrigin, ConnectedPosition } from '@angul
 import { NestedTreeControl } from '@angular/cdk/tree';
 import { CommonModule } from '@angular/common';
 import {
+    booleanAttribute,
     ChangeDetectionStrategy,
     Component,
     effect,
-    input,
-    Input,
-    TemplateRef,
-    ViewChild,
-    booleanAttribute,
-    Output,
-    viewChild,
     ElementRef,
     inject,
+    Input,
+    input,
+    Output,
+    TemplateRef,
+    viewChild,
+    ViewChild,
 } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
@@ -26,7 +26,7 @@ import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { TourMatMenuModule, TourService } from 'ngx-ui-tour-md-menu';
-import { BehaviorSubject, Observable, Subject, of, timer } from 'rxjs';
+import { BehaviorSubject, Observable, of, Subject, timer } from 'rxjs';
 import {
     debounceTime,
     delay,

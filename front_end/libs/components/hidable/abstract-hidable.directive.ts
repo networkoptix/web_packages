@@ -1,19 +1,19 @@
 import { ContentObserver } from '@angular/cdk/observers';
 import {
+    booleanAttribute,
     ContentChild,
     ContentChildren,
     Directive,
     ElementRef,
     HostBinding,
+    inject,
     Input,
     QueryList,
+    signal,
     Signal,
     TemplateRef,
-    booleanAttribute,
-    inject,
-    signal,
 } from '@angular/core';
-import { toObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { Observable, switchMap, tap } from 'rxjs';
 
 import { NxHidableItemDirective } from './hidable-item.directive';

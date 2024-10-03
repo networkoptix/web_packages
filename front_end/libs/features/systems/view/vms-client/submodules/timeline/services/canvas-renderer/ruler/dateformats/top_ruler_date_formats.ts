@@ -1,4 +1,4 @@
-import { SECOND, MINUTE, HOUR, DAY } from '../intervals/regularLengthIntervals';
+import { DAY, HOUR, MINUTE, SECOND } from '../intervals/regularLengthIntervals';
 // import { ROUGH_CENTURY, ROUGH_YEAR, ROUGH_MONTH } from '../intervals/regularLengthIntervals'
 
 import { LABEL_FORMATS as LF } from './label_formats';

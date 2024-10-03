@@ -1,6 +1,6 @@
 import { IrregularLengthInterval } from '../IrregularLengthInterval';
 
-import { timeStampMs, alignTimeStamp } from './alignTimeStamp';
+import { alignTimeStamp, timeStampMs } from './alignTimeStamp';
 
 export const isAlignedByIrregularInterval = (
     when: timeStampMs,

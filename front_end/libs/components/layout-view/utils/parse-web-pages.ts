@@ -1,5 +1,5 @@
 import { ResourceNode, ResourceType } from '@components/layout-grid/layout-grid.types';
-import { WebPages, WebPage } from '@services/system-api.types/layouts.types';
+import { WebPage, WebPages } from '@services/system-api.types/layouts.types';
 
 import { ResourceLookup } from './layout-view-utils.types';
 

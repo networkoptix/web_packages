@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { Subject, BehaviorSubject, combineLatest, interval, Observable } from 'rxjs';
-import { debounceTime, switchMap, shareReplay, map, tap, startWith } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, interval, Observable, Subject } from 'rxjs';
+import { debounceTime, map, shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
 
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';

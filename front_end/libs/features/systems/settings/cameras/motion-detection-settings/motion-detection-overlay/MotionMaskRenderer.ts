@@ -1,32 +1,32 @@
 import { ElementRef } from '@angular/core';
 import {
-    BehaviorSubject,
-    Subscription,
-    merge,
-    fromEvent,
-    Subject,
-    EMPTY,
     animationFrameScheduler,
+    BehaviorSubject,
+    EMPTY,
+    fromEvent,
+    merge,
     Observable,
+    Subject,
+    Subscription,
 } from 'rxjs';
 import {
-    switchMap,
-    pairwise,
-    throttleTime,
-    filter,
-    distinctUntilChanged,
-    map,
-    startWith,
-    tap,
     buffer,
-    withLatestFrom,
-    takeUntil,
     delay,
+    distinctUntilChanged,
+    filter,
+    map,
     merge as mergeOperator,
+    pairwise,
+    startWith,
+    switchMap,
+    takeUntil,
+    tap,
+    throttleTime,
+    withLatestFrom,
 } from 'rxjs/operators';
 
 import { MotionMaskState } from './MotionMaskState';
-import { Mask, Area } from './motion-detection-types';
+import { Area, Mask } from './motion-detection-types';
 
 enum ActionType {
     Click = 'click',

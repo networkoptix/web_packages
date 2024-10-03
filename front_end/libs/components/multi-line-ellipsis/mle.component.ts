@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnChanges, Output, booleanAttribute } from '@angular/core';
+import { booleanAttribute, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 
 import { NxResizeObserver } from '@directives/resize/nx-resize.directive';
 import { NgChanges } from '@utils/ng-changes';

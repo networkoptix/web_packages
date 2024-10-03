@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild, effect, signal } from '@angular/core';
+import { Component, effect, Input, OnInit, signal, ViewChild } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Subject } from 'rxjs';
 import { delay, map, retryWhen, takeUntil } from 'rxjs/operators';

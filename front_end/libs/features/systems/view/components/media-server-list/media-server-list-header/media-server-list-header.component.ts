@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { CookieService } from 'ngx-cookie-service';

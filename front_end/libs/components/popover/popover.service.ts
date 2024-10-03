@@ -1,11 +1,11 @@
 import {
-    Overlay,
     ConnectionPositionPair,
     FlexibleConnectedPositionStrategy,
+    Overlay,
 } from '@angular/cdk/overlay';
 import { ComponentPortal, TemplatePortal } from '@angular/cdk/portal';
 import { Injectable, TemplateRef, ViewContainerRef } from '@angular/core';
-import { timer, takeUntil, Subject, filter } from 'rxjs';
+import { filter, Subject, takeUntil, timer } from 'rxjs';
 
 import { NxPopoverComponent } from './popover/popover.component';
 import { PopoverConfig, POS_STRATEGY } from './popover-config';

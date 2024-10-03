@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { NxAccountSettingsDropdown } from '@components/dropdowns/account-settings/account-settings.component';

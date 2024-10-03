@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Observable, finalize, map, noop, of, take, timer } from 'rxjs';
+import { finalize, map, noop, Observable, of, take, timer } from 'rxjs';
 
 import { ExampleCustomTooltipDirective } from '@directives/tooltip-v2/custom/example-custom-tooltip/example-custom-tooltip.directive';
 import { NxTooltipV2Directive } from '@directives/tooltip-v2/tooltip-v2.directive';

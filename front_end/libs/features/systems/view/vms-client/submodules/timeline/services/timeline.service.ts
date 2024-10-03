@@ -3,7 +3,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { animationFrameScheduler, interval, Subject } from 'rxjs';
 
-import { int, float, ms, px, CanvasGeometry } from '@view/datatypes/type-aliases';
+import { CanvasGeometry, float, int, ms, px } from '@view/datatypes/type-aliases';
 import { VideoManagementSystemService } from '@view/services/vms.service';
 
 import { TimeRange } from './TimeRange';

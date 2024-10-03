@@ -1,29 +1,29 @@
 import {
     Component,
-    OnInit,
-    Inject,
-    ViewContainerRef,
-    ViewChild,
     computed,
+    Inject,
     Input,
     OnChanges,
+    OnInit,
     Optional,
     signal,
+    ViewChild,
+    ViewContainerRef,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import {
     BehaviorSubject,
-    from,
-    throwError,
-    of,
-    Observable,
     combineLatest,
     firstValueFrom,
+    from,
+    Observable,
+    of,
+    throwError,
     timer,
 } from 'rxjs';
-import { filter, map, delay, retry, catchError, switchMap, share } from 'rxjs/operators';
+import { catchError, delay, filter, map, retry, share, switchMap } from 'rxjs/operators';
 
 import { createPortalToken } from '@common/tokens';
 import {
@@ -44,15 +44,15 @@ import { Process } from '@services/process.service/process';
 import type { AlarmsReply } from '@services/system-api.types/system.types';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import {
+    CameraStatus,
     CameraUpdate,
+    DeviceType,
     MotionType,
     NxSystemCamera,
     RecordingModes,
     RecordingType,
     StreamQuality,
     TaskUpdate,
-    CameraStatus,
-    DeviceType,
 } from '@services/system.service/camera-manager/camera-manager-types';
 import type { NxSystem } from '@services/system.service/system';
 import { NxUriService } from '@services/uri.service';
@@ -62,10 +62,10 @@ import { MS } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 
 import {
+    ASPECT_RATIOS,
+    DEFAULT_ROTATION,
     ROTATION_OPTIONS,
     type SensitivityButtonValue,
-    DEFAULT_ROTATION,
-    ASPECT_RATIOS,
 } from './cameras.component.types';
 import { NxRecordingSettingsComponent } from './recording-settings/recording-settings.component';
 

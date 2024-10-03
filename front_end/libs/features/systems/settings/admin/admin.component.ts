@@ -16,7 +16,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgForm } from '@angular/forms';
-import { Router, NavigationStart } from '@angular/router';
+import { NavigationStart, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom, Observable, of, Subscription, timer } from 'rxjs';

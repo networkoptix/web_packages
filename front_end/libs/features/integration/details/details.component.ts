@@ -22,7 +22,7 @@ import { NxPageService } from '@services/page.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { NxUriService } from '@services/uri.service';
-import { icons, dialogs } from '@static-variables';
+import { dialogs, icons } from '@static-variables';
 
 import { IntegrationService } from '../integration.service';
 

@@ -1,6 +1,6 @@
 import { NestedTreeControl } from '@angular/cdk/tree';
 
-import { ResourceNode, isResourceParentNode } from '@components/layout-grid/layout-grid.types';
+import { isResourceParentNode, ResourceNode } from '@components/layout-grid/layout-grid.types';
 
 export const hasItem = (items: ResourceNode[], id: string): boolean => {
     for (let index = 0; index < items.length; index++) {

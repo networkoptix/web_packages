@@ -1,22 +1,22 @@
 import { CommonModule } from '@angular/common';
 import {
     Component,
-    OnInit,
-    Input,
-    forwardRef,
-    ViewEncapsulation,
-    ViewChild,
     ElementRef,
+    forwardRef,
+    Input,
+    OnInit,
+    ViewChild,
+    ViewEncapsulation,
 } from '@angular/core';
 import {
     ControlValueAccessor,
-    NG_VALUE_ACCESSOR,
-    NG_VALIDATORS,
-    Validator,
-    NgModel,
-    ValidationErrors,
     FormControl,
     FormsModule,
+    NG_VALIDATORS,
+    NG_VALUE_ACCESSOR,
+    NgModel,
+    ValidationErrors,
+    Validator,
 } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { AngularSvgIconModule } from 'angular-svg-icon';

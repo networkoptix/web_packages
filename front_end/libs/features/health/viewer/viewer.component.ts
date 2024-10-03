@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation, ViewChild, ElementRef, effect } from '@angular/core';
+import { Component, effect, ElementRef, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
@@ -17,7 +17,7 @@ import type { HealthReport } from '@services/system-api.aggregated-types';
 import { NxSystemAPI } from '@services/system-legacy-api.service';
 import type { NxSystem } from '@services/system.service/system';
 import { NxUriService } from '@services/uri.service';
-import { icons, healthMonitoring } from '@static-variables';
+import { healthMonitoring, icons } from '@static-variables';
 import { GridBreakpoints } from '@styles/theme-variables-common';
 import { useNewCloud } from '@utils/general';
 

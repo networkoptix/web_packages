@@ -4,7 +4,7 @@ import { Component } from '@angular/core';
 import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
 import { LetDirective, PushPipe } from '@ngrx/component';
 import { TranslateModule } from '@ngx-translate/core';
-import { Subject, catchError, map, merge, mergeMap, of } from 'rxjs';
+import { catchError, map, merge, mergeMap, of, Subject } from 'rxjs';
 
 import { NxChannelPartnersService } from '@services/channel-partners.service';
 import { GroupUser } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';

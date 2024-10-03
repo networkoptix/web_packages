@@ -16,12 +16,12 @@ import { PlaybackQuality, PlaybackTransport } from '@view/view.types';
 import { TimelineService } from '@vms-client/submodules/timeline/services/timeline.service';
 
 import {
-    PLAYBACK_MODE,
-    PlaybackState,
-    createInitialStoppedState,
+    ArchivePlaybackState,
     createInitialArchiveState,
     createInitialLiveState,
-    ArchivePlaybackState,
+    createInitialStoppedState,
+    PLAYBACK_MODE,
+    PlaybackState,
 } from '../datatypes/PlaybackState';
 
 @UntilDestroy()

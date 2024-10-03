@@ -1,10 +1,10 @@
 import {
-    xAngleToAzimuth,
     azimuthToXAngle,
-    ViewMode,
-    yAngleToPolar,
-    polarToYAngle,
     fovToZoom,
+    polarToYAngle,
+    ViewMode,
+    xAngleToAzimuth,
+    yAngleToPolar,
     zoomToFov,
 } from './item-param-utils';
 

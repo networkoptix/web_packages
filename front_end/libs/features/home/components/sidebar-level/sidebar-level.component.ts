@@ -1,4 +1,4 @@
-import { DragDropModule, type CdkDragDrop } from '@angular/cdk/drag-drop';
+import { type CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
 import { CdkMenuModule } from '@angular/cdk/menu';
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { Component, computed, inject, Input } from '@angular/core';

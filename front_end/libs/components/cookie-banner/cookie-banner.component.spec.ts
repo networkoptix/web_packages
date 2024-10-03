@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
 // import { DebugElement } from '@angular/core';
 import {
-    waitForAsync,
     ComponentFixture,
-    TestBed,
-    tick,
     fakeAsync,
     inject,
+    TestBed,
+    tick,
+    waitForAsync,
 } from '@angular/core/testing';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';

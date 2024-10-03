@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output, computed, input } from '@angular/core';
+import { Component, computed, EventEmitter, input, Output } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { NxQuantityChangeComponent } from '@components/quantity-change/quantity-change.component';

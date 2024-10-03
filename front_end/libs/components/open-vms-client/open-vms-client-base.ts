@@ -1,4 +1,4 @@
-import { Injectable, computed } from '@angular/core';
+import { computed, Injectable } from '@angular/core';
 
 import { NxVmsClientService } from '@services/vms-client.service';
 

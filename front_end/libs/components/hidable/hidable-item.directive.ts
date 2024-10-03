@@ -1,4 +1,4 @@
-import { Directive, ElementRef, HostBinding, Input, booleanAttribute, inject } from '@angular/core';
+import { booleanAttribute, Directive, ElementRef, HostBinding, inject, Input } from '@angular/core';
 
 import { getActualHeight, getActualWidth } from '@utils/general';
 

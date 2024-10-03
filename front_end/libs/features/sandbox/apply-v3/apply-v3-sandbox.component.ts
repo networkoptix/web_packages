@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, ElementRef, computed } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, ElementRef } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnDestroy, ViewEncapsulation, effect } from '@angular/core';
+import { Component, effect, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import FileSaver from 'file-saver';

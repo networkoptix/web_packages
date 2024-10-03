@@ -1,13 +1,13 @@
 import { CommonModule } from '@angular/common';
 import {
+    afterNextRender,
     AfterRenderPhase,
     ChangeDetectionStrategy,
     Component,
     ElementRef,
     EventEmitter,
-    Output,
-    afterNextRender,
     model,
+    Output,
     viewChild,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';

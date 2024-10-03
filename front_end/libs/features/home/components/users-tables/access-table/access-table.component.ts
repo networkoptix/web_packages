@@ -1,4 +1,4 @@
-import { Component, Output, computed, inject } from '@angular/core';
+import { Component, computed, inject, Output } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { escape } from 'lodash-es';
@@ -13,7 +13,7 @@ import { UserRecord } from '@pages/home/components/users/channel-partner-users/c
 import { HEADER_ITEM } from '@pages/home/home.types';
 import { OrgRoleIds } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { selectCurrentOrganization } from '@store/channel-partners/channel-partners.selectors';
-import { caseInsensitiveSearch, alphaNumericSort } from '@utils/general';
+import { alphaNumericSort, caseInsensitiveSearch } from '@utils/general';
 import { paramModel } from '@utils/signals';
 
 import { StranglerImports } from '../abstract-user-table/abstract-user-table-imports';

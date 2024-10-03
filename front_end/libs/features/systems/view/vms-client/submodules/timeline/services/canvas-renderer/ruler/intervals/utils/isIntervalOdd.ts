@@ -1,6 +1,6 @@
 import { IrregularLengthInterval } from '../IrregularLengthInterval';
 
-import { timeStampMs, durationMs } from './alignTimeStamp';
+import { durationMs, timeStampMs } from './alignTimeStamp';
 
 export function isIntervalOdd(t: timeStampMs, d: IrregularLengthInterval): boolean {
     const date = new Date(t);

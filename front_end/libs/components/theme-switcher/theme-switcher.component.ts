@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit, computed, effect, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, Input, OnInit, signal } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
@@ -7,14 +7,14 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { isEqual } from 'lodash-es';
 import { ColorPickerModule } from 'ngx-color-picker';
 import {
-    NEVER,
-    Subject,
     debounceTime,
     distinctUntilChanged,
     firstValueFrom,
+    NEVER,
     scan,
     shareReplay,
     startWith,
+    Subject,
     switchMap,
 } from 'rxjs';
 

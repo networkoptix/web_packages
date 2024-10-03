@@ -13,8 +13,8 @@ import { EntityType } from '../reports.types';
 
 import { ExpiringServiceDetailsStore } from './expiring-service-details.store';
 import {
-    ExpiringServiceTotals,
     EntityFormattedExpiringServiceRecord,
+    ExpiringServiceTotals,
     SystemFormattedExpiringServiceRecord,
 } from './expiring-service-details.types';
 import { NxExpiringServiceTableComponent } from './expiring-service-table/expiring-service-table.component';

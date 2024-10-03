@@ -10,7 +10,7 @@ import {
     runInInjectionContext,
 } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, Router, NavigationStart } from '@angular/router';
+import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { escape } from 'lodash-es';
 import { combineLatest, firstValueFrom, Subject, Subscription } from 'rxjs';
@@ -21,7 +21,7 @@ import { ToastType } from '@components/toast-container/toast.types';
 import { environment } from '@environments/environment';
 import staticLang from '@language_static';
 import { NxMenuService } from '@menu/menu.service';
-import type { ContentToggle, Content, Level3Item } from '@menu/menu.types';
+import type { Content, ContentToggle, Level3Item } from '@menu/menu.types';
 import { ribbonHeight } from '@pages/static-variables-features';
 import { Translatable } from '@pipes/nx-translate.types';
 import { NxAccountService } from '@services/account.service';
@@ -35,9 +35,9 @@ import { Process } from '@services/process.service/process';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxUser, UserType } from '@services/system-user.types';
 import {
-    RecordingStatus,
-    type NxSystemCamera,
     CameraStatus,
+    type NxSystemCamera,
+    RecordingStatus,
 } from '@services/system.service/camera-manager/camera-manager-types';
 import type { NxSystem } from '@services/system.service/system';
 import type { NxSystemServer } from '@services/system.service/types/servers.types';

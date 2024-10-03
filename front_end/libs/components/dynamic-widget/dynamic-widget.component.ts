@@ -1,16 +1,16 @@
 import {
     Component,
     ComponentFactoryResolver,
-    ViewChild,
-    ViewContainerRef,
+    EventEmitter,
     Input,
     Output,
-    EventEmitter,
+    ViewChild,
+    ViewContainerRef,
 } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { Observable } from 'rxjs';
 
-import { WidgetCard, FirstPartyWidget } from '@components/widgets/helper-classes';
+import { FirstPartyWidget, WidgetCard } from '@components/widgets/helper-classes';
 
 import { WIDGETS } from './register-widget';
 

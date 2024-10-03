@@ -1,13 +1,13 @@
-import { InjectionToken, Injector, computed, inject, runInInjectionContext } from '@angular/core';
+import { computed, inject, InjectionToken, Injector, runInInjectionContext } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import {
+    patchState,
     signalStore,
     type,
-    withState,
-    withMethods,
     withComputed,
     withHooks,
-    patchState,
+    withMethods,
+    withState,
 } from '@ngrx/signals';
 import {
     removeAllEntities,
@@ -17,7 +17,7 @@ import {
     withEntities,
 } from '@ngrx/signals/entities';
 import { groupBy, isEqual } from 'lodash-es';
-import { Observable, firstValueFrom, from, merge, NEVER, timer } from 'rxjs';
+import { firstValueFrom, from, merge, NEVER, Observable, timer } from 'rxjs';
 import {
     catchError,
     distinctUntilChanged,
@@ -32,7 +32,7 @@ import {
 
 import staticLang from '@language_static';
 import type { DraggableItem } from '@pages/home/home.types';
-import { Translatable, isTranslatable } from '@pipes/nx-translate.types';
+import { isTranslatable, Translatable } from '@pipes/nx-translate.types';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
 import {
     CloudSystemLight,
@@ -53,7 +53,7 @@ import {
     mapToSystemItem,
     sortGroups,
 } from './groups-utils';
-import type { SystemsByOrgOrGroup, Undo, GroupFlatItem, RibbonContextState } from './groups.types';
+import type { GroupFlatItem, RibbonContextState, SystemsByOrgOrGroup, Undo } from './groups.types';
 
 const initialState = {
     loadingGroups: true,

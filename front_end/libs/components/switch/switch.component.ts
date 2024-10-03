@@ -10,10 +10,10 @@ import {
 } from '@angular/core';
 import {
     ControlValueAccessor,
-    NG_VALUE_ACCESSOR,
-    Validator,
-    ValidationErrors,
     FormControl,
+    NG_VALUE_ACCESSOR,
+    ValidationErrors,
+    Validator,
 } from '@angular/forms';
 
 import { NgChanges } from '@utils/ng-changes';

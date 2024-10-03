@@ -16,7 +16,7 @@ import { NxCloudApiService } from '@services/nx-cloud-api';
 import { AgreementInfo } from '@services/nx-cloud-api/nx-cloud-api.types';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { icons, apiBase } from '@static-variables';
+import { apiBase, icons } from '@static-variables';
 import { accountSelectors } from '@store/account';
 
 @UntilDestroy()

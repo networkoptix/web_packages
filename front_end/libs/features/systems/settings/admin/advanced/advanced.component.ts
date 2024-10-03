@@ -1,8 +1,8 @@
-import { Component, OnDestroy, Input, ViewChild, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { firstValueFrom, Subject } from 'rxjs';
-import { map, delay, retryWhen, take } from 'rxjs/operators';
+import { delay, map, retryWhen, take } from 'rxjs/operators';
 
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import staticLang from '@language_static';

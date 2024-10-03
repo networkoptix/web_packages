@@ -34,7 +34,7 @@ import { alphabeticalSort, useNewCloud } from '@utils/general';
 import { NxLayoutComponent } from 'nx-components';
 
 import { IpvdSearchService } from './ipvd-search.service';
-import type { Disclaimer, IpvdParams, FilteredCamera } from './ipvd.types';
+import type { Disclaimer, FilteredCamera, IpvdParams } from './ipvd.types';
 
 const OTHER_PAGE_ELEMENTS = 270; // in px. combined height of menu, disclaimer, collapsed search and footer
 const OTHER_PAGE_ELEMENTS_MOBILE = 400; // in px. combined height of menu, disclaimer, collapsed search and footer

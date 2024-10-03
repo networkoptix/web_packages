@@ -1,6 +1,6 @@
 import { CdkAccordion, CdkAccordionModule } from '@angular/cdk/accordion';
 import { CommonModule } from '@angular/common';
-import { Component, ViewChild, effect, signal, untracked } from '@angular/core';
+import { Component, effect, signal, untracked, ViewChild } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { capitalize } from 'lodash-es';
 

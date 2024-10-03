@@ -21,8 +21,8 @@ import { NxApplyV3Module } from '@components/forms/apply-v3/apply-v3.module';
 import { NxFormResetFn } from '@components/forms/apply-v3/apply-v3.types';
 import { NxResetButtonComponent } from '@components/forms/buttons/reset-button/reset-button.component';
 import {
-    NX_BASE_ERROR_MATCHES,
     errorMatcherFactory,
+    NX_BASE_ERROR_MATCHES,
 } from '@components/forms/form-field/error-state-matcher';
 import { NxFormFieldModule } from '@components/forms/forms.module';
 import { NxInputComponent } from '@components/forms/input/input.component';

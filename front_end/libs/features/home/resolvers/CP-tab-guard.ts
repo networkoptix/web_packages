@@ -6,7 +6,7 @@ import {
     RouterStateSnapshot,
 } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { Observable, map } from 'rxjs';
+import { map, Observable } from 'rxjs';
 
 import * as cpActions from '@common/store/channel-partners/channel-partners.actions';
 import { selectCurrentPartner } from '@common/store/channel-partners/channel-partners.selectors';

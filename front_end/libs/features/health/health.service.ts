@@ -5,9 +5,9 @@ import type { SearchFilter } from '@components/search/search.component.types';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { healthMonitoring } from '@static-variables';
 import {
-    GridBreakpoints,
     GRID_PANEL_WIDTH,
     GRID_SUPER_WIDE_PANEL_WIDTH,
+    GridBreakpoints,
 } from '@styles/theme-variables-common';
 
 @Injectable({

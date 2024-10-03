@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, Injector, Input, AfterViewInit } from '@angular/core';
+import { AfterViewInit, Component, Injector, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';

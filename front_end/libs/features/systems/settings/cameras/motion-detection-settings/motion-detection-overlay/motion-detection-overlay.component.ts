@@ -1,14 +1,14 @@
 import {
-    Component,
-    Input,
-    ViewChild,
-    ElementRef,
-    OnChanges,
     AfterContentChecked,
     ChangeDetectionStrategy,
-    HostListener,
-    Output,
+    Component,
+    ElementRef,
     EventEmitter,
+    HostListener,
+    Input,
+    OnChanges,
+    Output,
+    ViewChild,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DeviceDetectorService } from 'ngx-device-detector';
