@@ -551,7 +551,7 @@
     "DISABLED TEXT": "無効",
     "ENABLED TEXT": "有効",
     "WARNING CAPS": "警告",
-    "OT WARNING TEXT": "所有権の譲渡が完了すると、このアカウントはシステムから削除されます。",
+    "OT WARNING TEXT": "所有権の譲渡が完了すると、現在のアカウントはシステムから削除されます。",
     "REQUEST SENT TEXT": "リクエストが送信されました",
     "REQUEST SENT EXPLANATION TEXT": "新しい所有者にリクエストが承認され次第、所有権の変更が実行されます。",
     "TRANSFERRING OWNERSHIP TO TEXT": "所有権の譲渡先: ",
