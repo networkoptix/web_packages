@@ -140,6 +140,7 @@ export class NxChannelPartnersUsersTableComponent extends AbstractUserTableDirec
                     channelPartners[currPartnerIndex] = {
                         ...channelPartners[currPartnerIndex],
                         ownPermissions: permissions,
+                        ownRolesIds: updatedUser.rolesIds,
                         ownRoles: updatedUser.roles,
                     };
                     this.store.dispatch(cpActions.setChannelPartners({ channelPartners }));
