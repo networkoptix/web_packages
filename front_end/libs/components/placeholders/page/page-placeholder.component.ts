@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { booleanAttribute, Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { SubscriptionLike } from 'rxjs';
 
@@ -66,10 +66,7 @@ export class NxPagePlaceholderComponent implements OnInit {
     windowSizeSubscription: SubscriptionLike;
     icons = icons;
 
-    constructor(
-        private translateService: TranslateService,
-        private scrollMechanicsService: NxScrollMechanicsService,
-    ) {
+    constructor(private scrollMechanicsService: NxScrollMechanicsService) {
         this.iconSize = 400;
 
         this.windowSizeSubscription = this.scrollMechanicsService.windowSizeSubject.subscribe(
@@ -98,11 +95,6 @@ export class NxPagePlaceholderComponent implements OnInit {
             }
 
             switch (this.type) {
-                case 'NO_CAMS':
-                    this.placeholderTitle = this.LANG.common.systemHasNoCameras;
-                    this.message = this.LANG.common.systemHasNoCamerasMessage;
-                    this.iconName = 'NoCams';
-                    break;
                 case 'OFFLINE':
                     this.placeholderTitle = this.LANG.common.systemOffline;
                     this.message = this.LANG.common.systemOfflineMessage;
@@ -168,35 +160,6 @@ export class NxPagePlaceholderComponent implements OnInit {
                     this.message = '';
                     this.iconName = '404';
                     break;
-                case 'MERGE':
-                    this.placeholderTitle = {
-                        value: this.LANG.placeholderTexts.merge.title,
-                        params: { systemName: this.data.systemName },
-                    };
-                    const whenFinishedMessage = this.translateService.instant(
-                        this.LANG.placeholderTexts.merge.message.whenFinished,
-                        { systemName: this.data.systemName },
-                    );
-                    this.message = `
-                        <p>${this.translateService.instant(
-                            this.LANG.placeholderTexts.merge.message.dependingOnSize,
-                        )}</p>
-                        <p class="mt-2">${this.translateService.instant(
-                            this.LANG.placeholderTexts.merge.message.untilFinished,
-                        )}</p>
-                        <p class="mt-2">${whenFinishedMessage}`;
-                    this.iconName = 'Merge';
-                    break;
-                case 'SERVER_OFFLINE':
-                    this.placeholderTitle = this.LANG.placeholderTexts.server.title;
-                    this.message = this.LANG.placeholderTexts.server.message;
-                    this.iconName = 'Offline';
-                    break;
-                case 'NO_SETTINGS':
-                    this.placeholderTitle = this.LANG.placeholderTexts.noSettings.title;
-                    this.message = this.LANG.placeholderTexts.noSettings.message;
-                    this.iconName = 'NoSettings';
-                    break;
                 case 'NO_SYSTEM_FOUND_API_TOOL':
                     this.iconName = '404';
                     this.message = '';
@@ -207,9 +170,6 @@ export class NxPagePlaceholderComponent implements OnInit {
                     this.message = '';
                     this.placeholderTitle =
                         this.LANG.placeholderTexts.systemLoadFailureApiTool.title;
-                    break;
-                case 'NO_BOOKMARKS':
-                    this.iconName = 'noBookmarksCloudIcon';
                     break;
             }
         }

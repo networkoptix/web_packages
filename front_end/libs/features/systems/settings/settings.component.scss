@@ -48,3 +48,21 @@ nx-block {
     height: 100%;
   }
 }
+
+.merge-placeholder {
+
+  svg-icon {
+    svg {
+      .brand_element_cloud {
+        fill: var(--placehoder-cloud-color);
+        opacity: var(--placehoder-cloud-opacity);
+      }
+    }
+  }
+
+  .message {
+    font-size: 0.9375rem !important;
+    color: var(--placehoder-body-color) !important;
+    line-height: 24px;
+  }
+}

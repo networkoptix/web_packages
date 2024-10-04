@@ -134,3 +134,31 @@
 nx-select.storages-loading {
     pointer-events: none !important;
 }
+
+.placeholder {
+    width: 100%;
+}
+
+.server-offline-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+
+    .message {
+        color: var(--placehoder-body-color) !important;
+    }
+
+    svg-icon {
+        svg {
+            .brand_element_cloud {
+                fill: var(--placehoder-cloud-color);
+                opacity: var(--placehoder-cloud-opacity);
+            }
+
+            .svg_accent {
+                fill: var(--placeholder-accent-color);
+            }
+        }
+    }
+}

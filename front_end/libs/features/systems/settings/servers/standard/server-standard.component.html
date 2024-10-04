@@ -1,9 +1,10 @@
 <div class="row auth-visible">
-    <nx-page-placeholder
-        class="placeholder-section"
-        type="NO_SETTINGS"
+    <div
+        class="placeholder"
         *ngIf="!selectedServer"
-    ></nx-page-placeholder>
+    >
+        <nx-page-placeholder-no-settings />
+    </div>
     <nx-alert-block
         *ngIf="certError"
         class="col-12"
@@ -53,11 +54,26 @@
     </div>
     <ng-template #preloader>
         <ng-template #offlinePlaceholder>
-            <nx-page-placeholder
-                *ngIf="system.isAvailable"
-                class="placeholder-section"
-                type="SERVER_OFFLINE"
-            ></nx-page-placeholder>
+            @if (system.isAvailable) {
+                <nx-page-generic-placeholder-v2 class="server-offline-placeholder">
+                    <svg-icon
+                        [src]="icons.dirPagePlaceholder + 'Offline.svg'"
+                        [svgStyle]="{ 'height.px': 200 }"
+                    ></svg-icon>
+                    <h2
+                        class="title"
+                        translate
+                    >
+                        Server not accessible
+                    </h2>
+                    <div
+                        class="message"
+                        translate
+                    >
+                        System is offline and hence, servers are not accessible.
+                    </div>
+                </nx-page-generic-placeholder-v2>
+            }
         </ng-template>
         <div
             *ngIf="system.isAvailable && !serverOffline; else offlinePlaceholder"

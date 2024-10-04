@@ -3,6 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { NxSystem } from '@services/system.service/system';
+import { icons } from '@static-variables';
 
 @Component({
     selector: 'nx-no-cameras-component',
@@ -11,6 +12,7 @@ import { NxSystem } from '@services/system.service/system';
 })
 export class NxNoCamerasComponent implements OnInit {
     @Input() system: NxSystem;
+    icons = icons;
     private router: Router = inject(Router);
     private activatedRoute: ActivatedRoute = inject(ActivatedRoute);
     destroyRef = inject(DestroyRef);

@@ -15,6 +15,8 @@ import { NxNumericComponent } from '@components/numeric-input/numeric.component'
 import { NxPagePlaceholderComponent } from '@components/placeholders/page/page-placeholder.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxSectionPlaceholderComponent } from '@components/placeholders/section/section-placeholder.component';
+import { NxPagePlaceholderGenericComponent } from '@components/placeholdersV2/generic-page-placeholder.component';
+import { NxPagePlaceholderNoSettingsComponent } from '@components/placeholdersV2/no-settings/no-settings-page-placeholder.component';
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { NxSwitchComponent } from '@components/switch/switch.component';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
@@ -30,7 +32,6 @@ import { NxSystemStandardServerComponent } from './standard/server-standard.comp
 import { NxSystemStorageComponent } from './storage/server-storage-standard.component';
 import { NxSystemAdvancedStorageComponent } from './storage-advanced/server-storage-adv.component';
 import { NxStorageSizeComponent } from './storage-advanced/size/size.component';
-
 @NgModule({
     imports: [
         CommonModule,
@@ -55,6 +56,8 @@ import { NxStorageSizeComponent } from './storage-advanced/size/size.component';
         NxAddSvgSrcDirective,
         NxTooltipDirective,
         NxSwitchComponent,
+        NxPagePlaceholderNoSettingsComponent,
+        NxPagePlaceholderGenericComponent,
     ],
     providers: [],
     declarations: [

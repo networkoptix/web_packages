@@ -62,7 +62,6 @@ import { NxAccessTableContainerComponent } from '../components/users/access-tabl
 import { Crumb } from '../home.types';
 import { GroupsStore } from '../store/groups/groups.store';
 import { ChannelPartnersRouteState } from '../store/route-state/route-state.store';
-
 interface SidebarSettings {
     showSidebarState: boolean;
 }

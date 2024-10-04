@@ -13,6 +13,7 @@ import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.
 import { NxInfoBlockComponent } from '@components/info-block/info-block.component';
 import { NxPagePlaceholderComponent } from '@components/placeholders/page/page-placeholder.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
+import { NxPagePlaceholderNoSettingsComponent } from '@components/placeholdersV2/no-settings/no-settings-page-placeholder.component';
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { NxLicenseSummaryComponent } from '@components/summary/summary.component';
 import { PipesModule } from '@pipes/pipes.module';
@@ -40,6 +41,7 @@ import { NxLicenseTrialComponent } from './trial/trial.component';
         PipesModule,
         NxPreLoaderComponent,
         NxProcessButtonComponent,
+        NxPagePlaceholderNoSettingsComponent,
     ],
     providers: [DatePipe],
     declarations: [

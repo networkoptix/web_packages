@@ -10,6 +10,7 @@ import { NxMonitoringGraphComponent } from '@components/graph/graph.component';
 import { NxLoggerComponent } from '@components/logger/logger.component';
 import { NxPagePlaceholderComponent } from '@components/placeholders/page/page-placeholder.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
+import { NxPagePlaceholderNoSettingsComponent } from '@components/placeholdersV2/no-settings/no-settings-page-placeholder.component';
 import { NxSelectV2ItemComponent } from '@components/select-v2/items/select-item/select-item.component';
 import { NxSelectV2Component } from '@components/select-v2/select-v2.component';
 import { AuthGuard } from '@guards/authGuard';
@@ -65,6 +66,7 @@ const appRoutes: Routes = [
         NxSelectV2ItemComponent,
         FormsModule,
         NxMenuProjectionDirective,
+        NxPagePlaceholderNoSettingsComponent,
     ],
     providers: [],
     declarations: [NxMonitoringComponent, GraphsComponent, LogsComponent],

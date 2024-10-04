@@ -1,0 +1,31 @@
+.placeholder-container {
+  padding-top: 5rem;
+  &.no-cams {
+    .unique-message {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      font-size: 0.9375rem !important;
+      color: var(--placehoder-body-color) !important;
+      line-height: 24px;
+    }
+  }
+}
+
+
+svg-icon {
+  svg {
+    .brand_element_cloud {
+      fill: var(--placehoder-cloud-color);
+      opacity: var(--placehoder-cloud-opacity);
+    }
+
+    .svg_light_2 {
+      fill: var(--placeholder-light2-color);
+    }
+
+    .svg_accent-stroke {
+      stroke: var(--placeholder-accent-color);
+    }
+  }
+}

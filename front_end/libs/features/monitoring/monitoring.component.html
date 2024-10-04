@@ -1,9 +1,8 @@
 <div class="mt-3 adjusted-height">
     @if (!systemOnline()) {
-        <nx-page-placeholder
-            class="placeholder-section page-placeholder"
-            type="NO_SETTINGS"
-        />
+        <div class="placeholder">
+            <nx-page-placeholder-no-settings></nx-page-placeholder-no-settings>
+        </div>
     } @else {
         <div [ngClass]="useNewCloud ? 'mr-3' : 'row'">
             <ng-template #leftMenu>

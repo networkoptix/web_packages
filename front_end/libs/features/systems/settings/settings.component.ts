@@ -44,7 +44,7 @@ import type { NxSystemServer } from '@services/system.service/types/servers.type
 import { NxSystemsService } from '@services/systems.service';
 import { NxToastService } from '@services/toast.service';
 import { NxUriService } from '@services/uri.service';
-import { alertTimeout, clientMode, menus, redirect } from '@static-variables';
+import { alertTimeout, clientMode, icons, menus, redirect } from '@static-variables';
 import { GridBreakpoints } from '@styles/theme-variables-common';
 import { alphabeticalSort, cleanIdLegacy, useNewCloud } from '@utils/general';
 import { NxLayoutComponent } from 'nx-components';
@@ -102,6 +102,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     );
 
     CONFIG = nxConfig;
+    icons = icons;
     LANG = staticLang;
     plugin;
     content: Content = { base: '', selectedSection: '', level1: [] };

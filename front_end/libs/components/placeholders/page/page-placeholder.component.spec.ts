@@ -27,16 +27,6 @@ describe('NxPagePlaceholderComponent', () => {
         expect(component.iconVisible).toBeTruthy();
     });
 
-    it('should initialize NO_CAMS', async () => {
-        const { component } = await setupPagePlaceholderComponent();
-        component.type = 'NO_CAMS';
-        component.ngOnInit();
-
-        expect(component.placeholderTitle).toBe(staticLang.common.systemHasNoCameras);
-        expect(component.message).toBe(staticLang.common.systemHasNoCamerasMessage);
-        expect(component.iconName).toBe('NoCams');
-    });
-
     it('should initialize OFFLINE', async () => {
         const { component } = await setupPagePlaceholderComponent();
         component.type = 'OFFLINE';
@@ -134,25 +124,5 @@ describe('NxPagePlaceholderComponent', () => {
         expect(component.placeholderTitle).toBe(staticLang.pageTitles.pageNotFound);
         expect(component.message).toBe('');
         expect(component.iconName).toBe('404');
-    });
-
-    it('should initialize SERVER_OFFLINE', async () => {
-        const { component } = await setupPagePlaceholderComponent();
-        component.type = 'SERVER_OFFLINE';
-        component.ngOnInit();
-
-        expect(component.placeholderTitle).toBe(staticLang.placeholderTexts.server.title);
-        expect(component.message).toBe(staticLang.placeholderTexts.server.message);
-        expect(component.iconName).toBe('Offline');
-    });
-
-    it('should initialize NO_SETTINGS', async () => {
-        const { component } = await setupPagePlaceholderComponent();
-        component.type = 'NO_SETTINGS';
-        component.ngOnInit();
-
-        expect(component.placeholderTitle).toBe(staticLang.placeholderTexts.noSettings.title);
-        expect(component.message).toBe(staticLang.placeholderTexts.noSettings.message);
-        expect(component.iconName).toBe('NoSettings');
     });
 });

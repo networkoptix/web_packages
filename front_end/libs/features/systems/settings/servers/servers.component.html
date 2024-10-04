@@ -60,8 +60,9 @@
     </ng-container>
 </ng-template>
 
-<nx-page-placeholder
-    class="placeholder-section"
-    type="NO_SETTINGS"
+<div
+    class="placeholder"
     *ngIf="isOffline$$(); else showServer"
-></nx-page-placeholder>
+>
+    <nx-page-placeholder-no-settings></nx-page-placeholder-no-settings>
+</div>

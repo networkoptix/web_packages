@@ -21,13 +21,39 @@
     >
     </nx-page-placeholder>
 
-    <nx-page-placeholder
+    <nx-page-generic-placeholder-v2
+        class="merge-placeholder"
         *ngIf="secondaryMerge"
-        type="MERGE"
-        [data]="{ systemName: mergeTargetSystem.name }"
-        withFooter
     >
-    </nx-page-placeholder>
+        <svg-icon
+            [src]="icons.dirPagePlaceholder + 'Merge.svg'"
+            [svgStyle]="{ 'height.px': 200 }"
+        ></svg-icon>
+        <h2 class="title">
+            {{
+                LANG.placeholderTexts.merge.title
+                    | translate: { systemName: mergeTargetSystem.system }
+            }}
+        </h2>
+        <div class="message">
+            <p translate>
+                Depending on the size of the database, this may take up to several hours.
+            </p>
+            <p
+                class="mt-2"
+                translate
+            >
+                Until merge is finished, you can log in to this system and watch video, but cannot
+                change any settings.
+            </p>
+            <p class="mt-2">
+                {{
+                    LANG.placeholderTexts.merge.message.whenFinished
+                        | translate: { systemName: mergeTargetSystem.system }
+                }}
+            </p>
+        </div>
+    </nx-page-generic-placeholder-v2>
 
     <nx-page-placeholder
         *ngIf="show2faRequired"

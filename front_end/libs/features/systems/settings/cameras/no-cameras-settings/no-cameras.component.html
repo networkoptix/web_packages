@@ -1,5 +1,27 @@
-<nx-page-placeholder
-    class="placeholder-content"
-    [type]="!system?.isOnline || !system?.isAvailable ? 'NO_SETTINGS' : 'NO_CAMS'"
->
-</nx-page-placeholder>
+@if (!system?.isOnline || !system.isAvailable) {
+    <div class="placeholder-container">
+        <nx-page-placeholder-no-settings></nx-page-placeholder-no-settings>
+    </div>
+} @else {
+    <div class="placeholder-container no-cams">
+        <nx-page-generic-placeholder-v2>
+            <svg-icon
+                [src]="icons.dirPagePlaceholder + 'NoCams.svg'"
+                [svgStyle]="{ 'height.px': 200 }"
+            />
+            <h2
+                class="title"
+                translate
+            >
+                No Cameras
+            </h2>
+            <div class="message unique-message">
+                <div translate>There are no accessible cameras for you in the system.</div>
+                <div translate>
+                    Connect a few cameras to the server’s local network to make them discoverable,
+                    or ask the system administrator to change your access level.
+                </div>
+            </div>
+        </nx-page-generic-placeholder-v2>
+    </div>
+}

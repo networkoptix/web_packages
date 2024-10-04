@@ -105,28 +105,46 @@
                             *ngIf="noMatchingResults; else noBookmarksText"
                             class="no-bookmarks-content"
                         >
-                            <nx-page-placeholder
-                                type="NO_BOOKMARKS"
-                                placeholderTitle="{{ 'No matching results.' | translate }}"
-                                class="page-placeholder"
-                            ></nx-page-placeholder>
-                            <button
-                                (click)="clearAllFilters()"
-                                class="clear-filters"
-                                type="button"
-                                translate
-                            >
-                                Clear Filters
-                            </button>
+                            <nx-page-generic-placeholder-v2>
+                                <div class="placeholder">
+                                    <svg-icon
+                                        [src]="
+                                            icons.dirPagePlaceholder + 'noBookmarksCloudIcon.svg'
+                                        "
+                                    ></svg-icon>
+                                    <h2
+                                        class="title"
+                                        translate
+                                    >
+                                        No matching results.
+                                    </h2>
+                                    <button
+                                        (click)="clearAllFilters()"
+                                        class="clear-filters"
+                                        type="button"
+                                        translate
+                                    >
+                                        Clear Filters
+                                    </button>
+                                </div>
+                            </nx-page-generic-placeholder-v2>
                         </div>
                         <ng-template #noBookmarksText>
-                            <nx-page-placeholder
-                                type="NO_BOOKMARKS"
-                                placeholderTitle="{{
-                                    'You don\'t have any Bookmarks yet.' | translate
-                                }}"
-                                class="page-placeholder"
-                            ></nx-page-placeholder>
+                            <nx-page-generic-placeholder-v2>
+                                <div class="placeholder">
+                                    <svg-icon
+                                        [src]="
+                                            icons.dirPagePlaceholder + 'noBookmarksCloudIcon.svg'
+                                        "
+                                    ></svg-icon>
+                                    <h2
+                                        class="title"
+                                        translate
+                                    >
+                                        You don't have any Bookmarks yet.
+                                    </h2>
+                                </div>
+                            </nx-page-generic-placeholder-v2>
                         </ng-template>
                     </ng-container>
                     <div

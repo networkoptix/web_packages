@@ -15,8 +15,9 @@ import { EditableModule } from '@components/editable/editable.module';
 import { NxInfoBlockComponent } from '@components/info-block/info-block.component';
 import { NxNumericComponent } from '@components/numeric-input/numeric.component';
 import { NxOpenClientSectionPlaceholderComponent } from '@components/placeholders/open-client-section/open-client-section.component';
-import { NxPagePlaceholderComponent } from '@components/placeholders/page/page-placeholder.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
+import { NxPagePlaceholderGenericComponent } from '@components/placeholdersV2/generic-page-placeholder.component';
+import { NxPagePlaceholderNoSettingsComponent } from '@components/placeholdersV2/no-settings/no-settings-page-placeholder.component';
 import { NxRadioComponent } from '@components/radio/radio.component';
 import { NxSelectV2Module } from '@components/select-v2/select-v2.module';
 import { NxSwitchComponent } from '@components/switch/switch.component';
@@ -48,7 +49,7 @@ import { NxRecordingSettingsComponent } from './recording-settings/recording-set
         NxGenericDropdownModule,
         NxImageComponent,
         NxNumericComponent,
-        NxPagePlaceholderComponent,
+        NxPagePlaceholderNoSettingsComponent,
         PipesModule,
         NxPreLoaderComponent,
         NxRadioComponent,
@@ -59,6 +60,7 @@ import { NxRecordingSettingsComponent } from './recording-settings/recording-set
         NxAddSvgSrcDirective,
         NxSelectV2Module,
         NxOpenClientSectionPlaceholderComponent,
+        NxPagePlaceholderGenericComponent,
     ],
     providers: [],
     declarations: [
