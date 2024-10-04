@@ -169,10 +169,10 @@ export class NxLayoutGridTreeNode {
         return [];
     });
 
-    cameraNodeStatus$$ = computed(() => {
+    cameraNodeRecordingStatus$$ = computed(() => {
         const node = this.node$$();
         if (assertResourceOfType.camera(node)) {
-            return node.details.status.toLowerCase();
+            return node.details.recordingStatus?.toLowerCase() || '';
         }
     });
 

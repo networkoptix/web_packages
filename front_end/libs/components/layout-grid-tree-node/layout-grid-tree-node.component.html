@@ -147,7 +147,7 @@
 
 <ng-template #cameraStatusIcon>
     @if (
-        ['recording', 'scheduled', 'archive'].includes(cameraNodeStatus$$()) ? '1' : '0';
+        ['recording', 'scheduled', 'archive'].includes(cameraNodeRecordingStatus$$()) ? '1' : '0';
         as opacity
     ) {
         <svg-icon
@@ -160,7 +160,7 @@
             }"
             class="status-icon"
             svgClass="recording-icon"
-            [src]="icons.dirLayouts + node$$().type + '_' + cameraNodeStatus$$() + '.svg'"
+            [src]="icons.dirLayouts + node$$().type + '_' + cameraNodeRecordingStatus$$() + '.svg'"
         >
         </svg-icon>
     }
