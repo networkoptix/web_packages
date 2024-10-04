@@ -127,6 +127,6 @@ export abstract class BaseFilterComponent<T, M extends boolean> implements Contr
         // The height is not finally set until after all the effects have run, but there is no lifecycle hook that runs after all effects
         setTimeout(() => {
             this.filterContainerHeight.set(this.filterContainer().nativeElement.clientHeight);
-        });
+        }, 10);
     }
 }

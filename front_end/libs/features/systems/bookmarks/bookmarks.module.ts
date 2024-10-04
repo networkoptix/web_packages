@@ -7,7 +7,10 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { NxAlertBlockComponent } from '@components/content-block/alert/block.component';
 import { NxFilterContainerComponent } from '@components/filters/filter-container/filter-container.component';
+import { NxCheckboxFilterItemComponent } from '@components/filters/filter-items/checkbox-filter-item/checkbox-filter-item.component';
+import { NxChipFilterItemComponent } from '@components/filters/filter-items/chip-filter-item/chip-filter-item.component';
 import { NxRadioFilterItemComponent } from '@components/filters/filter-items/radio-filter-item/radio-filter-item.component';
+import { NxMultiFilterComponent } from '@components/filters/multi-filter.component';
 import { NxSingleFilterComponent } from '@components/filters/single-filter.component';
 import { NxPagePlaceholderComponent } from '@components/placeholders/page/page-placeholder.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
@@ -22,8 +25,6 @@ import { NxMenuProjectionDirective } from 'nx-components';
 import { NxBookmarksComponent } from './bookmarks.component';
 import { NxBookmarksCardModule } from './components/card/bookmarks-card.module';
 import { NxDateAndTimeFilterModule } from './components/date-and-time-filter/date-and-time-filter.module';
-import { NxDeviceFilterModule } from './components/device-filter/device-filter.module';
-import { NxTagFilterModule } from './components/tag-filter/tag-filter.module';
 
 const appRoutes: Routes = [
     {
@@ -41,8 +42,6 @@ const appRoutes: Routes = [
         TranslateModule,
         RouterModule.forChild(appRoutes),
         NxDateAndTimeFilterModule,
-        NxDeviceFilterModule,
-        NxTagFilterModule,
         NxBookmarksCardModule,
         NxSimpleSearchComponent,
         NxAlertBlockComponent,
@@ -53,6 +52,9 @@ const appRoutes: Routes = [
         DummyBookmarkComponent,
         NxFilterContainerComponent,
         NxSingleFilterComponent,
+        NxMultiFilterComponent,
+        NxChipFilterItemComponent,
+        NxCheckboxFilterItemComponent,
         NxRadioFilterItemComponent,
         NxMenuProjectionDirective,
         NxPagePlaceholderGenericComponent,

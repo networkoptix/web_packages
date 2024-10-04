@@ -2462,5 +2462,11 @@
         "share": "Share",
         "shared": "Shared",
         "filterHeader": "Sharing"
+    },
+    "bookmarks": {
+        "headers": {
+            "tags": "Tags",
+            "devices": "Devices"
+        }
     }
 }

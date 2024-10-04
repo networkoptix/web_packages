@@ -1,5 +1,4 @@
-import { SelectionModel } from '@angular/cdk/collections';
-import { Component, computed, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, computed, effect, ElementRef, OnInit, signal, ViewChild } from '@angular/core';
 import { DateRange } from '@angular/material/datepicker';
 import { ActivatedRoute, Router } from '@angular/router';
 import { isEqual } from 'lodash-es';
@@ -9,13 +8,12 @@ import {
     merge,
     Observable,
     of,
-    ReplaySubject,
     Subject,
     switchMap,
     timer,
     zip,
 } from 'rxjs';
-import { debounceTime, distinctUntilChanged, map, startWith, take, tap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, map, take, tap } from 'rxjs/operators';
 
 import type { SuggestionSections } from '@components/simple-search/simple-search.types';
 import staticLang from '@language_static';
@@ -124,31 +122,25 @@ export class NxBookmarksComponent implements OnInit {
     loading$ = new Subject<boolean>();
     infLoading$ = new Subject<boolean>();
     loadingBuffer$ = new BehaviorSubject<number>(0);
-    devices$ = new ReplaySubject<BookmarksDevice[]>(1);
-    tags$ = new ReplaySubject<BookmarksTags>(1);
-    tagNames$ = this.tags$.pipe(
-        map(tags => Object.keys(tags).sort(alphabeticalSort(t => t))),
-        startWith<string[]>([]),
-    );
-    suggestions$ = combineLatest([this.devices$, this.tagNames$]).pipe(
-        map(
-            ([devices, tags]): SuggestionSections => ({
-                // DEVICE: devices.map(({ name }) => name),
-                TAGS: tags,
-            }),
-        ),
-        startWith({
-            // DEVICE: [],
-            TAGS: [],
-        }),
-    );
+    devices$$ = signal<BookmarksDevice[]>([]);
+    tags$$ = signal<BookmarksTags>({});
+    tagNames$$ = computed(() => {
+        const tags = this.tags$$();
+        return Object.keys(tags).sort(alphabeticalSort(t => t));
+    });
+    suggestions$$ = computed<SuggestionSections>(() => {
+        const tags = this.tagNames$$();
+        return {
+            TAGS: tags,
+        };
+    });
 
     deviceMap: Map<string, BookmarksDevice>;
 
     dateFilter: DateRange<Date> = null;
     timeFilter: TimeRange = { start: null, end: null };
-    deviceFilter = new SelectionModel<string>(true, []);
-    tagFilter = new SelectionModel<string>(true, []);
+    selectedDevices$$ = signal<string[]>([]);
+    selectedTags$$ = signal<string[]>([]);
     sharingFilter: 'shared' | 'notShared' | undefined;
     filteredFetchedBookmarkIds: Set<string> = new Set<string>();
     deviceIdsWithArchive: string[];
@@ -202,10 +194,10 @@ export class NxBookmarksComponent implements OnInit {
                         typeof queryParams.deviceId === 'string'
                             ? [queryParams.deviceId]
                             : queryParams.deviceId || [];
-                    this.deviceFilter.select(...devices);
+                    this.selectedDevices$$.set(devices);
                 }
                 if (queryParams.tags) {
-                    this.tagFilter.select(...cssaToStrArray(queryParams.tags));
+                    this.selectedTags$$.set(cssaToStrArray(queryParams.tags));
                 }
                 if (queryParams.sharing) {
                     this.sharingFilter =
@@ -314,12 +306,12 @@ export class NxBookmarksComponent implements OnInit {
                 this.deviceIdsWithArchive = devicesWithArchive.map(deviceId => {
                     return cleanId(deviceId);
                 });
-                this.tags$.next(tags);
+                this.tags$$.set(tags);
 
                 const filteredDevices = this.filterDevices(devices).sort(
                     alphabeticalSort(({ name }) => name),
                 );
-                this.devices$.next(filteredDevices);
+                this.devices$$.set(filteredDevices);
                 this.deviceMap = new Map(filteredDevices.map(device => [device.id, device]));
                 this.loading$.next(false);
                 return bks;
@@ -513,7 +505,34 @@ export class NxBookmarksComponent implements OnInit {
         });
     }
 
-    updateParam(key: 'search' | 'date' | 'time' | 'devices' | 'tags' | 'sharing'): void {
+    // These are duplicating logic, but all of the duplicated logic will be removed in the next step of refactor
+    selectedTagsChanged = effect(() => {
+        const tags = this.selectedTags$$();
+        if (!this.queryParams) {
+            return;
+        }
+        if (tags.length) {
+            this.queryParams.tags = strArrayToCssa(tags);
+        } else {
+            this.queryParams.tags = undefined;
+        }
+        this.updateUri();
+    });
+
+    selectedDevicesChanged = effect(() => {
+        const devices = this.selectedDevices$$();
+        if (!this.queryParams) {
+            return;
+        }
+        if (devices.length) {
+            this.queryParams.deviceId = devices;
+        } else {
+            this.queryParams.deviceId = undefined;
+        }
+        this.updateUri();
+    });
+
+    updateParam(key: 'search' | 'date' | 'time' | 'sharing'): void {
         if (!this.queryParams) {
             return;
         }
@@ -526,14 +545,6 @@ export class NxBookmarksComponent implements OnInit {
         } else if (key === 'time') {
             this.queryParams.startTime = this.timeFilter.start?.toString();
             this.queryParams.endTime = this.timeFilter.end?.toString();
-        } else if (key === 'devices') {
-            this.queryParams.deviceId = this.deviceFilter.hasValue()
-                ? this.deviceFilter.selected
-                : undefined;
-        } else if (key === 'tags') {
-            this.queryParams.tags = this.tagFilter.hasValue()
-                ? strArrayToCssa(this.tagFilter.selected)
-                : undefined;
         } else if (key === 'sharing') {
             this.queryParams.sharing = this.sharingFilter;
         }
@@ -542,8 +553,8 @@ export class NxBookmarksComponent implements OnInit {
 
     clearAllFilters(): void {
         this.dateAndTimeFilter.clear();
-        this.deviceFilter.clear();
-        this.tagFilter.clear();
+        this.selectedDevices$$.set([]);
+        this.selectedTags$$.set([]);
         this.queryParams = {};
         this.sharingFilter = undefined;
         this.search = '';

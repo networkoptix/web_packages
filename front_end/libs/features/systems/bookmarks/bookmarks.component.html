@@ -15,18 +15,38 @@
                 [timeRange]="timeFilter"
                 (timeRangeChange)="updateParam('time')"
             ></nx-date-and-time-filter>
-            <nx-device-filter
-                [items]="(devices$ | async) || []"
-                [selection]="deviceFilter"
-                (selectionChange)="updateParam('devices')"
-            ></nx-device-filter>
-            <nx-tag-filter
-                [tags]="tagNames$ | async"
-                [selection]="tagFilter"
-                (selectionChange)="updateParam('tags')"
-            ></nx-tag-filter>
-            @if (bookmarkSharingEnabled$$()) {
-                <div class="sharing-filter-container">
+            <div class="filters-container">
+                <nx-filter-container [header]="LANG.bookmarks.headers.devices">
+                    <nx-multi-filter
+                        [(ngModel)]="selectedDevices$$"
+                        [displayLimit]="7"
+                    >
+                        @for (device of devices$$(); track device.id) {
+                            <nx-checkbox-filter-item
+                                [value]="device.id"
+                                [searchString]="device.name"
+                            >
+                                {{ device.name }}
+                            </nx-checkbox-filter-item>
+                        }
+                    </nx-multi-filter>
+                </nx-filter-container>
+                <nx-filter-container [header]="LANG.bookmarks.headers.tags">
+                    <nx-multi-filter
+                        [(ngModel)]="selectedTags$$"
+                        [displayLimit]="15"
+                    >
+                        @for (tagName of tagNames$$(); track tagName) {
+                            <nx-chip-filter-item
+                                [value]="tagName"
+                                [searchString]="tagName"
+                            >
+                                {{ tagName }}
+                            </nx-chip-filter-item>
+                        }
+                    </nx-multi-filter>
+                </nx-filter-container>
+                @if (bookmarkSharingEnabled$$()) {
                     <nx-filter-container [header]="LANG.bookmarkSharing.filterHeader">
                         <nx-single-filter
                             [(ngModel)]="sharingFilter"
@@ -47,8 +67,8 @@
                             </nx-radio-filter-item>
                         </nx-single-filter>
                     </nx-filter-container>
-                </div>
-            }
+                }
+            </div>
         </ng-template>
 
         @if (useNewCloud) {
@@ -80,7 +100,7 @@
             <nx-simple-search
                 [(ngModel)]="search"
                 (ngModelChange)="updateParam('search')"
-                [suggestions]="suggestions$ | async"
+                [suggestions]="suggestions$$()"
             ></nx-simple-search>
             <ng-template #stillLoading>
                 <nx-pre-loader class="bookmarks-preloader"></nx-pre-loader>

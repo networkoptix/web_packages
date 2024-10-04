@@ -1,8 +1,0 @@
-@use '../../../features/systems/bookmarks/components/filter' as filter;
-
-@include filter.search-and-list();
-
-.devices {
-    height: filter.$device-label-height * 18;
-    overflow-y: auto;
-}

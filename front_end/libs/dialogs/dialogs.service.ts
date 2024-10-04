@@ -690,20 +690,6 @@ export class NxDialogsService {
     );
 
     /* Bookmarks */
-    moreDevices = this.dialogV1Factory<Dt.MoreDevices>(
-        () =>
-            import('./bookmarks/more-devices/more-devices.component').then(
-                m => m.NxMoreDevicesModalContent,
-            ),
-        { width: DIALOG_SIZE.INFO, autoFocus: 'input', panelClass: 'no-container-shadow' },
-    );
-
-    moreTags = this.dialogV1Factory<Dt.MoreTags>(
-        () =>
-            import('./bookmarks/more-tags/more-tags.component').then(m => m.NxMoreTagsModalContent),
-        { width: DIALOG_SIZE.INFO, autoFocus: 'input', panelClass: 'no-container-shadow' },
-    );
-
     bookmarkDetails = this.dialogV1Factory<Dt.BookmarkDetails>(
         () =>
             import('./bookmarks/card-modal/bookmarks-card-modal.component').then(

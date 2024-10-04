@@ -19,7 +19,7 @@
     <div class="col-6">
         <nx-filter-container header="State Tags">
             <nx-multi-filter [(ngModel)]="selectedStatesTags">
-                @for (state of ALL_STATES; track state) {
+                @for (state of allStates(); track state) {
                     <nx-chip-filter-item
                         [value]="state"
                         [searchString]="state"
