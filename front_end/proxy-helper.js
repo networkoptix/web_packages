@@ -51,7 +51,7 @@ const proxyTargetConfig = dynamicInstanceProxy({
     ...legacyTargetConfigs,
 });
 
-const target = process.env.CLOUD_TARGET || 'meta-cloud-test';
+const target = process.env.CLOUD_TARGET || 'cloud-test';
 const targetInstanceUrl = proxyTargetConfig[target];
 const rewriteLegacy = Object.values(legacyTargetConfigs).includes(targetInstanceUrl);
 
