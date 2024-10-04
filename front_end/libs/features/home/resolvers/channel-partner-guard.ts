@@ -27,11 +27,7 @@ export const ChannelPartnerGuard: CanActivateFn = async () => {
         if (!isValidPartner) {
             return true;
         }
-        await inject(Router).navigate(
-            permissionsStore.canViewPartnerReports$$()
-                ? ['reports', currentPartnerId]
-                : ['home', 'shared'],
-        );
+        await inject(Router).navigate(['home', 'shared']);
     }
     return canViewChannelPartner;
 };
