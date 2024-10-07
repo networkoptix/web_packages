@@ -44,12 +44,12 @@ def create_root_channel_partner(root_name, host_name):
 
     ChannelPartnerService.objects.get_or_create(
         created_by_channel_partner=root_channel_partner, name='Demo Device Service',
-        type=ChannelPartnerService.LOCAL_RECORDING, sub_type=ChannelPartnerService.DEMO, duration=1
+        type=ChannelPartnerService.LOCAL_RECORDING, sub_type=ChannelPartnerService.DEMO, duration=1,
     )
 
     ChannelPartnerService.objects.get_or_create(
         created_by_channel_partner=root_channel_partner, name='Credit Device Service',
-        type=ChannelPartnerService.LOCAL_RECORDING, sub_type=ChannelPartnerService.CREDIT, duration=1,
+        type=ChannelPartnerService.LOCAL_RECORDING, sub_type=ChannelPartnerService.CREDIT, duration=24,
         conversion_service=regular_recording
     )
 
