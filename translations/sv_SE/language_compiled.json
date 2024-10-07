@@ -479,7 +479,7 @@
     "Description": "Beskrivning",
     "Description (optional)": "Beskrivning (frivillig)",
     "Desktop client connection required": "Skrivbordsklientanslutning krävs",
-    "Destination folder is required": "Destination folder is required",
+    "Destination folder is required": "Målmapp krävs",
     "Detach": "Koppla från",
     "Detach from the System": "Koppla bort från systemet",
     "Detach server&nbsp;<strong>{ title }</strong>&nbsp;from current system?": "Koppla från servern&nbsp;<strong>{ title }</strong>&nbsp;från nuvarande system?",
