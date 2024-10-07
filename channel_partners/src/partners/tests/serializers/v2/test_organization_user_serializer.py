@@ -100,7 +100,7 @@ class TestOrganizationUserSerializer:
         assert serializer.data['groupRoles'][0]['created']
         assert serializer.data['groupRoles'][0]['lastModified']
 
-        httpx_mock.reset(False)
+        httpx_mock.reset()
         notification_send_url = mock_post_notification()
         user = group_user.user
         data = {

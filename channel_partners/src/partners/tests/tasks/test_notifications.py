@@ -48,7 +48,7 @@ def test_get_customization(mock_get_customization_request, request_host, httpx_m
     sent_requset = httpx_mock.get_request(url=url)
     assert sent_requset
     # Test cached
-    httpx_mock.reset(False)
+    httpx_mock.reset()
     url = mock_get_customization_request(customization_name=customization)
     assert get_customization(request_host) == customization
     sent_requset = httpx_mock.get_request(url=url)
@@ -61,7 +61,7 @@ def test_get_general_notification_type(mock_account_status, request_host, httpx_
     mock_account_status(email=email, active=True)
     assert is_existing_user(host=request_host, email=email, request_id=str(uuid4()))
 
-    httpx_mock.reset(False)
+    httpx_mock.reset()
     mock_account_status(email=email, active=False)
     assert is_existing_user(host=request_host, email=email, request_id=str(uuid4())) is False
 
@@ -112,7 +112,7 @@ class TestPartnerNameChangeTask:
             'old_partner_name': 'old_name',
             'new_partner_name': 'new_name',
         }
-        httpx_mock.reset(False)
+        httpx_mock.reset()
         post_notification_url = f'https://{cloud_test_host.hostname}/notifications/send'
         customization_url = mock_get_customization_request()
         httpx_mock.add_response(status_code=200, json={}, url=post_notification_url)
@@ -196,7 +196,7 @@ class TestOrganizationNameChangeTask:
             'old_organization_name': 'old_name',
             'new_organization_name': 'new_name',
         }
-        httpx_mock.reset(False)
+        httpx_mock.reset()
         post_notification_url = f'https://{cloud_test_host.hostname}/notifications/send'
         customization_url = mock_get_customization_request()
         httpx_mock.add_response(status_code=200, json={}, url=post_notification_url)

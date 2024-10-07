@@ -9,6 +9,7 @@ from unittest.mock import (
 
 import pytest
 import structlog
+from django.conf import settings
 from django.core.cache import caches
 from django.db import connection
 from django.http import HttpRequest
@@ -28,7 +29,6 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import GenericViewSet
 from waffle.models import Switch
 
-from channel_partners import settings
 from channel_partners.configuration.logging_config import configure_logging
 from channel_partners.logging.logging_signals import (
     bind_additional_request_metadata,

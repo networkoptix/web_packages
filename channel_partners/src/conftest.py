@@ -60,6 +60,8 @@ from partners.models import (
 )
 
 
+httpx_mark = pytest.mark.httpx_mock(assert_all_responses_were_requested=False)
+
 @pytest.fixture(autouse=True)
 def resource():
     yield
@@ -682,8 +684,8 @@ def random_email():
 def request_host():
     return settings.DEFAULT_HOST_NAME
 
-
 @pytest.fixture(autouse=True)
+@pytest.mark.httpx_mock(assert_all_responses_were_requested=False)
 def auto_mock_get_customization(request, httpx_mock, request_host):
     if request.node.get_closest_marker('no_tasks_autofix'):
         return
@@ -993,3 +995,27 @@ def mock_mark_organization_user(mocker):
 @pytest.fixture(autouse=True)
 def auto_mock_mark_organization_user(request, mock_mark_organization_user):
     mock_mark_organization_user.return_value = MagicMock()
+
+def pytest_collection_modifyitems(session, config, items):
+    for item in items:
+        item.add_marker(pytest.mark.httpx_mock(assert_all_responses_were_requested=False))
+        item.add_marker(pytest.mark.httpx_mock(assert_all_requests_were_expected=False))
+
+
+@pytest.fixture()
+def mock_settings(mocker):
+    def factory(**kwargs):
+        for name, val in kwargs.items():
+            mocker.patch(f'partners.models.settings.{name}', val)
+
+    return factory
+
+
+
+@pytest.fixture()
+def mock_debug_false(mocker):
+    return mocker.patch('django.conf.settings.DEBUG', False)
+
+@pytest.fixture()
+def mock_debug_true(mocker):
+    return mocker.patch('django.conf.settings.DEBUG', True)

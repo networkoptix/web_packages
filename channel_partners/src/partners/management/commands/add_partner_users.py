@@ -5,7 +5,6 @@ from django.conf import settings
 from django.core.management import BaseCommand
 from django.core.validators import validate_email
 
-from channel_partners.settings import EnvironmentEnum
 from partners.models import (
     ChannelPartner,
     ChannelPartnerRoles,
@@ -26,7 +25,7 @@ class Command(BaseCommand):
         parser.add_argument("--partner", type=str, required=True, help="ChannelPartner name or id")
 
     def handle(self, *args, **options):
-        if settings.INSTANCE_NAME == EnvironmentEnum.prod:
+        if settings.INSTANCE_NAME == settings.EnvironmentEnum.prod:
             self.stdout.write(self.style.ERROR("This command cannot be run on prod!"))
             sys.exit(1)
         emails = options['emails']

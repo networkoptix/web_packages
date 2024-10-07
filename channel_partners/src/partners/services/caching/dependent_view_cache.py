@@ -16,6 +16,7 @@ from typing import (
 )
 
 import structlog
+from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
 from django.db.models import (
     Model,
@@ -26,10 +27,6 @@ from rest_framework.response import Response
 from rest_framework.status import HTTP_304_NOT_MODIFIED
 from rest_framework.views import APIView
 
-from channel_partners.settings import (
-    CACHE_ETAG_HEADER_KEY,
-    CACHE_STATUS_HEADER_KEY,
-)
 from partners.models import (
     CloudSystemId,
     CloudUser,
@@ -530,7 +527,7 @@ def process_views(
     etag = None
 
     try:
-        request_etag = request.headers.get(CACHE_ETAG_HEADER_KEY, None)
+        request_etag = request.headers.get(settings.CACHE_ETAG_HEADER_KEY, None)
         if request_etag is not None:
             _, etag = retrieve_from_cache(
                 cache,
@@ -544,8 +541,8 @@ def process_views(
                 return Response(
                     status=HTTP_304_NOT_MODIFIED,
                     headers={
-                        CACHE_ETAG_HEADER_KEY: etag,
-                        CACHE_STATUS_HEADER_KEY: "hit"
+                        settings.CACHE_ETAG_HEADER_KEY: etag,
+                        settings.CACHE_STATUS_HEADER_KEY: "hit"
                     })
         cached_response, etag = retrieve_from_cache(
             cache,
@@ -561,8 +558,8 @@ def process_views(
         return Response(
             cached_response,
             headers={
-                CACHE_ETAG_HEADER_KEY: etag,
-                CACHE_STATUS_HEADER_KEY: "hit"
+                settings.CACHE_ETAG_HEADER_KEY: etag,
+                settings.CACHE_STATUS_HEADER_KEY: "hit"
             })
 
     # Not found in cache - proceed with the request
@@ -629,8 +626,8 @@ def dispatch_with_cache(
                 etag = generate_etag(self.response.content)
                 store_in_cache(cache, cache_key_params, response, auth_entity, validation_sources, etag)
 
-                self.response.headers[CACHE_ETAG_HEADER_KEY] = etag
-                self.response.headers[CACHE_STATUS_HEADER_KEY] = "miss"
+                self.response.headers[settings.CACHE_ETAG_HEADER_KEY] = etag
+                self.response.headers[settings.CACHE_STATUS_HEADER_KEY] = "miss"
         except Exception as e:
             logger.error("Error storing in cache", error=str(e), exc_info=True)
 

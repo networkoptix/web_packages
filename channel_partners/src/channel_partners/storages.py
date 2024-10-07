@@ -8,7 +8,7 @@ logger = structlog.get_logger(__name__)
 
 class ReportsStorage(S3Boto3Storage):
     location = 'usage_reports'
-    file_overwrite = True
+    file_overwrite = False
 
     def generate_presigned_url(self,
                                filename,

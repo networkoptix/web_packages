@@ -6,7 +6,6 @@ from django.core.validators import validate_email
 from django.utils.text import slugify
 from nx_ireg.registry import IReg
 
-from channel_partners.settings import EnvironmentEnum
 from partners.models import (
     ChannelPartner,
     ChannelPartnerRoles,
@@ -49,7 +48,7 @@ class Command(BaseCommand):
             self.stdout.write(f'{channel_partner.id}:{channel_partner.name}:{user.email}')
 
     def handle(self, *args, **options):
-        if settings.INSTANCE_NAME == EnvironmentEnum.prod:
+        if settings.INSTANCE_NAME == settings.EnvironmentEnum.prod:
             self.stdout.write(self.style.ERROR("This command cannot be run on prod!"))
             sys.exit(1)
         try:

@@ -15,6 +15,7 @@ from tools.cdb_service_auth import (
 
 
 @pytest.mark.no_service_auth_mock
+@pytest.mark.httpx_mock(can_send_already_matched_responses=True)
 class TestGetAuthToken:
     @pytest.fixture(autouse=True)
     def setup(self):

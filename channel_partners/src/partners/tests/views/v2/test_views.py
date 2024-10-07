@@ -431,7 +431,9 @@ class TestCloudSystemViewSetMenageLegacyLicenses:
         assert data['skippedLicenses'] == skipped
         assert data['failedLicenses'] == failed
 
+    @pytest.mark.httpx_mock(can_send_already_matched_responses=True)
     def test_all_failed(self, httpx_mock, mock_cdb_basic_auth):
+        httpx_mock.reset()
         httpx_mock.add_response(
             status_code=400,
             url=self.url,
@@ -439,7 +441,7 @@ class TestCloudSystemViewSetMenageLegacyLicenses:
         )
         auth = mock_cdb_basic_auth(self.system)
         self.client.credentials(HTTP_AUTHORIZATION=auth)
-        response = self.client.post(self.path, data=self.valid_data)
+        response = self.client.post(self.path, data=self.valid_data, format='json')
         assert response.status_code == 200
         data = response.json()
         assert MigrationRecord.objects.filter(license_key__in=self.licenses).count() == 1
@@ -2343,7 +2345,7 @@ class TestCloudSystemViewSetDelete:
     @pytest.fixture(autouse=True)
     def setUp(self, channel_partner_factory, organization_factory, cp_user_factory,
               org_user_factory, system_factory, mock_auth_with_user, arf, httpx_mock, arf_basic_auth):
-        httpx_mock.reset(False)
+        httpx_mock.reset()
         self.cp = channel_partner_factory()
         self.cp_user = cp_user_factory(channel_partner=self.cp)
         self.org = organization_factory(channel_partner=self.cp)
@@ -2412,7 +2414,7 @@ class TestCloudSystemViewSetDelete:
         self.org_user.roles = [OrganizationRoles.VIEWER]
         self.org_user.save()
         # resetting introspection mock from mock_auth_with_user
-        httpx_mock.reset(False)
+        httpx_mock.reset()
         sys = system_factory(organization=self.org)
         url = f'https://{settings.DEFAULT_HOST_NAME}/cdb/systems/{sys.system_id}'
         httpx_mock.add_response(url=url, status_code=200)
@@ -2430,7 +2432,7 @@ class TestCloudSystemViewSetDelete:
         self.org_user.roles = [OrganizationRoles.VIEWER]
         self.org_user.save()
         # resetting introspection mock from mock_auth_with_user
-        httpx_mock.reset(False)
+        httpx_mock.reset()
         sys = system_factory(organization=self.org)
         url = f'https://{settings.DEFAULT_HOST_NAME}/cdb/systems/{sys.system_id}'
         httpx_mock.add_response(url=url, status_code=200)
@@ -2613,7 +2615,7 @@ class TestSystemTransferOffer:
         assert response.data['organization'] == self.org.id
 
 
-
+@pytest.mark.httpx_mock(can_send_already_matched_responses=True)
 class TestGetAuthorizedSystem:
 
     @pytest.fixture(autouse=True)

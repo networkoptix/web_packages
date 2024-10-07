@@ -50,7 +50,7 @@ def test_authenticate_regular_token(httpx_mock):
     assert request.headers['authorization'] == f'Bearer {token}'
 
     # Reset the mock and add a new response for the second call
-    httpx_mock.reset(False)
+    httpx_mock.reset()
     httpx_mock.add_response(url=url, json=token_resp)
 
     auth = authenticate_regular_token(token, cloud_host)
@@ -60,7 +60,7 @@ def test_authenticate_regular_token(httpx_mock):
     assert request is None
     # test errors
     caches['default'].clear()
-    httpx_mock.reset(False)
+    httpx_mock.reset()
     httpx_mock.add_response(url=url, json=token_resp, status_code=401)
 
     auth = authenticate_regular_token(token, cloud_host)
@@ -70,7 +70,7 @@ def test_authenticate_regular_token(httpx_mock):
     assert request
 
     caches['default'].clear()
-    httpx_mock.reset(False)
+    httpx_mock.reset()
     httpx_mock.add_response(url=url, json=token_resp, status_code=403)
 
     auth = authenticate_regular_token(token, cloud_host)
@@ -80,7 +80,7 @@ def test_authenticate_regular_token(httpx_mock):
     assert request
 
     caches['default'].clear()
-    httpx_mock.reset(False)
+    httpx_mock.reset()
     httpx_mock.add_response(url=url, json=token_resp, status_code=500)
 
     auth = authenticate_regular_token(token, cloud_host)
@@ -90,7 +90,7 @@ def test_authenticate_regular_token(httpx_mock):
     assert request
 
     caches['default'].clear()
-    httpx_mock.reset(False)
+    httpx_mock.reset()
     httpx_mock.add_exception(url=url, exception=httpx.ConnectError('Connection refused'))
     try:
         auth = authenticate_regular_token(token, cloud_host)
@@ -154,7 +154,7 @@ def test_check_system_credentials(mocker, httpx_mock, channel_partner_factory,
     assert status == CloudSystemStates.ACTIVATED
     assert system_name == 'name_activated'
 
-    httpx_mock.reset(False)
+    httpx_mock.reset()
     httpx_mock.add_response(url=cdb_url, json=not_activated_system, status_code=200)
     authenticated, status, system_name = check_system_credentials(system_id, system_auth_key, cloud_host)
 
@@ -162,7 +162,7 @@ def test_check_system_credentials(mocker, httpx_mock, channel_partner_factory,
     assert status == CloudSystemStates.NOT_ACTIVATED
     assert system_name == 'name_not_activated'
 
-    httpx_mock.reset(False)
+    httpx_mock.reset()
     httpx_mock.add_response(url=cdb_url, json=wrong_id, status_code=200)
     authenticated, status, system_name = check_system_credentials(system_id, system_auth_key, cloud_host)
 
@@ -173,35 +173,35 @@ def test_check_system_credentials(mocker, httpx_mock, channel_partner_factory,
     sys.refresh_from_db()
     assert sys.system_state == CloudSystemStates.ACTIVATED
 
-    httpx_mock.reset(False)
+    httpx_mock.reset()
     httpx_mock.add_response(url=cdb_url, json=deleted_system, status_code=200)
     authenticated, status, system_name = check_system_credentials(system_id, system_auth_key, cloud_host)
     assert authenticated is False
     assert status == CloudSystemStates.DELETED
     assert system_name == None
 
-    httpx_mock.reset(False)
+    httpx_mock.reset()
     httpx_mock.add_response(url=cdb_url, json=auth_error, status_code=403)
     authenticated, status, system_name = check_system_credentials(system_id, system_auth_key, cloud_host)
     assert authenticated is False
     assert status == CloudSystemStates.DELETED
     assert system_name is None
 
-    httpx_mock.reset(False)
+    httpx_mock.reset()
     httpx_mock.add_response(url=cdb_url, content=b'some text response', status_code=403)
     authenticated, status, system_name = check_system_credentials(system_id, system_auth_key, cloud_host)
     assert authenticated is False
     assert status is None
     assert system_name is None
 
-    httpx_mock.reset(False)
+    httpx_mock.reset()
     httpx_mock.add_response(url=cdb_url, content=b'some text response', status_code=500)
     authenticated, status, system_name = check_system_credentials(system_id, system_auth_key, cloud_host)
     assert authenticated is False
     assert status is None
     assert system_name is None
 
-    httpx_mock.reset(False)
+    httpx_mock.reset()
     httpx_mock.add_exception(url=cdb_url, exception=httpx.ConnectError('error'))
     authenticated, status, system_name = check_system_credentials(system_id, system_auth_key, cloud_host)
     assert authenticated is False

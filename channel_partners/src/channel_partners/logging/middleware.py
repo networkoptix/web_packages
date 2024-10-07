@@ -5,14 +5,10 @@ from typing import Callable
 import structlog
 import waffle
 from django import http
+from django.conf import settings
 from django.core.cache import caches
 from django.db import connection
 
-from channel_partners import settings
-from channel_partners.settings import (
-    CACHE_STATUS_HEADER_KEY,
-    REDIS_WAFFLE_TIMEOUT,
-)
 from channel_partners.utils import set_request_internal
 
 
@@ -34,12 +30,12 @@ def is_debug_enabled() -> bool:
 
 
 class DebugLevelFilter(logging.Filter):
-    cache_timeout = REDIS_WAFFLE_TIMEOUT
+    cache_timeout = settings.REDIS_WAFFLE_TIMEOUT
 
     def __init__(self, level: int):
         super().__init__()
         self.level: int = level
-        self._last_update: float = -REDIS_WAFFLE_TIMEOUT - 1
+        self._last_update: float = -settings.REDIS_WAFFLE_TIMEOUT - 1
 
     def get_level(self) -> int:
         try:
@@ -98,7 +94,7 @@ class RequestLoggerMiddleware:
         duration_ms = int((time.time() - start_time) * 1000)
         final_query_count = len(connection.queries)
         queries_during_request = final_query_count - initial_query_count
-        cps_cache = response.get(CACHE_STATUS_HEADER_KEY, None)
+        cps_cache = response.get(settings.CACHE_STATUS_HEADER_KEY, None)
 
         # Log the request and response details.
         if response.status_code >= 500:

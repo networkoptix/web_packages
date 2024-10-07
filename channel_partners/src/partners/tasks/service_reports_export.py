@@ -178,7 +178,7 @@ def generate_report(channel_partner_id: str = None,
     try:
         fp = generator.stream()
     except Exception as e:
-        logger.error('Failed to generate report', exc_info=e)
+        logger.error('Failed to generate report', exc_info=True, error=str(e))
         if retry_count >= max_retries:
             caches['default'].delete(
                 get_usage_report_requests_key(entity_id=channel_partner_id or organization_id,
@@ -192,7 +192,7 @@ def generate_report(channel_partner_id: str = None,
     try:
         filename = storage.save(file_name, fp)
     except Exception as e:
-        logger.error('Failed to save report', exc_info=e)
+        logger.error('Failed to save report', exc_info=True, error=str(e))
         if retry_count >= max_retries:
             caches['default'].delete(
                 get_usage_report_requests_key(entity_id=channel_partner_id or organization_id,

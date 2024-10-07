@@ -86,7 +86,7 @@ class TestBindLocalSystemSerializer:
         assert serializer.errors['organization'] == ['Organization is suspended.']
 
     def test_bind_error_code(self, httpx_mock):
-        httpx_mock.reset(False)
+        httpx_mock.reset()
         httpx_mock.add_response(url=self.bind_url, json=self.bind_response, status_code=400)
         serializer = BindLocalSystemSerializer(data=self.valid_data,
                                                context=self.make_context(self.administrator.user))
@@ -96,7 +96,7 @@ class TestBindLocalSystemSerializer:
         assert status_code == 400
 
     def test_bind_ok(self, httpx_mock):
-        httpx_mock.reset(False)
+        httpx_mock.reset()
         httpx_mock.add_response(url=self.bind_url, json=self.bind_response, status_code=200)
         serializer = BindLocalSystemSerializer(data=self.valid_data,
                                                context=self.make_context(self.administrator.user))

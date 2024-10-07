@@ -330,9 +330,18 @@ REDIS_CELERY_DB = 15
 
 REDIS_WAFFLE_TIMEOUT = 500
 
+TEST_WORKER_NUM = int(env.str('PYTEST_XDIST_WORKER', '0').replace("gw", ""))
+
+def get_db_index(db_index: int) -> int:
+    if not TESTING:
+        return db_index
+    return db_index + 20 * TEST_WORKER_NUM
+
 if MIGRATING:
     # Avoid issues with redis on migrations
     REDIS_CACHE_BACKEND = "django.core.cache.backends.dummy.DummyCache"
+
+
 
 CACHES = {
     "local": {
@@ -347,28 +356,28 @@ CACHES = {
     },
     'waffle-redis': {
         "BACKEND": REDIS_CACHE_BACKEND,
-        "LOCATION": f"{REDIS_CACHE_LOCATION}/{REDIS_WAFFLE_CACHE_DB}",
-        "TIMEOUT": REDIS_WAFFLE_TIMEOUT
+        "LOCATION": f"{REDIS_CACHE_LOCATION}/{get_db_index(REDIS_WAFFLE_CACHE_DB)}",
+        "TIMEOUT": REDIS_WAFFLE_TIMEOUT,
     },
     'default': {
         "BACKEND": REDIS_CACHE_BACKEND,
-        "LOCATION": REDIS_CACHE_LOCATION,
+        "LOCATION": f"{REDIS_CACHE_LOCATION}/{get_db_index(0)}",
         "TIMEOUT": None
     },
     'celery': {
         # RESERVED FOR CELERY
         "BACKEND": REDIS_CACHE_BACKEND,
-        "LOCATION": f'{REDIS_CACHE_LOCATION}/{REDIS_CELERY_DB}',
+        "LOCATION": f'{REDIS_CACHE_LOCATION}/{get_db_index(REDIS_CELERY_DB)}',
         "TIMEOUT": None
     },
     "throttling": {
         "BACKEND": REDIS_CACHE_BACKEND,
-        "LOCATION": f"{REDIS_CACHE_LOCATION}/{REDIS_THROTTLING_DB}",
+        "LOCATION": f"{REDIS_CACHE_LOCATION}/{get_db_index(REDIS_THROTTLING_DB)}",
         "TIMEOUT": None
     },
     "dependent_cache": {
         "BACKEND": REDIS_CACHE_BACKEND,
-        "LOCATION": f"{REDIS_CACHE_LOCATION}/{REDIS_DEPENDENT_CACHE_DB}",
+        "LOCATION": f"{REDIS_CACHE_LOCATION}/{get_db_index(REDIS_DEPENDENT_CACHE_DB)}",
         "TIMEOUT": None
     }
 }

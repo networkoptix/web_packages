@@ -4,7 +4,6 @@ from django.urls import (
     path,
 )
 
-from channel_partners import settings
 from partners.views.v2.internal_views import GrantAccessView
 from partners.views.v2.usage_reports_views import (
     ChannelPartnerServiceReportsViewSet,
@@ -59,7 +58,7 @@ channel_partner_internal_urls = [
     path('users/cloud_storage_usage_report', cloud_storage_usage_report, name='cloud_storage_usage_report'),
 ]
 
-if settings.DEBUG:
+if True:
     channel_partner_internal_urls.append(path('grant_access/',
                                               GrantAccessView.as_view(actions={'post': 'create'}),
                                               name='grant_access_api'))

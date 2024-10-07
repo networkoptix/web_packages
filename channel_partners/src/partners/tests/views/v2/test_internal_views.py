@@ -86,20 +86,17 @@ class TestGrantAccessApiView:
         self.url = reverse('v2:grant_access_api')
         self.client = Client()
 
-    @override_settings(DEBUG=False)
-    def test_grant_access_debug_false_call_by_url(self, db):
+    def test_grant_access_debug_false_call_by_url(self, db, mock_debug_false):
         response = self.client.post(self.url)
         assert response.status_code == 404
 
     @override_settings(DEBUG=True)
-    def test_no_root_partner(self, db, mocker):
+    def test_no_root_partner(self, db, mocker, mock_debug_true):
         response = self.client.post(self.url)
         assert response.status_code == 400
         assert response.data == ['There is no root partner or customizations']
 
-
-    @override_settings(DEBUG=True)
-    def test_no_customizations(self, root_nx_channel_partner, mocker):
+    def test_no_customizations(self, root_nx_channel_partner, mocker, mock_debug_true):
         mocked_get_customizations = mocker.patch(
             'nx_ireg.helpers.get_customizations_s3', return_value=[])
         response = self.client.post(self.url)
@@ -107,8 +104,8 @@ class TestGrantAccessApiView:
         assert response.data == ['There is no root partner or customizations']
         mocked_get_customizations.assert_called_once()
 
-    @override_settings(DEBUG=True)
-    def test_grant_access_ok(self, root_nx_channel_partner, mocker, channel_partner_factory):
+    def test_grant_access_ok(self, root_nx_channel_partner, mocker,
+                             channel_partner_factory, mock_debug_true):
         for customization, host in self.ireg_customizations[1:]:
             channel_partner_factory(name=customization, parent_channel_partner=root_nx_channel_partner)
         mocked_get_customizations = mocker.patch(
