@@ -1,30 +1,28 @@
-import copy
-import json
-from smtplib import SMTPDataError, SMTPException, SMTPServerDisconnected
-from ssl import SSLError
-import traceback
-import logging
 import base64
-from typing import Any
-
-from celery import shared_task
+import json
+import logging
+import structlog
+import traceback
 from celery.exceptions import Ignore
 from django.conf import settings
-from django.utils import timezone
 from django.core.cache import caches
 from django.db.models.functions import Lower
+from django.utils import timezone
+from smtplib import SMTPDataError, SMTPException, SMTPServerDisconnected
+from ssl import SSLError
+from typing import Any
 
-from cloud.controllers import cloud_api
 from api.models import Account
+from celery import shared_task
+from cloud.controllers import cloud_api
 from cloud.customization_context import customization_ctx
-
 from notifications import notifications_api
 from notifications.engines import email_engine
-from notifications.notifications_api import log_push_result, get_push_devices_from_targets, get_system_with_users
 from notifications.models import RESULT_STATES, Message, PushNotification, SystemEmail
+from notifications.notifications_api import log_push_result, get_push_devices_from_targets, get_system_with_users
 from util.helpers import get_language_for_email
 
-logger = logging.getLogger(__name__)
+logger = structlog.getLogger(__name__)
 
 
 WARNING_TASK_ERRORS = (SMTPDataError, SMTPException, SMTPServerDisconnected)
@@ -49,8 +47,7 @@ def log_error(error, user_email, msg_type, message, lang, customization, queue, 
 
 def send_email_log(_task):
     def wrapper(*args, **kwargs):
-        logger.info(
-            f"Start {_task.__name__} was run with args {args}, kwargs: {kwargs}")
+        logger.info("task_start", task_name=_task.__name__, args=args, kwargs=kwargs)
         return _task(*args, **kwargs)
     return wrapper
 
@@ -65,7 +62,7 @@ def get_email_full_name(email: Any):
             users_emails = [email]
         except:
             # Return an original email if we can't parse it
-            logger.warning(f'Invalid email format: {email}, {email.__class__}.')
+            logger.warning("invalid_email_format", email=email, email_type=email.__class__)
             return email
     elif isinstance(email, list) or isinstance(email, tuple):
         # if list or tuple
@@ -159,7 +156,7 @@ def send_email(msg_id, queue="", attempt=1, email_type='', emails = None, sessio
 
     except Exception as error:
         if isinstance(error, SMTPDataError):
-            logger.warning(f'SMTP Error. {settings.CONFIG_ERROR}')
+            logger.warning("smtp_error", error=settings.CONFIG_ERROR)
         elif (
             isinstance(error, (SMTPException, SSLError))
             and attempt < settings.MAX_RETRIES
@@ -240,10 +237,7 @@ def initialize_push_notification_send(notification_id, count) -> PushNotificatio
     notification_object.count = count
     notification_object.save()
 
-    logger.info(
-        f'Start processing push notification: {notification_id}'
-        if count == 1 else
-        f'Retrying push notification: {notification_id} (count={count})')
+    logger.info("push_notification_processing", notification_id=notification_id, attempt=count)
     return notification_object
 
 

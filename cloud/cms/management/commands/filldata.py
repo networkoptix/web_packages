@@ -9,7 +9,9 @@ from cloud.debug import timer
 from cms.controllers import filldata, structure
 from cms.models import Customization, Language
 
-logger = logging.getLogger(__name__)
+import structlog
+
+logger = structlog.getLogger(__name__)
 
 
 class Command(BaseCommand):
@@ -25,8 +27,7 @@ class Command(BaseCommand):
     @timer
     def handle(self, *args, **options):
         if not (customization_option := options.get('customization')):
-            logger.warning("WARNING!!! Customization has not been passed. It may "
-                           "cause errors on customization depended containers.")
+            logger.warning("missing_customization", error="Customization not passed")
             return
 
         if (preview := options.get('preview', None)) is None:
@@ -38,8 +39,7 @@ class Command(BaseCommand):
             customization_ctx.set(customization_option)
 
         if not customization:
-            logger.warning(f'Customization {customization_option} was automatically generated.'
-                           f'{settings.CONFIG_ERROR} To configure cloud for {customization_option}.')
+            logger.warning("auto_generated_customization", customization=customization_option, error=settings.CONFIG_ERROR)
             en_us = Language.objects.get(code="en_US")
             customization = Customization(
                 name=customization_option, default_language=en_us)
@@ -54,20 +54,15 @@ class Command(BaseCommand):
             if filldata.init_skin(asset, preview, workers=1, management=True):
                 break
 
-            warning_msg = f"Filldata Failed. Retrying in {settings.FILLDATA_TIMEOUT} seconds"
-            logger.warning(warning_msg)
-            self.stdout.write(
-                self.style.WARNING(
-                    warning_msg))
+            warning_msg = f"Retrying in {settings.FILLDATA_TIMEOUT} seconds"
+            logger.warning("filldata_failed", error=warning_msg)
+            self.stdout.write(self.style.WARNING("Filldata Failed. " + warning_msg))
             time.sleep(settings.FILLDATA_TIMEOUT)
 
         else:
-            error_msg = f"Filldata failed after running {settings.FILLDATA_TRIES} time(s). " \
-                f"Run forceupdate for {asset} to fix the problem."
-            logger.critical(error_msg)
-            self.stdout.write(
-                self.style.ERROR(
-                    error_msg))
+            error_msg = f"Run forceupdate for {asset} to fix the problem."
+            logger.critical("filldata_failed", attempts=settings.FILLDATA_TRIES, asset=asset, error=error_msg)
+            self.stdout.write(self.style.ERROR(f"Filldata failed after running {settings.FILLDATA_TRIES} time(s). "  + error_msg))
             return
 
         self.stdout.write(

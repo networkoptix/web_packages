@@ -1,13 +1,12 @@
-from logging import getLogger
-from typing import List
-
+import structlog
 from django.core.cache import caches
 from django.core.exceptions import ImproperlyConfigured
 from rest_framework.throttling import SimpleRateThrottle
+from typing import List
 
-from cloud.helpers.exceptions import APIRequestException, APITooManyRequestsException
+from cloud.helpers.exceptions import APITooManyRequestsException
 
-logger = getLogger(__name__)
+logger = structlog.getLogger(__name__)
 
 
 class RequestDataThrottleBase(SimpleRateThrottle):
@@ -43,13 +42,13 @@ class RequestDataThrottleBase(SimpleRateThrottle):
 
     def check_throttle(self, request):
         if not self.allow_request(request, view=None):
-            logger.warning(f"Request throttled for key {self.get_cache_key(request, view=None)}")
+            logger.warning("request_throttled", cache_key=self.get_cache_key(request, view=None))
             raise APITooManyRequestsException('Too many request. Please try again later')
 
     @classmethod
     def is_allowed(cls, request):
         if not cls().allow_request(request, view=None):
-            logger.warning(f"Request throttled for key {cls().get_cache_key(request, view=None)}")
+            logger.warning("request_throttled", cache_key=cls().get_cache_key(request, view=None))
             raise APITooManyRequestsException('Too many request. Please try again later')
 
 

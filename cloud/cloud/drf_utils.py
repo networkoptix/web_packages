@@ -1,12 +1,12 @@
+import structlog
 from rest_framework.exceptions import UnsupportedMediaType
 from rest_framework.views import exception_handler
 
 from cloud.customization_context import ContextExecutor
 from cloud.helpers.exceptions import clean_passwords, handler
 from cloud.utils import is_async
-import logging
 
-logger = logging.getLogger(__name__)
+logger = structlog.getLogger(__name__)
 
 
 def cloud_exception_handler(exc, context):
@@ -29,8 +29,7 @@ def cloud_exception_handler(exc, context):
         #     logger.warning(f'Request: {request_data}\n'
         #                    f'Error: {exc}')
         # else:
-        logger.info(f'Request: {request_data}\n'
-                    f'Error: {exc}')
+        logger.warning("request_error", request_data=request_data, error=str(exc))
         return response
     else:
         # If in async context, run in separatee thread due to some db operations inside

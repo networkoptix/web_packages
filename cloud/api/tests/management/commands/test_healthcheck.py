@@ -7,9 +7,17 @@ from api.management.commands.healthcheck import *
 
 
 def plan_in_progress():
-    start = 1
-    for in_progress in range(start, MINUTES + start):
-        yield [migration for migration in range(in_progress)]
+    start = 0
+    for in_progress in range(start, MINUTES):
+        yield [migration for migration in range(in_progress + 1)]
+
+
+import pytest
+from itertools import chain, zip_longest
+from uuid import uuid4
+from unittest.mock import call
+
+from api.management.commands.healthcheck import *
 
 
 class TestHealthCheck:
@@ -31,25 +39,20 @@ class TestHealthCheck:
         # Test fails if pending migrations after 10 minutes
         plan_states = plan_in_progress()
         expected_log_iteration = [
-            f'Iteration: {minute} of {MINUTES}'
-            for minute in range(MINUTES)]
-        expected_log_pending = [
-            f"Pending migrations: {minute + 1}"
+            call('health_check_iteration', iteration=minute, total_iterations=MINUTES, pending_migrations=minute + 1)
             for minute in range(MINUTES)]
         expected_log_info = [
-            message for message in chain.from_iterable(
-                zip_longest(['Begin health check'], expected_log_iteration, expected_log_pending))
-                if message]
+            call('health_check_start'),
+            *expected_log_iteration
+        ]
         mock_migration_executor.return_value.migration_plan = lambda _: next(
             plan_states)
 
         instance.handle()
         assert deployment_cache.get(DEPLOYMENT_READY)
-        expected_calls = [call(message)
-            for message in expected_log_info]
-        mock_log_info.assert_has_calls(expected_calls)
+        mock_log_info.assert_has_calls(expected_log_info)
         mock_log_error.assert_called_once_with(
-            'Something went wrong with migrations. Please notify the web team')
+            'migration_error', error='Something went wrong with migrations')
         mock_exit.assert_called_once_with(1)
 
         # Test successful health check
@@ -57,7 +60,8 @@ class TestHealthCheck:
 
         instance.handle()
         mock_log_info.assert_has_calls([
-            call('Health check complete'),
-            call(f"Iteration: 0 of {MINUTES}")
+            call('health_check_start'),
+            call('health_check_iteration', iteration=0, total_iterations=MINUTES, pending_migrations=0),
+            call('health_check_complete', iteration=0, total_iterations=MINUTES)
         ])
         mock_exit.assert_called_with(0)

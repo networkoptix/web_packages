@@ -2,7 +2,7 @@ from django.conf import settings
 from django.urls import re_path
 from django.urls import path
 
-from cms.views import asset, celery, menu, utils
+from cms.views import asset, app_celery, menu, utils
 
 urlpatterns = [
     re_path(r'download/(?P<path>.*)$', asset.download_file, name="download_file"),
@@ -12,8 +12,8 @@ urlpatterns = [
         name="download_all_asset_structures"),
     re_path(r'preview/', asset.make_preview, name="preview"),
 
-    re_path(r'^celery/check_status/(?P<task_id>.+?)/?$', celery.check_status, name="celery_check_status"),
-    re_path(r'^celery/download_result/(?P<task_id>.+?)/?$', celery.download_result, name="celery_download_result"),
+    re_path(r'^celery/check_status/(?P<task_id>.+?)/?$', app_celery.check_status, name="celery_check_status"),
+    re_path(r'^celery/download_result/(?P<task_id>.+?)/?$', app_celery.download_result, name="celery_download_result"),
 
     re_path(r'^package/(?P<asset_id>.+?)/?$', asset.download_package, name="download_package"),
     re_path(r'^async_package/(?P<asset_id>.+?)/?$', asset.download_async_package, name="download_package_async"),

@@ -28,10 +28,8 @@ class TestFillData:
         mock_sleep = mocker.patch.object(time, 'sleep')
 
         # test clean exit on call without customization
-        warning_msg = "WARNING!!! Customization has not been passed. It may " \
-                      "cause errors on customization depended containers."
         instance.handle()
-        mock_warning.assert_called_with(warning_msg)
+        mock_warning.assert_called_with("missing_customization", error="Customization not passed")
         mock_warning = mocker.patch.object(logger, 'warning')
 
         # Raise error if missing preview
@@ -52,28 +50,26 @@ class TestFillData:
         ).first()
 
         failed_messages = [
-            f'Filldata Failed. Retrying in {settings.FILLDATA_TIMEOUT} seconds'
+            f'Retrying in {settings.FILLDATA_TIMEOUT} seconds'
             for _ in range(settings.FILLDATA_TRIES)]
 
         failed_warning_calls = [
-            call(message) for message in failed_messages]
+            call("filldata_failed", error=message) for message in failed_messages]
 
         expected_warning_messages = [
-            call(f'Customization {customization_option} was automatically generated.'
-                 f'{settings.CONFIG_ERROR} To configure cloud for {customization_option}.'),
+            call("auto_generated_customization", customization=customization_option, error=settings.CONFIG_ERROR),
             *failed_warning_calls]
 
         failed_stdout_calls = [
             call(instance.style.WARNING(
-                message))
+                f"Filldata Failed. {message}"))
             for message in failed_messages]
 
-        failure_message = f"Filldata failed after running {settings.FILLDATA_TRIES} time(s). " \
-                          f"Run forceupdate for {created_cloud_portal_asset} to fix the problem."
+        failure_message = f"Run forceupdate for {created_cloud_portal_asset} to fix the problem."
 
         expected_std_out_calls = [
             *failed_stdout_calls,
-            call(instance.style.ERROR(failure_message))]
+            call(instance.style.ERROR(f"Filldata failed after running {settings.FILLDATA_TRIES} time(s). {failure_message}"))]
 
         expected_sleep_calls = [
             call(settings.FILLDATA_TIMEOUT)
@@ -84,7 +80,7 @@ class TestFillData:
         assert created_cloud_portal_asset
         mock_sleep.assert_has_calls(expected_sleep_calls)
         mock_warning.assert_has_calls(expected_warning_messages)
-        mock_critical.assert_called_once_with(failure_message)
+        mock_critical.assert_called_once_with("filldata_failed", attempts=settings.FILLDATA_TRIES, asset=created_cloud_portal_asset, error=failure_message)
         mock_write_stdout.assert_has_calls(expected_std_out_calls)
         mock_init_skin.assert_has_calls(
             call(created_cloud_portal_asset, preview, workers=1, management=True)

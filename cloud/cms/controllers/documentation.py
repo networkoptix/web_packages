@@ -1,33 +1,26 @@
-import contextlib
-from collections import defaultdict
-from functools import wraps
-from signal import signal
-from bs4 import BeautifulSoup
-from bs4.element import Tag
-import time
-from django.conf import settings
-from django.core.cache import cache
-from inlinestyler.utils import inline_css
 import re
 import sass
-import logging
+import structlog
+import time
 from bs4 import BeautifulSoup
-from redis.exceptions import ConnectionError
-from mistletoe import markdown
+from bs4.element import Tag
+from django.conf import settings
+from django.core.cache import cache
 from html2text import HTML2Text
+from meilisearch.errors import MeiliSearchCommunicationError, MeiliSearchApiError
+from mistletoe import markdown
 from waffle import switch_is_active
 
 from cloud.customization_context import customization_ctx
 from cms.controllers.asset_json import get_review_matching_current_version, process_asset_global_contexts
+from cms.controllers.filldata import global_contexts_to_dict
 from cms.feature_flags.feature_flags import SWITCHES
-from meilisearch.errors import MeiliSearchCommunicationError, MeiliSearchApiError
-from util.base_cache import BaseCache, BaseCacheV2
-from cms.controllers.filldata import global_contexts_to_dict, ContextProcessor
-from cms.models import DataStructure, AssetType, AssetCustomizationReview, Context, get_cloud_portal_asset, Asset, ExternalFile
+from cms.models import DataStructure, AssetType, Context, get_cloud_portal_asset, Asset, ExternalFile
+from util.base_cache import BaseCacheV2
 from util.config import get_cloud_portal_url
 from util.helpers import get_meilisearch_client
 
-logger = logging.getLogger(__name__)
+logger = structlog.getLogger(__name__)
 
 INITIALIZATION_TASK_TIMEOUT = 60 * 60
 # INITIALIZATION_TASK_KEY = f'initialize-{settings.CUSTOMIZATION}-docs'
@@ -80,7 +73,7 @@ def html2plain(html):
 #     return _ignore_index_not_found
 def start_reinitialization(init_task_key, customization):
     from cms.tasks import async_initialize_doc_cache
-    from notifications.celery import app
+    from notifications.app_celery import app
     running_task = cache.get(init_task_key)
     if running_task:
         app.control.revoke(running_task, terminate=True, signal='SIGUSR1')
@@ -176,7 +169,9 @@ class SearchableCache(BaseCacheV2):
                     self.search_index.delete_all_documents()
             except (TypeError, MeiliSearchCommunicationError) as e:
                 # get_settings was throwing a weird unsupported operand error only on hard refresh of a kb article page
-                logger.info(e)
+                # TODO: Improve logging message
+                # TODO: Should this be an info event, like before?
+                logger.info("info_event", error=str(e))
 
     def mark_updated(self, completed=False):
         if completed:
@@ -203,7 +198,7 @@ class SearchableCache(BaseCacheV2):
             except (MeiliSearchCommunicationError, MeiliSearchApiError, TypeError, AttributeError) as e:
                 # MeiliSearchApiError is only raised when running with an empty db
                 # raised when meilisearch service is unavailable
-                logger.warning(e)
+                logger.warning("MeliSearch Communication Error", error=str(e))
 
     def __setitem__(self, lookup_key, doc):
         """Sets doc to cache using the lookup_key attribute.
@@ -235,7 +230,7 @@ class SearchableCache(BaseCacheV2):
                     self.mark_updated()
             except (MeiliSearchCommunicationError, TypeError) as e:
                 # MeiliSearchCommunicationError is raised when meilisearch service is unavailable
-                logger.warning(e)
+                logger.warning("MeliSearch Communication Error", error=str(e))
                 # TypeError is raised when switch is enabled but no master key provided
 
 

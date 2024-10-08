@@ -1,25 +1,23 @@
-import os
-import json
 import codecs
 import base64
 import binascii
-from dataclasses import dataclass
-import zipfile
+import codecs
 import errno
-from typing import Dict, Callable
+import structlog
 import traceback
-from typing import Union, Tuple, Dict, List
-from io import BytesIO
-
+import zipfile
+from dataclasses import dataclass
 from django.db.models import QuerySet
+from io import BytesIO
+from typing import Callable
+from typing import Union, Tuple, Dict
 
-from cms.models import *
-from cms.controllers.special_structures import SpecialStructures
 from cloud.debug import timer
 from cloud.helpers.exceptions import APIForbiddenException, APIInternalException, ErrorCodes
+from cms.controllers.special_structures import SpecialStructures
+from cms.models import *
 
-import logging
-logger = logging.getLogger(__name__)
+logger = structlog.getLogger(__name__)
 
 
 EMAIL_TEMPLATES = 'templates/lang'
@@ -242,9 +240,7 @@ class ContextProcessor:
             except Exception:
                 # if something happens here - instance will not start and it will close to impossible to fix so we ignore
                 # broken records while logging them - it will raise cloud alarm and we will go and fix the problem
-                logger.error(
-                    f"ERROR: Cannot process data structure {datastructure.name} for asset {self.asset.name}")
-                logger.error(traceback.format_exc())
+                logger.error("data_structure_processing_error", data_structure=datastructure.name, asset=self.asset.name, exc_info=True)
 
         return content
 
@@ -356,15 +352,15 @@ def init_skin(asset, preview=False, workers=2, management=False):
     # 1. read skin for this customization
     customization_name = asset.customizations.first().name
     skin = asset.read_global_value('%SKIN%')
-    logger.info("Init " + skin + " skin for " + asset.__str__())
+    logger.info("skin_initialization", skin=skin, asset=asset.__str__())
 
 
     # 2. run fill_content
     if not preview:
-        logger.info("Fill content for " + asset.__str__())
+        logger.info("content_filling", asset=asset.__str__())
         return fill_content(asset, preview=False, incremental=False, workers=workers, management=management)
     else:
-        logger.info("Fill preview for " + asset.__str__())
+        logger.info("preview_filling", asset=asset.__str__())
         return fill_content(asset, preview=True, incremental=False, workers=workers, management=management)
 
 
@@ -484,8 +480,7 @@ class PackageExporter:
                     data = base64.b64decode(data)
                     zip_file.writestr(name, data)
                 except binascii.Error as e:
-                    logger.error(
-                        f'{file_structure.name} had the following Exception {str(e)}')
+                    logger.error("file_structure_exception", file_structure=file_structure.name, error=str(e), exc_info=True)
                     return True
 
     def get_zip_package(self):

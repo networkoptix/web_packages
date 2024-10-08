@@ -1,24 +1,20 @@
 import json
-import logging
 import os
 import re
-from functools import wraps
-from logging import getLogger
-from mimetypes import guess_type
-
-import waffle
+import structlog
 from asgiref.sync import sync_to_async
 from django.conf import settings
 from django.http import HttpResponse, Http404
-from django.shortcuts import redirect
 from django.views.static import serve
+from functools import wraps
+from mimetypes import guess_type
 
 from cloud.helpers.exceptions import APINotFoundException
 from cms.controllers.static_files import get_template, get_customizable_static, TemplatesCache, get_languages_json
-from cms.models import get_cloud_portal_asset, Asset, AssetType
+from cms.models import get_cloud_portal_asset
 from util.helpers import detect_language_by_request
 
-logger = getLogger(__name__)
+logger = structlog.getLogger(__name__)
 
 
 def server_dev_static(view):
@@ -61,17 +57,17 @@ async def customizable_files(request, *args):
     language_code = await sync_to_async(detect_language_by_request)(request)
     content = await get_customizable_static(request.CUSTOMIZATION, static_path, language_code=language_code)
     if content is None:
-        logger.info(f'Empty content for {static_path}')
+        logger.info("empty_content", static_path=static_path)
         return HttpResponse(status=404)
     content_type, encoding = guess_type(static_path)
-    logger.info(f'Serving content for {static_path}')
+    logger.info("serving_content", static_path=static_path)
     return HttpResponse(content=content, content_type=content_type)
 
 
 async def get_template_response(request, filename, language_code=None):
     template = await get_template(request, filename, language_code=language_code)
     content_type, encoding = guess_type(filename)
-    logger.info(f'Serving template from DB. {filename}')
+    logger.info("serving_template_from_db", file_name=filename)
     return HttpResponse(template, content_type=content_type)
 
 

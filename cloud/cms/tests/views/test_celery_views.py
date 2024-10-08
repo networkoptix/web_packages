@@ -3,7 +3,7 @@ from uuid import uuid4
 
 from rest_framework import status
 
-from cms.views.celery import *
+from cms.views.app_celery import *
 
 
 def test_check_status(mocker, arf, account_factory, db):

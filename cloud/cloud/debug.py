@@ -1,7 +1,7 @@
-import logging
+import structlog
 import time
 
-logger = logging.getLogger(__name__)
+logger = structlog.getLogger(__name__)
 
 
 def timer(func):
@@ -11,8 +11,7 @@ def timer(func):
         res = func(*args, **kwargs)
         end = time.time()
 
-        logger.info(
-            f"Function: {func.__name__}\nArgs: {args}\nKwargs: {kwargs}\nelapsed time: {end - start}")
+        logger.info("function_timing", args=args, kwargs=kwargs, elapsed_time=end - start)
 
         return res
     return exec_foo
@@ -24,13 +23,12 @@ class Timer:
 
     def __enter__(self):
         self.start_time = time.time()
-        logger.info(f"Starting {self.measure_name}.")
+        logger.info("measurement_start", measure_name=self.measure_name)
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.finish_time = time.time()
-        logger.info(
-            f"{self.measure_name} took {self.finish_time - self.start_time}")
+        logger.info("measurement_end", measure_name=self.measure_name, duration=self.finish_time - self.start_time)
 
     def elapsed_time(self):
         return self.finish_time - self.start_time

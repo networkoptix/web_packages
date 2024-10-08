@@ -1,18 +1,19 @@
 # python script generates structure.json based on directory or archive
-import os
-import re
-import io
-import json
 from collections import OrderedDict
 from zipfile import ZipFile
-import logging
 
+import io
+import json
+import os
+import re
+import structlog
 from PIL import Image  # get Pillow
-from cms.serializers import AssetTypeSerializer
+
 from cms.controllers.modify_db import GUID_REGEXP
 from cms.models import Context, DataStructure, AssetType
+from cms.serializers import AssetTypeSerializer
 
-logger = logging.getLogger(__name__)
+logger = structlog.getLogger(__name__)
 
 IGNORE_DIRECTORIES = ('help',)
 IMAGES_EXTENSIONS = ('ico', 'png', 'bmp', 'jpg', 'jpeg')
@@ -249,7 +250,7 @@ def iterate_zip(file_descriptor):
     root = ''
     for name in zip_file.namelist():
         if name.count('/') == 0:  # ignore files from the root of the archive
-            logger.info(f"IGNORED FILE {name}")
+            logger.info("ignored_file", file_name=name)
             continue
         if name.endswith('/'):
             if not root:  # find root directory to ignore
@@ -262,13 +263,13 @@ def iterate_zip(file_descriptor):
 
 def iterate_directory(directory):
     for root, dirs, files in os.walk(directory):
-        logger.info(f"{root.replace(directory, '')}/")
+        logger.info("directory_processed", directory=root.replace(directory, ''))
         yield root.replace(directory, '') + '/', None
         for filename in files:
             filename = os.path.join(root, filename)
             with open(filename, "rb") as file_descriptor:
                 data = file_descriptor.read()
-                logger.info(f"{filename.replace(directory, '')}")
+                logger.info("file_processed", file_name=filename.replace(directory, ''))
                 yield filename.replace(directory, ''), data
 
 

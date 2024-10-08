@@ -1,10 +1,10 @@
 import hashlib
 import os
+import structlog
 import sys
 import yaml
-import logging
 
-logger = logging.getLogger(__name__)
+logger = structlog.getLogger(__name__)
 
 
 class UnableToFetchConfigException(Exception):
@@ -25,9 +25,8 @@ def get_init_config():
         conf_dir = os.path.dirname(__file__)
     file_path = os.path.join(conf_dir, 'cloud_portal.yaml')  # normal case - working instance
     if not os.path.exists(file_path) and not PYTHON_RUNNING and os.getenv('INSTANCE_NAME') in ['prod', 'stage']:
-        msg = f"Something went wrong as soon as file {file_path} does not exist."
-        logger.critical(msg)
-        raise UnableToFetchConfigException(msg)
+        logger.critical("File does not exist", filepath=file_path)
+        raise UnableToFetchConfigException(f"Something went wrong as soon as file {file_path} does not exist.")
     if not os.path.isfile(file_path):  # this is for local environment
         file_path = os.path.join(conf_dir, '../../etc', 'cloud_portal.local.yaml')
     if not os.path.isfile(file_path):  # this is for Jenkins to collect static
@@ -93,5 +92,5 @@ class CmsConfig:
         _models = list(admin.site._registry.keys())
         for _model in _models:
             if model_name(_model) not in self.allowed_models:
-                logger.info(f"Unregistering model admin: {model_name(_model)}")
+                logger.info("unregistering_model_admin", data_structure=model_name(_model))
                 admin.site.unregister(_model)

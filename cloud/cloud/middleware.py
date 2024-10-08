@@ -19,16 +19,23 @@ from cms.feature_flags.feature_flags import FLAGS
 from cms.views.agreement import check_required_tos
 from util.helpers import get_customization_name_from_cloud_host
 
-logger = logging.getLogger(__name__)
+import structlog
+
+logger = structlog.getLogger(__name__)
 
 
 class CatchExceptionMiddleware(MiddlewareMixin):
     @staticmethod
     def process_exception(request, exception):
-        logging.info(request)
         stack_trace = traceback.format_exc().replace("Traceback", "")
-        logging.critical(
-            f"{exception.__class__.__name__}: {exception}\nCall Stack:\n{stack_trace}")
+        logger.critical(
+            "exception_occurred",
+            request_data=request.data if request.data else None,
+            exception_name=exception.__class__.__name__,
+            error=str(exception),
+            stack_trace=stack_trace
+        )
+
         if not settings.DEBUG:
             return HttpResponse("Error with request", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 

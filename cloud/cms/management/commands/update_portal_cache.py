@@ -1,17 +1,15 @@
 import logging
+import structlog
 import sys
-import time
-
+from django.conf import settings
 from django.core.cache import caches
 from django.core.management.base import BaseCommand
-from django.conf import settings
 
 from cloud.customization_context import customization_ctx
 from cloud.debug import timer
-from cms.controllers import filldata, structure
-from cms.models import Customization, Language, cloud_portal_customization_cache, cloud_portal_customization_cache_key
+from cms.models import cloud_portal_customization_cache, cloud_portal_customization_cache_key
 
-logger = logging.getLogger(__name__)
+logger = structlog.getLogger(__name__)
 
 
 class Command(BaseCommand):
@@ -27,7 +25,7 @@ class Command(BaseCommand):
         if not (customization := options.get('customization')):
             raise ValueError('customization is required')
         if caches['customization'].get(cloud_portal_customization_cache_key(customization)):
-            logger.info(f"Cloud portal cache for {customization} and version {settings.VERSION} is already set")
+            logger.info("cache_already_set", customization=customization, version=settings.VERSION)
             return
         # just fill empty cache update is not needed in deployment
         customization_ctx.set(customization)
@@ -37,11 +35,10 @@ class Command(BaseCommand):
                 cloud_portal_customization_cache(customization_name=customization, force=False)
             except Exception as ex:
                 caches['customization'].delete(lock_key)
-                logging.warning(f"Error occurred during cache updating.\n{ex}")
+                logger.warning("cache_update_error", error=str(ex), exc_info=True)
                 sys.exit(1)
             caches['customization'].delete(lock_key)
-            logger.info(f"Cloud portal cache for {customization} and version "
-                        f"{settings.VERSION} has been successfully update.")
+            logger.info("cache_update_success", customization=customization, version=settings.VERSION)
             return
-        logger.info(f"Cloud portal cache for {customization} and version {settings.VERSION} is being update right now.")
+        logger.info("cache_update_in_progress", customization=customization, version=settings.VERSION)
 

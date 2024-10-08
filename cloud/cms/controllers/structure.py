@@ -1,25 +1,19 @@
+from zipfile import ZipFile
+
 import base64
-from io import BytesIO
 import glob
 import json
-import logging
 import os
 import re
 import requests
 import uuid
-from zipfile import ZipFile
-
-from django.conf import settings
 from django.core.files.base import ContentFile
 
-from cms.controllers.documentation import DocumentCache
 from cms.controllers.generate_structure import templatify_json
 from cms.controllers.modify_db import save_unrevisioned_records, send_version_for_review, update_draft_state
 from cms.models import Context, ContextTemplate, DataStructure, DataRecord, Asset, AssetType, MenuNode, Customization, \
     Menu, AssetCustomizationReview, Permission, MenuCache
 from util.helpers import substitute_branding
-
-logger = logging.getLogger(__name__)
 
 
 def deprecate_contexts_and_data_structures_for_asset_type(asset_type):
@@ -417,7 +411,6 @@ def process_zip(file_descriptor, user, asset, update_structure, update_content):
 
         data = zip_file.read(zip_name)
         data64 = base64.b64encode(data).decode('utf-8')
-        # logger.info(f"Name: {name}\tContext: {structure.context.name}\n\n")
         if update_structure:
             # if set_defaults or data structure has no default value - save it
             if structure.placeholder != data64:

@@ -3,21 +3,15 @@
 # update database structure
 # mark everything in the database which was not found in sources
 # create report: added vs outdated
-import os
-import re
-import json
-import codecs
-import logging
 
-from django.conf import settings
+import structlog
 from django.core.management.base import BaseCommand
-from django.core.cache import caches
 
 from cloud.debug import timer
 from cms.controllers import structure
 from cms.models import *
 
-logger = logging.getLogger(__name__)
+logger = structlog.getLogger(__name__)
 
 SOURCE_DIR = 'static/_source/{{skin}}/'
 
@@ -135,7 +129,7 @@ def read_languages(skin_name=None):
     for language in languages:
         lang, created = Language.objects.get_or_create(code=language['code'], defaults={"name": language['name']})
         if created:
-            logger.info(f"Created language {lang.name} - {lang.code}")
+            logger.info("language_created", language_name=lang.name, language_code=lang.code)
 
 
 class Command(BaseCommand):

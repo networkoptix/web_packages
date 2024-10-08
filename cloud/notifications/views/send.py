@@ -1,30 +1,24 @@
-import re
-import logging
-
-from django.core.exceptions import PermissionDenied, ValidationError
-from django.urls import reverse
-from django.conf import settings
-from django.utils import timezone
 from django.contrib import messages
+import structlog
+from django.contrib import messages
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import redirect
-
-from rest_framework.response import Response
-from rest_framework.decorators import api_view, permission_classes, throttle_classes
-from rest_framework.permissions import AllowAny, IsAuthenticated
-
+from django.urls import reverse
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.response import Response
 
-from cloud.helpers.exceptions import handle_exceptions, APIRequestException, APIServiceException, \
-    api_success, ErrorCodes, get_client_ip, APITooManyRequestsException
-from api.models import Account
-from cms.models import Customization, Asset, UserGroupsToAssetPermissions, cloud_portal_customization_cache
+from cloud.helpers.exceptions import APIRequestException, APIServiceException, \
+    api_success, ErrorCodes, get_client_ip
+from cms.models import UserGroupsToAssetPermissions, cloud_portal_customization_cache
 from cms.permissions import IsSuperuser
 from notifications import notifications_api
 from notifications.models import *
 from notifications.tasks import send_to_all_users
 
-logger = logging.getLogger(__name__)
+logger = structlog.getLogger(__name__)
 
 MESSAGE_TYPES = MessageTypes()
 
@@ -173,8 +167,7 @@ def send_event(request):
         request.data['sender_name'] = request.data['userName']
 
         ip = get_client_ip(request)
-        logging.info(
-            f"ip: {ip}\t user: {request.user}\nrequest data: {request.data}")
+        logger.info("request_info", ip_address=ip, user=request.user, request_data=request.data)
 
         notifications_api.send_feedback(
             request.data['type'], asset_id, request.data, request=request)

@@ -1,13 +1,13 @@
 import os
+import structlog
 import sys
-import logging
 import traceback
-from nx_ireg.helpers import get_customizations
 from django.core.management.base import BaseCommand
 
 from cms.models import Customization, Language
+from nx_ireg.helpers import get_customizations
 
-logger = logging.getLogger(__name__)
+logger = structlog.getLogger(__name__)
 
 
 class Command(BaseCommand):
@@ -20,8 +20,7 @@ class Command(BaseCommand):
         try:
             customizations = get_customizations(instance_name)
         except Exception as e:
-            logger.error(f"Failed to get cloud hosts: {e}")
-            logger.error(traceback.format_exc())
+            logger.error("failed_to_get_cloud_hosts", error=str(e), exc_info=True)
             if options.get('ignore_missing'):
                 return
             sys.exit(1)
@@ -31,12 +30,12 @@ class Command(BaseCommand):
                 name=customization_name, defaults={'host': hostname, 'default_language': en_us}
             )
             if created:
-                logger.info(f"Created customization: {customization_name}. Host: {hostname}.")
+                logger.info("customization_created", customization=customization_name, host=hostname)
                 continue
             if customization.host == hostname:
-                logger.info(f"Customization: {customization_name}. Host: {hostname}. Does not require updating.")
+                logger.info("customization_unchanged", customization=customization_name, host=hostname)
                 continue
             customization.host = hostname
             customization.save()
-            logger.info(f"Updated customization: {customization_name}. Host: {hostname}.")
+            logger.info("customization_updated", customization=customization_name, host=hostname)
 

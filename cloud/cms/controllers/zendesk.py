@@ -1,28 +1,22 @@
-import traceback
-import sys
-from cms.tasks import async_zendesk_sync
-from cms.controllers import documentation
-from cms.controllers import modify_db
-from cms.controllers import structure
-from cms import forms
-from cms.models import *
-from util.helpers import substitute_branding
-
-from django.conf import settings
-from django.utils.http import urlencode
-
-import logging
-import re
-import uuid
-import time
+import structlog
 import threading
+import time
+import traceback
+from django.utils.http import urlencode
 from functools import wraps
-from typing import List
 from zenpy import Zenpy
 from zenpy.lib.api_objects.help_centre_objects import Category, Section, Article, Translation, Label
 from zenpy.lib.exception import APIException, RecordNotFoundException, ZenpyException
 
-logger = logging.getLogger(__name__)
+from cms import forms
+from cms.controllers import documentation
+from cms.controllers import modify_db
+from cms.controllers import structure
+from cms.models import *
+from cms.tasks import async_zendesk_sync
+from util.helpers import substitute_branding
+
+logger = structlog.getLogger(__name__)
 
 
 def clean_nodes(nodes):
@@ -89,9 +83,7 @@ def retry(exception_to_retry=Exception, retries=3, delay=3, backoff=2, block_fin
                 try:
                     return func_to_retry(*args, **kwargs)
                 except exception_to_retry as err:
-                    message = f'{err}, Retrying in {next_delay} seconds...'
-                    if logger:
-                        logger.warning(message)
+                    logger.warning("Retry failed", status=f"Retrying in {next_delay} seconds", error=err, exc_info=True)
 
                     time.sleep(next_delay)
                     next_delay *= backoff
@@ -102,9 +94,8 @@ def retry(exception_to_retry=Exception, retries=3, delay=3, backoff=2, block_fin
                 try:
                     return func_to_retry(*args, **kwargs)
                 except exception_to_retry as err:
-                    message = f"Failed after {retries} retries. {args}"
-                    if logger:
-                        logger.warning(message)
+                    message = f"Failed after {retries} retries"
+                    logger.warning("Retry failed", status=message, retry_count=retries, args=args, error=err, exc_info=True)
 
         return decorated_func  # true decorator
 
@@ -699,21 +690,29 @@ class Exporter(ZendeskBase):
                 except (ZenpyException, ValueError, OSError, APIException) as exception:
                     # ZenpyException: Most likely from a file being too large.
                     # ValueError or OSError: Most likely an ExternalFile is missing it's file.
-                    logger.warning(f'Error creating attachment. Asset: {asset.id}'
-                                   f'Zenpy Article ID: {zenpy_article.id}, '
-                                   f'Ext File ID: {external_file.id}, '
-                                   f'File name: {file_info["external_file_name"]}, '
-                                   f'Exception: {exception}')
+                    logger.warning(
+                        "attachment_creation_error",
+                        asset_id=asset.id,
+                        zenpy_article_id=zenpy_article.id,
+                        external_file_id=external_file.id,
+                        file_name=file_info["external_file_name"],
+                        error=str(exception),
+                        exc_info=True
+                    )
                     return
                 except Exception as e:
                     # Exception was being raised here because I didn't have S3 location setup locally. This shouldn't happen in production.
                     # Catching all exceptions here in case there are any other unhandled exceptions we don't know about.
                     # We want to ensure that the sync continues even if we can't create an attachment.
-                    logger.error(f'Error creating attachment. Asset: {asset.id}'
-                        f'Zenpy Article ID: {zenpy_article.id}, '
-                        f'Ext File ID: {external_file.id}, '
-                        f'File name: {file_info["external_file_name"]}, '
-                        f'Exception: {e}', exc_info=True)
+                    logger.error(
+                        "attachment_creation_error",
+                        asset_id=asset.id,
+                        zenpy_article_id=zenpy_article.id,
+                        external_file_id=external_file.id,
+                        file_name=file_info["external_file_name"],
+                        error=str(e),
+                        exc_info=True
+                    )
                     return
 
             # Use zendesk url if attachment was created else link to cloud portal
@@ -725,8 +724,7 @@ class Exporter(ZendeskBase):
                     self.zen_client.help_center.attachments.delete(attachment)
                 except RecordNotFoundException as exception:
                     # Handle deleting none existing attachment
-                    logger.warning(f'Error deleting attachment. Attachment Id: {attachment and attachment.id}, '
-                                   f'Exception: {exception}')
+                    logger.warning("attachment_deletion_error", attachment_id=attachment and attachment.id, error=str(exception), exc_info=True)
                     return
 
             return body.replace(original, replacement)
@@ -1054,7 +1052,7 @@ def push_accepted_article_to_zendesk(asset, *, customization=None, request=None)
         exporter = Exporter(customization_name=customization,
                             cloud_portal=cloud_portal, verify_auth=True)
     except ZendeskInvalidConfiguration:
-        logger.warning(f'Unable to sync article. Invalid zendesk configuration for {customization}. Unable to Authorize User')
+        logger.warning("article_sync_error", customization=customization, error="Invalid zendesk configuration", alt_message="Unable to Authorize User")
         return
 
     for zd_article in zd_articles:
@@ -1191,7 +1189,7 @@ def process_nodes(nodes: List[MenuNode], parent_zd, parent_enabled=True, zendesk
     try:
         exporter = Exporter(customization_name=site.customization.name, verify_auth=verify_auth)
     except ZendeskInvalidConfiguration:
-        logger.warning(f'Unable to sync article. Invalid zendesk configuration for {site.customization.name}. Unable to Authorize User')
+        logger.warning("article_sync_error", customization=site.customization.name, error="Invalid zendesk configuration", alt_message="Unable to Authorize User")
         return
 
     for _position, node in enumerate(nodes, 1):
@@ -1251,7 +1249,7 @@ def process_general_section_node(zd_category, nodes_list, sync_log):
     try:
         exporter = Exporter(customization_name=zd_category.site.customization.name, verify_auth=True)
     except ZendeskInvalidConfiguration:
-        logger.warning(f'Unable to sync article. Invalid zendesk configuration for {zd_category.site.customization.name}. Unable to Authorize User')
+        logger.warning("article_sync_error", customization=zd_category.site.customization.name, error="Invalid zendesk configuration", alt_message="Unable to Authorize User")
         return
 
     top_level_assets = [node.asset for node in nodes_list if node.asset]

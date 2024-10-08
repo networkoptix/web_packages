@@ -1,19 +1,17 @@
-import asyncio
+import base64
 import base64
 import json
 import os
-import typing
 import re
-from hashlib import md5
-from logging import getLogger
-from typing import Tuple, Optional
-
+import structlog
+import typing
 import waffle
 from asgiref.sync import sync_to_async
 from django.conf import settings
 from django.core.cache import caches
 from django.core.files.base import ContentFile
 from django.db.models import QuerySet
+from typing import Tuple, Optional
 
 from cloud.helpers.exceptions import APINotFoundException
 from cms.controllers.filldata import ContextProcessor, global_contexts_to_dict
@@ -24,7 +22,7 @@ from cms.models import Asset, AssetType, Language, Context, DataStructure, Conte
 from util.base_cache import HashCache
 from util.config import get_customization_config
 
-logger = getLogger(__name__)
+logger = structlog.getLogger(__name__)
 
 
 class StaticFileNotFound(Exception):
@@ -186,16 +184,16 @@ def read_cached_file(asset: Asset, customization_name: str, filename: str, langu
     """
     templates_cache = TemplatesCache(customization_name, filename, language_code, skin, version_id)
     if data := templates_cache.get_value():
-        logger.info(f"Got file {filename} from cache.")
+        logger.info("file_from_cache", file_name=filename)
         return data
     if is_email:
         # read email template
         data = read_db_email_file(asset, customization_name, filename, language_code, skin, version_id)
-        logger.info(f"Got email file {filename} from db.")
+        logger.info("email_file_from_db", file_name=filename)
     else:
         # read view template
         data = read_customized_db_file(asset, customization_name, filename, language_code, skin, version_id)
-        logger.info(f"Got file {filename} from db.")
+        logger.info("file_from_db", file_name=filename)
     templates_cache.set_value(data)
     return data
 
@@ -313,7 +311,7 @@ def set_latest_value(customization: Customization, asset: Asset, context: Contex
                                                                 version=review.version, data_structure=new_structure,
                                                                 language=language)
     if not created:
-        logger.warning(f"Data record for structure {new_structure} already exist. Skipping structure!")
+        logger.warning("data_record_exists", data_structure=new_structure)
         return
     content = base64.b64decode(actual_content)
     ext_file = ExternalFile.objects.create(file=ContentFile(content, name=new_structure.name.split('/')[-1]),
@@ -348,8 +346,7 @@ def convert_structures_in_customization(customization_name: str, convert_records
 def convert_context(cloud_portal, customization, ctx, convert_all_records: bool = False):
     context = Context.objects.filter(asset_type=cloud_portal.asset_type, name=ctx["name"]).last()
     if not context:
-        logger.warning(f"Context '{ctx['name']}' for cloud portal asset and "
-                       f"customization '{customization.name}' not found in DB.")
+        logger.warning("context_not_found", context_name=ctx['name'], customization=customization.name)
         return
     for val in ctx.get('values', []):
         if val["type"] not in ("external_file", "external_image"):
@@ -357,10 +354,10 @@ def convert_context(cloud_portal, customization, ctx, convert_all_records: bool 
         old_structure_name = get_old_name(val["name"])
         new_structure, old_structure = get_structures(context, val["name"])
         if not new_structure:
-            logger.warning(f"External Data structure not found. Context: {context}, name:{val['name']}")
+            logger.warning("external_data_structure_not_found", context=context, name=val['name'])
             continue
         if not old_structure:
-            logger.warning(f"Data structure not found. Context: {context}, name:{old_structure_name}")
+            logger.warning("data_structure_not_found", context=context, name=old_structure_name)
             continue
         if convert_all_records:
             convert_data_records(customization, cloud_portal, context, new_structure, old_structure)

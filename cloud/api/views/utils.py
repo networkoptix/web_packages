@@ -1,49 +1,42 @@
-import asyncio
-import time
-
-import httpx
-import requests
-
 import datetime
+import httpx
 import json
-import logging
-import re
 import os
-
+import re
+import requests
+import structlog
 import waffle
-from django.http import HttpResponse
-from django.urls import reverse
-from uuid import uuid4
-
 from asgiref.sync import sync_to_async
-from rest_framework.request import Request
-
-from cloud.customization_context import customization_ctx
-from notifications.celery import update_ipvd
-from util.helpers import HttpxAsyncRequest
-from django.core.cache import cache, caches
 from django.conf import settings
+from django.core.cache import cache, caches
+from django.http import HttpResponse
 from django.shortcuts import redirect
-from rest_framework.decorators import permission_classes
-from rest_framework.response import Response
-from rest_framework.permissions import AllowAny, IsAuthenticated
-from rest_framework import serializers, status
+from django.urls import reverse
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
+from rest_framework import serializers, status
+from rest_framework.decorators import permission_classes
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.response import Response
+from uuid import uuid4
 from waffle import flag_is_active, switch_is_active, sample_is_active
 
-from cloud import settings
-from cloud.helpers.exceptions import api_success, handle_exceptions, require_params, \
-    APIRequestException, APIForbiddenException, APINotFoundException, ErrorCodes, APIInternalException
-from nx_drf.drf_async import async_api_view as api_view, async_api_view
-from api.serializers import CustomizationCacheSerializer, SettingsSerializer, IpvdSerializer, ThemeSerializer, process_cameras, \
+from api.serializers import CustomizationCacheSerializer, SettingsSerializer, IpvdSerializer, ThemeSerializer, \
+    process_cameras, \
     CustomizationNameSerializer, ForceSyncSerializer
-from cms.models import Customization, cloud_portal_customization_cache, UserGroupsToAssetPermissions, \
-    cloud_portal_customization_cache_async, global_version_key, get_or_set_global_cache
+from cloud import settings
+from cloud.customization_context import customization_ctx
+from cloud.helpers.exceptions import api_success, handle_exceptions, require_params, \
+    APIForbiddenException, APINotFoundException, ErrorCodes, APIInternalException
 from cms.feature_flags.feature_flags import FLAGS, SWITCHES, SAMPLES
+from cms.models import Customization, UserGroupsToAssetPermissions, \
+    cloud_portal_customization_cache_async, global_version_key, get_or_set_global_cache
 from cms.permissions import IsSuperuser
+from notifications.app_celery import update_ipvd
+from nx_drf.drf_async import async_api_view as api_view, async_api_view
+from util.helpers import HttpxAsyncRequest
 
-logger = logging.getLogger(__name__)
+logger = structlog.getLogger(__name__)
 
 
 # Swagger params
@@ -134,7 +127,7 @@ async def visited_key(request):
             key = 'visited_key_' + request.query_params['key']
             value = await global_cache.aget(key, False)
 
-            logger.debug(f'check visited: {key}: {value}')
+            logger.debug("check_visited", key=key, value=value)
 
     else:
         # Save cache value here
@@ -143,7 +136,7 @@ async def visited_key(request):
         value = datetime.datetime.now().strftime('%c')
         await global_cache.aset(key, value, settings.LINKS_LIVE_TIMEOUT)
 
-        logger.debug(f'visited: {key}: {value}')
+        logger.debug("visited", key=key, value=value)
 
     return Response({'visited': value})
 
@@ -227,10 +220,7 @@ async def downloads_history(request):
     downloads_json = await HttpxAsyncRequest.get(downloads_url)
 
     if downloads_json.status_code == 404:
-        logger.warning(
-            f"downloads.json doesn't exist for customization: {customization}, {settings.CONFIG_ERROR} "
-            f"(publish and accept a release)"
-        )
+        logger.warning("downloads_json_missing", customization=customization, error=settings.CONFIG_ERROR)
         return Response(None)
 
     downloads_json.raise_for_status()
@@ -309,10 +299,7 @@ async def get_downloads_json(customization):
         return downloads_json.json()
     except (httpx.HTTPStatusError, requests.exceptions.HTTPError) as e:
         if e.response.status_code == 404:
-            logger.warning(
-                f"downloads.json doesn't exist for customization: {customization}, {settings.CONFIG_ERROR} "
-                f"(publish and accept a release)"
-            )
+            logger.warning("downloads_json_missing", customization=customization, error=settings.CONFIG_ERROR)
         raise e
 
 
@@ -355,24 +342,20 @@ async def downloads(request):
         # Fallback section for old structure and old versions
         if not latest_version or latest_version.startswith('2'):
             if latest_version and latest_version.startswith('2'):
-                logger.warning(f'No 3.0 downloadable release for customization: {customization}. '
-                               f'{settings.CONFIG_ERROR}')
+                logger.warning("no_3_0_release", customization=customization, error=settings.CONFIG_ERROR)
             else:
-                logger.warning(f'No download_version in updates.json for customization: {customization}. '
-                               f'{settings.CONFIG_ERROR}')
+                logger.warning("no_download_version", customization=customization, error=settings.CONFIG_ERROR)
             latest_release = None
             if 'current_release' in updates_record:
                 latest_release = updates_record['current_release']
             if not latest_release:  # Hack for new customizations
-                logger.warning(f'No official release for customization: {customization}. '
-                               f'{settings.CONFIG_ERROR}')
+                logger.warning("no_official_release", customization=customization, error=settings.CONFIG_ERROR)
                 latest_release = '3.0'
             # latest release is 2.* - fallback for 3.0
             if latest_release.startswith('2'):
                 latest_release = '3.0'
             if latest_release not in updates_record['releases']:
-                logger.warning(
-                    f'No 3.0 release for customization: {customization}. {settings.CONFIG_ERROR}')
+                logger.warning("no_3_0_release", customization=customization, error=settings.CONFIG_ERROR)
                 return Response(None)
             latest_version = updates_record['releases'][latest_release]
         # End of fallback section for old structure and old versions
@@ -546,15 +529,24 @@ async def get_settings(request):
     features_changed = features != current_features
     if user_changed or version_changed or features_changed:
         tag = '[GET SETTINGS DEBUG]'
-        logger.info(f"{tag} Something has been changed {customization} and user:{user_changed}, "
-                    f"version:{version_changed}, features:{features_changed}")
-        logger.info(f"{tag} For request: {request.get_full_path()}")
-        logger.info(f"{tag} User {user}. current: {current_user}")
-        logger.info(f"{tag} Version {version}. current: {current_version}, {sync_version}")
-        logger.info(f"{tag} Features: {features}, current: {current_features}")
-        logger.info(f'{tag} Redirecting to "?cached={current_user}'
-                    f'&version={current_version}&features={current_features}"')
 
+        logger.info(
+            "Settings debug information",
+            tag='[GET SETTINGS DEBUG]',
+            customization=customization,
+            user_changed=user_changed,
+            version_changed=version_changed,
+            features_changed=features_changed,
+            request_path=request.get_full_path(),
+            user=user,
+            current_user=current_user,
+            version=version,
+            current_version=current_version,
+            sync_version=sync_version,
+            features=features,
+            current_features=current_features,
+            redirect_url=f"?cached={current_user}&version={current_version}&features={current_features}"
+        )
         return redirect(f'{reverse("get_settings")}?cached={current_user}&version={current_version}&features={current_features}')
 
     data = await get_settings_from_cache(customization=customization)
@@ -652,7 +644,7 @@ def ipvd_update(request):
         try:
             update_ipvd(force=True, ignore_errors=False)
         except Exception as e:
-            logger.warning(f"Error occurred while updating IPVD. Exception: {e}")
+            logger.warning("ipvd_update_error", error=str(e), exc_info=True)
             return Response(data={IPVD_CACHE_ERROR}, status=status.HTTP_400_BAD_REQUEST)
         return Response(data={IPVD_CACHE_CLEARED}, status=status.HTTP_200_OK)
     else:

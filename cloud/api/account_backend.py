@@ -1,21 +1,19 @@
-import logging
+import structlog
 import zlib
-
 from django.conf import settings
 from django.contrib.auth.backends import ModelBackend
-from django.core.cache import caches
-from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.signals import user_logged_in, user_logged_out, user_login_failed
+from django.core.exceptions import ObjectDoesNotExist
 from django.dispatch import receiver
 from rest_framework.authentication import TokenAuthentication
 
 from api.models import AccountLoginHistory, AccountManager, Account
-from cloud.controllers.cloud_api import Auth
 from cloud.controllers.cloud_api import Account as Clouddb_Account
+from cloud.controllers.cloud_api import Auth
 from cloud.helpers.exceptions import APILogicException, ErrorCodes, APINotAuthorisedException
 from cms.helpers.cached_asset import AccountObjectCache
 
-logger = logging.getLogger(__name__)
+logger = structlog.getLogger(__name__)
 
 IP_MAX_LENGTH = 255
 
@@ -116,7 +114,7 @@ class BearerAuthentication(TokenAuthentication):
 @receiver(user_logged_in)
 def user_logged_in_callback(sender, request, user, **kwargs):
     ip = get_ip(request)
-    logger.info(f'User logged in: {user.email}, IP: {ip}')
+    logger.info("user_login", user_email=user.email, ip_address=ip)
     AccountLoginHistory.objects.create(
         action='user_logged_in', ip=ip, email=user.email)
 
@@ -125,10 +123,10 @@ def user_logged_in_callback(sender, request, user, **kwargs):
 def user_logged_out_callback(sender, request, user, **kwargs):
     ip = get_ip(request)
     if user:
-        logger.info(f'User logged out: {user.email}, IP: {ip}')
+        logger.info("user_logout", user_email=user.email, ip_address=ip)
         AccountLoginHistory.objects.create(action='user_logged_out', ip=ip, email=user.email)
     else:
-        logger.info(f'Unknown user has logged out, IP: {ip}')
+        logger.info("unknown_user_logout", ip_address=ip)
 
 
 @receiver(user_login_failed)
@@ -137,6 +135,6 @@ def user_login_failed_callback(sender, credentials, request, **kwargs):
     if request:
         ip = get_ip(request)
     user_name = credentials.get('email') or credentials.get('username')
-    logger.info(f'Failed login attempt: %{user_name}, IP: {ip}')
+    logger.info("failed_login_attempt", user_name=user_name, ip_address=ip)
     AccountLoginHistory.objects.create(
         action='user_login_failed', ip=ip, email=user_name)

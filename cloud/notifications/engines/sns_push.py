@@ -1,14 +1,14 @@
-from enum import Enum
+import botocore
 import json
 import logging
-
-import botocore
+import structlog
+from enum import Enum
 
 from notifications.models import PushDevice
 from notifications.notifications_api import log_push_result
 from notifications.serializers import get_aws_platform_arns, PROVIDERS_REVERSE_MAP
 
-logger = logging.getLogger(__name__)
+logger = structlog.getLogger(__name__)
 
 
 class SNSErrors(Enum):
@@ -75,9 +75,7 @@ def create_platform_endpoint(device, client):
     platform_arns = get_aws_platform_arns(device.application_id)
     platform_arn = platform_arns[PROVIDERS_REVERSE_MAP[device.provider]]
     if not platform_arn:
-        logger.warning(
-            f'Provider: {PushDevice.PROVIDERS[device.provider]}, Device Id: {device.registration_id}, UserId: {device.user_id}\n'
-            f'ARN is not configured for provider {device.provider}')
+        logger.warning("arn_not_configured", provider=PushDevice.PROVIDERS[device.provider], device_id=device.registration_id, user_id=device.user_id)
         return False
 
     try:
@@ -90,10 +88,7 @@ def create_platform_endpoint(device, client):
             platform_endpoint = client.create_platform_endpoint(PlatformApplicationArn=platform_arn,
                                                                 Token=device.registration_id)
     except botocore.exceptions.ClientError as client_error:
-        logger.warning(
-            f'Provider: {PushDevice.PROVIDERS[device.provider]}, Device Id: {device.registration_id}, '
-            f'UserId: {device.baidu_user_id}, PlatformARN: {platform_arn}\n'
-            f'Boto3 ClientError: {client_error}')
+        logger.warning("sns_client_error", provider=PushDevice.PROVIDERS[device.provider], device_id=device.registration_id, user_id=device.baidu_user_id, platform_arn=platform_arn, error=str(client_error))
         return False
 
     endpoint_arn = platform_endpoint.get('EndpointArn')

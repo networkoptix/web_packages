@@ -1,46 +1,39 @@
 import base64
-import enum
-import time
-import logging
-import json
-from django.shortcuts import redirect
-from django.urls import reverse
-import requests
-from uuid import uuid4
-from django.core.cache import caches
-
-from asgiref.sync import sync_to_async
 import django
-from django.conf import settings
+import enum
+import requests
+import structlog
+import time
+from asgiref.sync import sync_to_async
+from dal import autocomplete
 from django.contrib.auth.models import Permission
 from django.contrib.auth.signals import user_login_failed
+from django.core.cache import caches
 from django.core.exceptions import ObjectDoesNotExist
-
 from django.utils import timezone
-from django.utils.decorators import method_decorator
-from rest_framework import status
-from rest_framework.decorators import  permission_classes
-from rest_framework.response import Response
-from rest_framework.permissions import AllowAny, IsAuthenticated
-from rest_framework.serializers import ValidationError
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
-from dal import autocomplete
+from rest_framework import status
+from rest_framework.decorators import permission_classes
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.serializers import ValidationError
+from uuid import uuid4
 
 from api import models
-from cloud.controllers.cloud_api import Account, Auth
 from api.account_backend import get_ip
+from api.views.account_serializers import (
+    AccountSerializer, CreateAccountSerializer, AccountSecuritySerializer, AccountUpdateSerializer)
+from cloud.controllers.cloud_api import Account, Auth
 from cloud.helpers.exceptions import (
     APIRequestException, APINotAuthorisedException, APILogicException,
     APIInternalException, APINotFoundException, api_success, ErrorCodes,
     require_params, kill_session, kill_tokens)
-from api.views.account_serializers import (
-    AccountSerializer, CreateAccountSerializer, AccountSecuritySerializer, AccountUpdateSerializer)
-from nx_drf.drf_async import async_api_view as api_view, AsyncAPIView as APIView
 from cloud.utils import get_authenticated_session_cookie_age, method_decorator_async
-from cms.models import AgreementTypes, ContributorAgreement, get_reviews_by_type 
+from cms.models import AgreementTypes, ContributorAgreement, get_reviews_by_type
+from nx_drf.drf_async import async_api_view as api_view, AsyncAPIView as APIView
 
-logger = logging.getLogger(__name__)
+logger = structlog.getLogger(__name__)
 
 # Swagger Schemas for body parameters
 action__body = openapi.Schema(type=openapi.TYPE_STRING,
@@ -143,7 +136,7 @@ async def implicit_accept(customization, account):
 @permission_classes((AllowAny, ))
 async def register(request):
     from util.helpers import detect_language_by_request
-    logger.debug('/api/account/register called')
+    logger.debug("account_register_called")
     lang = await sync_to_async(detect_language_by_request)(request)
     data = request.data.copy()
     data['language'] = lang
@@ -155,7 +148,7 @@ async def register(request):
         if not serializer.is_valid():
             raise APIRequestException('Wrong form parameters', ErrorCodes.wrong_parameters,
                                       error_data=serializer.errors)
-        logger.debug('/api/account/register calling serializer.save')
+        logger.debug("account_register_saving")
         account = await sync_to_async(serializer.save)()
     elif account.is_active:
         raise APILogicException('User already registered',
@@ -164,10 +157,10 @@ async def register(request):
         await models.AccountManager().register_cloud_invite_user(
             data['email'], data['password'], data, request)
 
-    logger.debug('/api/account/register checking if activated')
+    logger.debug("account_register_checking_activation")
     activated = models.AccountManager().check_if_activated(
         request, data['email'], data['password'])
-    logger.debug('/api/account/register completed')
+    logger.debug("account_register_completed")
     # Implicit acceptance of the current tos when registering
     await implicit_accept(request.CUSTOMIZATION, account)
     return api_success({'activated': activated})

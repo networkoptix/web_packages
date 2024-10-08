@@ -70,6 +70,7 @@ requests = "~2.32.0" #Apache License 2.0|https://github.com/psf/requests|https:/
 uvicorn = "~0.22.0" #BSD 3-Clause "New" or "Revised" License|https://github.com/encode/uvicorn|https://github.com/encode/uvicorn/blob/master/LICENSE.md
 zenpy = "2.0.40" #GNU General Public License v3.0|https://github.com/facetoe/zenpy|https://github.com/facetoe/zenpy/blob/master/LICENSE
 etils = { version = "*", extras = ["edc"] } #Apache License 2.0|https://github.com/google/etils|https://github.com/google/etils/blob/main/LICENSE
+django-structlog = "8.1.0" #MIT License|https://github.com/jrobichaud/django-structlog/blob/main/LICENSE.rst
 
 [tool.poetry.group.test]
 optional = true

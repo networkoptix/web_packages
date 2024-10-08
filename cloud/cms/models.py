@@ -124,7 +124,7 @@ class MenuCache(BaseCacheV2):
     def clear_cache(self, immediate = False, clear_documentation_cache = False):
         from cms.controllers.documentation import DocumentCache
         from cms.tasks import async_generate_menus
-        from notifications.celery import app
+        from notifications.app_celery import app
         if immediate:
             super().clear_cache()
         elif not settings.TESTING:

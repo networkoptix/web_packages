@@ -1,20 +1,14 @@
+import botocore
 import json
-
-from django.conf import settings
 from django.core.cache import caches
-from rest_framework import serializers
 from django.core.exceptions import ValidationError
+from rest_framework import serializers
 
 from cloud.controllers.cloud_api import System, CloudDbConfig
 from cloud.helpers.exceptions import APILogicException, APINotAuthorisedException
 from cms.models import get_cloud_portal_asset
-from notifications.models import PushSubscription, PushDevice, PushNotification, SystemEmail
 from notifications.conf import get_sns_client
-
-import botocore
-import logging
-
-
+from notifications.models import PushSubscription, PushDevice, PushNotification, SystemEmail
 
 PUSHDEVICE_TYPES = tuple(PushDevice.TYPES._identifier_map.keys())
 PROVIDERS = tuple(PushDevice.PROVIDERS._identifier_map.keys())
@@ -28,7 +22,9 @@ FCM_ERRORS = {
     'InvalidApnsCredential': 'APNs key is not valid for this device'
 }
 
-logger = logging.getLogger(__name__)
+import structlog
+
+logger = structlog.getLogger(__name__)
 
 
 def get_aws_platform_arns(customization_name):
@@ -195,8 +191,7 @@ class SubscriptionSerializer(serializers.Serializer):
                 platform_endpoint = sns_client.create_platform_endpoint(
                     PlatformApplicationArn=platform_arn, Token=instance.registration_id)
         except botocore.exceptions.ClientError as client_error:
-            logger.warning(f'Provider: {provider}, Device Id: {instance.registration_id}, UserId: {user_id}, PlatformARN: {platform_arn}\n'
-                           f'Boto3 ClientError: {client_error}')
+            logger.warning("sns_client_error", provider=provider, device_id=instance.registration_id, user_id=user_id, platform_arn=platform_arn, error=str(client_error))
             raise serializers.ValidationError(
                 {'message': 'Error registering the provided token'})
 

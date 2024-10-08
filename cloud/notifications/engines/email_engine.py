@@ -1,15 +1,15 @@
-import logging
+import imghdr
 import json
 import os
-
 import pystache
+import structlog
 from django.conf import settings
 from django.core.mail.backends.smtp import EmailBackend
+
 from cms.controllers.static_files import read_cached_file, TemplatesCache, read_customized_db_file
 from cms.models import Asset
-import imghdr
 
-logger = logging.getLogger(__name__)
+logger = structlog.getLogger(__name__)
 EMAIL_CONFIG = ["portal_url", "smtp_host", "smtp_port", "smtp_password", "smtp_user", "smtp_tls", "mail_from_name", "mail_from_email"]
 
 
@@ -27,8 +27,7 @@ def send(email, msg_type, message, language_code, customization_name, subject=''
     if any(
         config_key not in customization_cache for config_key in EMAIL_CONFIG
     ):
-        logger.error(f"Some smtp config settings are missing from {customization_name}. "
-                     f"Please notify Release engineers")
+        logger.error("smtp_config_missing", customization=customization_name)
         return False
 
     config = {

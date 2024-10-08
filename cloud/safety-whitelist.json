@@ -1,350 +1,359 @@
 {
   "38834": {
- "name": "urllib3"
+    "name": "urllib3"
   },
   "38678": {
- "name": "django-celery-results",
- "note": "Django-celery-results through 1.2.1 stores task results in the database. Among the data it stores are the variables passed into the tasks."
+    "name": "django-celery-results",
+    "note": "Django-celery-results through 1.2.1 stores task results in the database. Among the data it stores are the variables passed into the tasks."
   },
   "40965": {
- "name": "pillow",
- "note": "Pillow through 8.2.0 and PIL (aka Python Imaging Library) through 1.1.7 allow an attacker to pass controlled parameters directly into a convert function to trigger a buffer overflow in Convert.c."
+    "name": "pillow",
+    "note": "Pillow through 8.2.0 and PIL (aka Python Imaging Library) through 1.1.7 allow an attacker to pass controlled parameters directly into a convert function to trigger a buffer overflow in Convert.c."
   },
   "41002": {
- "name": "coverage",
- "note": "Coverage 6.0b1 starts to use a modern hash algorithm (sha256) when fingerprinting for high-security environments."
+    "name": "coverage",
+    "note": "Coverage 6.0b1 starts to use a modern hash algorithm (sha256) when fingerprinting for high-security environments."
   },
   "41271": {
- "name": "pillow",
- "note": "The package pillow from 5.2.0 and before 8.3.2 is vulnerable to Regular Expression Denial of Service (ReDoS) via the getrgb function. https://github.com/python-pillow/Pillow/commit/9e08eb8f78fdfd2f476e1b20b7cf38683754866b https://pillow.readthedocs.io/en/stable/releasenotes/8.3.2.html"
+    "name": "pillow",
+    "note": "The package pillow from 5.2.0 and before 8.3.2 is vulnerable to Regular Expression Denial of Service (ReDoS) via the getrgb function. https://github.com/python-pillow/Pillow/commit/9e08eb8f78fdfd2f476e1b20b7cf38683754866b https://pillow.readthedocs.io/en/stable/releasenotes/8.3.2.html"
   },
   "41277": {
- "name": "pillow",
- "note": "Pillow 8.3.2 fixes a 6-byte out-of-bounds (OOB) read. The previous bounds check in FliDecode.c incorrectly calculated the required read buffer size when copying a chunk, potentially reading six extra bytes off the end of the allocated buffer from the heap. Present since Pillow 7.1.0."
+    "name": "pillow",
+    "note": "Pillow 8.3.2 fixes a 6-byte out-of-bounds (OOB) read. The previous bounds check in FliDecode.c incorrectly calculated the required read buffer size when copying a chunk, potentially reading six extra bytes off the end of the allocated buffer from the heap. Present since Pillow 7.1.0."
   },
   "42497": {
- "name": "kombu",
- "note": "Kombu 5.2.1 updates dependencies to include security fixes. https://github.com/celery/kombu/commit/f3b04558fa0df4ecc383c93e0b3b300d95e17 c47              "
+    "name": "kombu",
+    "note": "Kombu 5.2.1 updates dependencies to include security fixes. https://github.com/celery/kombu/commit/f3b04558fa0df4ecc383c93e0b3b300d95e17 c47              "
   },
   "42498": {
- "name": "celery",
- "note": "Celery 5.2.0 updates 'kombu' to v5.2.1, which includes dependencies updates that resolve security issues."
+    "name": "celery",
+    "note": "Celery 5.2.0 updates 'kombu' to v5.2.1, which includes dependencies updates that resolve security issues."
   },
   "43738": {
- "name": "celery",
- "note": "Celery 5.2.2 includes a fix for CVE-2021-23727: Celery before 5.2.2. by default trusts the messages and metadata stored in backends (result stores). When reading task metadata from the backend, the data is deserialized. Given that an attacker can gain access to, or somehow manipulate the metadata within a celery backend, they could trigger a stored command injection vulnerability and potentially gain further access to the system. https://github.com/celery/celery/blob/master/Changelog.rst#522"
+    "name": "celery",
+    "note": "Celery 5.2.2 includes a fix for CVE-2021-23727: Celery before 5.2.2. by default trusts the messages and metadata stored in backends (result stores). When reading task metadata from the backend, the data is deserialized. Given that an attacker can gain access to, or somehow manipulate the metadata within a celery backend, they could trigger a stored command injection vulnerability and potentially gain further access to the system. https://github.com/celery/celery/blob/master/Changelog.rst#522"
   },
   "43975": {
- "name": "urllib3",
- "note": "Urllib3 1.26.5 includes a fix for CVE-2021-33503: An issue was discovered in urllib3 before 1.26.5. When provided with a URL containing many @ characters in the authority component, the authority regular expression exhibits catastrophic backtracking, causing a denial of service if a URL were passed as a parameter or redirected to via an HTTP redirect. https://github.com/advisories/GHSA-q2q7-5pp4-w6pg"
+    "name": "urllib3",
+    "note": "Urllib3 1.26.5 includes a fix for CVE-2021-33503: An issue was discovered in urllib3 before 1.26.5. When provided with a URL containing many @ characters in the authority component, the authority regular expression exhibits catastrophic backtracking, causing a denial of service if a URL were passed as a parameter or redirected to via an HTTP redirect. https://github.com/advisories/GHSA-q2q7-5pp4-w6pg"
   },
   "44715": {
- "name": "numpy",
- "note": "All versions of Numpy are affected by CVE-2021-41495: A null Pointer Dereference vulnerability exists in numpy.sort, in the PyArray_DescrNew function due to missing return-value validation, which allows attackers to conduct DoS attacks by repetitively creating sort arrays. https://github.com/numpy/numpy/issues/19038"
+    "name": "numpy",
+    "note": "All versions of Numpy are affected by CVE-2021-41495: A null Pointer Dereference vulnerability exists in numpy.sort, in the PyArray_DescrNew function due to missing return-value validation, which allows attackers to conduct DoS attacks by repetitively creating sort arrays. https://github.com/numpy/numpy/issues/19038"
   },
   "46406": {
- "name": "meilisearch",
- "note": "Meilisearch 0.26.0 sets a limit to filters to avoid a stack overflow crash when using a huge list of filters. https://github.com/meilisearch/meilisearch/issues/1967"
+    "name": "meilisearch",
+    "note": "Meilisearch 0.26.0 sets a limit to filters to avoid a stack overflow crash when using a huge list of filters. https://github.com/meilisearch/meilisearch/issues/1967"
   },
   "47012": {
- "name": "django-oauth-toolkit",
- "note": "Django-oauth-toolkit 2.0.0 defaults to hash application client secrets using Django password hashing. https://github.com/jazzband/django-oauth-toolkit/pull/1093"
+    "name": "django-oauth-toolkit",
+    "note": "Django-oauth-toolkit 2.0.0 defaults to hash application client secrets using Django password hashing. https://github.com/jazzband/django-oauth-toolkit/pull/1093"
   },
   "47853": {
- "name": "django-oauth-toolkit",
- "note": "Django-oauth-toolkit 2.0.0 removes support for insecure 'urn:ietf:wg:oauth:2.0:oob' and 'urn:ietf:wg:oauth:2.0:oob:auto' which are replaced by RFC 8252 \"OAuth 2.0 for Native Apps\" BCP. https://github.com/jazzband/django-oauth-toolkit/pull/1124"
+    "name": "django-oauth-toolkit",
+    "note": "Django-oauth-toolkit 2.0.0 removes support for insecure 'urn:ietf:wg:oauth:2.0:oob' and 'urn:ietf:wg:oauth:2.0:oob:auto' which are replaced by RFC 8252 \"OAuth 2.0 for Native Apps\" BCP. https://github.com/jazzband/django-oauth-toolkit/pull/1124"
   },
   "48517": {
- "name": "meilisearch",
- "note": " Meilisearch (python client) 0.18.3 is compatible with Meilisearch 0.27.0, that adds a hard limit of '1000' retrievable documents during search ('GET/POST /indexes/:uid/search'). This limit is a security fix to avoid scraping the Meilisearch DB."
+    "name": "meilisearch",
+    "note": " Meilisearch (python client) 0.18.3 is compatible with Meilisearch 0.27.0, that adds a hard limit of '1000' retrievable documents during search ('GET/POST /indexes/:uid/search'). This limit is a security fix to avoid scraping the Meilisearch DB."
   },
   "48542": {
- "name": "pyjwt",
- "note": "| PyJWT is a Python implementation of RFC 7519. PyJWT supports multiple different JWT signing algorithms. With JWT, an attacker submitting the JWT token can choose the used signing algorithm. The PyJWT library requires that the application chooses what algorithms are supported. The application can specify 'jwt.algorithms.get_default_algorithms()' to get support for all algorithms, or specify a single algorithm. The issue is not that big as 'algorithms=jwt.algorithms.get_default_algorithms()' has to be used. Users should upgrade to v2.4.0 to receive a patch for this issue. As a workaround, always be explicit with the algorithms that are accepted and expected when decoding. Conflicts with apns2 0.7.2 requires PyJWT<2.0.0,>=1.4.0"
+    "name": "pyjwt",
+    "note": "| PyJWT is a Python implementation of RFC 7519. PyJWT supports multiple different JWT signing algorithms. With JWT, an attacker submitting the JWT token can choose the used signing algorithm. The PyJWT library requires that the application chooses what algorithms are supported. The application can specify 'jwt.algorithms.get_default_algorithms()' to get support for all algorithms, or specify a single algorithm. The issue is not that big as 'algorithms=jwt.algorithms.get_default_algorithms()' has to be used. Users should upgrade to v2.4.0 to receive a patch for this issue. As a workaround, always be explicit with the algorithms that are accepted and expected when decoding. Conflicts with apns2 0.7.2 requires PyJWT<2.0.0,>=1.4.0"
   },
   "49733": {
- "name": "django",
- "note": "Django 3.2.14 and 4.0.6 include a fix for CVE-2022-34265: Potential SQL injection via Trunc(kind) and Extract(lookup_name) arguments. https://www.djangoproject.com/weblog/2022/jul/04/security-releases"
+    "name": "django",
+    "note": "Django 3.2.14 and 4.0.6 include a fix for CVE-2022-34265: Potential SQL injection via Trunc(kind) and Extract(lookup_name) arguments. https://www.djangoproject.com/weblog/2022/jul/04/security-releases"
   },
   "50454": {
- "name": "django",
- "note": "Django 3.2.15 and 4.0.7 include a fix for CVE-2022-36359: An issue was discovered in the HTTP FileResponse class in Django 3.2 before 3.2.15 and 4.0 before 4.0.7. An application is vulnerable to a reflected file download (RFD) attack that sets the Content-Disposition header of a FileResponse when the filename is derived from user-supplied input. https://www.djangoproject.com/weblog/2022/aug/03/security-releases"
+    "name": "django",
+    "note": "Django 3.2.15 and 4.0.7 include a fix for CVE-2022-36359: An issue was discovered in the HTTP FileResponse class in Django 3.2 before 3.2.15 and 4.0 before 4.0.7. An application is vulnerable to a reflected file download (RFD) attack that sets the Content-Disposition header of a FileResponse when the filename is derived from user-supplied input. https://www.djangoproject.com/weblog/2022/aug/03/security-releases"
   },
-  "50748":{
- "name": "lxml",
- "note": "Lxml 4.9.1 include a fix for CVE-2022-2309: NULL Pointer Dereference allows attackers to cause a denial of service (or application crash). This only applies when lxml is used together with libxml2 2.9.10 through 2.9.14. Libxml2 2.9.9 and earlier versions are not affected. It allows triggering crashes through forged input data, given a vulnerable code sequence in the application. The vulnerability is caused by the iterwalk function (also used by the canonicalize function). Such code shouldn't be in wide-spread use, given that parsing + iterwalk would usually be replaced with the more efficient iterparse function. However, an XML converter that serializes to C14N would also be vulnerable, for example, and there are legitimate use cases for this code sequence. If untrusted input is received (also remotely) and processed via iterwalk function, a crash can be triggered."
+  "50748": {
+    "name": "lxml",
+    "note": "Lxml 4.9.1 include a fix for CVE-2022-2309: NULL Pointer Dereference allows attackers to cause a denial of service (or application crash). This only applies when lxml is used together with libxml2 2.9.10 through 2.9.14. Libxml2 2.9.9 and earlier versions are not affected. It allows triggering crashes through forged input data, given a vulnerable code sequence in the application. The vulnerability is caused by the iterwalk function (also used by the canonicalize function). Such code shouldn't be in wide-spread use, given that parsing + iterwalk would usually be replaced with the more efficient iterparse function. However, an XML converter that serializes to C14N would also be vulnerable, for example, and there are legitimate use cases for this code sequence. If untrusted input is received (also remotely) and processed via iterwalk function, a crash can be triggered."
   },
   "51157": {
- "name": "meilisearch",
- "note": "Meilisearch 0.19.2 updates its dependency 'mako' to v1.2.2 to include a security fix."
+    "name": "meilisearch",
+    "note": "Meilisearch 0.19.2 updates its dependency 'mako' to v1.2.2 to include a security fix."
   },
   "51119": {
- "name": "meilisearch",
- "note": "Meilisearch (python client) 0.20.0 is compatible with Meilisearch < v0.29.0, which has a transitive vulnerability. https://github.com/meilisearch/meilisearch/pull/2768"
+    "name": "meilisearch",
+    "note": "Meilisearch (python client) 0.20.0 is compatible with Meilisearch < v0.29.0, which has a transitive vulnerability. https://github.com/meilisearch/meilisearch/pull/2768"
   },
   "51159": {
- "name": "cryptography",
- "note": "Cryptography 39.0.0 drops support for C library \"LibreSSL\" < 3.4, as these versions are not receiving security support anymore."
+    "name": "cryptography",
+    "note": "Cryptography 39.0.0 drops support for C library \"LibreSSL\" < 3.4, as these versions are not receiving security support anymore."
   },
   "51457": {
- "name": "py",
- "note": "Py throughout 1.11.0 allows remote attackers to conduct a ReDoS (Regular expression Denial of Service) attack via a Subversion repository with crafted info data, because the InfoSvnCommand argument is mishandled.https://github.com/pytest-dev/py/issues/287 CVE-2022-42969"
+    "name": "py",
+    "note": "Py throughout 1.11.0 allows remote attackers to conduct a ReDoS (Regular expression Denial of Service) attack via a Subversion repository with crafted info data, because the InfoSvnCommand argument is mishandled.https://github.com/pytest-dev/py/issues/287 CVE-2022-42969"
   },
   "51499": {
- "name": "wheel",
- "note": "Wheel 0.38.1 fixes a potential DoS attack via the 'WHEEL_INFO_RE' regular expression. PVE-2022-51499"
+    "name": "wheel",
+    "note": "Wheel 0.38.1 fixes a potential DoS attack via the 'WHEEL_INFO_RE' regular expression. PVE-2022-51499"
   },
   "51885": {
- "name": "pillow",
- "note": "Pillow before 9.2.0 performs Improper Handling of Highly Compressed GIF Data (Data Amplification). CVE-2022-45198 For more information, please visit https://pyup.io/v/51885/f17"
+    "name": "pillow",
+    "note": "Pillow before 9.2.0 performs Improper Handling of Highly Compressed GIF Data (Data Amplification). CVE-2022-45198 For more information, please visit https://pyup.io/v/51885/f17"
   },
   "51886": {
- "name": "pillow",
- "note": "Pillow before 9.3.0 allows denial of service via SAMPLESPERPIXEL. CVE-2022-45199 For more information, please visit https://pyup.io/v/51886/f17"
+    "name": "pillow",
+    "note": "Pillow before 9.3.0 allows denial of service via SAMPLESPERPIXEL. CVE-2022-45199 For more information, please visit https://pyup.io/v/51886/f17"
   },
   "52365": {
- "name": "certifi",
- "note": "Certifi 2022.12.07 includes a fix for CVE-2022-23491: Certifi 2022.12.07 removes root certificates from \"TrustCor\" from the root store. These are in the process of being removed from Mozilla's trust store. TrustCor's root certificates are being removed pursuant to an investigation prompted by media reporting that TrustCor's ownership also operated a business that produced spyware. Conclusions of Mozilla's investigation can be found in the linked google group discussion.https://github.com/certifi/python-certifi/security/advisories/GHSA-43fp-rhv2-5gv8https://groups.google.com/a/mozilla.org/g/dev-security-policy/c/oxX69KFvsm4/m/yLohoVqtCgAJ CVE-2022-23491"
+    "name": "certifi",
+    "note": "Certifi 2022.12.07 includes a fix for CVE-2022-23491: Certifi 2022.12.07 removes root certificates from \"TrustCor\" from the root store. These are in the process of being removed from Mozilla's trust store. TrustCor's root certificates are being removed pursuant to an investigation prompted by media reporting that TrustCor's ownership also operated a business that produced spyware. Conclusions of Mozilla's investigation can be found in the linked google group discussion.https://github.com/certifi/python-certifi/security/advisories/GHSA-43fp-rhv2-5gv8https://groups.google.com/a/mozilla.org/g/dev-security-policy/c/oxX69KFvsm4/m/yLohoVqtCgAJ CVE-2022-23491"
   },
   "52495": {
- "name": "setuptools",
- "note": "Setuptools 65.5.1 includes a fix for CVE-2022-40897: Python Packaging Authority (PyPA) setuptools before 65.5.1 allows remote attackers to cause a denial of service via HTML in a crafted package or custom PackageIndex page. There is a Regular Expression Denial of Service (ReDoS) in package_index.py.https://pyup.io/posts/pyup-discovers-redos-vulnerabilities- in-top-python-packages CVE-2022-40897 For more information, please visit https://pyup.io/v/52495/f17"
+    "name": "setuptools",
+    "note": "Setuptools 65.5.1 includes a fix for CVE-2022-40897: Python Packaging Authority (PyPA) setuptools before 65.5.1 allows remote attackers to cause a denial of service via HTML in a crafted package or custom PackageIndex page. There is a Regular Expression Denial of Service (ReDoS) in package_index.py.https://pyup.io/posts/pyup-discovers-redos-vulnerabilities- in-top-python-packages CVE-2022-40897 For more information, please visit https://pyup.io/v/52495/f17"
   },
   "52945": {
- "name": "django",
- "note": "Django 3.2.17, 4.0.9 and 4.1.6 includes a fix for CVE-2023-23969: In Django 3.2 before 3.2.17, 4.0 before 4.0.9, and 4.1 before 4.1.6, the parsed values of Accept-Language headers are cached in order to avoid repetitive parsing. This leads to a potential denial-of-service vector via excessive memory usage if the raw value of Accept-Language headers is very large.https://www.djangoproject.com/weblog/2023/feb/01/security-releases CVE-2023-23969 For more information, please visit https://pyup.io/v/52945/f17"
+    "name": "django",
+    "note": "Django 3.2.17, 4.0.9 and 4.1.6 includes a fix for CVE-2023-23969: In Django 3.2 before 3.2.17, 4.0 before 4.0.9, and 4.1 before 4.1.6, the parsed values of Accept-Language headers are cached in order to avoid repetitive parsing. This leads to a potential denial-of-service vector via excessive memory usage if the raw value of Accept-Language headers is very large.https://www.djangoproject.com/weblog/2023/feb/01/security-releases CVE-2023-23969 For more information, please visit https://pyup.io/v/52945/f17"
   },
   "53048": {
- "name": "cryptography",
- "note": "Cryptography 39.0.1 includes a fix for CVE-2023-23931: In affected versions 'Cipher.update_into' would accept Python objects which implement the buffer protocol, but provide only immutable buffers. This would allow immutable objects (such as 'bytes') to be mutated, thus violating fundamental rules of Python and resulting in corrupted output. This issue has been present since 'update_into' was originally introduced in cryptography 1.8.https://github.com/pyca/cryptography/security/advisories/GHSA-w7pp-m8wf- vj6r CVE-2023-23931 For more information, please visit https://pyup.io/v/53048/f17"
+    "name": "cryptography",
+    "note": "Cryptography 39.0.1 includes a fix for CVE-2023-23931: In affected versions 'Cipher.update_into' would accept Python objects which implement the buffer protocol, but provide only immutable buffers. This would allow immutable objects (such as 'bytes') to be mutated, thus violating fundamental rules of Python and resulting in corrupted output. This issue has been present since 'update_into' was originally introduced in cryptography 1.8.https://github.com/pyca/cryptography/security/advisories/GHSA-w7pp-m8wf- vj6r CVE-2023-23931 For more information, please visit https://pyup.io/v/53048/f17"
   },
   "53315": {
- "name": "django",
- "note": "Django 4.1.7, 4.0.10 and 3.2.18 include a fix for CVE-2023-24580: Potential denial-of-service vulnerability in file uploads. https://www.djangoproject.com/weblog/2023/feb/14/security-releases CVE-2023-24580 For more information, please visit https://pyup.io/v/53315/f17"
+    "name": "django",
+    "note": "Django 4.1.7, 4.0.10 and 3.2.18 include a fix for CVE-2023-24580: Potential denial-of-service vulnerability in file uploads. https://www.djangoproject.com/weblog/2023/feb/14/security-releases CVE-2023-24580 For more information, please visit https://pyup.io/v/53315/f17"
   },
   "53325": {
- "name": "werkzeug",
- "note": "Werkzeug 2.2.3 includes a fix for CVE-2023-25577: Prior to version 2.2.3, Werkzeug's multipart form data parser will parse an unlimited number of parts, including file parts. Parts can be a small amount of bytes, but each requires CPU time to parse and may use more memory as Python data. If a request can be made to an endpoint that accesses 'request.data', 'request.form', 'request.files', or 'request.get_data(parse_form_data=False)', it can cause unexpectedly high resource usage."
+    "name": "werkzeug",
+    "note": "Werkzeug 2.2.3 includes a fix for CVE-2023-25577: Prior to version 2.2.3, Werkzeug's multipart form data parser will parse an unlimited number of parts, including file parts. Parts can be a small amount of bytes, but each requires CPU time to parse and may use more memory as Python data. If a request can be made to an endpoint that accesses 'request.data', 'request.form', 'request.files', or 'request.get_data(parse_form_data=False)', it can cause unexpectedly high resource usage."
   },
   "53326": {
- "name": "werkzeug",
- "note": "Werkzeug 2.2.3 includes a fix for CVE-2023-23934: Browsers may allow \"nameless\" cookies that look like '=value' instead of 'key=value'. A vulnerable browser may allow a compromised application on an adjacent subdomain to exploit this to set a cookie like '=__Host-test=bad' for another subdomain. Werkzeug prior to 2.2.3 will parse the cookie '=__Host-test=bad' as __Host-test=bad'. If a Werkzeug application is running next to a vulnerable or malicious subdomain which sets such a cookie using a vulnerable browser, the Werkzeug application will see the bad cookie value but the valid cookie key.://www.djangoproject.com/weblog/2023/feb/14/security-releases CVE-2023-24580 For more information, please visit https://pyup.io/v/53315/f17"
+    "name": "werkzeug",
+    "note": "Werkzeug 2.2.3 includes a fix for CVE-2023-23934: Browsers may allow \"nameless\" cookies that look like '=value' instead of 'key=value'. A vulnerable browser may allow a compromised application on an adjacent subdomain to exploit this to set a cookie like '=__Host-test=bad' for another subdomain. Werkzeug prior to 2.2.3 will parse the cookie '=__Host-test=bad' as __Host-test=bad'. If a Werkzeug application is running next to a vulnerable or malicious subdomain which sets such a cookie using a vulnerable browser, the Werkzeug application will see the bad cookie value but the valid cookie key.://www.djangoproject.com/weblog/2023/feb/14/security-releases CVE-2023-24580 For more information, please visit https://pyup.io/v/53315/f17"
   },
   "53868": {
- "name": "Redis",
- "note": "Redis before 4.5.3 leaves a connection open after canceling an async Redis command at an inopportune time, and can send response data to the client of an unrelated request in an off-by-one manner. NOTE: this CVE Record was initially created in response to reports about ChatGPT, and 4.3.6, 4.4.3, and 4.5.3 were released (changing the behavior for pipeline operations); however, please see CVE-2023-28859 about addressing data leakage across AsyncIO connections in general. CVE-2023-28858 For more information, please visit https://pyup.io/v/53868/f17"
+    "name": "Redis",
+    "note": "Redis before 4.5.3 leaves a connection open after canceling an async Redis command at an inopportune time, and can send response data to the client of an unrelated request in an off-by-one manner. NOTE: this CVE Record was initially created in response to reports about ChatGPT, and 4.3.6, 4.4.3, and 4.5.3 were released (changing the behavior for pipeline operations); however, please see CVE-2023-28859 about addressing data leakage across AsyncIO connections in general. CVE-2023-28858 For more information, please visit https://pyup.io/v/53868/f17"
   },
   "53869": {
- "name": "Redis",
- "note": " Redis 4.4.4 and 4.5.4 include a fix for CVE-2023-28859: Redis-py before 4.4.4 and 4.5.x before 4.5.4 leaves a connection open after canceling an async Redis command at an inopportune time, and can send response data to the client of an unrelated request. (This could, for example, happen for a non-pipeline operation.) NOTE: the solutions for CVE-2023-28859 address data leakage across AsyncIO connections in general. CVE-2023-28859 For more information, please visit https://pyup.io/v/53869/f17"
+    "name": "Redis",
+    "note": " Redis 4.4.4 and 4.5.4 include a fix for CVE-2023-28859: Redis-py before 4.4.4 and 4.5.x before 4.5.4 leaves a connection open after canceling an async Redis command at an inopportune time, and can send response data to the client of an unrelated request. (This could, for example, happen for a non-pipeline operation.) NOTE: the solutions for CVE-2023-28859 address data leakage across AsyncIO connections in general. CVE-2023-28859 For more information, please visit https://pyup.io/v/53869/f17"
   },
   "55264": {
- "name": "Django",
- "note": "Django 4.2.1, 4.1.9 and 3.2.19 include a fix for CVE-2023-31047: In Django 3.2 before 3.2.19, 4.x before 4.1.9, and 4.2 before 4.2.1, it was possible to bypass validation when using one form field to upload multiple files. This multiple upload has never been supported by forms.FileField or forms.ImageField (only the last uploaded file was validated). However, Django's \"Uploading multiple files\" documentation suggested otherwise. https://www.djangoproject.com/weblog/2023/may/03/security-releases"
+    "name": "Django",
+    "note": "Django 4.2.1, 4.1.9 and 3.2.19 include a fix for CVE-2023-31047: In Django 3.2 before 3.2.19, 4.x before 4.1.9, and 4.2 before 4.2.1, it was possible to bypass validation when using one form field to upload multiple files. This multiple upload has never been supported by forms.FileField or forms.ImageField (only the last uploaded file was validated). However, Django's \"Uploading multiple files\" documentation suggested otherwise. https://www.djangoproject.com/weblog/2023/may/03/security-releases"
   },
   "58755": {
- "name": "requests",
- "note": "Requests is a HTTP library. Since Requests 2.3.0, Requests has been leaking Proxy-Authorization headers to destination servers when redirected to an HTTPS endpoint. This is a product of how we use 'rebuild_proxies' to reattach the 'Proxy-Authorization' header to requests."
+    "name": "requests",
+    "note": "Requests is a HTTP library. Since Requests 2.3.0, Requests has been leaking Proxy-Authorization headers to destination servers when redirected to an HTTPS endpoint. This is a product of how we use 'rebuild_proxies' to reattach the 'Proxy-Authorization' header to requests."
   },
   "59293": {
- "name": "Django",
- "note": "CVE-2023-36053: Potential regular expression denial of service vulnerability in EmailValidator/URLValidator://www.djangoproject.com/weblog/2023/may/03/security-releases"
+    "name": "Django",
+    "note": "CVE-2023-36053: Potential regular expression denial of service vulnerability in EmailValidator/URLValidator://www.djangoproject.com/weblog/2023/may/03/security-releases"
   },
   "59473": {
- "name": "cryptography",
- "note": "CVE-2023-38325: ADVISORY: The cryptography package before 41.0.2 for Python mishandles SSH certificates that have critical options."
+    "name": "cryptography",
+    "note": "CVE-2023-38325: ADVISORY: The cryptography package before 41.0.2 for Python mishandles SSH certificates that have critical options."
   },
   "59956": {
- "name": "certifi",
- "note": "Certifi 2023.07.22 includes a fix for CVE-2023-37920: Certifi prior to version 2023.07.22 recognizes \"e-Tugra\" root certificates. e-Tugra's root certificates were subject to an investigation prompted by reporting of security issues in their systems. Certifi 2023.07.22 removes root certificates from \"e-Tugra\" from the root store."
+    "name": "certifi",
+    "note": "Certifi 2023.07.22 includes a fix for CVE-2023-37920: Certifi prior to version 2023.07.22 recognizes \"e-Tugra\" root certificates. e-Tugra's root certificates were subject to an investigation prompted by reporting of security issues in their systems. Certifi 2023.07.22 removes root certificates from \"e-Tugra\" from the root store."
   },
   "61601": {
- "name": "urllib3",
- "note": "Urllib3 1.26.17 and 2.0.5 include a fix for CVE-2023-43804: Urllib3 doesn't treat the 'Cookie' HTTP header special or provide any helpers for managing cookies over HTTP, that is the responsibility of the user. However, it is possible for a user to specify a 'Cookie' header and unknowingly leak information via HTTP redirects to a different origin if that user doesn't disable redirects explicitly.https://github.com/urllib3/urllib3/ security/advisories/GHSA-v845-jxx5-vc9f"
+    "name": "urllib3",
+    "note": "Urllib3 1.26.17 and 2.0.5 include a fix for CVE-2023-43804: Urllib3 doesn't treat the 'Cookie' HTTP header special or provide any helpers for managing cookies over HTTP, that is the responsibility of the user. However, it is possible for a user to specify a 'Cookie' header and unknowingly leak information via HTTP redirects to a different origin if that user doesn't disable redirects explicitly.https://github.com/urllib3/urllib3/ security/advisories/GHSA-v845-jxx5-vc9f"
   },
   "60956": {
- "name": "django"
+    "name": "django"
   },
   "61586": {
- "name": "django"
+    "name": "django"
   },
   "61893": {
- "name": "urllib3"
+    "name": "urllib3"
   },
   "62019": {
- "name": "werkzeug"
+    "name": "werkzeug"
   },
   "62044": {
- "name": "pip"
+    "name": "pip"
   },
   "62126": {
- "name": "Django",
- "note": "CVE-2023-46695: Potential denial of service vulnerability in UsernameField on Windows.https://www.djangoproject.com/weblog/2023/nov/01/security-releases"
+    "name": "Django",
+    "note": "CVE-2023-46695: Potential denial of service vulnerability in UsernameField on Windows.https://www.djangoproject.com/weblog/2023/nov/01/security-releases"
   },
-  "62156":{
- "name": "Pillow",
- "note": "CVE-2023-44271: It is a Denial of Service that uncontrollably allocates memory to process a given task, potentially causing a service to crash by having it run out of memory. This occurs for true type in ImageFont when text length in an ImageDraw instance operates on a long text argument.https://github.com/python- pillow/Pillow/pull/7244 CVE-2023-44271 For more information, please visit https://data.safetycli.com/v/62156/f17"
+  "62156": {
+    "name": "Pillow",
+    "note": "CVE-2023-44271: It is a Denial of Service that uncontrollably allocates memory to process a given task, potentially causing a service to crash by having it run out of memory. This occurs for true type in ImageFont when text length in an ImageDraw instance operates on a long text argument.https://github.com/python- pillow/Pillow/pull/7244 CVE-2023-44271 For more information, please visit https://data.safetycli.com/v/62156/f17"
   },
   "64227": {
- "name": "jinja2",
- "note": "Jinja2 before 3.1.3 is affected by a Cross-Site Scripting vulnerability. Special placeholders in the template allow writing code similar to Python syntax. It is possible to inject arbitrary HTML attributes into the rendered HTML template. The Jinja 'xmlattr' filter can be abused to inject arbitrary HTML attribute keys and values, bypassing the auto escaping mechanism and potentially leading to XSS. It may also be possible to bypass attribute validation checks if they are blacklist-based. CVE-2024-22195 For more information, please visit https://data.safetycli.com/v/64227/f17"
+    "name": "jinja2",
+    "note": "Jinja2 before 3.1.3 is affected by a Cross-Site Scripting vulnerability. Special placeholders in the template allow writing code similar to Python syntax. It is possible to inject arbitrary HTML attributes into the rendered HTML template. The Jinja 'xmlattr' filter can be abused to inject arbitrary HTML attribute keys and values, bypassing the auto escaping mechanism and potentially leading to XSS. It may also be possible to bypass attribute validation checks if they are blacklist-based. CVE-2024-22195 For more information, please visit https://data.safetycli.com/v/64227/f17"
   },
   "64436": {
- "name": "pillow",
- "note": "ADVISORY: Pillow is affected by an arbitrary code execution vulnerability. If an attacker has control over the keys passed to the environment argument of PIL.ImageMath.eval(), they may be able to execute arbitrary code.https://pillow.readthedocs.io/en/stable/releasenotes/10.2.0.html CVE-2023-50447"
+    "name": "pillow",
+    "note": "ADVISORY: Pillow is affected by an arbitrary code execution vulnerability. If an attacker has control over the keys passed to the environment argument of PIL.ImageMath.eval(), they may be able to execute arbitrary code.https://pillow.readthedocs.io/en/stable/releasenotes/10.2.0.html CVE-2023-50447"
   },
   "64437": {
- "name": "pillow",
- "note": "ADVISORY: Pillow is potentially vulnerable to DoS attacks through PIL.ImageFont.ImageFont.getmask(). A decompression bomb check has also been added to the affected function.https://pillow.readthedocs.io/en/stable/releasenotes/10.2.0.html PVE-2024-64437"
+    "name": "pillow",
+    "note": "ADVISORY: Pillow is potentially vulnerable to DoS attacks through PIL.ImageFont.ImageFont.getmask(). A decompression bomb check has also been added to the affected function.https://pillow.readthedocs.io/en/stable/releasenotes/10.2.0.html PVE-2024-64437"
   },
   "64438": {
- "name": "pillow",
- "note": "ADVISORY: Pillow is potentially vulnerable to DoS attacks through ImageFont.getmask glyph size. As a fix, PIL.ImageFont.ImageFont now trims the size of individual glyphs so that they do not extend beyond the bitmap image.https://pillow.readthedocs.io/en/stable/releasenotes/10.2.0.html PVE-2024-64438://data.safetycli.com/v/64227/f17"
+    "name": "pillow",
+    "note": "ADVISORY: Pillow is potentially vulnerable to DoS attacks through ImageFont.getmask glyph size. As a fix, PIL.ImageFont.ImageFont now trims the size of individual glyphs so that they do not extend beyond the bitmap image.https://pillow.readthedocs.io/en/stable/releasenotes/10.2.0.html PVE-2024-64438://data.safetycli.com/v/64227/f17"
   },
   "64976": {
- "name": "Django",
- "note": "CVE-2024-24680: Affected versions of Django are vulnerable to potential denial-of-service in intcomma template filter when used with very long strings."
+    "name": "Django",
+    "note": "CVE-2024-24680: Affected versions of Django are vulnerable to potential denial-of-service in intcomma template filter when used with very long strings."
   },
   "65212": {
- "name": "cryptography",
- "note": "CVE-2023-6129: Versions of Cryptograph starting from 35.0.0 are susceptible to a security flaw in the POLY1305 MAC algorithm on PowerPC CPUs, which allows an attacker to disrupt the application's state. This disruption might result in false calculations or cause a denial of service. The vulnerability's exploitation hinges on the attacker's ability to alter the algorithm's application and the dependency of the software on non-volatile XMM registers."
+    "name": "cryptography",
+    "note": "CVE-2023-6129: Versions of Cryptograph starting from 35.0.0 are susceptible to a security flaw in the POLY1305 MAC algorithm on PowerPC CPUs, which allows an attacker to disrupt the application's state. This disruption might result in false calculations or cause a denial of service. The vulnerability's exploitation hinges on the attacker's ability to alter the algorithm's application and the dependency of the software on non-volatile XMM registers."
   },
   "65647": {
- "name": "cryptography",
- "note": "Cryptography version 42.0.5 introduces a limit on the number of name constraint checks during X.509 path validation to prevent denial of service attacks.https://github.com/pyca/cryptography/commit/4be53bf 20cc90cbac01f5f94c5d1aecc5289ba1f PVE-2024-65647"
+    "name": "cryptography",
+    "note": "Cryptography version 42.0.5 introduces a limit on the number of name constraint checks during X.509 path validation to prevent denial of service attacks.https://github.com/pyca/cryptography/commit/4be53bf 20cc90cbac01f5f94c5d1aecc5289ba1f PVE-2024-65647"
   },
   "65278": {
- "name": "cryptography",
- "note": "A flaw was found in the python-cryptography package. This issue may allow a remote attacker to decrypt captured messages in TLS servers that use RSA key exchanges, which may lead to exposure of confidential or sensitive data. See CVE-2023-50782. CVE-2023-50782"
+    "name": "cryptography",
+    "note": "A flaw was found in the python-cryptography package. This issue may allow a remote attacker to decrypt captured messages in TLS servers that use RSA key exchanges, which may lead to exposure of confidential or sensitive data. See CVE-2023-50782. CVE-2023-50782"
   },
   "65771": {
- "name": "django",
- "note": "Affected versions of Django are vulnerable to potential regular expression denial-of-service. django.utils.text.Truncator.words() method (with html=True) and truncatewords_html template filter were subject to a potential regular expression denial-of-service attack using a suitably crafted string (follow up to CVE-2019-14232 and CVE-2023-43665). CVE-2024-27351"
+    "name": "django",
+    "note": "Affected versions of Django are vulnerable to potential regular expression denial-of-service. django.utils.text.Truncator.words() method (with html=True) and truncatewords_html template filter were subject to a potential regular expression denial-of-service attack using a suitably crafted string (follow up to CVE-2019-14232 and CVE-2023-43665). CVE-2024-27351"
   },
   "66704": {
- "name": "cryptography",
- "note": "Starting in version 38.0.0 and before version 42.0.4, if `pkcs12.serialize_key_and_certificates` is called with both a certificate whose public key did not match the provided private key and an `encryption_algorithm` with `hmac_hash` set (via `PrivateFormat.PKCS12.encryption_builder().hmac_hash(...)`, then a NULL pointer dereference would occur, crashing the Python process. This has been resolved in version 42.0.4, the first version in which a `ValueError` is properly raised."
+    "name": "cryptography",
+    "note": "Starting in version 38.0.0 and before version 42.0.4, if `pkcs12.serialize_key_and_certificates` is called with both a certificate whose public key did not match the provided private key and an `encryption_algorithm` with `hmac_hash` set (via `PrivateFormat.PKCS12.encryption_builder().hmac_hash(...)`, then a NULL pointer dereference would occur, crashing the Python process. This has been resolved in version 42.0.4, the first version in which a `ValueError` is properly raised."
   },
   "66777": {
- "name": "cryptography",
- "note": "CVE-2023-6237 addresses a vulnerability in RSA public key verification where checking a large, incorrect RSA key with EVP_PKEY_public_check() could take an excessive amount of time. This is due to no size limit on the RSA public key and an unnecessarily high number of Miller-Rabin rounds for modulus non-primality checks. The fix sets a maximum key size of 16384 bits and reduces Miller-Rabin rounds to 5, enhancing security and performance by preventing the RSA_R_MODULUS_TOO_LARGE error."
+    "name": "cryptography",
+    "note": "CVE-2023-6237 addresses a vulnerability in RSA public key verification where checking a large, incorrect RSA key with EVP_PKEY_public_check() could take an excessive amount of time. This is due to no size limit on the RSA public key and an unnecessarily high number of Miller-Rabin rounds for modulus non-primality checks. The fix sets a maximum key size of 16384 bits and reduces Miller-Rabin rounds to 5, enhancing security and performance by preventing the RSA_R_MODULUS_TOO_LARGE error."
   },
   "66969": {
- "name": "jwcrypto",
- "note": "JWCrypto implements JWK, JWS, and JWE specifications using python-cryptography. Prior to version 1.5.6, an attacker can cause a denial of service attack by passing in a malicious JWE Token with a high compression ratio. When the server processes this token, it will consume a lot of memory and processing time. Version 1.5.6 fixes this vulnerability by limiting the maximum token length. See CVE-2024-28102."
+    "name": "jwcrypto",
+    "note": "JWCrypto implements JWK, JWS, and JWE specifications using python-cryptography. Prior to version 1.5.6, an attacker can cause a denial of service attack by passing in a malicious JWE Token with a high compression ratio. When the server processes this token, it will consume a lot of memory and processing time. Version 1.5.6 fixes this vulnerability by limiting the maximum token length. See CVE-2024-28102."
   },
   "67136": {
- "name": "pillow",
- "note": "Pillow 10.3.0 introduces a security update addressing CVE-2024-28219 by replacing certain functions with strncpy to prevent buffer overflow issues. CVE-2024-28219 For more information, please visit https://data.safetycli.com/v/67136/f17"
+    "name": "pillow",
+    "note": "Pillow 10.3.0 introduces a security update addressing CVE-2024-28219 by replacing certain functions with strncpy to prevent buffer overflow issues. CVE-2024-28219 For more information, please visit https://data.safetycli.com/v/67136/f17"
   },
   "67137": {
- "name": "pillow",
- "note": "pillow 9.1.1 addresses the CVE-2022-30595: libImaging/TgaRleDecode.c in Pillow 9.1.0 has a heap buffer overflow in the processing of invalid TGA image files. CVE-2022-30595 For more information, please visit https://data.safetycli.com/v/67137/f17"
+    "name": "pillow",
+    "note": "pillow 9.1.1 addresses the CVE-2022-30595: libImaging/TgaRleDecode.c in Pillow 9.1.0 has a heap buffer overflow in the processing of invalid TGA image files. CVE-2022-30595 For more information, please visit https://data.safetycli.com/v/67137/f17"
   },
   "67599": {
- "name": "pip",
- "note": "** DISPUTED ** An issue was discovered in pip (all versions) because it installs the version with the highest version number, even if the user had intended to obtain a private package from a private index. This only affects use of the --extra-index-url option, and exploitation requires that the package does not already exist in the public index (and thus the attacker can put the package there with an arbitrary version number). NOTE: it has been reported that this is intended functionality and the user is responsible for using --extra-index-url securely. CVE-2018-20225 For more information, please visit https://data.safetycli.com/v/67599/f17"
+    "name": "pip",
+    "note": "** DISPUTED ** An issue was discovered in pip (all versions) because it installs the version with the highest version number, even if the user had intended to obtain a private package from a private index. This only affects use of the --extra-index-url option, and exploitation requires that the package does not already exist in the public index (and thus the attacker can put the package there with an arbitrary version number). NOTE: it has been reported that this is intended functionality and the user is responsible for using --extra-index-url securely. CVE-2018-20225 For more information, please visit https://data.safetycli.com/v/67599/f17"
   },
   "70612": {
- "name": "jinja2",
- "note": "In Jinja2, the from_string function is prone to Server Side Template Injection (SSTI) where it takes the \"source\" parameter as a template object, renders it, and then returns it. The attacker can exploit it with {{INJECTION COMMANDS}} in a URI. NOTE: The maintainer and multiple third parties believe that this vulnerability isn't valid because users shouldn't use untrusted templates without sandboxing. https://data.safetycli.com/v/67599/f17"
+    "name": "jinja2",
+    "note": "In Jinja2, the from_string function is prone to Server Side Template Injection (SSTI) where it takes the \"source\" parameter as a template object, renders it, and then returns it. The attacker can exploit it with {{INJECTION COMMANDS}} in a URI. NOTE: The maintainer and multiple third parties believe that this vulnerability isn't valid because users shouldn't use untrusted templates without sandboxing. https://data.safetycli.com/v/67599/f17"
   },
   "67895": {
- "name": "idna",
- "note": "CVE-2024-3651 impacts the idna.encode() function, where a specially crafted argument could lead to significant resource consumption, causing a denial-of-service. In version 3.7, this function has been updated to reject such inputs efficiently, minimizing resource use. A practical workaround involves enforcing a maximum domain name length of 253 characters before encoding, as the vulnerability is triggered by unusually large inputs that normal operations wouldn't encounter."
+    "name": "idna",
+    "note": "CVE-2024-3651 impacts the idna.encode() function, where a specially crafted argument could lead to significant resource consumption, causing a denial-of-service. In version 3.7, this function has been updated to reject such inputs efficiently, minimizing resource use. A practical workaround involves enforcing a maximum domain name length of 253 characters before encoding, as the vulnerability is triggered by unusually large inputs that normal operations wouldn't encounter."
   },
   "67887": {
- "name": "sqlparse",
- "note": "ADVISORY: Sqlparse 0.5.0 addresses a potential denial of service (DoS) vulnerability related to recursion errors in deeply nested SQL statements. To mitigate this issue, the update replaces recursion errors with a general SQLParseError, improving the resilience and stability of the parsing process. PVE-2024-67887"
+    "name": "sqlparse",
+    "note": "ADVISORY: Sqlparse 0.5.0 addresses a potential denial of service (DoS) vulnerability related to recursion errors in deeply nested SQL statements. To mitigate this issue, the update replaces recursion errors with a general SQLParseError, improving the resilience and stability of the parsing process. PVE-2024-67887"
   },
   "71064": {
- "name": "requests",
- "note": "Affected versions of Requests, when making requests through a Requests `Session`, if the first request is made with `verify=False` to disable cert verification, all subsequent requests to the same host will continue to ignore cert verification regardless of changes to the value of `verify`. This behavior will continue for the lifecycle of the connection in the connection pool. Requests 2.32.0 fixes the issue, but versions 2.32.0 and 2.32.1 were yanked due to conflicts with CVE-2024-35195 mitigation."
+    "name": "requests",
+    "note": "Affected versions of Requests, when making requests through a Requests `Session`, if the first request is made with `verify=False` to disable cert verification, all subsequent requests to the same host will continue to ignore cert verification regardless of changes to the value of `verify`. This behavior will continue for the lifecycle of the connection in the connection pool. Requests 2.32.0 fixes the issue, but versions 2.32.0 and 2.32.1 were yanked due to conflicts with CVE-2024-35195 mitigation."
   },
   "71199": {
- "name": "anyio",
- "note": "Affected spec: <4.4.0 ADVISORY: Anyio version 4.4.0 addresses a thread race condition in `_eventloop.get_asynclib()` that caused crashes when multiple event loops of the same backend were running in separate threads and simultaneously attempted to use AnyIO for the first time. This fix ensures more stable and reliable performance in multi-threaded environments."
+    "name": "anyio",
+    "note": "Affected spec: <4.4.0 ADVISORY: Anyio version 4.4.0 addresses a thread race condition in `_eventloop.get_asynclib()` that caused crashes when multiple event loops of the same backend were running in separate threads and simultaneously attempted to use AnyIO for the first time. This fix ensures more stable and reliable performance in multi-threaded environments."
   },
   "71591": {
- "name": "jinja2",
- "note": "Jinja is an extensible templating engine. The `xmlattr` filter in affected versions of Jinja accepts keys containing non-attribute characters. XML/HTML attributes cannot contain spaces, `/`, `>`, or `=`, as each would then be interpreted as starting a separate attribute. If an application accepts keys (as opposed to only values) as user input, and renders these in pages that other users see as well, an attacker could use this to inject other attributes and perform XSS. The fix for CVE-2024-22195 only addressed spaces but not other characters. Accepting keys as user input is now explicitly considered an unintended use case of the `xmlattr` filter, and code that does so without otherwise validating the input should be flagged as insecure, regardless of Jinja version. Accepting _values_ as user input continues to be safe."
+    "name": "jinja2",
+    "note": "Jinja is an extensible templating engine. The `xmlattr` filter in affected versions of Jinja accepts keys containing non-attribute characters. XML/HTML attributes cannot contain spaces, `/`, `>`, or `=`, as each would then be interpreted as starting a separate attribute. If an application accepts keys (as opposed to only values) as user input, and renders these in pages that other users see as well, an attacker could use this to inject other attributes and perform XSS. The fix for CVE-2024-22195 only addressed spaces but not other characters. Accepting keys as user input is now explicitly considered an unintended use case of the `xmlattr` filter, and code that does so without otherwise validating the input should be flagged as insecure, regardless of Jinja version. Accepting _values_ as user input continues to be safe."
   },
   "71594": {
- "name": "werkzeug",
- "note": "Werkzeug is a comprehensive WSGI web application library. The debugger in affected versions of Werkzeug can allow an attacker to execute code on a developer's machine under some circumstances. This requires the attacker to get the developer to interact with a domain and subdomain they control, and enter the debugger PIN, but if they are successful it allows access to the debugger even if it is only running on localhost. This also requires the attacker to guess a URL in the developer's application that will trigger the debugger."
-
+    "name": "werkzeug",
+    "note": "Werkzeug is a comprehensive WSGI web application library. The debugger in affected versions of Werkzeug can allow an attacker to execute code on a developer's machine under some circumstances. This requires the attacker to get the developer to interact with a domain and subdomain they control, and enter the debugger PIN, but if they are successful it allows access to the debugger even if it is only running on localhost. This also requires the attacker to guess a URL in the developer's application that will trigger the debugger."
   },
   "71595": {
- "name": "werkzeug",
- "note": "Werkzeug is a comprehensive WSGI web application library. If an upload of a file that starts with CR or LF and then is followed by megabytes of data without these characters: all of these bytes are appended chunk by chunk into internal bytearray and lookup for boundary is performed on growing buffer. This allows an attacker to cause a denial of service by sending crafted multipart data to an endpoint that will parse it. The amount of CPU time required can block worker processes from handling legitimate requests."
+    "name": "werkzeug",
+    "note": "Werkzeug is a comprehensive WSGI web application library. If an upload of a file that starts with CR or LF and then is followed by megabytes of data without these characters: all of these bytes are appended chunk by chunk into internal bytearray and lookup for boundary is performed on growing buffer. This allows an attacker to cause a denial of service by sending crafted multipart data to an endpoint that will parse it. The amount of CPU time required can block worker processes from handling legitimate requests."
   },
   "71600": {
- "name": "gunicorn",
- "note": "Gunicorn fails to properly validate Transfer-Encoding headers, leading to HTTP Request Smuggling (HRS) vulnerabilities. By crafting requests with conflicting Transfer-Encoding headers, attackers can bypass security restrictions and access restricted endpoints. This issue is due to Gunicorn's handling of Transfer-Encoding headers, where it incorrectly processes requests with multiple, conflicting Transfer-Encoding headers, treating them as chunked regardless of the final encoding specified. This vulnerability allows for a range of attacks including cache poisoning, session manipulation, and data exposure."
+    "name": "gunicorn",
+    "note": "Gunicorn fails to properly validate Transfer-Encoding headers, leading to HTTP Request Smuggling (HRS) vulnerabilities. By crafting requests with conflicting Transfer-Encoding headers, attackers can bypass security restrictions and access restricted endpoints. This issue is due to Gunicorn's handling of Transfer-Encoding headers, where it incorrectly processes requests with multiple, conflicting Transfer-Encoding headers, treating them as chunked regardless of the final encoding specified. This vulnerability allows for a range of attacks including cache poisoning, session manipulation, and data exposure."
   },
   "71608": {
- "name": "urllib3",
- "note": "Urllib3's ProxyManager ensures that the Proxy-Authorization header is correctly directed only to configured proxies. However, when HTTP requests bypass urllib3's proxy support, there's a risk of inadvertently setting the Proxy-Authorization header, which remains ineffective without a forwarding or tunneling proxy. Urllib3 does not recognize this header as carrying authentication data, failing to remove it during cross-origin redirects. While this scenario is uncommon and poses low risk to most users, urllib3 now proactively removes the Proxy-Authorization header during cross-origin redirects as a precautionary measure. Users are advised to utilize urllib3's proxy support or disable automatic redirects to handle the Proxy-Authorization header securely. Despite these precautions, urllib3 defaults to stripping the header to safeguard users who may inadvertently misconfigure requests."
+    "name": "urllib3",
+    "note": "Urllib3's ProxyManager ensures that the Proxy-Authorization header is correctly directed only to configured proxies. However, when HTTP requests bypass urllib3's proxy support, there's a risk of inadvertently setting the Proxy-Authorization header, which remains ineffective without a forwarding or tunneling proxy. Urllib3 does not recognize this header as carrying authentication data, failing to remove it during cross-origin redirects. While this scenario is uncommon and poses low risk to most users, urllib3 now proactively removes the Proxy-Authorization header during cross-origin redirects as a precautionary measure. Users are advised to utilize urllib3's proxy support or disable automatic redirects to handle the Proxy-Authorization header securely. Despite these precautions, urllib3 defaults to stripping the header to safeguard users who may inadvertently misconfigure requests."
   },
   "71849": {
- "name": "djangorestframework",
- "note": "Affected versions of the package djangorestframework are vulnerable to Cross-site Scripting (XSS) via the break_long_headers template filter due to improper input sanitization before splitting and joining with <br> tags."
+    "name": "djangorestframework",
+    "note": "Affected versions of the package djangorestframework are vulnerable to Cross-site Scripting (XSS) via the break_long_headers template filter due to improper input sanitization before splitting and joining with <br> tags."
   },
   "71890": {
- "name": "html-sanitizer",
- "note": "An issue has been identified in the sanitizer when handling unicode normalization, which can lead to arbitrary HTML being present after sanitization. Specifically, if keep_typographic_whitespace=False (the default setting), the sanitizer normalizes unicode to the NFKC form at the end of the process. Some unicode characters normalize to chevrons (< and >), allowing specially crafted HTML to escape the sanitization process."
+    "name": "html-sanitizer",
+    "note": "An issue has been identified in the sanitizer when handling unicode normalization, which can lead to arbitrary HTML being present after sanitization. Specifically, if keep_typographic_whitespace=False (the default setting), the sanitizer normalizes unicode to the NFKC form at the end of the process. Some unicode characters normalize to chevrons (< and >), allowing specially crafted HTML to escape the sanitization process."
   },
   "72110": {
- "name": "django",
- "note": "Affected versions of Django are affected by a directory-traversal vulnerability in the Storage.save() method. Derived classes of the django.core.files.storage.Storage base class that overrides the generate_filename() method without replicating the file path validations existing in the parent class could allow for directory traversal via certain inputs when calling save(). This could enable an attacker to manipulate file paths and access unintended directories."
+    "name": "django",
+    "note": "Affected versions of Django are affected by a directory-traversal vulnerability in the Storage.save() method. Derived classes of the django.core.files.storage.Storage base class that overrides the generate_filename() method without replicating the file path validations existing in the parent class could allow for directory traversal via certain inputs when calling save(). This could enable an attacker to manipulate file paths and access unintended directories."
   },
   "72109": {
- "name": "django",
- "note": "Affected versions of Django are affected by a username enumeration vulnerability caused by timing differences in the django.contrib.auth.backends.ModelBackend.authenticate() method. This method allowed remote attackers to enumerate users through a timing attack involving login requests for users with unusable passwords. The timing difference in the authentication process exposed whether a username was valid or not, potentially aiding attackers in gaining unauthorized access."
+    "name": "django",
+    "note": "Affected versions of Django are affected by a username enumeration vulnerability caused by timing differences in the django.contrib.auth.backends.ModelBackend.authenticate() method. This method allowed remote attackers to enumerate users through a timing attack involving login requests for users with unusable passwords. The timing difference in the authentication process exposed whether a username was valid or not, potentially aiding attackers in gaining unauthorized access."
   },
   "72095": {
- "name": "django",
- "note": "Affected versions of Django are affected by a potential denial-of-service vulnerability in the django.utils.html.urlize() function. The urlize and urlizetrunc template filters were susceptible to a denial-of-service attack via certain inputs containing many brackets. An attacker could exploit this vulnerability to cause significant delays or crashes in the affected application."
+    "name": "django",
+    "note": "Affected versions of Django are affected by a potential denial-of-service vulnerability in the django.utils.html.urlize() function. The urlize and urlizetrunc template filters were susceptible to a denial-of-service attack via certain inputs containing many brackets. An attacker could exploit this vulnerability to cause significant delays or crashes in the affected application."
   },
   "72111": {
- "name": "django",
- "note": "Affected versions of Django are potentially vulnerable to denial-of-service via the get_supported_language_variant() method. This method was susceptible to a denial-of-service attack when used with very long strings containing specific characters. Exploiting this vulnerability could cause significant delays or crashes in the affected application, potentially leading to service disruption."
+    "name": "django",
+    "note": "Affected versions of Django are potentially vulnerable to denial-of-service via the get_supported_language_variant() method. This method was susceptible to a denial-of-service attack when used with very long strings containing specific characters. Exploiting this vulnerability could cause significant delays or crashes in the affected application, potentially leading to service disruption."
   },
   "72083": {
- "name": "certifi",
- "note": "Certifi affected versions recognized root certificates from GLOBALTRUST. Certifi patch removes these root certificates from the root store. These certificates are being removed pursuant to an investigation that identified \"long-running and unresolved compliance issues\" and are also in the process of being removed from Mozilla's trust store."
+    "name": "certifi",
+    "note": "Certifi affected versions recognized root certificates from GLOBALTRUST. Certifi patch removes these root certificates from the root store. These certificates are being removed pursuant to an investigation that identified \"long-running and unresolved compliance issues\" and are also in the process of being removed from Mozilla's trust store."
   },
   "72236": {
- "name": "setuptools",
- "note": "Affected versions of Setuptools allow for remote code execution via its download functions. These functions, which are used to download packages from URLs provided by users or retrieved from package index servers, are susceptible to code injection. If these functions are exposed to user-controlled inputs, such as package URLs, they can execute arbitrary commands on the system."
+    "name": "setuptools",
+    "note": "Affected versions of Setuptools allow for remote code execution via its download functions. These functions, which are used to download packages from URLs provided by users or retrieved from package index servers, are susceptible to code injection. If these functions are exposed to user-controlled inputs, such as package URLs, they can execute arbitrary commands on the system."
   },
   "72132": {
- "name": "zipp",
- "note": "A Denial of Service (DoS) vulnerability exists in the jaraco/zipp library. The vulnerability is triggered when processing a specially crafted zip file that leads to an infinite loop. This issue also impacts the zipfile module of CPython, as features from the third-party zipp library are later merged into CPython, and the affected code is identical in both projects. The infinite loop can be initiated through the use of functions affecting the `Path` module in both zipp and zipfile, such as `joinpath`, the overloaded division operator, and `iterdir`. Although the infinite loop is not resource exhaustive, it prevents the application from responding."
+    "name": "zipp",
+    "note": "A Denial of Service (DoS) vulnerability exists in the jaraco/zipp library. The vulnerability is triggered when processing a specially crafted zip file that leads to an infinite loop. This issue also impacts the zipfile module of CPython, as features from the third-party zipp library are later merged into CPython, and the affected code is identical in both projects. The infinite loop can be initiated through the use of functions affecting the `Path` module in both zipp and zipfile, such as `joinpath`, the overloaded division operator, and `iterdir`. Although the infinite loop is not resource exhaustive, it prevents the application from responding."
   },
   "72519": {
- "name": "django",
- "note": "Django has a potential denial-of-service vulnerability in django.utils.html.urlize(). The urlize and urlizetrunc functions are susceptible to a possible attack through huge inputs containing a specific sequence of characters. CVE-2024-41990. For more information, please visit https://data.safetycli.com/v/72519/f17",
- "affected_spec": "<4.2.15"
+    "name": "django",
+    "note": "Django has a potential denial-of-service vulnerability in django.utils.html.urlize(). The urlize and urlizetrunc functions are susceptible to a possible attack through huge inputs containing a specific sequence of characters. CVE-2024-41990. For more information, please visit https://data.safetycli.com/v/72519/f17",
+    "affected_spec": "<4.2.15"
   },
   "72520": {
- "name": "django",
- "note": "Django has a potential denial-of-service vulnerability in django.utils.html.urlize() and AdminURLFieldWidget. The urlize and urlizetrunc functions, along with AdminURLFieldWidget, are vulnerable to denial-of-service attacks when handling inputs with a very large number of Unicode characters. CVE-2024-41991. For more information, please visit https://data.safetycli.com/v/72520/f17",
- "affected_spec": "<4.2.15"
+    "name": "django",
+    "note": "Django has a potential denial-of-service vulnerability in django.utils.html.urlize() and AdminURLFieldWidget. The urlize and urlizetrunc functions, along with AdminURLFieldWidget, are vulnerable to denial-of-service attacks when handling inputs with a very large number of Unicode characters. CVE-2024-41991. For more information, please visit https://data.safetycli.com/v/72520/f17",
+    "affected_spec": "<4.2.15"
   },
   "72515": {
- "name": "django",
- "note": "Django addresses a memory exhaustion issue in django.utils.numberformat.floatformat(). When floatformat receives a string representation of a number in scientific notation with a large exponent, it could lead to excessive memory consumption. To prevent this, decimals with more than 200 digits are now returned as-is. CVE-2024-41990. For more information, please visit https://data.safetycli.com/v/72515/f17",
- "affected_spec": "<4.2.15"
+    "name": "django",
+    "note": "Django addresses a memory exhaustion issue in django.utils.numberformat.floatformat(). When floatformat receives a string representation of a number in scientific notation with a large exponent, it could lead to excessive memory consumption. To prevent this, decimals with more than 200 digits are now returned as-is. CVE-2024-41990. For more information, please visit https://data.safetycli.com/v/72515/f17",
+    "affected_spec": "<4.2.15"
   },
   "72521": {
- "name": "django",
- "note": "Django has a potential SQL injection vulnerability in the QuerySet.values() and QuerySet.values_list() methods. When used on models with a JSONField, these methods are susceptible to SQL injection through column aliases if a crafted JSON object key is passed as an argument. CVE-2024-42005. For more information, please visit https://data.safetycli.com/v/72521/f17",
- "affected_spec": "<4.2.15"
+    "name": "django",
+    "note": "Django has a potential SQL injection vulnerability in the QuerySet.values() and QuerySet.values_list() methods. When used on models with a JSONField, these methods are susceptible to SQL injection through column aliases if a crafted JSON object key is passed as an argument. CVE-2024-42005. For more information, please visit https://data.safetycli.com/v/72521/f17",
+    "affected_spec": "<4.2.15"
   },
   "72780": {
- "name": "gunicorn",
- "note": "A time-based vulnerability in Gunicorn affected versions allows an attacker to disrupt service by manipulating the system clock, causing premature worker timeouts and potential denial-of-service (DoS) conditions. The issue stems from the use of time.time() in the worker timeout logic, which can be exploited if an attacker gains the ability to change the system time. PVE-2024-72780://data.safetycli.com/v/72521/f17",
- "affected_spec": "<4.2.15"
+    "name": "gunicorn",
+    "note": "A time-based vulnerability in Gunicorn affected versions allows an attacker to disrupt service by manipulating the system clock, causing premature worker timeouts and potential denial-of-service (DoS) conditions. The issue stems from the use of time.time() in the worker timeout logic, which can be exploited if an attacker gains the ability to change the system time. PVE-2024-72780://data.safetycli.com/v/72521/f17",
+    "affected_spec": "<4.2.15"
+  },
+  "73023": {
+    "name": "django",
+    "note": "A potential denial-of-service vulnerability has been\n   identified in Django's urlize() and urlizetrunc() functions in\n   django.utils.html. This vulnerability can be triggered by inputting huge\n   strings containing a specific sequence of characters.\n   CVE-2024-45230\n   For more information, please visit\n   https://data.safetycli.com/v/73023/f17",
+    "affected_spec": "<4.2.16"
+  },
+  "73028": {
+    "name": "django",
+    "note": "A security vulnerability has been discovered in certain\n   versions of Django, affecting the password reset functionality. The\n   PasswordResetForm class in django.contrib.auth.forms inadvertently allowed\n   attackers to enumerate user email addresses by exploiting unhandled\n   exceptions during the email sending process. This could be done by issuing\n   password reset requests and observing the responses. To mitigate this risk,\n   Django has implemented a fix where these exceptions are now caught and logged\n   using the django.contrib.auth logger, preventing potential information\n   leakage through error responses.\n   CVE-2024-45231\n   For more information, please visit\n   https://data.safetycli.com/v/73028/f17",
+    "affected_spec": "<4.2.16"
   }
 }

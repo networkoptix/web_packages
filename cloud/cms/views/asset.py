@@ -9,7 +9,7 @@ from util.base_cache import IntegrationCache
 from util.instance_config import UnableToFetchConfigException
 from waffle import flag_is_active
 from cms.controllers.asset_json import get_contexts_and_datastructures_of_asset_type
-from cms.views.celery import download_result
+from cms.views.app_celery import download_result
 from util import helpers
 from django.views.decorators.http import require_http_methods
 from django.conf import settings

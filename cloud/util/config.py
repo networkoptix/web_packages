@@ -1,13 +1,12 @@
-import logging
-
+import structlog
 from django.conf import settings
 from django.core.cache import caches
 
 from cloud.customization_context import customization_ctx, hostname_ctx
-from util.helpers import get_cloud_host_by_customization, get_cached_customization
+from util.helpers import get_cloud_host_by_customization
 from util.instance_config import get_init_config
 
-logger = logging.getLogger(__name__)
+logger = structlog.get_logger(__name__)
 
 
 def get_cached_config(customization):
@@ -28,9 +27,9 @@ def get_config_hostname(customization):
 def get_customization_config(customization=None):
     host = get_config_hostname(customization)
     if not customization:
-        logger.warning('Customisation must be given.')
+        logger.warning("customization_missing", parameter="customization")
     if not host:
-        logger.warning('Host must be given.')
+        logger.warning("host_missing", parameter="host")
 
     conf = {
         'customization': customization,

@@ -25,19 +25,21 @@ This is where settings used by other modules or introduced by another package.
 In House Settings:
 This is where settings that don't belong to any of the previous categories should go.
 """
+import logging
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 import re
 import json
+import structlog
 import sys
 from enum import Enum
 
 from botocore.config import Config
 from django.core.exceptions import ImproperlyConfigured
 
+from cloud.cloud_logging.config import configure_logging
 from util.instance_config import get_init_config, get_structures_hash, CmsConfig
-from cloud.logger import downgrade_requests
 
 
 # Base Settings
@@ -139,6 +141,8 @@ if os.getenv('LOCAL_ENV', False):
 
 
 MIDDLEWARE = (
+    "django_structlog.middlewares.RequestMiddleware",
+    "cloud.cloud_logging.middleware.RequestLoggerMiddleware",
     'cloud.middleware.CustomizationMiddleware',
     'cloud.customization_context.CustomizationCtxMiddleware',
     'cloud.middleware.CachedMiddleware',
@@ -427,92 +431,30 @@ USE_L10N = True
 
 USE_TZ = False
 
-LOG_LEVEL = 'INFO' if DEBUG else 'WARNING'
+# Logging Configuration
+LOG_LEVEL = logging.DEBUG if DEBUG else logging.INFO
 
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'filters': {
-        'downgrade_requests': {
-            '()': 'django.utils.log.CallbackFilter',
-            'callback': downgrade_requests
-        }
-    },
-    'formatters': {
-        'verbose': {
-            'format': '[%(levelname)s] %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
-        },
-        'simple': {
-            'format': '[%(levelname)s] %(message)s'
-        },
-    },
-    'handlers': {
-        'console': {
-            'level': 'DEBUG',
-            'class': 'logging.StreamHandler',
-            'filters': ['downgrade_requests'],
-            'formatter': 'verbose'
-        },
-        'mail_admins': {
-            'level': 'CRITICAL',
-            'class': 'cloud.logger.LimitAdminEmailHandler',
-            'formatter': 'simple'
-        },
-    },
-    'loggers': {
-        '': {  # default settings for all django loggers
-            'level': LOG_LEVEL,
-            'propagate': True,
-            'handlers': ['console']
-        },
-        'django.security.csrf': {
-            'level': 'ERROR',
-            'propagate': False,
-            'handlers': ['console']
-        },
-        'api.views.utils': {
-            'level': LOG_LEVEL,
-            'propagate': False,
-            'handlers': ['console']
-        },
-        'cloud.helpers.exceptions': {
-            'level': LOG_LEVEL,
-            'propagate': False,
-            'handlers': ['console']
-        },
-        'cloud.controllers.cloud_gateway': {
-            'level': LOG_LEVEL,
-            'propagate': False,
-            'handlers': ['console']
-        },
-        'notifications.tasks': {
-            'level': LOG_LEVEL,
-            'propagate': False,
-            'handlers': ['console']
-        },
-        'api.account_backend': {  # explicitly mention all modules with loggers
-            'level': LOG_LEVEL,
-            'propagate': False,
-            'handlers': ['console']
-        },
-        'cms.controllers.cloud_api': {
-            'level': LOG_LEVEL,
-            'propagate': False,
-            'handlers': ['console']
-        },
-        'api.views.account': {
-            'level': 'CRITICAL',
-            'propagate': False,
-            'handlers': ['console']
-        },
-        'cms.controllers.filldata': {
-            'level': LOG_LEVEL,
-            'propagate': False,
-            'handlers': ['console']
-        }
-    }
-}
+DJANGO_STRUCTLOG_STATUS_4XX_LOG_LEVEL = logging.INFO
+DJANGO_STRUCTLOG_CELERY_ENABLED = True
 
+LOGGING = configure_logging(log_level=LOG_LEVEL)
+
+structlog.configure(
+    processors=[
+        structlog.contextvars.merge_contextvars,
+        structlog.stdlib.filter_by_level,
+        structlog.processors.TimeStamper(fmt="iso"),
+        structlog.stdlib.add_logger_name,
+        structlog.stdlib.add_log_level,
+        structlog.stdlib.PositionalArgumentsFormatter(),
+        structlog.processors.StackInfoRenderer(),
+        structlog.processors.format_exc_info,
+        structlog.processors.UnicodeDecoder(),
+        structlog.stdlib.ProcessorFormatter.wrap_for_formatter,
+    ],
+    logger_factory=structlog.stdlib.LoggerFactory(),
+    cache_logger_on_first_use=True,
+)
 # Static files (CSS, JavaScript, Images) and s3 config
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
@@ -989,4 +931,14 @@ STRUCTURES_HASH = get_structures_hash()
 
 CMS_CONFIG = os.getenv('CMS_CONFIG')
 
-
+"""
+- If i don't import the following, i'm not getting any signals. 
+- If i place at the top, the following tests fail
+    - TestCloudSystemViewSet::test_saas_report
+    - TestSystemUsers::test_system_failure
+"""
+# ruff: noqa: F401, TID252
+from cloud.cloud_logging.receivers import (
+    bind_additional_request_metadata,
+    bind_failed_request_metadata
+)  # noqa: F401, F403

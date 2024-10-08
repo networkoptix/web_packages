@@ -1,7 +1,3 @@
-from django.test import TestCase
-from django.urls import reverse
-
-from cms.admin import *
 from cms.models import *
 
 import pytest

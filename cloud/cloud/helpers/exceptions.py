@@ -1,24 +1,24 @@
 import asyncio
-from functools import wraps
-import logging
+import functools
 import json
+import logging
+import structlog
 import time
 import traceback
-import functools
-from enum import Enum
-from typing import Union, List, Tuple, Dict, Callable
-
 from asgiref.sync import sync_to_async
 from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
-from requests.exceptions import HTTPError
 from django.http import HttpResponse, QueryDict, HttpResponseRedirect
-from rest_framework.exceptions import UnsupportedMediaType, ValidationError
-from rest_framework.response import Response
-from rest_framework.request import Request
+from enum import Enum
+from functools import wraps
+from requests.exceptions import HTTPError
 from rest_framework import status
+from rest_framework.exceptions import UnsupportedMediaType, ValidationError
+from rest_framework.request import Request
+from rest_framework.response import Response
+from typing import Union, List, Tuple, Dict, Callable
 
-logger = logging.getLogger(__name__)
+logger = structlog.getLogger(__name__)
 
 class ErrorCodes(Enum):
     ok = 'ok'
@@ -176,8 +176,8 @@ class APIException(Exception):
         if isinstance(error_code, str):
             try:
                 error_code = ErrorCodes(error_code)
-            except ValueError:
-                logger.error(f'Unexpected error code {error_code}')
+            except ValueError as e:
+                logger.error("unexpected_error_code", error_code=error_code, error=str(e) ,exec_info=True)
 
         self.error_data = error_data
         self.error_code = error_code

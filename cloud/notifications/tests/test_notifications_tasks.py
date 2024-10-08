@@ -5,7 +5,6 @@ from random import randint
 import base64
 from datetime import datetime
 from unittest.mock import call
-from notifications.models import SystemEmail
 from notifications.tasks import *
 
 
@@ -40,8 +39,7 @@ def test_send_email_log(mocker):
 
     assert test_func(*args, **kwargs) == result
     mock_logger.info.assert_called_once_with(
-        f"Start {func_name} was run with args {args}, kwargs: {kwargs}")
-
+        "task_start", task_name=func_name, args=args, kwargs=kwargs)
 
 class TestSendEmail:
     @pytest.fixture(autouse=True)

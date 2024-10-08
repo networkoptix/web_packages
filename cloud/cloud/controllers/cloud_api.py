@@ -1,19 +1,20 @@
-from hashlib import md5, sha256
-import base64
-from functools import wraps
 import ast
+import base64
 import random
 import re
-import string
-import logging
-
 import requests
+import string
+import structlog
 from asgiref.sync import sync_to_async
-from requests.auth import HTTPBasicAuth, HTTPDigestAuth
 from django.conf import settings
+from functools import wraps
+from hashlib import md5, sha256
+
+from numpy.distutils.conv_template import header
+from requests.auth import HTTPBasicAuth, HTTPDigestAuth
+from rest_framework import status
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.response import Response
-from rest_framework import status
 
 from cloud.customization_context import customization_ctx
 from cloud.helpers.exceptions import (validate_response, ErrorCodes, APIRequestException,
@@ -21,7 +22,7 @@ from cloud.helpers.exceptions import (validate_response, ErrorCodes, APIRequestE
                                       kill_session, kill_tokens, APIInternalException)
 from util.config import get_cached_config, get_cloud_portal_url
 
-logger = logging.getLogger(__name__)
+logger = structlog.getLogger(__name__)
 
 
 class CloudDbConfig:
@@ -568,7 +569,7 @@ class Account(object):
             raise APIInternalException('Customization must be given.',
                                       error_code=ErrorCodes.no_customization_given)
         customization = customization or getattr(request, 'CUSTOMIZATION', customization_ctx.get())
-        logger.debug('cloud_api.Account.register: ' + email)
+        logger.debug("account_registration", user_email=email)
 
         headers = {
             'X-Forwarded-For': ip
@@ -577,15 +578,13 @@ class Account(object):
         @validate_response
         def _update(login, password, params):
             request = CloudDbConfig.url(customization_ctx.get()) + '/account/update'
-            logger.debug(
-                'cloud_api.Account.register - making request: ' + request)
+            logger.debug("account_registration_request", url=request, payload=params, headers=headers)
             return post_wrapper(request, json=params, auth={"email": login, "password": password}, headers=headers)
 
         @validate_response
         def _register(params):
             request = CloudDbConfig.url(customization_ctx.get()) + '/account/register'
-            logger.debug(
-                'cloud_api.Account.register - making request: ' + request)
+            logger.debug("account_registration_request", url=request, payload=params, headers=headers)
             return post_wrapper(request, json=params, headers=headers)
 
         password_ha1, password_ha1_sha256 = Account.encode_password(
@@ -837,11 +836,10 @@ class Storage(object):
     @validate_response
     def delete_from_system(request, system_id):
         storages = Storage.list_system_storages(request, system_id)
-        logger.debug(f"Delete storage for system.\t SystemId: {system_id}")
+        logger.debug("delete_system_storage", system_id=system_id)
         for storage in storages:
             storage_id = storage.get('id')
-            logger.debug(
-                f"Removing storage: {storage_id} from the system {system_id}")
+            logger.debug("remove_storage", storage_id=storage_id, system_id=system_id)
             Storage._remove_from_system(request, system_id, storage_id)
             Storage._delete(request, storage_id)
         return Response(None, status=status.HTTP_204_NO_CONTENT)

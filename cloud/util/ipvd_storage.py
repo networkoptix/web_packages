@@ -1,17 +1,15 @@
-import json
-from io import BytesIO
-from logging import getLogger
-
 import httpx
+import json
+import structlog
 from django.conf import settings
 from django.utils.functional import cached_property
+from io import BytesIO
 from storages.backends.s3boto3 import S3Boto3Storage
 from storages.utils import clean_name
 
 from api.serializers import process_cameras
 
-
-logger = getLogger(__name__)
+logger = structlog.getLogger(__name__)
 
 
 class IPVDS3Upload(S3Boto3Storage):
@@ -45,18 +43,18 @@ class IPVDS3Upload(S3Boto3Storage):
     def ipvd_data(self):
         ipvd = process_cameras(self.get_ipvd())
         if not all([k in ipvd for k in ("cameras", "vendors", "analytics", "num_cameras")]):
-            logger.error("IPVD info in not valid.")
+            logger.error("invalid_ipvd_info")
             raise ValueError("IPVD info in not valid.")
         return ipvd
 
     def update_ipvd_data(self, force=True):
         url = self.url(self.filename)
         if not force and not self.ipvd_changed():
-            logger.info(f"IPVD info is not changed. {url} is latest version.")
+            logger.info("ipvd_info_unchanged", url=url)
             return
         ipvd = BytesIO(json.dumps(self.ipvd_data()).encode())
         name = self.save(self.filename, ipvd)
-        logger.info(f"IPVD info is updated. Saved to {url}.")
+        logger.info("ipvd_info_updated", url=url)
         return name
 
     def _get_write_parameters(self, name, content=None):
