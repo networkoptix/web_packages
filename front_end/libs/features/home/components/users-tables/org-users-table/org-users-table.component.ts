@@ -135,7 +135,10 @@ export class NxOrgUsersTableComponent extends AbstractUserTableDirective {
     }
 
     canDeleteUser(user: UserRecord): boolean {
-        const userIsOnlyAdmin = this.hasOnlyOneAdmin$$() && this.onlyAdmin$$() === user.email;
+        const userIsOnlyAdmin =
+            this.hasOnlyOneAdmin$$() &&
+            this.onlyAdmin$$() === user.email &&
+            this.currAccessLevel !== OrgRoleIds.OrgAdmin;
         return (
             user.accessLevel?.id === this.currentGroupId$$() ||
             (!this.inGroup$$() && !userIsOnlyAdmin)
