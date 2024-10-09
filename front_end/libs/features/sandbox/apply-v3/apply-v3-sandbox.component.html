@@ -36,16 +36,18 @@
 }
 <div class="button-container">
     <button
+        data-escape-global-style
         type="button"
-        class="btn btn-default"
+        class="nx-button--default"
         (click)="fireActions()"
         [disabled]="!hasUnsavedChanges()"
     >
         Fire actions
     </button>
     <button
+        data-escape-global-style
         type="button"
-        class="btn btn-default"
+        class="nx-button--default"
         (click)="triggerNavigation()"
     >
         Navigate away

@@ -1,3 +1,5 @@
+@use 'common-nonglobal/button-legacy';
+
 :host > * + * {
     margin-top: 1rem
 }

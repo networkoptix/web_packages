@@ -1,0 +1,19 @@
+@use 'components/forms/buttons/buttons';
+
+// Before <button class="btn btn-primary"
+// After <button data-escape-global-style class="nx-button--primary">
+
+.nx-button--primary {
+    @include buttons.nx-button();
+    @include buttons.nx-button--primary();
+}
+
+.nx-button--default {
+    @include buttons.nx-button();
+    @include buttons.nx-button--default();
+}
+
+.nx-button--danger {
+    @include buttons.nx-button();
+    @include buttons.nx-button--danger();
+}
