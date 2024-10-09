@@ -1,14 +1,13 @@
-@use "../styles/reset-mixins";
+@use "../styles/bootstrap-reset";
 @use "../styles/typography";
 @use "../styles/spacing";
 
-@include reset-mixins.reset-globals {
-    @include typography.defaults;
 
-    .wrapper {
-        @include spacing.with-spacing-for(padding, 8);
-        background-color: var(--example-background-color, green);
-        width: calc(100% - 144px);
-        border: 2px solid currentColor;
-    }
+@include typography.defaults;
+
+.wrapper {
+    @include spacing.with-spacing-for(padding, 8);
+    background-color: var(--example-background-color, green);
+    width: calc(100% - 144px);
+    border: 2px solid currentColor;
 }

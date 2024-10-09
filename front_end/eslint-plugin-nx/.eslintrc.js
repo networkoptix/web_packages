@@ -6,5 +6,9 @@ module.exports = {
                 '@typescript-eslint/no-var-requires': 'off',
             },
         },
+        {
+            files: ['src/sandbox/*'],
+            rules: {},
+        },
     ],
 };

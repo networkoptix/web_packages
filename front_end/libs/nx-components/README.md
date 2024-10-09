@@ -44,33 +44,17 @@ TODO:
 - [] Need to create a base component class that injects the service that provides theming and maybe a config partial that
 gets passed into the `@Component` config for common properties like `changeDetection` and `encapsulation`.
 
-## Component Styling Reset
-
-Sometimes application styling could leak into the component library. We use css layers to prevent unintended leaking
-into the component styles.
-
-### Within the application
-To prevent global styles from leaking into library wrap your styles in an nxglobal css layer `@layer nxglobal {...styles}`.
-
-TODO:
-
-- [] Typography is being imported into a lot of files with ViewEncapsulation.None which is leaking into the global scope
-we need to add typography into the nxglobal layer.
-- [] We should remove all ViewEncapsulation.None from components within the apps.
-
-
-### When developing components for library
-Wrap component styles in a nxcomponents css layer using the reset-globals mixing.
+## Styling Reset
+Use the Bootstrap reset to escape from bootstrap styling
 
 ```scss
-@use "../base-component/common";
-
-@layer nxcomponents {
-    ...styling
-}
-
-@include common.reset-globals;
+@use "../styles/bootstrap-reset"; // Should be at the very top of the file
 ```
+
+New components will have lint rules to escape element global styling and prevent
+use of global styling classes in templates
+
+[] We should remove all ViewEncapsulation.None from components within the apps.
 
 ## Running tasks
 

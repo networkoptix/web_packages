@@ -16,3 +16,16 @@ a {
         pointer-events: none;
     }
 }
+
+a[data-escape-global-style] {
+    color: unset;
+    text-decoration: unset;
+    &:hover {
+        color: unset;
+        text-decoration: unset;
+    }
+    &.disabled {
+        color: unset;
+        pointer-events: unset;
+    }
+}

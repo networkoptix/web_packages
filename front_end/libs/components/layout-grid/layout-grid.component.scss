@@ -1116,20 +1116,16 @@ nx-lines-loader {
         }
 
         h3 {
-            @include reset-mixins.reset-globals {
-                @include typography.medium16nocolor;
-                font-size: rem(16px) !important;
-                color: var(--other-sites-title) !important;
-            }
+            @include typography.medium16nocolor;
+            font-size: rem(16px) !important;
+            color: var(--other-sites-title) !important;
         }
 
         h4 {
-            @include reset-mixins.reset-globals {
-                @include typography.regular14nocolor;
-                font-size: rem(14px) !important;
-                color: var(--other-sites-expand-stroke) !important;
-                max-width: max(250px, calc(100% - 96px));
-            }
+            @include typography.regular14nocolor;
+            font-size: rem(14px) !important;
+            color: var(--other-sites-expand-stroke) !important;
+            max-width: max(250px, calc(100% - 96px));
         }
 
         & > div {

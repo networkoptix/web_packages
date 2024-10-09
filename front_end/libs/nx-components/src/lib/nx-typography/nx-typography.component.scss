@@ -1,12 +1,10 @@
-@use '../styles/reset-mixins';
+@use "../styles/bootstrap-reset";
 @use '../styles/typography' with (
     $font-sizes: 69px
 );
 
-@include reset-mixins.reset-globals {
-    @include typography.defaults;
+@include typography.defaults;
 
-    .custom-size {
-        @include typography.font-size(69px);
-    }
+.custom-size {
+    @include typography.font-size(69px);
 }

@@ -1,5 +1,4 @@
 {
-    "extends": ["../../.eslintrc.js"],
     "ignorePatterns": ["!**/*", "storybook-static"],
     "overrides": [
         {

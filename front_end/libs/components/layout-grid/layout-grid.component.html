@@ -20,7 +20,7 @@
                     >
                         @if (LANG.layouts.helpMessages[message]; as helpMessage) {
                             @if (helpMessage.title; as title) {
-                                <h4>
+                                <h4 data-escape-global-style>
                                     <span>{{ title | translate }}</span>
                                     @if (helpMessage.help) {
                                         <svg-icon
@@ -60,7 +60,12 @@
                                 </button>
                             }
                         } @else {
-                            <h4 class="name-message">{{ message }}</h4>
+                            <h4
+                                data-escape-global-style
+                                class="name-message"
+                            >
+                                {{ message }}
+                            </h4>
                         }
                     </div>
                 }
@@ -188,9 +193,12 @@
                                 [svgClass]="small ? 'small' : 'large'"
                                 [src]="icons.dirLayouts + svg + '.svg'"
                             ></svg-icon>
-                            <h3>{{ content.title | translate }}</h3>
+                            <h3 data-escape-global-style>{{ content.title | translate }}</h3>
                             @if (content.description) {
-                                <h4 [innerHtml]="content.description | translate"></h4>
+                                <h4
+                                    data-escape-global-style
+                                    [innerHtml]="content.description | translate"
+                                ></h4>
                             }
                         </ng-template>
                         @if (filteredOtherSystems$$(); as otherSystems) {
@@ -627,7 +635,12 @@
                                     }
                                     @case (PLACEHOLDER_NAME_LOOKUP.noLayouts) {
                                         <div class="no-layouts-placeholder">
-                                            <h3 translate>Layouts</h3>
+                                            <h3
+                                                data-escape-global-style
+                                                translate
+                                            >
+                                                Layouts
+                                            </h3>
                                             @if (
                                                 CONFIG.featureFlags.layoutsEditable ||
                                                 CONFIG.featureFlags.layoutsDemo
@@ -675,7 +688,12 @@
                                                 }"
                                                 [src]="icons.dirLayouts + 'cameras_placeholder.svg'"
                                             ></svg-icon>
-                                            <h3 translate>No Cameras</h3>
+                                            <h3
+                                                data-escape-global-style
+                                                translate
+                                            >
+                                                No Cameras
+                                            </h3>
                                             @if (
                                                 CONFIG.featureFlags.layoutsEditable ||
                                                 CONFIG.featureFlags.layoutsDemo
@@ -706,7 +724,12 @@
                                         }"
                                         [src]="icons.dirLayouts + 'layouts_placeholder.svg'"
                                     ></svg-icon>
-                                    <h3 translate>Layout has been deleted</h3>
+                                    <h3
+                                        data-escape-global-style
+                                        translate
+                                    >
+                                        Layout has been deleted
+                                    </h3>
                                 </div>
                             } @else {
                                 @for (item of layout.items; track itemId($index, item)) {

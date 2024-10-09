@@ -1,46 +1,41 @@
-@use "reset-mixins";
+@import '_theme_variables_common';
 
-@include reset-mixins.wrap-app-globals {
-    @import '_theme_variables_common';
+@import "sass-rem";
+@import 'bootstrap/scss/bootstrap';
 
-    @import "sass-rem";
-    @import 'bootstrap/scss/bootstrap';
+@import '_theme_override';
 
-    @import '_theme_override';
+@import 'mixins';
+@import 'typography';
+@import 'visuals';
 
-    @import 'mixins';
-    @import 'typography';
-    @import 'visuals';
+// Components
+@import 'components/placeholders/placeholders';
+@import 'components/dropdowns/dropdowns';
+//@import 'dialogs/dialogs'; // imported in angular.json <- here it's causing an error
+@import 'menu/menu.component';
+@import 'anchor';
+@import 'arrows';
+@import 'buttons';
+@import 'checkbox';
+@import 'components';
+@import 'elements';
+@import 'forms';
+@import 'icons';
+@import 'inputs';
+@import 'labels';
+@import 'labels';
+@import 'languages';
+@import 'navs';
+@import 'option';
+@import 'page';
+@import 'tables';
+@import 'tabset';
+@import 'whatinput';
+@import 'popovers';
+@import 'scrollbars';
 
-    // Components
-    @import 'components/placeholders/placeholders';
-    @import 'components/dropdowns/dropdowns';
-    //@import 'dialogs/dialogs'; // imported in angular.json <- here it's causing an error
-    @import 'menu/menu.component';
-    @import 'anchor';
-    @import 'arrows';
-    @import 'buttons';
-    @import 'checkbox';
-    @import 'components';
-    @import 'elements';
-    @import 'elements';
-    @import 'forms';
-    @import 'icons';
-    @import 'inputs';
-    @import 'labels';
-    @import 'labels';
-    @import 'languages';
-    @import 'navs';
-    @import 'option';
-    @import 'page';
-    @import 'tables';
-    @import 'tabset';
-    @import 'whatinput';
-    @import 'popovers';
-    @import 'scrollbars';
+// Pages
+@import 'faq';
 
-    // Pages
-    @import 'faq';
-
-    @import '_mat';
-}
+@import '_mat';

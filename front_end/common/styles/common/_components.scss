@@ -253,3 +253,7 @@ pre,
 code {
     color: var(--body-text-color);
 }
+pre[data-escape-global-style],
+code[data-escape-global-style] {
+    color: reset;
+}

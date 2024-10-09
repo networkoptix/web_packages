@@ -17,6 +17,20 @@ svg {
     }
 }
 
+svg-icon[data-escape-global-style] svg {
+    pointer-events: unset;
+
+    .icon-with-fill {
+        fill: unset;
+        stroke: unset;
+    }
+
+    .icon-with-stroke {
+        fill: unset;
+        stroke: unset;
+    }
+}
+
 .outerContainer {
     display: flex;
     flex-direction: column;

@@ -272,6 +272,35 @@ module.exports = {
             },
         },
         {
+            plugins: ['@nx'],
+            files: ['*.ts'],
+            rules: {
+                '@nx/enforce-module-boundaries': [
+                    // Only show warnings within editor for now
+                    // We have a lot of circular dependencies to fix
+                    // There are also issues where we import from non-lib modules
+                    onlyEditor('warn'),
+                    {
+                        allow: [],
+                        depConstraints: [
+                            {
+                                sourceTag: 'apps:*',
+                                onlyDependOnLibsWithTags: ['libs:*', 'features:*'],
+                            },
+                            {
+                                sourceTag: 'features:*',
+                                onlyDependOnLibsWithTags: ['libs:*'],
+                            },
+                            {
+                                sourceTag: 'libs:*',
+                                onlyDependOnLibsWithTags: ['libs:*'],
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        {
             files: ['*.ts'],
             extends: ['plugin:@angular-eslint/recommended'],
             plugins: ['@angular-eslint'],
@@ -420,35 +449,6 @@ module.exports = {
                 ],
             },
         },
-        {
-            plugins: ['@nx'],
-            files: ['*.ts'],
-            rules: {
-                '@nx/enforce-module-boundaries': [
-                    // Only show warnings within editor for now
-                    // We have a lot of circular dependencies to fix
-                    // There are also issues where we import from non-lib modules
-                    onlyEditor('warn'),
-                    {
-                        allow: [],
-                        depConstraints: [
-                            {
-                                sourceTag: 'apps:*',
-                                onlyDependOnLibsWithTags: ['libs:*', 'features:*'],
-                            },
-                            {
-                                sourceTag: 'features:*',
-                                onlyDependOnLibsWithTags: ['libs:*'],
-                            },
-                            {
-                                sourceTag: 'libs:*',
-                                onlyDependOnLibsWithTags: ['libs:*'],
-                            },
-                        ],
-                    },
-                ],
-            },
-        },
 
         /* Only allow non-$$-suffixed signals in components exclusively using control flow,
         since old directives (*ngIf, *ngFor, etc.) cannot detect constant conditions while
@@ -490,6 +490,15 @@ module.exports = {
             ],
             rules: {
                 'nx/template/no-global-style-class': 'error',
+                'nx/template/require-global-style-escape': [
+                    'error',
+                    [
+                        'nx-submit-button',
+                        'nx-async-submit-button',
+                        'nx-apply-button',
+                        'nx-reset-button',
+                    ],
+                ],
             },
         },
     ],

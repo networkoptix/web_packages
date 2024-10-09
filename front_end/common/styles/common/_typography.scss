@@ -23,8 +23,8 @@
 }
 
 
-h1,
-h2 {
+h1:not([data-escape-global-style]),
+h2:not([data-escape-global-style]) {
     @include font-source($font-family-medium, $h1-font-size);
     color: var(--h1);
     margin-top: $line-height-computed;
@@ -39,27 +39,27 @@ h2 {
     line-height: rem(26px);
 }
 
-h2 {
+h2:not([data-escape-global-style]) {
     @include font-source($font-family-medium, $h2-font-size, var(--h2));
     margin: 0;
     padding: 0;
 }
 
-h3 {
+h3:not([data-escape-global-style]) {
     @include font-source($font-family-medium, $h3-font-size, var(--h3));
     margin-top: ($line-height-computed * 0.5);
     margin-bottom: ($line-height-computed * 0.25);
 }
 
-h4 {
+h4:not([data-escape-global-style]) {
     @include font-source($font-family-medium, $h4-font-size, var(--h4));
 }
 
-h5 {
+h5:not([data-escape-global-style]) {
     @include font-source($font-family-medium, $h5-font-size, var(--h5));
 }
 
-h6 {
+h6:not([data-escape-global-style]) {
     @include font-source($font-family-medium, $h6-font-size, var(--h6));
 }
 
@@ -74,6 +74,10 @@ h1>.label {
 
 p {
     margin-bottom: 0.5rem;
+}
+
+p[data-escape-global-style] {
+    margin-bottom: unset;
 }
 
 // Font mixins work like so [family][size][color modifier](-transparency modifier)
@@ -483,8 +487,8 @@ p {
 // BOLD
 
 // since we use specific fonts <b> and <strong> have no effect on "roboto-regular"
-b,
-strong {
+b:not([data-escape-global-style]),
+strong:not([data-escape-global-style]) {
     font-family: $font-family-bold  !important;
 }
 

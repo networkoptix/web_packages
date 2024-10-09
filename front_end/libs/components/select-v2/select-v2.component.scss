@@ -1,98 +1,95 @@
 @use 'typography';
-@use 'reset-mixins';
 
-@include reset-mixins.wrap-app-globals {
-    :host {
-        display: block;
-        width: 100%;
-    }
+:host {
+    display: block;
+    width: 100%;
+}
 
-    .select-wrapper {
-        height: 2rem;
-        display: flex;
-        justify-content: space-between;
-        background-color: var(--btn-dropdown-toggle-bg);
-        box-shadow: var(--btn-dropdown-toggle-shadow-color);
-        @include typography.medium13nocolor;
+.select-wrapper {
+    height: 2rem;
+    display: flex;
+    justify-content: space-between;
+    background-color: var(--btn-dropdown-toggle-bg);
+    box-shadow: var(--btn-dropdown-toggle-shadow-color);
+    @include typography.medium13nocolor;
 
-        &[aria-disabled='false'] {
-            cursor: pointer;
+    &[aria-disabled='false'] {
+        cursor: pointer;
 
-            &:hover {
-                background-color: var(--btn-dropdown-toggle-hover-bg);
-                box-shadow: var(--btn-dropdown-toggle-hover-shadow);
-            }
-
-            &:active {
-                background-color: var(--btn-dropdown-toggle-active-bg);
-                box-shadow: var(--btn-dropdown-toggle-active-shadow);
-            }
-
-            &:focus-visible {
-                outline: 2px solid var(--btn-default-focus-outline-rgb);
-                outline-offset: 2px;
-                box-shadow: var(--btn-default-focus-shadow);
-            }
-
-            :host.nx-form-field__control--error &:not(:focus-visible) {
-                outline: 1px solid var(--input-error-border-color);
-                outline-offset: -1px;
-            }
-            /* Borders are incompatible with shadow effects for raised buttons,
-            fake a border with an offset outline instead */
+        &:hover {
+            background-color: var(--btn-dropdown-toggle-hover-bg);
+            box-shadow: var(--btn-dropdown-toggle-hover-shadow);
         }
 
-        &[aria-disabled='true'] {
-            opacity: 0.4;
+        &:active {
+            background-color: var(--btn-dropdown-toggle-active-bg);
+            box-shadow: var(--btn-dropdown-toggle-active-shadow);
         }
-    }
 
-    svg-icon svg g polyline {
-        stroke: var(--btn-dropdown-toggle-color);
-        stroke-width: 2px;
-    }
-
-    $paddingTop: 5px;
-    $paddingBottom: 5px;
-    .select-box {
-        padding: $paddingTop 0px $paddingBottom 10px;
-        flex-grow: 1;
-        line-height: calc(2rem - $paddingTop - $paddingBottom);
-        text-align: left;
-    }
-
-    .dropdown-arrow {
-        padding: $paddingTop 10px $paddingBottom 0px;
-
-        svg {
-            height: 18px;
-            width: 18px;
+        &:focus-visible {
+            outline: 2px solid var(--btn-default-focus-outline-rgb);
+            outline-offset: 2px;
+            box-shadow: var(--btn-default-focus-shadow);
         }
+
+        :host.nx-form-field__control--error &:not(:focus-visible) {
+            outline: 1px solid var(--input-error-border-color);
+            outline-offset: -1px;
+        }
+        /* Borders are incompatible with shadow effects for raised buttons,
+        fake a border with an offset outline instead */
     }
 
-    .custom-dropdown-menu {
-        background-color: var(--dropdown-menu-bg);
-        box-shadow: var(--dropdown-menu-shadow);
-        flex-grow: 1;
-        max-height: 302px;
-        overflow-y: auto;
+    &[aria-disabled='true'] {
+        opacity: 0.4;
     }
+}
 
-    .placeholder {
-        color: var(--dropdown-placeholder-color);
-    }
+svg-icon svg g polyline {
+    stroke: var(--btn-dropdown-toggle-color);
+    stroke-width: 2px;
+}
 
-    .rotationTransition {
-        -webkit-transition: 0.2s ease-in-out;
-        -moz-transition: 0.2s ease-in-out;
-        -o-transition: 0.2s ease-in-out;
-        transition: 0.2s ease-in-out;
-    }
+$paddingTop: 5px;
+$paddingBottom: 5px;
+.select-box {
+    padding: $paddingTop 0px $paddingBottom 10px;
+    flex-grow: 1;
+    line-height: calc(2rem - $paddingTop - $paddingBottom);
+    text-align: left;
+}
 
-    .rotate {
-        -webkit-transform: rotateX(180deg);
-        -moz-transform: rotateX(180deg);
-        -o-transform: rotateX(180deg);
-        transform: rotateX(180deg);
+.dropdown-arrow {
+    padding: $paddingTop 10px $paddingBottom 0px;
+
+    svg {
+        height: 18px;
+        width: 18px;
     }
+}
+
+.custom-dropdown-menu {
+    background-color: var(--dropdown-menu-bg);
+    box-shadow: var(--dropdown-menu-shadow);
+    flex-grow: 1;
+    max-height: 302px;
+    overflow-y: auto;
+}
+
+.placeholder {
+    color: var(--dropdown-placeholder-color);
+}
+
+.rotationTransition {
+    -webkit-transition: 0.2s ease-in-out;
+    -moz-transition: 0.2s ease-in-out;
+    -o-transition: 0.2s ease-in-out;
+    transition: 0.2s ease-in-out;
+}
+
+.rotate {
+    -webkit-transform: rotateX(180deg);
+    -moz-transform: rotateX(180deg);
+    -o-transform: rotateX(180deg);
+    transform: rotateX(180deg);
 }

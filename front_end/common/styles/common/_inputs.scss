@@ -62,12 +62,12 @@ input.hide-errors {
     &:disabled,
     &[disabled],
     &[readonly],
-    fieldset[disabled] & {
+    fieldset:not([data-escape-global-style])[disabled] & {
         opacity: .4;
         color: var(--input-disabled-color) !important;
         border-color: var(--input-disabled-border-color) !important;
         pointer-events: none;
-        
+
         &:hover,
         &:focus {
             border-color: var(--input-border-color) !important;

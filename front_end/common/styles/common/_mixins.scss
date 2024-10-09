@@ -69,10 +69,10 @@
 }
 
 /* Rotation mixin */
-@-webkit-keyframes rotating
+@-webkit-keyframes rotating {
 
 /* Safari and Chrome */
-    {
+
     from {
         -webkit-transform: rotate(0deg);
         -o-transform: rotate(0deg);

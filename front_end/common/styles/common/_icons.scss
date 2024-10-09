@@ -71,6 +71,10 @@ svg-icon svg .error {
     stroke: none;
     fill: var(--card-simple-error-svg-color);
 }
+svg-icon[data-escape-global-style] svg .error {
+    stroke: unset;
+    fill: unset;
+}
 
 /* Spinner icon -> HTML: <div class="spinner"></div> */
 .spinner {

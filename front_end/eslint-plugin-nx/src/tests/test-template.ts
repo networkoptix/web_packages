@@ -9,11 +9,13 @@ const ruleTester = new RuleTester({
 ruleTester.run('rule-name', rule, {
     valid: [
         {
+            name: '',
             code: '',
         },
     ],
     invalid: [
         {
+            name: '',
             code: '',
             errors: [{ messageId: '' }],
         },
