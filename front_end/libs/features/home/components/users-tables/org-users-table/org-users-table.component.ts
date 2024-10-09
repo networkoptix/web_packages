@@ -57,7 +57,21 @@ export class NxOrgUsersTableComponent extends AbstractUserTableDirective {
 
     roles$$ = this.cpService.organizationRoles$$;
     orgUserRecords$$ = this.orgUsersStore.currentGroupUsersEntities;
-    filteredRecords$$ = this.orgUsersStore.filteredRecords$$;
+    filteredRecords$$ = computed(() => {
+        const records = this.orgUsersStore.filteredRecords$$();
+        if (!records) {
+            return null;
+        }
+        return records.map(record => {
+            if (record.groupRoles) {
+                const sortedGroupRoles = [...record.groupRoles].sort((a, b) =>
+                    a.name.localeCompare(b.name),
+                );
+                return { ...record, groupRoles: sortedGroupRoles };
+            }
+            return record;
+        });
+    });
     currentOrg$$ = this.store.selectSignal(selectCurrentOrganization);
     searching$$ = computed(
         () =>
