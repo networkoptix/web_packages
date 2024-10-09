@@ -53,7 +53,7 @@ export class MoveGroupItemModalContent extends ModalBase<DT['return']> {
         this.organization = organization;
 
         const orgTreeStatuses: OrgTreeStatusMap = new Map();
-        const msg = translate.instant(LANG.dialogs.channelPartners.cannotMoveIntoSelf);
+        const msg = translate.instant(LANG.systemGroups.errorMsg.folderInBranch);
         const status = { status: 'disable' as const, msg };
         orgTreeStatuses.set(item.id, status);
         function recursivelySetChildren(groups: GroupItem[]): void {
