@@ -437,7 +437,7 @@ LOG_LEVEL = logging.DEBUG if DEBUG else logging.INFO
 DJANGO_STRUCTLOG_STATUS_4XX_LOG_LEVEL = logging.INFO
 DJANGO_STRUCTLOG_CELERY_ENABLED = True
 
-LOGGING = configure_logging(log_level=LOG_LEVEL)
+LOGGING = configure_logging(log_level=LOG_LEVEL, is_local=LOCAL_ENVIRONMENT)
 
 structlog.configure(
     processors=[

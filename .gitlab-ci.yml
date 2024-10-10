@@ -152,7 +152,7 @@ django-unit-test-slow:
         coverage_format: cobertura
         path: cloud/slow-coverage.xml
   script:
-    - pytest -m "integration and slow" --create-db --junitxml=slow-report.xml --cov="." --cov-report xml:slow-coverage.xml --cov-report term
+    - pytest -m "integration or slow" --create-db --junitxml=slow-report.xml --cov="." --cov-report xml:slow-coverage.xml --cov-report term
 
 django-unit-test-fast:
   extends: .django-unit-test

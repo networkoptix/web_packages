@@ -30,7 +30,7 @@ class CatchExceptionMiddleware(MiddlewareMixin):
         stack_trace = traceback.format_exc().replace("Traceback", "")
         logger.critical(
             "exception_occurred",
-            request_data=request.data if request.data else None,
+            request_data=getattr(request, 'data', None),
             exception_name=exception.__class__.__name__,
             error=str(exception),
             stack_trace=stack_trace

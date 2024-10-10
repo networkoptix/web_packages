@@ -4,12 +4,13 @@ from typing import Dict
 import logging
 
 
-def configure_logging(log_level) -> Dict:
+def configure_logging(log_level, is_local) -> Dict:
     logging.basicConfig(level=log_level)
 
+    handlers_to_use = ['console' if is_local else 'console_json']
     loggers = {
         "version": 1,
-        "disable_existing_loggers": True,  # Think about this
+        "disable_existing_loggers": False,
         "formatters": {
             "json_formatter": {
                 "()": structlog.stdlib.ProcessorFormatter,
@@ -71,24 +72,24 @@ def configure_logging(log_level) -> Dict:
             },
         },
         "loggers": {
-            '': {  # default settings for all django loggers
+            '': {
                 'level': log_level,
                 'propagate': False,
-                'handlers': ['console']
+                'handlers': handlers_to_use
             },
             "django_structlog": {
                 'level': log_level,
-                'handlers': ['console']
+                'handlers': handlers_to_use
             },
             'django.security.csrf': {
                 'level': 'ERROR',
                 'propagate': False,
-                'handlers': ['console']
+                'handlers': handlers_to_use
             },
             'api.views.account': {
                 'level': 'CRITICAL',
                 'propagate': False,
-                'handlers': ['console']
+                'handlers': handlers_to_use
             }
         },
     }
