@@ -35,6 +35,11 @@ const dbConfig: DBConfig = {
             storeSchema: [{ name: 'value', keypath: 'value', options: { unique: false } }],
         },
         {
+            store: 'layoutCache',
+            storeConfig: { keyPath: 'key', autoIncrement: false },
+            storeSchema: [{ name: 'value', keypath: 'value', options: { unique: false } }],
+        },
+        {
             store: 'jsons',
             storeConfig: { keyPath: 'key', autoIncrement: false },
             storeSchema: [

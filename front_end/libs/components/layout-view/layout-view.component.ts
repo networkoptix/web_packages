@@ -1,11 +1,18 @@
 // import { Location } from '@angular/common';
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    effect,
+    inject,
+} from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { cloneDeep } from 'lodash-es';
+import { NgxIndexedDBService } from 'ngx-indexed-db';
 import { TourMatMenuModule, TourService } from 'ngx-ui-tour-md-menu';
 import { combineLatest, firstValueFrom, forkJoin, merge, Observable, Subject, timer } from 'rxjs';
 import {
@@ -26,6 +33,7 @@ import {
     placeholderNameLookup,
     ResourceType,
 } from '@components/layout-grid/layout-grid.types';
+import { findNode } from '@components/layout-grid-tree/utils/find-node';
 import { NxLayoutPtzComponent } from '@components/layout-ptz/layout-ptz.component';
 import { NxPagePlaceholderComponent } from '@components/placeholders/page/page-placeholder.component';
 import { NxDialogsService } from '@dialogs/dialogs.service';
@@ -170,10 +178,26 @@ export class NxLayoutViewComponent {
         }),
     );
 
+    db = inject(NgxIndexedDBService);
+
     #defaultLayout$: Observable<string> = this.layoutItemLookup$.pipe(
-        switchMap(async ({ tree }) =>
-            defaultLayoutSelectorFactory(this.layoutStateService.paramStateHandler.state$$)(tree),
-        ),
+        switchMap(async ({ tree }) => {
+            const systemId = this.systemService.currentSystem$$()?.id;
+            if (systemId) {
+                const res = (await firstValueFrom(
+                    this.db.getByKey('layoutCache', `last-route-${systemId}`),
+                )) as {
+                    value?: ReturnType<LayoutStateService['paramStateHandler']['state$$']>;
+                };
+                const value = res?.value;
+                if (value?.params?.layoutId && findNode(tree, value.params.layoutId)) {
+                    return value.params.layoutId;
+                }
+            }
+            return defaultLayoutSelectorFactory(this.layoutStateService.paramStateHandler.state$$)(
+                tree,
+            );
+        }),
         distinctUntilChanged(),
         untilDestroyed(this),
     );
@@ -258,18 +282,59 @@ export class NxLayoutViewComponent {
         public layoutStateService: LayoutStateService,
     ) {
         registerDemoLogger(this);
+        effect(() => {
+            const state = this.layoutStateService.paramStateHandler.state$$();
+            if (
+                state.params?.systemId &&
+                state.params?.layoutId &&
+                state.params?.layoutId !== 'default'
+            ) {
+                this.db
+                    .update('layoutCache', {
+                        key: `last-route-${state.params?.systemId}`,
+                        value: state,
+                    })
+                    .subscribe();
+            }
+        });
+    }
+
+    initialLoad = true;
+
+    async setQueryParamState(): Promise<void> {
+        const systemId = this.systemService.currentSystem$$()?.id;
+        if (!systemId) {
+            return;
+        }
+
+        const res = (await firstValueFrom(
+            this.db.getByKey('layoutCache', `last-route-${systemId}`),
+        )) as {
+            value?: ReturnType<LayoutStateService['paramStateHandler']['state$$']>;
+        };
+        const queryParams = res?.value?.queryParams;
+        if (this.initialLoad) {
+            this.layoutStateService.paramStateHandler.state$$.set({ queryParams });
+        } else {
+            this.layoutStateService.paramStateHandler.state$$.update(({ queryParams: old }) => ({
+                queryParams: {
+                    ...old,
+                    ...queryParams,
+                    openNodes: [...(old?.openNodes || []), ...(queryParams?.openNodes || [])],
+                },
+            }));
+        }
     }
 
     ngOnInit(): void {
-        this.selectedSystem$
-            .pipe(untilDestroyed(this))
-            .subscribe(system =>
-                this.pageService.pageTitle(
-                    [staticLang.pageTitles.layouts, system.info.name, this.CONFIG.cloudName].join(
-                        ' - ',
-                    ),
+        this.selectedSystem$.pipe(untilDestroyed(this)).subscribe(system => {
+            this.setQueryParamState();
+            this.pageService.pageTitle(
+                [staticLang.pageTitles.layouts, system.info.name, this.CONFIG.cloudName].join(
+                    ' - ',
                 ),
             );
+        });
         this.#selectedLayout$
             .pipe(
                 switchMap(layout => timer(layout ? 0 : 2500).pipe(map(() => layout))),
