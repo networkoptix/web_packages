@@ -3,6 +3,7 @@ import { inject, Inject, Injectable, Injector, runInInjectionContext } from '@an
 import { Router } from '@angular/router';
 import * as FullStory from '@fullstory/browser';
 import { CookieService } from 'ngx-cookie-service';
+import { NgxIndexedDBService } from 'ngx-indexed-db';
 import {
     BehaviorSubject,
     defer,
@@ -14,7 +15,16 @@ import {
     throwError,
 } from 'rxjs';
 import type { Observable } from 'rxjs';
-import { catchError, concatMap, filter, map, shareReplay, switchMap, tap } from 'rxjs/operators';
+import {
+    catchError,
+    concatMap,
+    filter,
+    map,
+    shareReplay,
+    switchMap,
+    take,
+    tap,
+} from 'rxjs/operators';
 
 import { ConsoleSection } from '@components/console-table/console-table.component.types';
 import { environment } from '@environments/environment';
@@ -145,6 +155,31 @@ export class NxCloudApiService {
     public docDbApi: DocDbAPI;
     public cloudChannelPartnersApi: ChannelPartnersApi;
     public targetInstance: string;
+    db = inject(NgxIndexedDBService);
+
+    etagCachedGet: HttpClient['get'] = <T>(url, options?) =>
+        this.http.head(url, { observe: 'response' }).pipe(
+            map(res => res.headers.get('etag')!),
+            switchMap(etag =>
+                this.db
+                    .getByKey<{ key: string; value?: T }>('requestCache', etag)
+                    .pipe(map(res => res || { key: etag })),
+            ),
+            switchMap(cached =>
+                cached.value
+                    ? of(cached.value)
+                    : this.http
+                          .get<T>(url, options)
+                          .pipe(
+                              tap(ipvd =>
+                                  this.db
+                                      .update('requestCache', { ...cached, value: ipvd })
+                                      .subscribe(),
+                              ),
+                          ),
+            ),
+            take(1),
+        );
 
     constructor(
         private http: HttpClient,
@@ -377,9 +412,8 @@ export class NxCloudApiService {
         return this.cachedGet<Array<t.Integration>>(uri);
     }
 
-    @memoizeAsyncLong
     getIPVD() {
-        return this.http.get<t.IPVDCameras>(apiBase + '/ipvd');
+        return this.etagCachedGet<t.IPVDCameras>(apiBase + '/ipvd');
     }
 
     getCode(systemId: string) {
