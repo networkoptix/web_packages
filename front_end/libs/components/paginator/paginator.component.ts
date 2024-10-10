@@ -42,23 +42,26 @@ export class NxPaginatorComponent {
             this.onChange.emit(page);
 
             let pages: number[] = [];
-            let _current = page <= this.pagesToShow ? 1 : page;
+            let _current = page < this.pagesToShow ? 1 : page;
 
-            // current page is near the beginning
-            while (_current <= this.pagesToShow && _current <= this.numPages) {
-                pages.push(_current++);
-            }
+            // special case when current page equals pagesToShow
+            if (page !== this.pagesToShow) {
+                // current page is near the beginning
+                while (_current <= this.pagesToShow && _current <= this.numPages) {
+                    pages.push(_current++);
+                }
 
-            // current page is near the end
-            if (
-                !pages.length &&
-                _current <= this.numPages &&
-                _current > this.pagesToShow &&
-                _current > this.numPages - this.pagesToShow + 1
-            ) {
-                let _last = this.numPages;
-                while (this.numPages - this.pagesToShow < _last) {
-                    pages.unshift(_last--);
+                // current page is near the end
+                if (
+                    !pages.length &&
+                    _current <= this.numPages &&
+                    _current > this.pagesToShow &&
+                    _current > this.numPages - this.pagesToShow + 1
+                ) {
+                    let _last = this.numPages;
+                    while (this.numPages - this.pagesToShow < _last) {
+                        pages.unshift(_last--);
+                    }
                 }
             }
 
