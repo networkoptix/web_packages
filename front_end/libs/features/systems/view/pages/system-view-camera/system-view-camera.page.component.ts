@@ -128,7 +128,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
 
     controlsShown: boolean = false;
     private unsub$ = new Subject<string>();
-    isLocal: boolean = false;
+    isWebadmin: boolean = false;
     cameraDetailsShown: boolean = false;
     isNvr: boolean = false;
     canViewDevice$$ = computed(() => {
@@ -194,7 +194,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         this.isChrome = deviceService.browser === 'Chrome';
         this.isMobileSafari = deviceService.browser === 'Safari' && deviceService.isMobile();
 
-        this.isLocal = environment.isLocal;
+        this.isWebadmin = environment.isWebadmin;
         effect(() => {
             const state = this.vms.state$$();
             switch (state.mode) {

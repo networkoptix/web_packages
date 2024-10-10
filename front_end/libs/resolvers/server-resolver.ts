@@ -9,7 +9,7 @@ import { cleanIdLegacy } from '@utils/general';
 
 const buildUpdatedPath = (path: string, systemId: string, serverId: string): string => {
     let base = `/systems/${systemId}`;
-    if (environment.isLocal) {
+    if (environment.isWebadmin) {
         base = '/settings';
     }
     return `${base}/${path.replace(':serverId', serverId)}`;

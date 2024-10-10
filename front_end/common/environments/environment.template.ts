@@ -4,7 +4,7 @@ import { IEnvironment, testing } from './environment-config';
 // The list of file replacements can be found in `angular.json`.
 
 export const environment: IEnvironment = {
-    isLocal: false,
+    isWebadmin: false,
     production: false,
     cloudHost: '$TARGET_INSTANCE_URL',
     testing

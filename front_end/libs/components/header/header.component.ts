@@ -4,6 +4,7 @@ import {
     DestroyRef,
     effect,
     inject,
+    isDevMode,
     OnInit,
     Renderer2,
     ViewChild,
@@ -29,10 +30,6 @@ import { map, startWith } from 'rxjs/operators';
 
 import { accountSelectors } from '@common/store/account';
 import { NxAccountSettingsDropdown } from '@components/dropdowns/account-settings/account-settings.component';
-import { NxAdditionalSystemsTileComponent } from '@components/dropdowns/drop-menu/additional-systems-tile/additional-systems-tile.component';
-import { NxDropMenu } from '@components/dropdowns/drop-menu/drop-menu.component';
-import { NxNavigationTileComponent } from '@components/dropdowns/drop-menu/navigation-tile/navigation-tile.component';
-import { NxSystemTileComponent } from '@components/dropdowns/drop-menu/system-tile/system-tile.component';
 import { LanguageModule } from '@components/dropdowns/language/language.module';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { NxClickElsewhereDirective } from '@directives/nx-click-elsewhere';
@@ -84,7 +81,9 @@ enum sizes {
 @Component({
     selector: 'nx-header',
     templateUrl: 'header.component.html',
-    styleUrls: [environment.isLocal ? 'header-webadmin.component.scss' : 'header.component.scss'],
+    styleUrls: [
+        environment.isWebadmin ? 'header-webadmin.component.scss' : 'header.component.scss',
+    ],
     standalone: true,
     imports: [
         CommonModule,
@@ -95,10 +94,6 @@ enum sizes {
         NxHeaderMainButtonComponent,
         NxNavDropdownComponent,
         NxTabsComponent,
-        NxDropMenu,
-        NxAdditionalSystemsTileComponent,
-        NxNavigationTileComponent,
-        NxSystemTileComponent,
         NxResizeObserver,
         NxClickElsewhereDirective,
         NxAddSvgSrcDirective,
@@ -184,7 +179,7 @@ export class NxHeaderComponent implements OnInit {
             this.getMenu();
         });
 
-        if (environment.isLocal) {
+        if (environment.isWebadmin) {
             // Polls for the system and currentUser. Once its ready the header is updated and the poll is killed off.
             effect(
                 () => {
@@ -289,7 +284,7 @@ export class NxHeaderComponent implements OnInit {
 
             if (windowWidth < GridBreakpoints.LG) {
                 showSmallRightNav = true;
-                const collapsedSize: sizes = this.environment.isLocal ? sizes.XL : sizes.MD;
+                const collapsedSize: sizes = this.environment.isWebadmin ? sizes.XL : sizes.MD;
                 const widthDifference = rightNav - this.rightNavWidthCollapsed$.value;
                 navWidth = navWidth - widthDifference + collapsedSize;
             }
@@ -322,13 +317,13 @@ export class NxHeaderComponent implements OnInit {
             this.hiddenBreadcrumbs$.next(hiddenBreadcrumbs);
         });
 
-        if (!environment.production) {
+        if (isDevMode()) {
             this.headerService.authorizeUrl = useNewCloud()
                 ? `/?redirect_url=${window.location.href}`
                 : `https://${environment.cloudHost}/authorize?redirect_url=${window.location.href}`;
         }
         this.headerService.createUrl = `${this.headerService.authorizeUrl}${
-            environment.production ? '?' : '&'
+            !isDevMode() ? '?' : '&'
         }client_type=create`;
 
         NxConfigService.configChanged.subscribe(() => {
@@ -342,7 +337,7 @@ export class NxHeaderComponent implements OnInit {
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(async header => {
                 const nodes = this.menusService.cleanEmptyNodes(header.nodes);
-                if (environment.isLocal) {
+                if (environment.isWebadmin) {
                     const permissions = this.systemService
                         .currentSystem$$()
                         ?.permissionManager.permissions$$();
@@ -521,7 +516,7 @@ export class NxHeaderComponent implements OnInit {
                 setTimeout(() => this.renderer.removeClass(document.body, 'loading'));
             });
 
-        if (this.environment.isLocal) {
+        if (this.environment.isWebadmin) {
             this.hideWebAdmin = true;
         } else {
             this.systemsService.systemsSubject
@@ -624,9 +619,10 @@ export class NxHeaderComponent implements OnInit {
         if (!this.systems) {
             return;
         }
-        const sessionVerified = this.accountService.account?.sessionVerified || environment.isLocal;
+        const sessionVerified =
+            this.accountService.account?.sessionVerified || environment.isWebadmin;
         let nextActiveSystem: NxSystemInfo;
-        if (this.singleSystem || this.environment.isLocal) {
+        if (this.singleSystem || this.environment.isWebadmin) {
             // Special case for a single system - it always active
             nextActiveSystem = this.systems[0];
         } else if (this.systemId) {
@@ -639,7 +635,7 @@ export class NxHeaderComponent implements OnInit {
         this.headerService.activeSystem =
             nextActiveSystem?.system2faEnabled && !sessionVerified ? undefined : system;
 
-        if (!this.environment.isLocal) {
+        if (!this.environment.isWebadmin) {
             if (system) {
                 if (!this.system || this.system.id !== this.systemId) {
                     this.stopActiveSubscription();
@@ -681,7 +677,7 @@ export class NxHeaderComponent implements OnInit {
     }
 
     get mainUrl() {
-        if (this.environment.isLocal) {
+        if (this.environment.isWebadmin) {
             return '/view';
         }
 

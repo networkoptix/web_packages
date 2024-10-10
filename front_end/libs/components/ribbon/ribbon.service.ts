@@ -34,7 +34,7 @@ export class NxRibbonService {
         updateFunction?: () => void,
         systemOnly = false,
     ): void {
-        if (message === this.LANG.ribbon.systemOffline && environment.isLocal) {
+        if (message === this.LANG.ribbon.systemOffline && environment.isWebadmin) {
             return;
         }
         if (

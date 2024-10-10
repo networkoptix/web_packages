@@ -225,7 +225,7 @@
                     </ng-container>
                     <ng-container
                         *ngIf="
-                            !environment.isLocal &&
+                            !environment.isWebadmin &&
                             system.useRest &&
                             system.permissionManager.isOwner$$()
                         "

@@ -6,4 +6,4 @@ import { NxSystemRestAPI } from '@services/system-rest-api.service';
 export const jsonRpcEnabled = (target: NxSystemRestAPI): boolean =>
     nxConfig.featureFlags.useJsonRpc &&
     target.version >= NxSystemRestAPI2.VERSION &&
-    !!(target.authGet || environment.isLocal);
+    !!(target.authGet || environment.isWebadmin);

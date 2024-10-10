@@ -146,7 +146,7 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
     private currentSystemIsPrimary$$ = signal(true);
     readonly MergeState = MergeState;
     readonly maxServers = 100;
-    isLocal: boolean = environment.isLocal;
+    isWebadmin: boolean = environment.isWebadmin;
     dryRunAvailable: boolean;
     isSessionOauth: boolean;
     systemUrls: { [ip: string]: string } = {};
@@ -329,7 +329,7 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
             this.account = await this.accountService.get();
 
             // set up cloud or peer systems
-            if (this.isLocal) {
+            if (this.isWebadmin) {
                 this.mergeSystems = [];
                 await this.webadminSetup();
             } else {
@@ -459,7 +459,7 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
                         this.stateHistory$$.update(history => [...history, MergeState.confirm]);
                     } else if (!Object.keys(res).length || res.error === '0' || !res.error) {
                         if (this.serverUrl) {
-                            // this.isLocal? + some indication that it's not cloud merge?
+                            // this.isWebadmin? + some indication that it's not cloud merge?
                             this.stateHistory$$.update(history => [...history, MergeState.admin]);
                         } else {
                             this.stateHistory$$.update(history => [...history, MergeState.primary]);
@@ -555,7 +555,7 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
                 this.lock();
                 let password = this.confirmPassword;
 
-                if (this.environment.isLocal) {
+                if (this.environment.isWebadmin) {
                     password = this.remotePassword;
                 }
                 if (!password && !this.isSessionOauth) {
@@ -564,7 +564,7 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
                     });
                 }
 
-                if (this.isLocal) {
+                if (this.isWebadmin) {
                     const takeRemoteSettings = this.system.id === this.secondarySystem$$().id;
                     const bothAreCloud = this.isSessionOauth && !!this.targetSystem.cloudSystemId;
                     return firstValueFrom(
@@ -612,7 +612,7 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
                     !res.failedServers.length
                 ) {
                     // handles telling the app which systems are getting merged and the proper messaging
-                    if (this.isLocal) {
+                    if (this.isWebadmin) {
                         const template = `<div class="my-1">
                             <div class="larger"><strong>${this.secondaryName$$()}</strong> ${this.translateService.instant(
                                 this.LANG.ribbon.beingMerged.to,
@@ -695,7 +695,7 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
          * localSystemId = auto-discovered system
          * else = cloud-connected merge check
          */
-        if (this.isLocal) {
+        if (this.isWebadmin) {
             this.cleanUrl = this.cleanUpUrl(this.serverUrl);
             if (this.otherSystem || !this.targetSystem.id) {
                 let secondarySystem: ModuleInformationReply;

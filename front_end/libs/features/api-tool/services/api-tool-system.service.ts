@@ -187,14 +187,14 @@ export class NxAPIToolSystemService {
 
     async initSystems(systems: NxSystemInfo[]): Promise<void> {
         this.emitAllSystems(systems);
-        if (!environment.isLocal) {
+        if (!environment.isWebadmin) {
             await this.readonlyAPIService.getReadonlyAPIs();
             if (await this.readonlyAPIService.getReadonlyAPIByQueryParams()) {
                 return;
             }
         }
 
-        if (environment.isLocal) {
+        if (environment.isWebadmin) {
             this.getLocalSystem();
             return;
         }
@@ -214,7 +214,7 @@ export class NxAPIToolSystemService {
             this.currentSystem = await this.systemService.createSystem('', onlineSystem.id);
             return;
         }
-        if (!environment.isLocal && (await this.readonlyAPIService.setReadonlyAPI())) {
+        if (!environment.isWebadmin && (await this.readonlyAPIService.setReadonlyAPI())) {
             // Get any readonlyAPI
             return;
         }
@@ -222,7 +222,7 @@ export class NxAPIToolSystemService {
     }
 
     async handleSystemChange(): Promise<void> {
-        if (environment.isLocal) {
+        if (environment.isWebadmin) {
             const systemInfo = await firstValueFrom(
                 this.currentSystem.serverManager.getModuleInfo(),
             );
@@ -391,7 +391,7 @@ export class NxAPIToolSystemService {
 
     async tryNextSystem(): Promise<void> {
         this.getServers.errorCount = 0;
-        if (environment.isLocal) {
+        if (environment.isWebadmin) {
             this.showError();
         } else {
             this.emitSystem(this.currentSystem, true, 'Error');
@@ -435,14 +435,14 @@ export class NxAPIToolSystemService {
 
     showError = (): void => {
         this.loadingFailure$.next(true);
-        this.loadingErrorType = environment.isLocal
+        this.loadingErrorType = environment.isWebadmin
             ? 'SYSTEM_FAILED_TO_LOAD_API_TOOL'
             : 'NO_SYSTEM_FOUND_API_TOOL';
         this.serverSubscription?.unsubscribe();
     };
 
     setQueryParams = (param: string, newValue: string | number) => {
-        if (environment.isLocal && param === 'system') {
+        if (environment.isWebadmin && param === 'system') {
             return;
         }
 

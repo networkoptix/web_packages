@@ -71,7 +71,7 @@ export class NxLoggerComponent implements OnChanges {
         const { host, protocol } = window.location;
         let loggerHost = host;
 
-        if (!environment.isLocal) {
+        if (!environment.isWebadmin) {
             this.systemRequires2fa = (
                 await firstValueFrom(this.system.getInfoFromCloudDb())
             )[0]?.system2faEnabled;
@@ -112,7 +112,7 @@ export class NxLoggerComponent implements OnChanges {
         if (changes.system?.currentValue || changes.selectedServerId?.currentValue) {
             if (this.selectedServerId) {
                 this.logData = '';
-                if (!environment.isLocal) {
+                if (!environment.isWebadmin) {
                     this.systemRequires2fa = (
                         await firstValueFrom(this.system.getInfoFromCloudDb())
                     )[0]?.system2faEnabled;

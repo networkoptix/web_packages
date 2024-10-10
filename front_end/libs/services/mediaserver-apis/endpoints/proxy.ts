@@ -16,7 +16,7 @@ export function proxyLegacyV1<T>(
     data: Record<string, unknown>,
     coercedEnglishError?: boolean,
 ): Observable<T> {
-    if (environment.isLocal && protocol === 'https') {
+    if (environment.isWebadmin && protocol === 'https') {
         protocol = 'https-insecure';
     }
     const url = `/proxy/${protocol}/${serverAddress}/${requestUrl}`;

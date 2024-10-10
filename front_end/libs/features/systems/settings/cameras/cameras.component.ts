@@ -520,7 +520,7 @@ export class NxCamerasComponent implements OnInit, OnChanges {
 
         this.settingsDisabled = deviceType !== DeviceType.Camera || !vendor;
         this.settingsRecordingDisabled =
-            environment.isLocal || deviceType !== DeviceType.Camera || !vendor;
+            environment.isWebadmin || deviceType !== DeviceType.Camera || !vendor;
         const deviceColumn = [
             new InfoBlockSection([
                 new InfoBlockLine(this.LANG.common.vendor, vendor),

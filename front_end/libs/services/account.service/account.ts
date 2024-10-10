@@ -36,7 +36,7 @@ export function newLocalAccount(user: RestV3User): Account {
         first_name: first,
         last_name: last(rest || ['']),
         permissions: permissions?.split('|') || [],
-        is_superuser: !environment.isLocal && permissions?.includes('GlobalAdminPermission'),
+        is_superuser: !environment.isWebadmin && permissions?.includes('GlobalAdminPermission'),
         isCloud: type === UserType.cloud,
         type,
     } as Account;

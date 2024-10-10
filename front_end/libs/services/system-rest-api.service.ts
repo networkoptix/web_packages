@@ -185,7 +185,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
     }
 
     public override get isSessionOauth() {
-        return !environment.isLocal || (this.currentUser as CurrentUser)?.type === 'cloud';
+        return !environment.isWebadmin || (this.currentUser as CurrentUser)?.type === 'cloud';
     }
 
     private get cloudAccessTokenName() {
@@ -268,7 +268,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
                 const location = window.location;
                 if (
                     !this.skipSettingSystem &&
-                    !environment.isLocal &&
+                    !environment.isWebadmin &&
                     [401, 403, 422].includes(e.status) &&
                     location.href.includes(this.systemId) &&
                     e.error.errorId !== servers.errors.cloudSessionTruncated
@@ -307,8 +307,8 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
     }
 
     private deleteToken(cloudAccessToken, token) {
-        const host = environment.isLocal ? this.CONFIG.cloudHost : '';
-        const options = environment.isLocal
+        const host = environment.isWebadmin ? this.CONFIG.cloudHost : '';
+        const options = environment.isWebadmin
             ? { headers: { Authorization: `Bearer ${cloudAccessToken}` } }
             : undefined;
         return this.http.post(`${host}/api/systems/revokeToken`, { token }, options);
@@ -379,7 +379,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
 
     override generateHeaders(): any {
         let headers = new HttpHeaders();
-        // if (!environment.isLocal && this.authGet) {
+        // if (!environment.isWebadmin && this.authGet) {
         //     params.auth = this.authGet;
         // }
         if (this._vmsToken) {
@@ -398,7 +398,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
     // Checks if the url does not have swagger-ui in it.
     private requiresWeb(url) {
         // Leaving this method incase we remember what it was used for.
-        return environment.isLocal;
+        return environment.isWebadmin;
     }
 
     // Legacy api requires runtime in the header of the request.
@@ -426,7 +426,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         if (useToken) {
             headers = headers.set(this.token, accessToken || this._vmsToken || '');
         }
-        if (!environment.isLocal && accessToken) {
+        if (!environment.isWebadmin && accessToken) {
             if (!nxConfig.featureFlags.restCookieLogin) {
                 headers = headers.set('x-runtime-guid', accessToken); // Adding this for CLOUD-10535. Safari keeps removing the auth headers.
             }
@@ -466,7 +466,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
             retryWhen(request => this.retryHandler(request)),
             timeout(customTimeout),
             tap(undefined, error => {
-                if (environment.isLocal && error.name === 'TimeoutError') {
+                if (environment.isWebadmin && error.name === 'TimeoutError') {
                     this.appState.systemAvailable$.next(false);
                 }
             }),
@@ -530,7 +530,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
             retryWhen(request => this.retryHandler(request)),
             timeout(customTimeout),
             tap(undefined, error => {
-                if (environment.isLocal && error.name === 'TimeoutError') {
+                if (environment.isWebadmin && error.name === 'TimeoutError') {
                     this.appState.systemAvailable$.next(false);
                 }
             }),
@@ -803,7 +803,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
                 })
                 .pipe(switchMap(() => this.delete<{}>('/rest/v1/login/sessions/current')));
             // Logout a cloud session on cloud.
-        } else if (!environment.isLocal) {
+        } else if (!environment.isWebadmin) {
             logoutObservable$ = this.deleteToken('', accessToken);
             // Logout a local session.
         } else {

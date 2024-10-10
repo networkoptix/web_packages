@@ -16,7 +16,7 @@ import { BaseDropdown } from '../../dropdowns/injDropdown';
     selector: 'nx-nav-dropdown',
     templateUrl: 'nav-dropdown.component.html',
     styleUrls: [
-        environment.isLocal
+        environment.isWebadmin
             ? 'nav-dropdown-webadmin.component.scss'
             : 'nav-dropdown.component.scss',
     ],

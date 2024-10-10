@@ -66,7 +66,7 @@ class WebadminMockServices {
     selector: 'nx-system-admin-component',
     templateUrl: 'admin.component.html',
     styleUrls: ['admin.component.scss'],
-    providers: environment.isLocal
+    providers: environment.isWebadmin
         ? [
               { provide: NxChannelPartnersService, useClass: WebadminMockServices },
               { provide: GroupsStore, useClass: WebadminMockServices },
@@ -160,7 +160,9 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
 
     cloudSystemInfo$$ = computed<NxSystemInfo | undefined>(() => {
         const [systemId, systemInfos] = [this.systemId$$(), this.systemsService.systems$$()];
-        return !environment.isLocal ? systemInfos.find(info => info.id === systemId)! : undefined;
+        return !environment.isWebadmin
+            ? systemInfos.find(info => info.id === systemId)!
+            : undefined;
     });
     cloudSystemType$$ = computed<'user' | 'org' | undefined>(() => {
         const systemInfo = this.cloudSystemInfo$$();
@@ -351,7 +353,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
         this.setupDefaults();
 
         // TODO: In develop add a store for transfers.
-        if (nxConfig.featureFlags.cloudOwnershipTransfer && !environment.isLocal) {
+        if (nxConfig.featureFlags.cloudOwnershipTransfer && !environment.isWebadmin) {
             timer(0, updateInterval)
                 .pipe(
                     takeUntilDestroyed(),
@@ -465,7 +467,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
                     return Promise.reject();
                 }
                 return (
-                    this.environment.isLocal ? this.system.mediaserver : this.cloudApiService
+                    this.environment.isWebadmin ? this.system.mediaserver : this.cloudApiService
                 ).renameSystem(this.system.id, trimmedName);
             },
             { ignoreError: true },
@@ -529,7 +531,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
                     // Dialog was canceled or closed
                     return;
                 }
-                if (!this.environment.isLocal) {
+                if (!this.environment.isWebadmin) {
                     this.groupsStore.deleteSystem(this.system.id);
                     return this.router.navigate([redirect.authorised]).catch(error => {
                         console.error(error);
@@ -549,7 +551,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
             this.currentMergeInfo = this.system.mergeInfo;
         } else if (this.currentMergeInfo) {
             this.currentMergeInfo = undefined;
-            if (!this.environment.isLocal) {
+            if (!this.environment.isWebadmin) {
                 firstValueFrom(this.systemsService.forceUpdateSystems()).catch(console.error);
             } else {
                 this.systemsService.mergingSystems.add(this.system.id);
@@ -605,7 +607,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
     delete() {
         if (!this.system.permissionManager.isOwner$$()) {
             // User is not owner. Deleting means he'll lose access to it
-            if (this.environment.isLocal) {
+            if (this.environment.isWebadmin) {
                 return this.dialogs.removeSystem(this.system).then(response => {
                     if (response) {
                         setTimeout(() => {
@@ -696,7 +698,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
                     let downloadHTML = `<span>${this.LANG.dialogs.merge.latestBuild}</span>`;
                     if (this.CONFIG.cloudHost) {
                         downloadHTML = `<a href=\"${
-                            this.environment.isLocal ? this.CONFIG.cloudHost : ''
+                            this.environment.isWebadmin ? this.CONFIG.cloudHost : ''
                         }/download" target=\"_blank\">${this.LANG.dialogs.merge.latestBuild}</a>`;
                     }
 

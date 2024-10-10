@@ -56,7 +56,7 @@ export class NxPlayerPlaceholderComponent implements OnInit {
     }
 
     public get settingsLinkUrl(): string {
-        if (environment.isLocal) {
+        if (environment.isWebadmin) {
             return '/settings/cameras/' + this.camera?.id;
         } else {
             return '/systems/' + this.system?.id + '/cameras/' + this.camera?.id;

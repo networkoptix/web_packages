@@ -29,7 +29,7 @@
             >
             </nx-server-storage-component>
             <nx-cloud-storage
-                *ngIf="!environment.isLocal && system?.canUserViewCloudStorage()"
+                *ngIf="!environment.isWebadmin && system?.canUserViewCloudStorage()"
                 layout="simple"
                 type="servers"
             ></nx-cloud-storage>

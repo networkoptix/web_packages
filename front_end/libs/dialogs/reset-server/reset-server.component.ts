@@ -112,7 +112,7 @@ export class ResetServerModalContent extends ModalBase<DT['return']> implements 
             },
             async () => {
                 const numberOfServers = this.system.serverManager.servers?.length || 0;
-                if (environment.isLocal && numberOfServers) {
+                if (environment.isWebadmin && numberOfServers) {
                     this.close(true);
                     if (numberOfServers === 1) {
                         this.localStorage.store('resetServer', true);
@@ -133,7 +133,7 @@ export class ResetServerModalContent extends ModalBase<DT['return']> implements 
                 } catch (err) {
                     if (![503, 504].includes(err.status)) {
                         return handleResetFailError('getModuleInfo', err);
-                    } else if (environment.isLocal) {
+                    } else if (environment.isWebadmin) {
                         // If we failed to get module info the system probably has only one server.
                         this.close();
                         this.appState.systemAvailable$.next(false);

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, isDevMode } from '@angular/core';
 import { SwUpdate } from '@angular/service-worker';
 import { LocalStorageService } from 'ngx-webstorage';
 import { filter, tap } from 'rxjs';
@@ -19,7 +19,7 @@ export class NxSwPromptUpdateService {
         processService: NxProcessService,
         session: LocalStorageService,
     ) {
-        if (environment.production && !environment.isLocal) {
+        if (!isDevMode() && !environment.isWebadmin) {
             updates.versionUpdates
                 .pipe(
                     tap(evt => console.info('version update', evt)),

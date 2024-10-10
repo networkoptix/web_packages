@@ -5,11 +5,10 @@ import {
     ElementRef,
     Inject,
     input,
+    isDevMode,
     TemplateRef,
     ViewChild,
 } from '@angular/core';
-
-import { environment } from '@environments/environment';
 
 import { NxAutocompleteInjectionToken } from '../autocomplete-injection-token';
 import { NxAutocompleteComponent } from '../autocomplete.component';
@@ -45,7 +44,7 @@ export class NxAutoCompleteItemComponent<T> {
         } else if (typeof value === 'string') {
             return value;
         } else {
-            if (!environment.production) {
+            if (isDevMode()) {
                 console.warn('Implicit string convertion used');
             }
             return String(value);

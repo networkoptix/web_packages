@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { environment } from '@environments/environment';
+import { isDevMode } from '@angular/core';
 
 enum LogLevel {
     ERROR = 'error',
@@ -56,7 +56,7 @@ export class NxLogger<T> {
     constructor(config: Partial<LoggerConfig>, errorOrAnyToLog: T) {
         this.config = new LoggerConfig(config);
         const { logProduction, logLevel, logLoggerObject, prettyPrint } = this.config;
-        if ((environment.production && !logProduction) || !logLevel) {
+        if ((!isDevMode() && !logProduction) || !logLevel) {
             // Prevents logging in production
             return;
         }

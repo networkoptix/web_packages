@@ -63,7 +63,7 @@ export class NxMonitoringComponent {
         };
         const serverId = this.serverId() ?? '';
         const selectedSection = this.menuService.selectedSection$$();
-        const base = environment.isLocal ? '' : menus.systemSettings.baseUrl + this.system().id;
+        const base = environment.isWebadmin ? '' : menus.systemSettings.baseUrl + this.system().id;
         const content = {
             base: base + menus.systemMonitoring.baseUrl,
             selectedSection: selectedSection || 'graphs',

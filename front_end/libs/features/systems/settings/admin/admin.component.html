@@ -3,7 +3,7 @@
 </ng-template>
 <div
     *ngIf="
-        !environment.isLocal ? cloudSystemInfo$$() : systemName !== undefined;
+        !environment.isWebadmin ? cloudSystemInfo$$() : systemName !== undefined;
         else systemNotReady
     "
     class="row d-flex align-items-start"
@@ -28,12 +28,12 @@
                             [editEnabled]="enableEdit"
                         ></nx-editable-heading>
                         <nx-vms-client-text
-                            *ngIf="!environment.isLocal && !editMode"
+                            *ngIf="!environment.isWebadmin && !editMode"
                         ></nx-vms-client-text>
                     </div>
                 </form>
 
-                @if (!environment.isLocal) {
+                @if (!environment.isWebadmin) {
                     <div class="d-flex align-items-center">
                         <span class="system-owner">
                             @if (cloudSystemType$$() === 'user') {
@@ -169,7 +169,7 @@
                     <ng-container *ngTemplateOutlet="permissions"></ng-container>
                     <div
                         class="mt-2"
-                        *ngIf="!environment.isLocal && isOrgUser$$() === false"
+                        *ngIf="!environment.isWebadmin && isOrgUser$$() === false"
                     >
                         <button
                             [disabled]="settings?.disconnectDisabled"
@@ -213,7 +213,7 @@
                     </div>
                     <div
                         class="col-lg-6 p-0 mt-2 mt-lg-0"
-                        *ngIf="!environment.isLocal && !CONFIG.cloudSystemId"
+                        *ngIf="!environment.isWebadmin && !CONFIG.cloudSystemId"
                     >
                         <div class="float-lg-right">
                             <nx-process-button
@@ -232,7 +232,7 @@
 
         <nx-block
             header-style="extended"
-            *ngIf="environment.isLocal"
+            *ngIf="environment.isWebadmin"
         >
             <header>
                 <div class="system-cloud-tag float-right">

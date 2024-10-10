@@ -7,7 +7,7 @@ import { NxSystemInfo } from '@services/systems.service.types';
 
 export const SystemTitleResolver: ResolveFn<string> = (route: ActivatedRouteSnapshot) => {
     const systemsService = inject(NxSystemsService);
-    if (!environment.isLocal) {
+    if (!environment.isWebadmin) {
         const systemName =
             systemsService.systems.find(
                 (system: NxSystemInfo) => system.id === route.params.systemId,

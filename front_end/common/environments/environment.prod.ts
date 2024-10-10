@@ -1,6 +1,6 @@
 import { IEnvironment, testing } from './environment-config';
 export const environment: IEnvironment = {
-    isLocal: false,
+    isWebadmin: false,
     production: true,
     testing
 };

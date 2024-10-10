@@ -122,7 +122,7 @@ export class HomeSystemListComponent {
 
     openSystem(systemId: string): void {
         this.uriService
-            .updateURI(environment.isLocal ? '/settings' : `/systems/${systemId}`, {
+            .updateURI(environment.isWebadmin ? '/settings' : `/systems/${systemId}`, {
                 search: undefined,
             })
             .catch(err => {

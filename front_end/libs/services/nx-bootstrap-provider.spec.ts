@@ -36,7 +36,7 @@ describe('Bootstrap Provider', () => {
     //     Object.defineProperty(
     //         bootstrapService,
     //         'environment',
-    //         { value: { ...bootstrapService.environment, isLocal: true } }
+    //         { value: { ...bootstrapService.environment, isWebadmin: true } }
     //     );
     //     bootstrapService.setSettings(resultSettings);
 
@@ -58,7 +58,7 @@ describe('Bootstrap Provider', () => {
     //     Object.defineProperty(
     //         bootstrapService,
     //         'environment',
-    //         { value: { ...bootstrapService.environment, isLocal: true } }
+    //         { value: { ...bootstrapService.environment, isWebadmin: true } }
     //     );
     //     bootstrapService.setLocalInfo(resultSettings);
 
@@ -78,7 +78,7 @@ describe('Bootstrap Provider', () => {
     //     Object.defineProperty(
     //         bootstrapService,
     //         'environment',
-    //         { value: { ...bootstrapService.environment, isLocal: false } }
+    //         { value: { ...bootstrapService.environment, isWebadmin: false } }
     //     );
     //     bootstrapService.setSettings(resultSettings);
 

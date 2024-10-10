@@ -69,7 +69,7 @@ export class UserManager {
     }
 
     // Local owners id will always be localOwnerId for all versions
-    private isLocalOwner(user: SystemUser): boolean {
+    private isWebadminOwner(user: SystemUser): boolean {
         return user.id === this.localOwnerId;
     }
 
@@ -87,7 +87,7 @@ export class UserManager {
     }
 
     protected isOwner(user: SystemUser): boolean {
-        return this.isCloudOwner(user) || this.isLocalOwner(user);
+        return this.isCloudOwner(user) || this.isWebadminOwner(user);
     }
 
     deleteUser(removedUser: Pick<NxUser, 'id'>): Promise<void> {
@@ -162,8 +162,8 @@ export class UserManager {
     processUser(user: SystemUser): NxUser {
         const { id, name, fullName, email, isEnabled } = user;
         const isCloudOwner = this.isCloudOwner(user);
-        const isLocalOwner = this.isLocalOwner(user);
-        const isOwner = isCloudOwner || isLocalOwner || ('isAdmin' in user && !!user.isAdmin);
+        const isWebadminOwner = this.isWebadminOwner(user);
+        const isOwner = isCloudOwner || isWebadminOwner || ('isAdmin' in user && !!user.isAdmin);
         const type = coerceUserType(user);
 
         user.permissions = this.normalizePermissionString(user.permissions);
@@ -174,7 +174,7 @@ export class UserManager {
 
         const canBeEdited = this.canBeEdited({
             id,
-            isLocalOwner,
+            isWebadminOwner,
             isCloudOwner,
             permissions,
         });
@@ -189,7 +189,7 @@ export class UserManager {
             isAdmin: isOwner || isAdmin(user),
             isEnabled,
             isCloudOwner,
-            isLocalOwner,
+            isWebadminOwner,
             isHttpDigestEnabled: false,
             isOwner,
             type,
@@ -240,7 +240,7 @@ export class UserManager {
     }
 
     protected canBeEdited(
-        user: Pick<NxUser, 'id' | 'isLocalOwner' | 'isCloudOwner' | 'permissions'>,
+        user: Pick<NxUser, 'id' | 'isWebadminOwner' | 'isCloudOwner' | 'permissions'>,
     ): boolean {
         /**
          * User can not be edited if:
@@ -252,10 +252,14 @@ export class UserManager {
          *   they also can not be edited
          */
         // const amIAdmin = this.system.userManager.currentUser.isAdmin;
-        // const isNotMeOrOwner = !(user.isMe || user.isLocalOwner || user.isCloudOwner);
+        // const isNotMeOrOwner = !(user.isMe || user.isWebadminOwner || user.isCloudOwner);
         // this.selectedUser.canBeEdited = isNotMeOrOwner && amIAdmin;
 
-        const isNotMeOrOwner = !(this.userId === user.id || user.isLocalOwner || user.isCloudOwner);
+        const isNotMeOrOwner = !(
+            this.userId === user.id ||
+            user.isWebadminOwner ||
+            user.isCloudOwner
+        );
         return isNotMeOrOwner && (this.isMySystem || !isAdmin(user));
     }
 
@@ -304,7 +308,7 @@ export class UserManager {
         const userData: NxUser = user;
         user.email = user.email.toLowerCase();
         // The mediaserver doesn't like any attempts to change admin's permissions
-        if (userData.isLocalOwner) {
+        if (userData.isWebadminOwner) {
             delete userData.name;
             delete userData.permissions;
         } else if (userData.role) {

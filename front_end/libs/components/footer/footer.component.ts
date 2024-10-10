@@ -65,7 +65,7 @@ export class NxFooterComponent implements OnInit {
     private getMenu(): void {
         this.menusService.getMenu('footer').subscribe(footer => {
             this.footerItems = this.menusService.cleanEmptyNodes(footer.nodes);
-            if (environment.isLocal) {
+            if (environment.isWebadmin) {
                 this.footerItems.forEach(footerItem => {
                     footerItem.new_window = true;
                     footerItem.url = footerItem.url.replace(

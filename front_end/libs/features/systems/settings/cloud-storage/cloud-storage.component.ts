@@ -154,7 +154,7 @@ export class NxCloudStorageComponent implements OnInit {
     };
 
     ngOnInit(): void {
-        if (environment.isLocal) {
+        if (environment.isWebadmin) {
             this.serverSettings = '/settings/servers';
         } else {
             this.serverSettings = `/systems/${this.system.id}/servers`;

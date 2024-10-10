@@ -112,7 +112,7 @@ export class AppComponent implements AfterViewInit {
         const { NxRibbonComponent } = await import('@components/ribbon/ribbon.component');
         this.ribbon.createComponent(NxRibbonComponent);
 
-        if (environment.isLocal) {
+        if (environment.isWebadmin) {
             await idle();
             await import('@components/overlay-modal/overlay-modal.module').then(
                 m => m.OverlayModalModule,
@@ -142,7 +142,7 @@ export class AppComponent implements AfterViewInit {
             window.location.hash = '/';
         }
         if (!this.CONFIG.browserNotSupported) {
-            if (environment.isLocal || this.appStateService.ready) {
+            if (environment.isWebadmin || this.appStateService.ready) {
                 this.lazyLoadHeader();
             } else {
                 this.appStateService.readySubject
@@ -203,7 +203,7 @@ export class AppComponent implements AfterViewInit {
         } // else -> unknown platform or device ... cross fingers and hope for the best
 
         if (!NxBootstrapProvider.isLoaded) {
-            if (!this.environment.isLocal) {
+            if (!this.environment.isWebadmin) {
                 this.router
                     .navigate(['/503'])
                     .catch(error => console.error(error))

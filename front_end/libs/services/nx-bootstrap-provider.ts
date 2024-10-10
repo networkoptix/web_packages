@@ -63,7 +63,7 @@ export class NxBootstrapProvider {
     };
 
     private getModuleInfo(reload = true) {
-        return this.environment.isLocal
+        return this.environment.isWebadmin
             ? fetch('/rest/v1/servers/this/info', {}).then(response => response.json())
             : Promise.resolve({});
     }

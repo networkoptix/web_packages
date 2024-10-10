@@ -235,7 +235,7 @@ export class LegacyCloudAppComponent implements OnInit {
 
     private initComponents(): void {
         if (!this.CONFIG.browserNotSupported) {
-            if (environment.isLocal || this.appStateService.ready) {
+            if (environment.isWebadmin || this.appStateService.ready) {
                 this.lazyLoadHeader();
             } else {
                 this.appStateService.readySubject

@@ -4,7 +4,7 @@
     </header>
     <nx-section>
         <form [formGroup]="authConfigFormGroup">
-            @if (!environment.production) {
+            @if (isProd) {
                 <nx-form-field>
                     <label
                         nx-label

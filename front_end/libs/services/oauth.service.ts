@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, isDevMode } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
@@ -79,7 +79,7 @@ export class OauthService {
         };
         const clientTypes = {
             connect: 'connect',
-            login: environment.isLocal ? 'loginWebadmin' : 'loginCloud',
+            login: environment.isWebadmin ? 'loginWebadmin' : 'loginCloud',
             disconnect: 'passwordDisconnect',
             detach: 'passwordDetach',
             merge: 'passwordMerge',
@@ -94,11 +94,11 @@ export class OauthService {
             client_type: (state && clientTypes[state]) || clientTypes.login,
             view_type: 'web',
             redirect_uri: cleanRedirect(redirectTo),
-            client_id: environment.isLocal ? 'webadmin' : 'cloud_portal',
+            client_id: environment.isWebadmin ? 'webadmin' : 'cloud_portal',
             response_type: 'code',
             grant_type: 'password',
         });
-        if (environment.isLocal) {
+        if (environment.isWebadmin) {
             params.append(
                 'scope',
                 `${this.CONFIG.cloudHost.replace(/http?s:\/\//, '')} cloudSystemId=${
@@ -119,7 +119,7 @@ export class OauthService {
         if (accessToken) {
             params.append('access_token', accessToken);
         }
-        const host = environment.production
+        const host = !isDevMode()
             ? `${this.CONFIG.cloudHost ?? ''}`
             : environment.cloudHost
               ? `https://${environment.cloudHost}`
@@ -134,7 +134,7 @@ export class OauthService {
 
     add2fa(accessToken): void {
         const authorizeUrl = `${
-            environment.isLocal ? '/#' : ''
+            environment.isWebadmin ? '/#' : ''
         }/cloud-authorize?state=renew&access_token=${accessToken}`;
         window.open(authorizeUrl, '_blank').focus();
     }

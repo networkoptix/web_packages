@@ -34,7 +34,7 @@ export class Nx404Component {
     ) {
         this.CONFIG = configService.config;
 
-        if (this.environment.isLocal && !this.route.snapshot.queryParams.redirected) {
+        if (this.environment.isWebadmin && !this.route.snapshot.queryParams.redirected) {
             this.handleRedirect(this.location.path(true));
         } else {
             this.message = this.route.snapshot.queryParams.message || '';

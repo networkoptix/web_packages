@@ -43,7 +43,7 @@ type SettingsType = Pick<
     selector: 'nx-account-settings-select',
     templateUrl: 'account-settings.component.html',
     styleUrls: [
-        environment.isLocal
+        environment.isWebadmin
             ? 'account-settings-webadmin.component.scss'
             : 'account-settings.component.scss',
     ],

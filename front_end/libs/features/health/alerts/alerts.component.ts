@@ -137,7 +137,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
         this.reportView = url.includes('/health-report/viewer');
         if (!this.healthService.alertsValues) {
             if (this.reportView) {
-                this.router.navigate([`/health${environment.isLocal ? '' : '-report'}/viewer`]);
+                this.router.navigate([`/health${environment.isWebadmin ? '' : '-report'}/viewer`]);
             }
 
             return;

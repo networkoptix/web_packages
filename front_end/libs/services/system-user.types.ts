@@ -173,7 +173,7 @@ export interface NxUser {
     isCloudOwner: boolean;
     isEnabled: boolean;
     isHttpDigestEnabled: boolean;
-    isLocalOwner: boolean;
+    isWebadminOwner: boolean;
     isOwner: boolean;
     name: string;
     permissions: string;

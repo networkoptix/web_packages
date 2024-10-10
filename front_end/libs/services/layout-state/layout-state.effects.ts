@@ -383,12 +383,12 @@ export class LayoutStateEffects {
                 const layouts = this.store.selectSignal(selectLayoutsState)();
                 return layoutIds.reduce(
                     (acc, id) => {
-                        const isLocalLayout = layouts.find(
+                        const isWebadminLayout = layouts.find(
                             ({ id: layoutId, layoutType }) =>
                                 layoutId === id && layoutType === LayoutTypes.LOCAL,
                         );
 
-                        (isLocalLayout ? acc.localLayouts : acc.crossSystemLayouts).push(id);
+                        (isWebadminLayout ? acc.localLayouts : acc.crossSystemLayouts).push(id);
                         return acc;
                     },
                     { localLayouts: [] as string[], crossSystemLayouts: [] as string[] } as const,

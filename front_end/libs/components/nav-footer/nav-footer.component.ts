@@ -80,7 +80,7 @@ export class NxNavFooterComponent implements OnInit {
             .pipe(take(1))
             .subscribe(footer => {
                 this.footerItems = this.menusService.cleanEmptyNodes(footer.nodes);
-                if (environment.isLocal) {
+                if (environment.isWebadmin) {
                     this.footerItems.forEach(footerItem => {
                         footerItem.new_window = true;
                         footerItem.url = footerItem.url.replace(

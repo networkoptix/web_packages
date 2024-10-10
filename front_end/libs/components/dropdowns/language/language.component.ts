@@ -91,7 +91,7 @@ class BaseLanguageDropdown extends BaseDropdown {
             });
 
             if (this.languageService.currentLang !== this.langCode) {
-                if (environment.isLocal) {
+                if (environment.isWebadmin) {
                     this.localStorageService.store('language', this.langCode);
                     window.location.reload();
                 } else {
@@ -141,7 +141,7 @@ class BaseLanguageDropdown extends BaseDropdown {
     selector: 'nx-language-select',
     templateUrl: 'language.component.html',
     styleUrls: [
-        environment.isLocal ? 'language-webadmin.component.scss' : 'language.component.scss',
+        environment.isWebadmin ? 'language-webadmin.component.scss' : 'language.component.scss',
     ],
     providers: [
         {
@@ -157,7 +157,7 @@ export class NxLanguageDropdown extends BaseLanguageDropdown {}
     selector: 'nx-header-language-select',
     templateUrl: 'language.component.html',
     styleUrls: [
-        environment.isLocal ? 'language-webadmin.component.scss' : 'language.component.scss',
+        environment.isWebadmin ? 'language-webadmin.component.scss' : 'language.component.scss',
     ],
     encapsulation: ViewEncapsulation.None,
     providers: [

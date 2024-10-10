@@ -108,7 +108,7 @@ export class NxMenusService {
                 : undefined;
         // Update to also make request if no menu
 
-        if (environment.isLocal) {
+        if (environment.isWebadmin) {
             if (menu?.title === undefined) {
                 menu = {
                     description: undefined,
@@ -119,7 +119,7 @@ export class NxMenusService {
         }
 
         if (
-            !environment.isLocal &&
+            !environment.isWebadmin &&
             withCurrentSystem &&
             this.currentSystemNode$.value &&
             !nxConfig.featureFlags.newHeader
@@ -129,7 +129,7 @@ export class NxMenusService {
                 : [this.currentSystemNode$.value];
         }
 
-        if (environment.isLocal) {
+        if (environment.isWebadmin) {
             return from([menu]);
         }
 
@@ -150,7 +150,7 @@ export class NxMenusService {
             map(([login, menu]) => {
                 const filteredMenu = this.filterMenu(
                     menu,
-                    login || environment.isLocal ? Auth.LOGGED_IN : Auth.LOGGED_OUT,
+                    login || environment.isWebadmin ? Auth.LOGGED_IN : Auth.LOGGED_OUT,
                 );
                 filteredMenu.nodes = filteredMenu.nodes.map(this.translateNode());
                 return filteredMenu;
@@ -248,7 +248,7 @@ export class NxMenusService {
         };
 
     getUrl(systemId: string, endpoint = this.endpoint, home = false) {
-        const url = environment.isLocal ? '/settings' : '/systems/' + systemId;
+        const url = environment.isWebadmin ? '/settings' : '/systems/' + systemId;
         if (home) {
             return url;
         }
@@ -262,7 +262,7 @@ export class NxMenusService {
             segment = '/health';
         }
 
-        if (endpoint.settings && environment.isLocal) {
+        if (endpoint.settings && environment.isWebadmin) {
             segment = '/settings';
         }
 
@@ -282,7 +282,7 @@ export class NxMenusService {
             segment = '/services';
         }
 
-        return !environment.isLocal && systemId ? url + segment : segment;
+        return !environment.isWebadmin && systemId ? url + segment : segment;
     }
 
     makeReportsMenuNode() {
@@ -337,10 +337,10 @@ export class NxMenusService {
             activeSystem.systemName ||
             activeSystem.name;
         if (!name) {
-            name = environment.isLocal ? this.CONFIG.localServerId : activeSystem.moduleInfo?.id;
+            name = environment.isWebadmin ? this.CONFIG.localServerId : activeSystem.moduleInfo?.id;
         }
         const icon =
-            environment.isLocal ||
+            environment.isWebadmin ||
             activeSystem.isOnline ||
             activeSystem.stateOfHealth === this.CONFIG.system.status.online
                 ? 'system.svg'
@@ -408,7 +408,7 @@ export class NxMenusService {
         }
 
         const roleCanViewServices =
-            !environment.isLocal &&
+            !environment.isWebadmin &&
             nxConfig.featureFlags.channelPartners &&
             nxConfig.featureFlags.channelPartnersChangeServicesUI &&
             activeSystem.info?.roleIds &&

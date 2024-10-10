@@ -10,7 +10,9 @@ import { NxHeaderService } from '@services/nx-header.service';
 @Component({
     selector: 'nx-header-tabs',
     templateUrl: './tabs.component.html',
-    styleUrls: [environment.isLocal ? './tabs-webadmin.component.scss' : './tabs.component.scss'],
+    styleUrls: [
+        environment.isWebadmin ? './tabs-webadmin.component.scss' : './tabs.component.scss',
+    ],
     standalone: true,
     imports: [CommonModule, RouterModule, NxNavDropdownComponent],
 })

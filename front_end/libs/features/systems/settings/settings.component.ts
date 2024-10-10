@@ -191,7 +191,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.content = { ...this.content };
         // Removing dexie caching until we fix the menu in develop
         return '';
-        // if (environment.isLocal || !this.system || !this.menuVisible) {
+        // if (environment.isWebadmin || !this.system || !this.menuVisible) {
         //     return;
         // }
         // return this.db.personal.menuContent.put(this.content);
@@ -265,7 +265,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        // if (!this.CONFIG.isLocal) {
+        // if (!this.CONFIG.isWebadmin) {
         //     this.pageService.pageTitle = this.LANG.pageTitles.system?.();
         // }
         this.init();
@@ -466,7 +466,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                         this.system &&
                         this.systemsService.systems &&
                         !this.systemsService.systems.some(system => system.id === this.system.id) &&
-                        !environment.isLocal
+                        !environment.isWebadmin
                     ) {
                         this.uriService.updateURI(
                             nxConfig.featureFlags.dashboardRedirect ||
@@ -504,7 +504,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.accountService.get().then(account => {
             if (account) {
                 this.account = account;
-                if (!environment.isLocal) {
+                if (!environment.isWebadmin) {
                     this.getCloudSystemInfo();
                 } else {
                     this.system.update().then(() => {
@@ -541,7 +541,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             .subscribe({
                 next: res => {
                     const mergeInProgress = res?.reply?.mergeInProgress;
-                    if (environment.isLocal) {
+                    if (environment.isWebadmin) {
                         if (
                             !mergeInProgress &&
                             this.system.isOnline &&
@@ -803,7 +803,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             ];
 
             if (
-                (environment.isLocal
+                (environment.isWebadmin
                     ? !nxConfig.organizationId
                     : !('organizationId' in this.system.info)) &&
                 (this.system.permissionManager.isAdmin$$() ||

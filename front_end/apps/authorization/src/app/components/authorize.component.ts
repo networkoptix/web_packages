@@ -201,7 +201,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     setCurrentState(state: string): void {
         // when user uses link to go directly to create-account and presses back, sets them into normal login clientTypes
         if (state === 'email' && this.clientType === ClientType.create) {
-            this.clientType = environment.isLocal
+            this.clientType = environment.isWebadmin
                 ? ClientType.loginWebadmin
                 : ClientType.loginCloud;
         }

@@ -24,7 +24,7 @@
             ></nx-select>
         </ng-template>
         <div
-            *ngIf="isLocal"
+            *ngIf="isWebadmin"
             class="d-flex flex-column server-url add-specificity"
             [ngClass]="{
                 'mb-4': !(selectedSystem.status || serverUrlInputValidationErrorText)
@@ -69,7 +69,7 @@
                 >Checking...</span
             >
             <span
-                *ngIf="!checking && !isLocal"
+                *ngIf="!checking && !isWebadmin"
                 translate
             >
                 You can only merge Systems where you are the owner

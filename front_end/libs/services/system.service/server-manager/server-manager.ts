@@ -141,7 +141,7 @@ export class ServerManager {
         if (this.servers.length) {
             this._mediaserverConnections = this.servers.reduce((mediaserverConnections, server) => {
                 let unauthorizedCallback = () => Promise.resolve(true);
-                if (!environment.isLocal) {
+                if (!environment.isWebadmin) {
                     unauthorizedCallback = this.system.useRest
                         ? () =>
                               firstValueFrom(this.cloudApi.getSystemToken(this.systemId)).then(

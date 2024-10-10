@@ -25,7 +25,7 @@ export const reportsRegex: string =
 export const buildFromEnv: string = '{{BUILD}}'.trim();
 export const buildSubstituted: boolean = buildFromEnv && !buildFromEnv.includes('BUILD');
 export const staticBase: string =
-    buildSubstituted && !environment.isLocal ? 'static/{{BUILD}}' : 'static';
+    buildSubstituted && !environment.isWebadmin ? 'static/{{BUILD}}' : 'static';
 export const responseOk: string = 'ok';
 export const updateInterval: number = 30 * 1000;
 
@@ -452,7 +452,7 @@ export const menus = {
         },
     },
     systemSettings: {
-        baseUrl: environment.isLocal ? '/settings/' : '/systems/',
+        baseUrl: environment.isWebadmin ? '/settings/' : '/systems/',
         admin: {
             id: 'admin',
             icon: 'system',
@@ -510,7 +510,7 @@ export const oauthStore = {
 };
 
 export const redirect = {
-    authorised: environment.isLocal ? '/settings' : '/systems',
+    authorised: environment.isWebadmin ? '/settings' : '/systems',
     channelPartners: '/home',
     unauthorised: '/',
     page404: '/404',

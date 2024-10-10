@@ -104,7 +104,7 @@ describe('NxHeaderMainButtonComponent', () => {
     it('should show system state for webadmin', async () => {
         const { component, fixture, debugElement } = await setupMainbuttonComponent();
         Object.defineProperty(component, 'environment', {
-            value: { ...component.environment, isLocal: true },
+            value: { ...component.environment, isWebadmin: true },
         });
         headerMock.currentLocation.isSystem = false;
         headerMock.activeSystem = {
@@ -121,7 +121,7 @@ describe('NxHeaderMainButtonComponent', () => {
     it('should show systems state', async () => {
         const { component, fixture, debugElement } = await setupMainbuttonComponent();
         Object.defineProperty(component, 'environment', {
-            value: { ...component.environment, isLocal: false },
+            value: { ...component.environment, isWebadmin: false },
         });
         component.systems = [{}, {}, {}];
         jest.spyOn(component, 'getState').mockReturnValue(mainButtonState.SYSTEMS);

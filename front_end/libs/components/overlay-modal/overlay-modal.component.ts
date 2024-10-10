@@ -97,7 +97,7 @@ export class NxOverlayModalComponent implements OnInit {
                 this.system = system;
                 this.currentRoute = `/#${this.router.url}`;
                 this.getServers();
-                this.serverId = environment.isLocal
+                this.serverId = environment.isWebadmin
                     ? this.CONFIG.localServerId
                     : this.system.serverManager.moduleInfo.id;
                 this.router.events.pipe(untilDestroyed(this)).subscribe(route => {

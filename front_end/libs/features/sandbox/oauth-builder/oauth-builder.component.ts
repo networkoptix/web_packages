@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, isDevMode, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, FormGroupDirective, ReactiveFormsModule } from '@angular/forms';
 import { ClipboardService } from 'ngx-clipboard';
@@ -37,6 +37,7 @@ import { parseJWTToken } from '@utils/token-tools';
 })
 export class NxOauthBuilderComponent {
     protected readonly environment = environment;
+    protected readonly isProd = !isDevMode();
     protected readonly defaultValues = {
         responseType: 'token',
         grantType: 'password',

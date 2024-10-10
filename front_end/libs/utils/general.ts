@@ -3,11 +3,11 @@
 third party data/types it should probably go in nx.ts instead. */
 
 import { Location } from '@angular/common';
+import { isDevMode } from '@angular/core';
 import { last, zip } from 'lodash-es';
 import { combineLatest, Observable, timer } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { environment } from '@environments/environment';
 import { nxConfig } from '@services/nx-config/config';
 import {
     CameraProjection,
@@ -36,7 +36,7 @@ const __unwrappedIdRegex = /^[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]
 export function cleanId(dirtyId: DirtyId): CleanId;
 export function cleanId(dirtyId: string): string;
 export function cleanId(dirtyId: string | DirtyId): CleanId {
-    if (!environment.production) {
+    if (isDevMode()) {
         if (__unwrappedIdRegex.test(dirtyId)) {
             console.warn('Attempting to clean already clean uuid');
         } else if (!__wrappedIdRegex.test(dirtyId)) {

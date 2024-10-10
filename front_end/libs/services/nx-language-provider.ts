@@ -39,7 +39,7 @@ export class NxLanguageProviderService {
             this.currentLang = lang ?? this.translate.getDefaultLang();
         }
 
-        if (environment.isLocal && !environment.isWizard) {
+        if (environment.isWebadmin && !environment.isWizard) {
             // Fixes circular dependency with local-system-status-interceptor.
             setTimeout(() => {
                 this.currentLang = this.language;
@@ -48,7 +48,7 @@ export class NxLanguageProviderService {
 
         this.localStorageService.observe('language').subscribe(_ => {
             // webadmin will handle the reload
-            if (!environment.isLocal && !document.hasFocus()) {
+            if (!environment.isWebadmin && !document.hasFocus()) {
                 window.location.reload();
             }
         });
@@ -75,7 +75,7 @@ export class NxLanguageProviderService {
 
     loadLanguage(): Promise<Language> {
         const lang = this.currentLang ?? this.translate.getDefaultLang();
-        const fetchUrl = environment.isLocal
+        const fetchUrl = environment.isWebadmin
             ? `/static/lang_${lang}/language_compiled.json`
             : '/api/utils/language';
         return fetch(fetchUrl).then(response => response.json());
@@ -99,8 +99,8 @@ export class NxLanguageProviderService {
             this.translate.setTranslation(lang, this.processLanguage(translation));
             this.translate.use(lang); // this will tell TranslateService to switch language -> see "breadcrumbs"
             const productName =
-                staticLang?.[environment.isLocal ? 'metaDefaultsWebadmin' : 'metaDefaults']?.default
-                    ?.site_name || '';
+                staticLang?.[environment.isWebadmin ? 'metaDefaultsWebadmin' : 'metaDefaults']
+                    ?.default?.site_name || '';
             this.translate.set('productName', productName);
         } catch (e) {
             this.toastService.notify(

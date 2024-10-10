@@ -1,5 +1,5 @@
 <div class="mb-3">
-    <ng-container *ngIf="!environment.isLocal">
+    <ng-container *ngIf="!environment.isWebadmin">
         <nx-select
             [componentId]="'avail-systems'"
             [type]="'api-tool'"
@@ -15,7 +15,7 @@
         >
         </nx-select>
         <nx-select
-            *ngIf="serverDropdownEnabled && !environment.isLocal && servers"
+            *ngIf="serverDropdownEnabled && !environment.isWebadmin && servers"
             [type]="'api-tool'"
             class="mt-2"
             [componentId]="'system-servers'"
@@ -35,7 +35,7 @@
         (onSelected)="onTypeChange($event)"
         [disabled]="this.APIToolSystemService.systemChangeLockout"
         [stillLoading]="types.length === 0"
-        [ngClass]="environment.isLocal ? 'mb-3' : 'mt-2'"
+        [ngClass]="environment.isWebadmin ? 'mb-3' : 'mt-2'"
     >
     </nx-select>
     <nx-version-message *ngIf="!(APIToolSystemService.loading$ | async)"></nx-version-message>

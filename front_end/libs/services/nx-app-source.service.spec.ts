@@ -33,7 +33,7 @@ describe('AppSource Service', () => {
     it('should return baseUrl if local', async () => {
         const { appSourceService, systemMock } = await setupAppSource();
         Object.defineProperty(appSourceService, 'environment', {
-            value: { ...appSourceService.environment, isLocal: true },
+            value: { ...appSourceService.environment, isWebadmin: true },
         });
         const base = `${menus.systemHealth.baseUrl}`;
         const url = appSourceService.getMenuBase(systemMock);

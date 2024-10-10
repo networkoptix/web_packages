@@ -46,7 +46,7 @@ export class NxUriService {
     }
 
     navigateSystem(navigateTo: string, system: NxSystem): Promise<boolean> {
-        navigateTo = environment.isLocal
+        navigateTo = environment.isWebadmin
             ? navigateTo.replace('SYSTEM_ID', '')
             : navigateTo.replace('SYSTEM_ID', '/' + system.id);
 
@@ -91,7 +91,7 @@ export class NxUriService {
                     .navigate([navigateTo], {
                         queryParams,
                         relativeTo: this.route,
-                        replaceUrl: replace || environment.isLocal,
+                        replaceUrl: replace || environment.isWebadmin,
                         queryParamsHandling: 'merge',
                     })
                     .then(
@@ -144,7 +144,7 @@ export class NxUriService {
         const otherParams = Object.entries(_otherParams);
 
         // const routesConfig = this.router.config.filter(route => {
-        //     if (environment.isLocal) {
+        //     if (environment.isWebadmin) {
         //         return route.path === 'settings';
         //     } else {
         //         return route.path === 'systems/:systemId';
@@ -154,7 +154,7 @@ export class NxUriService {
         let base = menus.systemSettings.baseUrl;
         let childRoute = '';
 
-        if (!environment.isLocal) {
+        if (!environment.isWebadmin) {
             base += systemId;
         }
 
@@ -164,7 +164,7 @@ export class NxUriService {
             const isChildRoute = param === 'childRoute';
             childRoute = '/' + (isChildRoute ? value : '') + '/';
             if ((isChildRoute && value === ChildRoutes.HEALTH) || value === ChildRoutes.VIEW) {
-                if (environment.isLocal) {
+                if (environment.isWebadmin) {
                     base = '/';
                     childRoute += '/';
                 }

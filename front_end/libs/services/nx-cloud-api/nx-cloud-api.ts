@@ -165,7 +165,7 @@ export class NxCloudApiService {
         );
         try {
             const _targetInstance =
-                this.cookieService.get('cloud_instance') || environment.isLocal
+                this.cookieService.get('cloud_instance') || environment.isWebadmin
                     ? this.CONFIG.cloudHost
                     : '';
             this.targetInstance =
@@ -505,7 +505,7 @@ export class NxCloudApiService {
             accessRole: this.CONFIG.accessRoles.unshare,
             isEnabled: false,
         };
-        if (environment.isLocal) {
+        if (environment.isWebadmin) {
             const url = `${this.CONFIG.cloudHost}/api/systems/${systemId}/users`;
             body.email = userEmail;
             body.password = password || '';
@@ -749,7 +749,7 @@ export class NxCloudApiService {
 
     @memoizeAsyncPersistent
     getLanguages() {
-        const uri = environment.isLocal
+        const uri = environment.isWebadmin
             ? '/static/languages.json'
             : `${window.location.origin}/${staticBase}/languages.json`;
         return firstValueFrom(this.cachedGet<t.ILanguages>(uri));
@@ -1071,7 +1071,7 @@ export class NxCloudApiService {
      */
     #withFreshSession: t.WithFreshSession = minSessionSeconds => {
         return TokenSessionManager.getInstance('/api/account/refreshAccessToken')(() => {
-            if (!this.refreshError && !environment.isLocal) {
+            if (!this.refreshError && !environment.isWebadmin) {
                 this.refreshError = true;
                 runInInjectionContext(this.injector, () => {
                     inject(NxAccountService).showExpired();

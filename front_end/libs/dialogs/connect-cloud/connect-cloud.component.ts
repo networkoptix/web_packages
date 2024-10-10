@@ -47,7 +47,7 @@ export class ConnectCloudModalContent extends ModalBase<DT['return']> implements
 
     LANG = staticLang;
     CONFIG: IConfig;
-    readonly isLocal: boolean;
+    readonly isWebadmin: boolean;
     readonly environment = environment;
 
     bindData: CloudBindData;

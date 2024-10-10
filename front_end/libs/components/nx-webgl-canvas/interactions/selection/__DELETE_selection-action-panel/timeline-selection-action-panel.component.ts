@@ -90,7 +90,7 @@ export class WebGlTimelineSelectionActionPanelComponent implements OnInit, After
             if (!account) {
                 return Promise.reject();
             }
-            if (environment.isLocal) {
+            if (environment.isWebadmin) {
                 this.system = this.systemService.createLocalSystem(
                     this.accountService.mediaServerApi,
                     account.id,

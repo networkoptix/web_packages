@@ -351,7 +351,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                 return Promise.reject(error);
             }
             if (
-                this.environment.isLocal &&
+                this.environment.isWebadmin &&
                 newPort &&
                 (await firstValueFrom(this.system.mediaserver.checkIfConnectedToServer(serverId)))
             ) {
@@ -389,7 +389,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
             this.dropdownStorages = [];
         }
 
-        if (environment.isLocal && status === 'restarting') {
+        if (environment.isWebadmin && status === 'restarting') {
             // Force overlay to show - don't wait next api call to fail --TT
             this.appState.systemAvailable$.next(false);
         }
@@ -456,7 +456,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
             this.system.isAvailable = false;
             this.system.storageManager.update();
             this.setStatus(res);
-            if (environment.isLocal) {
+            if (environment.isWebadmin) {
                 this.appState.systemAvailable$
                     .pipe(untilDestroyed(this), takeUntil(this.destroyRestartTake$))
                     .subscribe(status => {

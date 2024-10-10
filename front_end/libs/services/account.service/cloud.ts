@@ -241,7 +241,7 @@ export class CloudAccount extends BaseAccount {
             if (account) {
                 this.router
                     .navigate([
-                        !environment.isLocal && nxConfig.featureFlags.channelPartners
+                        !environment.isWebadmin && nxConfig.featureFlags.channelPartners
                             ? redirect.channelPartners
                             : redirect.authorised,
                     ])

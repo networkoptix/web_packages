@@ -128,7 +128,7 @@ export const nxConfig: IConfig = {
         searchTags: [],
         vendorsShown: 0,
     },
-    isLocal: environment.isLocal,
+    isWebadmin: environment.isWebadmin,
     isDarkTheme: false,
     landing: {
         description: '',

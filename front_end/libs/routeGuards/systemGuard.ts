@@ -32,7 +32,7 @@ export const SystemGuard: CanActivateFn = (
     const deviceService: DeviceDetectorService = inject(DeviceDetectorService);
     const cloudApiService = inject(NxCloudApiService);
 
-    if (!environment.isLocal && state.url === '/health-report') {
+    if (!environment.isWebadmin && state.url === '/health-report') {
         // navigate to report viewer if viewing /health route
         return router.navigate(['/health-report/viewer']);
     }
@@ -55,7 +55,7 @@ export const SystemGuard: CanActivateFn = (
     ];
     const currentRoute = restrictedRoutes.find(route => state.url.includes(route));
     const systemId =
-        environment.isLocal ||
+        environment.isWebadmin ||
         route.pathFromRoot.find(snapshot => snapshot.params.systemId).params.systemId;
 
     const checkPermissionsFor = (system: NxSystem): boolean | Promise<boolean> => {
@@ -66,9 +66,9 @@ export const SystemGuard: CanActivateFn = (
             users: permissions.editUsers,
             'cloud-storage': system.canUserViewCloudStorage(),
             health: permissions.systemHealth,
-            // TODO: when !isLocal check system info using isUserSystem util.
+            // TODO: when !isWebadmin check system info using isUserSystem util.
             //  Leaving as true for vms_6.0 since it doesn't use cloud.
-            licenses: isAdmin && (environment.isLocal ? !nxConfig.organizationId : true),
+            licenses: isAdmin && (environment.isWebadmin ? !nxConfig.organizationId : true),
             advanced: isAdmin,
             servers: isAdmin,
             monitoring: permissions.systemHealth,
@@ -82,7 +82,7 @@ export const SystemGuard: CanActivateFn = (
 
         return (
             canViewChecks[currentRoute] ||
-            router.navigate([environment.isLocal ? '/settings/' : `/systems/${systemId}`])
+            router.navigate([environment.isWebadmin ? '/settings/' : `/systems/${systemId}`])
         );
     };
 
@@ -96,8 +96,8 @@ export const SystemGuard: CanActivateFn = (
         }
         let currSystem = systemService.getCurrentSystem();
 
-        if (!currSystem || (currSystem.id !== systemId && !environment.isLocal)) {
-            if (environment.isLocal) {
+        if (!currSystem || (currSystem.id !== systemId && !environment.isWebadmin)) {
+            if (environment.isWebadmin) {
                 currSystem = systemService.createLocalSystem(
                     accountService.mediaServerApi,
                     account.id,

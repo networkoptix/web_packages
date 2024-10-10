@@ -170,7 +170,7 @@ export class MergeModalContent {
 
     private getSystemInfo(systemId: string): Promise<ModuleInformation> {
         let url = '';
-        if (!environment.isLocal && systemId) {
+        if (!environment.isWebadmin && systemId) {
             url = `https://${this.CONFIG.trafficRelayHost.replace('{systemId}', systemId)}`;
         }
         return this.httpService.get<ModuleInformation>(`${url}/api/moduleInformation`).toPromise();
@@ -193,7 +193,7 @@ export class MergeModalContent {
             this.setPrimarySystem(this.system);
             this.updateShow(this.checkMergeDefault);
             await this.system.serverManager.getModuleInfo().toPromise();
-            if (environment.isLocal) {
+            if (environment.isWebadmin) {
                 await this.getPeerSystems();
             }
             this.account = await this.accountService.get();
@@ -223,7 +223,7 @@ export class MergeModalContent {
             );
 
             if (this.systemsWithInfo.length === 0 && this.peerSystems.length === 0) {
-                if (environment.isLocal) {
+                if (environment.isWebadmin) {
                     this.targetSystem = {
                         value: this.otherSystem,
                         name: this.LANG.dialogs.merge.otherSystem,
@@ -237,7 +237,7 @@ export class MergeModalContent {
                 if (this.systemsWithInfo.length) {
                     this.processedSystems.push(...this.makeSelectorList(this.systemsWithInfo));
                 }
-                if (environment.isLocal) {
+                if (environment.isWebadmin) {
                     if (this.peerSystems.length) {
                         this.processedSystems.push(
                             { name: 'horizontal', value: undefined },
@@ -417,7 +417,7 @@ export class MergeModalContent {
             .then((res: DiscoveredPeers) => {
                 this.peerSystems = res.reply
                     .filter(peer =>
-                        this.environment.isLocal
+                        this.environment.isWebadmin
                             ? this.system.id !== peer.localSystemId
                             : !peer.cloudSystemId,
                     )
@@ -598,7 +598,7 @@ export class MergeModalContent {
         this.checkPasswordProcess = this.processService.createProcess(
             () => {
                 // when trying again, does not have access to previous state template
-                if (!this.environment.isLocal && this.machine.state.template.passwordValue) {
+                if (!this.environment.isWebadmin && this.machine.state.template.passwordValue) {
                     // for use case when password gets changed
                     if (this.serverUrl.includes('//admin:')) {
                         const startIndex = this.serverUrl.indexOf('//admin') + 2;
@@ -714,7 +714,7 @@ export class MergeModalContent {
                 () => {
                     let password = this.machine.state.template.passwordValue;
 
-                    if (this.environment.isLocal) {
+                    if (this.environment.isWebadmin) {
                         password = this.remotePassword;
                     }
                     if (!password && !this.system.mediaserver.isSessionOauth) {
@@ -723,7 +723,7 @@ export class MergeModalContent {
                         });
                     }
 
-                    if (this.nonCloudMerge || this.environment.isLocal) {
+                    if (this.nonCloudMerge || this.environment.isWebadmin) {
                         const takeRemoteSettings = this.system.id === this.secondarySystem.id;
                         const bothAreCloud =
                             (this.primarySystem?.mediaserver?.isSessionOauth &&
@@ -785,7 +785,7 @@ export class MergeModalContent {
                         !res.unmergedServers
                     ) {
                         // handles telling the app which systems are getting merged and the proper messaging
-                        if (this.environment.isLocal) {
+                        if (this.environment.isWebadmin) {
                             const template = `<div class="my-1">
                             <div class="larger"><strong>${
                                 this.secondarySystem.name
@@ -994,7 +994,7 @@ export class MergeModalContent {
          * else = cloud-connected merge check
          */
         if (
-            this.environment.isLocal &&
+            this.environment.isWebadmin &&
             this.targetSystem.cloudOwnerId &&
             this.system.moduleInfo.cloudOwnerId
         ) {
@@ -1136,7 +1136,7 @@ export class MergeModalContent {
                 let downloadHTML = `<span>${latestBuild}</span>`;
                 if (this.CONFIG.cloudHost) {
                     downloadHTML = `<a href=\"${
-                        this.environment.isLocal ? this.CONFIG.cloudHost : ''
+                        this.environment.isWebadmin ? this.CONFIG.cloudHost : ''
                     }/download" target=\"_blank\">${latestBuild}</a>`;
                 }
                 const parsedError = [
@@ -1198,7 +1198,7 @@ export class MergeModalContent {
                     status = statusUnavailable;
                 }
         }
-        if (environment.isLocal && !status && system.cloudSystemId) {
+        if (environment.isWebadmin && !status && system.cloudSystemId) {
             status = statusCloud;
         }
 

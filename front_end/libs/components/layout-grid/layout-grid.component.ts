@@ -2395,8 +2395,8 @@ export class NxLayoutGridComponent {
 
                 if (isPlaceholder) {
                     const items = [this.generateLayoutItem(node, { x: 0, y: 0 })];
-                    const isLocalLayout = !hasCrossSystemItems(items, this.system.id);
-                    if (isLocalLayout) {
+                    const isWebadminLayout = !hasCrossSystemItems(items, this.system.id);
+                    if (isWebadminLayout) {
                         this.layoutStateService.createNewLayout(items);
                     } else {
                         this.layoutStateService.createNewCrossSystemLayout(items);
@@ -2428,12 +2428,12 @@ export class NxLayoutGridComponent {
                           })()),
                 ]).map(ensureLayoutItemResourcePath(this.system.id));
 
-                const isLocalLayout = !hasCrossSystemItems(items, this.system.id);
+                const isWebadminLayout = !hasCrossSystemItems(items, this.system.id);
                 const layoutOrFocus = this.layoutItemLookup?.[dirtyId(this.layout.id)];
                 if (
                     layoutOrFocus &&
                     assertResourceOfType.layout(layoutOrFocus) &&
-                    layoutOrFocus.crossSystem === !isLocalLayout
+                    layoutOrFocus.crossSystem === !isWebadminLayout
                 ) {
                     const currentUser = this.system.permissionManager.currentUser$$();
 
@@ -2447,7 +2447,7 @@ export class NxLayoutGridComponent {
                         this.layoutStateService.updateLayout({ ...this.layout, items });
                     }
                 } else {
-                    if (isLocalLayout) {
+                    if (isWebadminLayout) {
                         this.layoutStateService.createNewLayout(items);
                     } else {
                         this.layoutStateService.createNewCrossSystemLayout(

@@ -69,7 +69,7 @@ export class DisconnectModalContent extends ModalBase<DT['return']> implements O
             () => {
                 this.lock();
 
-                if (this.environment.isLocal) {
+                if (this.environment.isWebadmin) {
                     return this.disconnectLocal();
                 }
                 return new Promise<void>((resolve, reject) => {

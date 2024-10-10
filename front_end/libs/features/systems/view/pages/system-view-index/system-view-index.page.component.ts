@@ -131,7 +131,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         this.systemId = this.system.id || '';
         this.vms.reset();
         this.hasCameras = false;
-        if (!environment.isLocal) {
+        if (!environment.isWebadmin) {
             const systemInfoFromCDB = this.systemsService.systems.find(s => s.id === this.systemId);
             if (systemInfoFromCDB?.stateOfHealth === this.CONFIG.system.status.online) {
                 this.setInitializationState(false, false);

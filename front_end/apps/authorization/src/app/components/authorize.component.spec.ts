@@ -97,7 +97,7 @@ describe('NxAuthorizeComponent', () => {
     });
 
     // it('should load webadmin email component', () => {
-    //     Object.defineProperty(environment, 'isLocal', { value: true });
+    //     Object.defineProperty(environment, 'isWebadmin', { value: true });
     //     fixture.detectChanges();
     //     const loginLabel = el.nativeElement.querySelectorAll('label');
     //     expect(loginLabel[0].innerText).toBe('Login');

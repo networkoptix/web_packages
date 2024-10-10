@@ -70,7 +70,7 @@ export class NxPageTitleStrategy extends TitleStrategy {
                     title = this.translateService.instant(lang.metaDefaults.default.title);
                 }
             }
-        } else if (!environment.isLocal) {
+        } else if (!environment.isWebadmin) {
             title = this.translateService.instant(lang.metaDefaults.default.title);
         }
 

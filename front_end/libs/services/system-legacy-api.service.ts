@@ -319,7 +319,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
         } = opts ?? {};
         let headers = new HttpHeaders(_headers);
 
-        if (environment.isLocal) {
+        if (environment.isWebadmin) {
             headers = headers.set('X-Runtime-Guid', this.cookieService.get('x-runtime-guid'));
             headers = headers.set('X-CSRFToken', this.cookieService.get('x-runtime-guid'));
         }
@@ -332,7 +332,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
         const getRequest = () => {
             let params = new HttpParams({ fromObject: _params });
 
-            if (!environment.isLocal && this.authGet) {
+            if (!environment.isWebadmin && this.authGet) {
                 params = params.append('auth', this.authGet);
             }
 
@@ -356,7 +356,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
             tap(undefined, error => {
                 // 'Gateway Timeout' is added for 'local' testing of webadmin
                 if (
-                    environment.isLocal &&
+                    environment.isWebadmin &&
                     (error.name === 'TimeoutError' || error.statusText === 'Gateway Timeout')
                 ) {
                     this.appState.systemAvailable$.next(false);
@@ -374,13 +374,13 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
         let params = new HttpParams({ fromObject: _params });
         let headers = new HttpHeaders(_headers);
 
-        if (!environment.isLocal && this.authPost) {
+        if (!environment.isWebadmin && this.authPost) {
             params = params.append('auth', this.authPost);
         }
         if (this.serverId) {
             headers = headers.set('X-Server-Guid', this.serverId);
         }
-        if (environment.isLocal) {
+        if (environment.isWebadmin) {
             headers = headers.set('X-Runtime-Guid', this.cookieService.get('x-runtime-guid'));
         }
 
@@ -630,7 +630,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
     }
 
     checkLocalIfNew(reload = true) {
-        return environment.isLocal ? Promise.resolve({}) : firstValueFrom(this.getModuleInfo());
+        return environment.isWebadmin ? Promise.resolve({}) : firstValueFrom(this.getModuleInfo());
     }
 
     createEvent = createEventLegacyV1;

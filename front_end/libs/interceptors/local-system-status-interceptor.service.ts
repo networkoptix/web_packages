@@ -37,7 +37,7 @@ export class LocalSystemStatusInterceptor implements HttpInterceptor {
         httpRequest: HttpRequest<unknown>,
         handler: HttpHandler,
     ): Observable<HttpEvent<unknown>> {
-        if (!environment.isLocal || httpRequest.headers.get('X-Server-Guid')) {
+        if (!environment.isWebadmin || httpRequest.headers.get('X-Server-Guid')) {
             return handler.handle(httpRequest);
         }
         return handler.handle(httpRequest).pipe(

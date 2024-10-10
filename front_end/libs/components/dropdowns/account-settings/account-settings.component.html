@@ -27,7 +27,7 @@
         <span
             *ngIf="!small"
             class="fs-mask username"
-            [innerText]="environment.isLocal ? settings$$().name : settings$$().email"
+            [innerText]="environment.isWebadmin ? settings$$().name : settings$$().email"
         ></span>
     </button>
     <div
@@ -40,7 +40,7 @@
         data-testid="accountSettingsDropdown"
     >
         <ul class="dropdown-menu--list width-override">
-            <ng-container *ngIf="!environment.isLocal">
+            <ng-container *ngIf="!environment.isWebadmin">
                 <li
                     class="dropdown-item-container"
                     *ngFor="let dropdownItem of accountDropdown; let i = index"

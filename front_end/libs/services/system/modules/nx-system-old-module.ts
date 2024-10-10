@@ -1,4 +1,4 @@
-import { Injector } from '@angular/core';
+import { Injector, isDevMode } from '@angular/core';
 import { Router } from '@angular/router';
 import {
     BehaviorSubject,
@@ -239,7 +239,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
         this.lostConnection = false;
         this.initSystem(currentUserEmail, systemId, serverId, userId);
         // Todo: Figure out when to enable it for webadmin
-        // !environment.isLocal && firstValueFrom(this.getLicenseManager());
+        // !environment.isWebadmin && firstValueFrom(this.getLicenseManager());
         this.getCloudStorageManager(this.cloudApi.cloudStorageApi);
     }
 
@@ -408,7 +408,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
     };
 
     updateSystemAuth = (force: boolean = true): Promise<boolean | void> => {
-        if (environment.isLocal || (!force && this.mediaserver?.authGet)) {
+        if (environment.isWebadmin || (!force && this.mediaserver?.authGet)) {
             // no need to update
             return Promise.resolve(true);
         }
@@ -437,7 +437,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
             // await this.serverManager.initSystemMediaServers();
         }
         const accessToken = (<NxSystemRestAPI>this.mediaserver).accessToken;
-        if (environment.isLocal || (!force && accessToken)) {
+        if (environment.isWebadmin || (!force && accessToken)) {
             return Promise.resolve(accessToken);
         }
 
@@ -458,7 +458,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
     }
 
     canUserViewCloudStorage() {
-        if (!nxConfig.featureFlags.cloudStorage || environment.isLocal) {
+        if (!nxConfig.featureFlags.cloudStorage || environment.isWebadmin) {
             return false;
         }
         const isOwner = this.permissionManager.isOwner$$();
@@ -470,7 +470,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
     }
 
     canViewBookmarks(isMobile?: boolean) {
-        const webAdminAndNotProduction = environment.isLocal && !environment.production;
+        const webAdminAndNotProduction = environment.isWebadmin && isDevMode();
         const bookmarksEnabled =
             !isMobile &&
             (nxConfig.featureFlags.bookmarks || webAdminAndNotProduction) &&
@@ -520,7 +520,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
             };
         };
 
-        if (environment.isLocal) {
+        if (environment.isWebadmin) {
             const systemPromise = Promise.resolve(this);
             return this.mediaserver
                 .getSystemSettings()
@@ -540,7 +540,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
                         } else {
                             this.info = parsedSettings;
                         }
-                        if (environment.isLocal && !this.info.name) {
+                        if (environment.isWebadmin && !this.info.name) {
                             this.info.name = this.CONFIG.system.name;
                         }
                         this.id = parsedSettings?.id || this.CONFIG.localSystemId;
@@ -623,7 +623,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
         }
         if (!this.infoPromise) {
             this.infoPromise = (
-                (!environment.isLocal && this.mediaserver.unauthorizedCallback(false)) ||
+                (!environment.isWebadmin && this.mediaserver.unauthorizedCallback(false)) ||
                 Promise.resolve(true)
             )
                 .then(() => {
@@ -646,7 +646,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
                 return this.useRpcOverPolling();
             }
             if (
-                environment.isLocal ||
+                environment.isWebadmin ||
                 this.mediaserver?.authGet ||
                 (<NxSystemRestAPI>this.mediaserver).accessToken
             ) {
@@ -669,7 +669,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
     stopPoll(): void {
         if (this.subscriberCount > 1) {
             this.subscriberCount--;
-        } else if (!environment.isLocal) {
+        } else if (!environment.isWebadmin) {
             this.forceStopAllPolls();
         }
     }
@@ -697,7 +697,9 @@ export class NxSystemOldModule extends NxSystemModuleBase {
                         : Promise.reject({ offline: true }),
                 )
                 .then(() => firstValueFrom(this.proxied.serverManager.getForceServers(false)))
-                .then(() => (environment.isLocal ? Promise.resolve() : this.getUsers(true, true)))
+                .then(() =>
+                    environment.isWebadmin ? Promise.resolve() : this.getUsers(true, true),
+                )
                 .catch(error => {
                     if (error?.offline) {
                         this.isOnline = false;
@@ -717,7 +719,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
                         }
                         this.isAvailable = false;
                         this.systemInfo = this;
-                        if (!environment.isLocal) {
+                        if (!environment.isWebadmin) {
                             this.permissionManager.ownerEmail$$.set(this.info.ownerAccountEmail);
                             this.getUsersCachedInCloud().then(users => {
                                 return this.userManager.processUsers(users);
@@ -1022,7 +1024,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
                         this.isAvailable = true;
                     })
                     .catch(() => {
-                        if (!environment.isLocal && this.permissionManager.isAdmin$$()) {
+                        if (!environment.isWebadmin && this.permissionManager.isAdmin$$()) {
                             return this.getUsersCachedInCloud().then(users => {
                                 this.userManager.processUsers(users);
                                 return Promise.resolve();
@@ -1031,7 +1033,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
                             return Promise.resolve();
                         }
                     });
-            } else if (!environment.isLocal && this.permissionManager.isAdmin$$()) {
+            } else if (!environment.isWebadmin && this.permissionManager.isAdmin$$()) {
                 // or we get old cached data from the cloud
                 usersPromise = this.getUsersCachedInCloud().then(users => {
                     return this.userManager.processUsers(users);
@@ -1063,7 +1065,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
             });
         }
         // Anyway - send another request to cloud_db to remove my this
-        const id = environment.isLocal ? this.CONFIG.cloudSystemId : this.id;
+        const id = environment.isWebadmin ? this.CONFIG.cloudSystemId : this.id;
         return this.cloudApi.removeUser(id, email, password);
     }
 }

@@ -146,7 +146,7 @@
                 name="serverUrl"
                 id="serverUrl"
                 type="url"
-                [readonly]="checking || !environment.isLocal"
+                [readonly]="checking || !environment.isWebadmin"
                 placeholder="host:port"
                 (ngModelChange)="serverUrlChange(serverUrlInput)"
                 [ngModel]="machine.state.template.serverUrlInputValue"
@@ -233,7 +233,7 @@
                 name="adminPassword"
                 type="password"
                 [required]="
-                    !environment.isLocal ||
+                    !environment.isWebadmin ||
                     !system.mediaserver.isSessionOauth ||
                     !targetSystem.cloudSystemId
                 "
@@ -402,7 +402,7 @@
             </p>
         </div>
         <div
-            *ngIf="!environment.isLocal && !system.mediaserver.isSessionOauth"
+            *ngIf="!environment.isWebadmin && !system.mediaserver.isSessionOauth"
             class="form-group"
             [ngClass]="{ 'mb-merge': !machine.state.show.passwordError }"
         >

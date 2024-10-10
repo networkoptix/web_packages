@@ -43,7 +43,7 @@ export class NxSystemUsersWithGroupsComponent extends NxSystemUsersBaseComponent
         );
     });
     accountBlockFooterSettings$$ = computed(() => ({
-        cloudAccountSettings: !this.environment.isLocal && this.isCloud$$() && this.isMe$$(),
+        cloudAccountSettings: !this.environment.isWebadmin && this.isCloud$$() && this.isMe$$(),
         changePassword: this.editPermissions$$().changePassword,
         delete: this.editPermissions$$().delete,
     }));
@@ -66,8 +66,8 @@ export class NxSystemUsersWithGroupsComponent extends NxSystemUsersBaseComponent
         }
 
         this.selectedGroups = user.groupIds || [];
-        const isLocalOwner = !this.isCloud$$() && user.isOwner;
-        this.processSelectedGroupsList(this.selectedGroups, isLocalOwner);
+        const isWebadminOwner = !this.isCloud$$() && user.isOwner;
+        this.processSelectedGroupsList(this.selectedGroups, isWebadminOwner);
 
         // setTimeout is required for handling items. Without it the defaultLdap group is missing.
         setTimeout(() => {

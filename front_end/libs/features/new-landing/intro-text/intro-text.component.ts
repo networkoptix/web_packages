@@ -1,5 +1,12 @@
 import { Platform } from '@angular/cdk/platform';
-import { AfterViewChecked, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
+import {
+    AfterViewChecked,
+    Component,
+    ElementRef,
+    isDevMode,
+    OnDestroy,
+    ViewChild,
+} from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Observable, Subscription } from 'rxjs';
 import { filter, startWith } from 'rxjs/operators';
@@ -50,7 +57,7 @@ export class NxIntroTextComponent implements AfterViewChecked, OnDestroy {
 
     routeToCreate(): void {
         let url = '/authorize?client_type=create';
-        if (!environment.production) {
+        if (isDevMode()) {
             url = `https://${environment.cloudHost}/authorize?redirect_uri=${window.location.href}&client_type=create`;
         }
         window.location.href = url;

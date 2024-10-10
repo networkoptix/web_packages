@@ -68,7 +68,7 @@ export abstract class NxSystemUsersBaseComponent implements OnInit, OnChanges, A
     protected locked = new Set<string>();
     protected isCloud$$ = signal(false);
     protected isLdap$$ = signal(false);
-    protected isLocal$$ = signal(false);
+    protected isWebadmin$$ = signal(false);
     protected isTemporary$$ = signal(false);
     protected isMe$$ = signal(false);
     protected canBeEdited$$ = computed(() => {
@@ -79,7 +79,7 @@ export abstract class NxSystemUsersBaseComponent implements OnInit, OnChanges, A
     protected hasCustomPermissions$$ = signal(false);
 
     protected editPermissions$$ = computed<EditActions>(() => {
-        const isLocal = this.isLocal$$();
+        const isWebadmin = this.isWebadmin$$();
         const isMe = this.isMe$$();
         const isTemporary = this.isTemporary$$();
         const canEdit = this.canBeEdited$$();
@@ -94,9 +94,9 @@ export abstract class NxSystemUsersBaseComponent implements OnInit, OnChanges, A
         }
         return {
             enable: !isMe,
-            changePassword: isLocal && !isTemporary,
+            changePassword: isWebadmin && !isTemporary,
             changePermissions: !isMe && !isTemporary,
-            changeInfo: (isLocal || !isMe) && !isTemporary,
+            changeInfo: (isWebadmin || !isMe) && !isTemporary,
             delete: !isMe,
         };
     });
@@ -215,7 +215,7 @@ export abstract class NxSystemUsersBaseComponent implements OnInit, OnChanges, A
         const currentUser = this.system.permissionManager.currentUser$$();
         this.isCloud$$.set(user.type === UserType.cloud);
         this.isLdap$$.set(user.type === UserType.ldap);
-        this.isLocal$$.set(user.type === UserType.local);
+        this.isWebadmin$$.set(user.type === UserType.local);
         this.isTemporary$$.set(user.type === UserType.temporaryLocal);
         this.isMe$$.set(currentUser.id === user.id);
         this.hasCustomPermissions$$.set(user.hasCustomPermissions);

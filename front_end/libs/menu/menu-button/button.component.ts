@@ -14,7 +14,7 @@ import type { Level2Button } from '../menu.types';
 @Component({
     selector: 'nx-menu-button',
     template: `<button
-        *ngIf="!environment.isLocal || CONFIG.cloudSystemId"
+        *ngIf="!environment.isWebadmin || CONFIG.cloudSystemId"
         class="inset btn btn-menu btn-clear"
         [disabled]="button.disabled"
         (click)="action()"

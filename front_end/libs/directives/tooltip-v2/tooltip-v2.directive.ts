@@ -16,6 +16,7 @@ import {
     EventEmitter,
     HostListener,
     input,
+    isDevMode,
     OnDestroy,
     Output,
     signal,
@@ -26,7 +27,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { identity } from 'lodash-es';
 import { BehaviorSubject, delay, filter, of, switchMap, takeUntil, tap } from 'rxjs';
 
-import { environment } from '@environments/environment';
 import { cdkOriginPosition, cdkOverlayPosition } from '@utils/nx';
 
 import { NxTooltipV2Component } from './tooltip-v2.component';
@@ -102,7 +102,7 @@ export class NxTooltipV2Directive implements AfterViewInit, OnDestroy {
     private trigger = computed<TooltipTrigger | undefined>(() => {
         const [_trigger, manualOverride] = [this._trigger(), this.manualOverride()];
         if (manualOverride) {
-            if (_trigger !== undefined && _trigger !== 'none' && !environment.production) {
+            if (_trigger !== undefined && _trigger !== 'none' && isDevMode()) {
                 console.warn(`Trigger ${_trigger} overridden`);
             }
             return undefined;
@@ -148,7 +148,7 @@ export class NxTooltipV2Directive implements AfterViewInit, OnDestroy {
     private delay = computed<[number, number]>(() => {
         const [_delay, manualOverride] = [this._delay(), this.manualOverride()];
         if (manualOverride) {
-            if (_delay !== this.defaultDelay && !environment.production) {
+            if (_delay !== this.defaultDelay && isDevMode()) {
                 console.warn(`Delay [${_delay}] overridden`);
             }
             return this.defaultDelay;
@@ -169,7 +169,7 @@ export class NxTooltipV2Directive implements AfterViewInit, OnDestroy {
     private autohide = computed<number>(() => {
         const [_autohide, manualOverride] = [this._autohide(), this.manualOverride()];
         if (manualOverride) {
-            if (_autohide !== 0 && !environment.production) {
+            if (_autohide !== 0 && isDevMode()) {
                 console.warn(`Autohide ${_autohide} overridden`);
             }
             return 0;

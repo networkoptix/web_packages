@@ -210,14 +210,14 @@ export class NxHeaderService {
     setLocation(url?): void {
         const bestMatch: any = {};
         // Check if system url or go through nodes
-        const settingsBase = environment.isLocal ? '/settings' : '/systems';
+        const settingsBase = environment.isWebadmin ? '/settings' : '/systems';
         const dynamicRoute = this.getDynamicRoute(url);
         if (dynamicRoute) {
             this.currentLocation = dynamicRoute;
             return;
         } else if (
             url.startsWith(settingsBase) ||
-            (environment.isLocal &&
+            (environment.isWebadmin &&
                 (url.startsWith('/view') ||
                     url.startsWith('/health') ||
                     url.startsWith('/bookmarks') ||
@@ -225,14 +225,16 @@ export class NxHeaderService {
         ) {
             bestMatch.isSystem = true;
             bestMatch.parentNode = this.menusService.currentSystemNode$.value;
-            const systemId = environment.isLocal ? '' : this.activeSystem$.value?.id;
-            const systemUrl = `${settingsBase}${environment.isLocal ? '' : '/'}${systemId}`;
-            const viewUrl = environment.isLocal ? '/view' : systemUrl + '/view';
-            const healthUrl = environment.isLocal ? '/health' : systemUrl + '/health';
-            const bookmarkUrl = environment.isLocal ? '/bookmarks' : systemUrl + '/bookmarks';
-            const monitoringUrl = environment.isLocal ? '/monitoring' : systemUrl + '/monitoring';
-            const layoutsUrl = environment.isLocal ? '/layouts' : systemUrl + '/layouts';
-            const servicesUrl = environment.isLocal ? '/services' : systemUrl + '/services';
+            const systemId = environment.isWebadmin ? '' : this.activeSystem$.value?.id;
+            const systemUrl = `${settingsBase}${environment.isWebadmin ? '' : '/'}${systemId}`;
+            const viewUrl = environment.isWebadmin ? '/view' : systemUrl + '/view';
+            const healthUrl = environment.isWebadmin ? '/health' : systemUrl + '/health';
+            const bookmarkUrl = environment.isWebadmin ? '/bookmarks' : systemUrl + '/bookmarks';
+            const monitoringUrl = environment.isWebadmin
+                ? '/monitoring'
+                : systemUrl + '/monitoring';
+            const layoutsUrl = environment.isWebadmin ? '/layouts' : systemUrl + '/layouts';
+            const servicesUrl = environment.isWebadmin ? '/services' : systemUrl + '/services';
 
             if (url.startsWith(viewUrl)) {
                 this.menusService.endpoint = { view: true };

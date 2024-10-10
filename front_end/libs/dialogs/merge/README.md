@@ -33,7 +33,7 @@ version testing:
     If the user presses the button while it's processing, then it will stop the previous process and restart the process altogether
 
 ~~4. We need to investigate local primary, cloud secondary
-    One particular area of the code to look is the comment in `processSystems()` from `select-system.component.ts` in the `if (this.isLocal)` section.~~
+    One particular area of the code to look is the comment in `processSystems()` from `select-system.component.ts` in the `if (this.isWebadmin)` section.~~
 
 ~~5. Verify that `otherSystem` (boolean) works properly~~
 ~~    We haven't fully tested how that should get handled within the whole merge process~~

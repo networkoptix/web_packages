@@ -1,5 +1,5 @@
 export interface IEnvironment {
-    readonly isLocal: boolean;
+    readonly isWebadmin: boolean;
     readonly isSetup?: boolean;
     readonly production: boolean;
     readonly cloudHost?: string;

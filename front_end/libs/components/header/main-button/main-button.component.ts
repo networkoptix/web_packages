@@ -20,7 +20,9 @@ import { mainButtonState } from './main-button.types';
     selector: 'nx-header-main-button',
     templateUrl: 'main-button.component.html',
     styleUrls: [
-        environment.isLocal ? 'main-button-webadmin.component.scss' : 'main-button.component.scss',
+        environment.isWebadmin
+            ? 'main-button-webadmin.component.scss'
+            : 'main-button.component.scss',
     ],
     standalone: true,
     imports: [
@@ -57,7 +59,7 @@ export class NxHeaderMainButtonComponent implements OnInit, OnChanges {
     getState() {
         //  TODO: Refine state when adding header mechanics
         let state = mainButtonState.ALL;
-        if (this.environment.isLocal) {
+        if (this.environment.isWebadmin) {
             state = mainButtonState.SYSTEM;
         } else if (this.node && !this.headerService.currentLocation.isSystem) {
             state = mainButtonState.NODE;

@@ -22,7 +22,7 @@ export const generateAPIRouteName = (endpoint: string, requestType: string) => {
 };
 
 const appendBaseAPIToolRoute = (endpoint: string) => {
-    if (environment.isLocal) {
+    if (environment.isWebadmin) {
         return '/api-tool/' + endpoint;
     }
     return '/doc/developers/api-tool/' + endpoint;

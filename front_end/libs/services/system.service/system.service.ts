@@ -197,7 +197,7 @@ export class NxSystemService {
 
         this.system ??= system;
 
-        if (environment.isLocal || skipSettingSystem) {
+        if (environment.isWebadmin || skipSettingSystem) {
             return system;
         }
 
@@ -205,7 +205,7 @@ export class NxSystemService {
 
         // This is done to set the auth keys for video. Local doesn't need auth keys
         // because cookies are same site and will be attached to all requests.
-        if (!environment.isLocal) {
+        if (!environment.isWebadmin) {
             this.system.updateSystemAuth(true).catch(() => {});
         }
 

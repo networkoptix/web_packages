@@ -24,7 +24,7 @@ export const OrgStateGuard: CanActivateFn = async (
     const cloudApiService = inject(NxCloudApiService);
     const systemService = inject(NxSystemsService);
     const systemId = route.params.systemId;
-    if (environment.isLocal || !nxConfig.featureFlags.channelPartners || !systemId) {
+    if (environment.isWebadmin || !nxConfig.featureFlags.channelPartners || !systemId) {
         return true;
     }
 

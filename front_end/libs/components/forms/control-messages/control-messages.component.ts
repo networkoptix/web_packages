@@ -13,6 +13,7 @@ import {
     HostBinding,
     Inject,
     input,
+    isDevMode,
     QueryList,
     signal,
     SkipSelf,
@@ -21,7 +22,6 @@ import {
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { environment } from '@environments/environment';
 import LANG from '@language_static';
 
 import { ControlState } from '../form-field/error-state-matcher';
@@ -124,7 +124,7 @@ export class NxControlMessagesComponent implements AfterViewInit {
         }
         for (let i = 0; i < presetMessages.length; i++) {
             const message = presetMessages[i];
-            if (!environment.production && messages.has(message.key())) {
+            if (isDevMode() && messages.has(message.key())) {
                 /* Potential pitfall: attempting to overwrite preset message */
                 console.warn(`Custom message for error \`${message.key()}\` ignored`);
             }
@@ -144,7 +144,7 @@ export class NxControlMessagesComponent implements AfterViewInit {
                     selectedMessage?.detach();
                     this.selectedMessage.set(new DomPortal(selected.host));
                     return;
-                } else if (!environment.production) {
+                } else if (isDevMode()) {
                     /* Potential pitfall: forgetting to add the message for an error */
                     console.warn('No message found for key', state.key);
                 }

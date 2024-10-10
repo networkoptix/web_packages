@@ -53,10 +53,10 @@ export class UserWithGroupsManager extends UserManager {
     }
 
     // get isMine(): boolean {
-    //     const { email, isLocalOwner } = this.currentUser;
+    //     const { email, isWebadminOwner } = this.currentUser;
     //     return email
     //         ? email === this.currentUserEmail
-    //         : isLocalOwner;
+    //         : isWebadminOwner;
     // }
 
     override get ownerEmail(): string {
@@ -68,7 +68,7 @@ export class UserWithGroupsManager extends UserManager {
             this._ownerEmail = email;
             // this.isMySystem =
             //     this.currentUserEmail === email ||
-            //     !!this.currentUser?.isLocalOwner;
+            //     !!this.currentUser?.isWebadminOwner;
             this.processUsers(this.users);
         }
     }
@@ -241,7 +241,7 @@ export class UserWithGroupsManager extends UserManager {
             user.isOwner ||
             user.groupIds.some(groupId => this.isGroupPowerUser(this.userGroups[groupId]));
         user.isCloudOwner = user.type === UserType.cloud && user.isOwner;
-        user.isLocalOwner = user.type === UserType.local && user.isOwner;
+        user.isWebadminOwner = user.type === UserType.local && user.isOwner;
         user.canBeEdited = this.canBeEdited(user);
         user.hasCustomPermissions =
             !['none', ''].includes(user.permissions) ||
@@ -343,7 +343,7 @@ export class UserWithGroupsManager extends UserManager {
         }
 
         // The mediaserver doesn't like any attempts to change admin's permissions
-        if (user.isLocalOwner) {
+        if (user.isWebadminOwner) {
             delete user.name;
         } else if (user.type === UserType.cloud) {
             delete user.fullName;

@@ -27,12 +27,12 @@ export class DynamicConfig {
                 DynamicConfig.getData(),
                 DynamicConfig.getTranslation(),
                 DynamicConfig.getCustomizationColors(),
-                preloadedAccount && !environment.isLocal
+                preloadedAccount && !environment.isWebadmin
                     ? getUserEnabledBetaFeatureFlags()
                     : Promise.resolve([]),
             ]).then(res => res.map(res => res.status === 'fulfilled' && res.value));
 
-        if (preloadedAccount && !environment.isLocal) {
+        if (preloadedAccount && !environment.isWebadmin) {
             const getOverrides = (): Partial<
                 Record<`featureFlags.${FeatureFlagType}`, boolean>
             > => {
@@ -88,7 +88,7 @@ export class DynamicConfig {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     static async getData(): Promise<any> {
-        if (environment.isLocal) {
+        if (environment.isWebadmin) {
             const [
                 webadminConfig,
                 description,
@@ -115,18 +115,18 @@ export class DynamicConfig {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     static async getAccount(): Promise<any> {
         const getCurrentAccount = (): Promise<unknown> =>
-            fetch(environment.isLocal ? '/rest/v1/login/sessions/current' : '/api/account')
+            fetch(environment.isWebadmin ? '/rest/v1/login/sessions/current' : '/api/account')
                 .then(res => res.json())
                 .then(result =>
                     result.resultCode ||
-                    (environment.isLocal ? !result?.token : !result?.is_authenticated)
+                    (environment.isWebadmin ? !result?.token : !result?.is_authenticated)
                         ? null
                         : result,
                 )
                 .catch(() => null);
 
         const loginCode = (code: string): Promise<unknown> =>
-            (environment.isLocal
+            (environment.isWebadmin
                 ? Promise.resolve()
                 : fetch('/api/account/loginCode', {
                       method: 'POST',
@@ -151,7 +151,7 @@ export class DynamicConfig {
                 .catch(() => null);
 
         const current = await getCurrentAccount();
-        if (environment.isLocal) {
+        if (environment.isWebadmin) {
             localStorage.setItem(
                 'ngx-webstorage|loginstate',
                 `"${current ? LOGIN_STATE.AUTHORIZED : LOGIN_STATE.UNAUTHORIZED}"`,
@@ -171,7 +171,7 @@ export class DynamicConfig {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     static getTranslation(): Promise<any> {
         return fetch(
-            environment.isLocal
+            environment.isWebadmin
                 ? `/static/lang_${nxConfig.defaultLanguage}/language_compiled.json`
                 : '/api/utils/language',
         )
@@ -180,7 +180,7 @@ export class DynamicConfig {
     }
 
     static getCustomizationColors(): Promise<ThemeColors> {
-        if (environment.isLocal) {
+        if (environment.isWebadmin) {
             return Promise.resolve({} as ThemeColors);
         }
         return fetch('/api/utils/theme')
@@ -193,7 +193,7 @@ export class DynamicConfig {
         nxConfig.preloadedAccount = data.preloadedAccount;
         nxConfig.preloadedTranslation = data.preloadedTranslation;
         nxConfig.themeColors = { ...nxConfig.themeColors, ...data.themeColors };
-        if (environment.isLocal) {
+        if (environment.isWebadmin) {
             // weird timing issue occur when using method updateConfig. Re-factored to explicit assignment. (TT)
             const { defaultLanguage, description, webadminConfig, supportedLanguages } = data;
             nxConfig.dynamicMenus = webadminConfig.dynamicMenus?.reduce((menu, { name, nodes }) => {
@@ -228,7 +228,7 @@ export class DynamicConfig {
                 : [nxConfig.defaultLanguage];
 
             nxConfig.clientProtocol = description.uriProtocol;
-        } else if (!environment.isLocal && Object.keys(data).length > 0) {
+        } else if (!environment.isWebadmin && Object.keys(data).length > 0) {
             // extend CONFIG ... ugly // @ts-ignore ... no implementation for // @ts-ignore-start/end
             // This was done every time a system is created. Its only need once
             nxConfig.accessRoles.predefinedRoles.forEach((option: Role) => {

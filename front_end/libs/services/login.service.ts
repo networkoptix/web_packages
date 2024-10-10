@@ -46,7 +46,7 @@ export class NxLoginService {
     private handleCode(code: string, scopedToken: boolean): Promise<string> {
         let sessionRenewal: Promise<string>;
 
-        if (!environment.isLocal) {
+        if (!environment.isWebadmin) {
             sessionRenewal = firstValueFrom(
                 this.http.post('/api/account/renewSession', { code }),
             ).then(() => {
@@ -79,7 +79,7 @@ export class NxLoginService {
             return Promise.resolve(false);
         }
 
-        if (environment.isLocal && NxBootstrapProvider.isNewSystem) {
+        if (environment.isWebadmin && NxBootstrapProvider.isNewSystem) {
             return Promise.resolve('newSystem');
         }
 
@@ -92,7 +92,7 @@ export class NxLoginService {
 
     async updateSession(state: string, scopedToken: boolean = true): Promise<string | undefined> {
         if (
-            (['disconnect', 'transfer'].includes(state) && !environment.isLocal) ||
+            (['disconnect', 'transfer'].includes(state) && !environment.isWebadmin) ||
             (this._currentSystem.useRest && this._currentSystem.mediaserver.isSessionOauth)
         ) {
             if (!(await this.pingCloud())) {
@@ -110,7 +110,7 @@ export class NxLoginService {
                 params.append('email', this._currentSystem.currentUserEmail);
             }
             const queryString = params.toString();
-            const authorizeUrl = `${environment.isLocal ? '/#' : ''}/cloud-authorize${
+            const authorizeUrl = `${environment.isWebadmin ? '/#' : ''}/cloud-authorize${
                 queryString ? '?' + queryString : ''
             }`;
             window.open(authorizeUrl, '_blank')?.focus();

@@ -49,7 +49,8 @@ export class NxSystemsService {
         // Ignore preloaded account on cloud
         // Also ignore first assignment missing security properties
         filter(
-            acc => acc && (environment.isLocal || ('email' in acc && 'account2faEnabled' in acc)),
+            acc =>
+                acc && (environment.isWebadmin || ('email' in acc && 'account2faEnabled' in acc)),
         ),
         distinctUntilChanged<Account>(isEqual),
     );
@@ -57,10 +58,10 @@ export class NxSystemsService {
     mergingSystems = new Set<string>();
     systemsSubject = merge(this.currentUser$, this.updateSystems$).pipe(
         withLatestFrom(this.currentUser$),
-        filter(([_, email]) => environment.isLocal || !!email),
+        filter(([_, email]) => environment.isWebadmin || !!email),
         // Ignore manual update signal if email has not been assigned
         switchMap(([systems]) => {
-            if (environment.isLocal) {
+            if (environment.isWebadmin) {
                 return Promise.resolve([] as NxSystemInfo[]);
             }
             return Array.isArray(systems)
@@ -192,7 +193,7 @@ export class NxSystemsService {
     }
 
     forceUpdateSystems(): Observable<NxSystemInfo[]> {
-        if (environment.isLocal) {
+        if (environment.isWebadmin) {
             return of([]);
         }
 

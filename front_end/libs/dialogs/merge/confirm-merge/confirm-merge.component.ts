@@ -42,7 +42,7 @@ export class NxMergeConfirmMergeComponent implements OnChanges {
     @Input() errorCode: string;
     @Input() tooManyServers: boolean = false;
     @Input() isSessionOauth: boolean = false;
-    @Input() isLocal: boolean;
+    @Input() isWebadmin: boolean;
     @Output() passwordChange = new EventEmitter<string>();
     @Output() setCurrentState = new EventEmitter<MergeState>();
 

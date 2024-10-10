@@ -8,7 +8,7 @@
         [ngStyle]="{ 'minWidth.px': '280', 'minHeight.px': '80' }"
         [src]="
             icons.dirSectionPlaceholder +
-            (environment.isLocal ? 'local_header' : 'cloud_header') +
+            (environment.isWebadmin ? 'local_header' : 'cloud_header') +
             '.svg'
         "
         [svgStyle]="{ 'width.px': '320', 'height.px': '80' }"
@@ -36,7 +36,7 @@
         name="emailForm"
         class="form"
     >
-        <ng-container *ngIf="!environment.isLocal; else webadmin">
+        <ng-container *ngIf="!environment.isWebadmin; else webadmin">
             <label
                 for="authorizeEmail"
                 class="mb-2"

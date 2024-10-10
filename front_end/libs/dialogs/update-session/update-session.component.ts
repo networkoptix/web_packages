@@ -113,7 +113,7 @@ export class NxUpdateSessionModalContent extends ModalBase<DT['return']> {
                 }
             })
             .catch(() => {
-                this.isCloud = !environment.isLocal;
+                this.isCloud = !environment.isWebadmin;
             })
             .finally(() => {
                 setTimeout(() => {
@@ -160,7 +160,7 @@ export class NxUpdateSessionModalContent extends ModalBase<DT['return']> {
             },
         );
 
-        if (!environment.isLocal || system.mediaserver.isSessionOauth) {
+        if (!environment.isWebadmin || system.mediaserver.isSessionOauth) {
             loginService.currentSystem = system;
             loginService
                 .updateSession(sessionState, isScopedRequest)

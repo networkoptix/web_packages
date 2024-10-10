@@ -107,7 +107,7 @@ export class AddWidgetModalContent {
 
     downloadWidget = async (widgetUrl, isDevServer = false): Promise<void> => {
         // To handle cors issue when developing locally
-        widgetUrl = this.environment.isLocal
+        widgetUrl = this.environment.isWebadmin
             ? widgetUrl
             : last(widgetUrl.split(this.environment.cloudHost));
         const devSource = `${widgetUrl}/widget.html`;

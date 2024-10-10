@@ -48,7 +48,7 @@ export class NxMergeSelectSystemComponent implements OnInit, OnChanges {
     @Input() existingSystems: { [ip: string]: string };
     @Input() getSystemInfo: (systemId: string) => Promise<ModuleInformation>;
     @Input() errorCode: string;
-    @Input() isLocal: boolean;
+    @Input() isWebadmin: boolean;
     @Input() otherSystem: boolean;
     @Input() checking: boolean;
     @Input() checkedOnce: boolean;
@@ -97,7 +97,7 @@ export class NxMergeSelectSystemComponent implements OnInit, OnChanges {
         this.downloadHTML = `<span>${latestBuild}</span>`;
         if (this.cloudHost) {
             this.downloadHTML = `<a href=\"${
-                this.isLocal ? this.cloudHost : ''
+                this.isWebadmin ? this.cloudHost : ''
             }/download" target=\"_blank\">${latestBuild}</a>`;
         }
 
@@ -180,7 +180,7 @@ export class NxMergeSelectSystemComponent implements OnInit, OnChanges {
                     status = this.ti(this.LANG.dialogs.merge.secondaryCannotMerge, name);
                 }
 
-                if (this.isLocal) {
+                if (this.isWebadmin) {
                     if (cloudSystemId) {
                         // doesn't catch when current system is a local system
                         if (this.system.serverManager?.moduleInfo.cloudSystemId) {
@@ -221,7 +221,7 @@ export class NxMergeSelectSystemComponent implements OnInit, OnChanges {
             },
         );
 
-        if (this.isLocal) {
+        if (this.isWebadmin) {
             processedSystems.push(
                 { value: undefined, name: 'horizontal' },
                 { value: 'otherSystem', name: this.ti(this.LANG.dialogs.merge.otherSystem) },
@@ -233,7 +233,7 @@ export class NxMergeSelectSystemComponent implements OnInit, OnChanges {
 
     updateErrorMessage(errorKey: string): void {
         if (['systemVersionOld', 'systemVersionNew', 'systemsIncompatible'].includes(errorKey)) {
-            errorKey = this.isLocal ? 'systemsIncompatible' : 'systemVersionsNotMatch';
+            errorKey = this.isWebadmin ? 'systemsIncompatible' : 'systemVersionsNotMatch';
         }
         if (!errorKey) {
             errorKey = 'unknownError';
@@ -297,7 +297,7 @@ export class NxMergeSelectSystemComponent implements OnInit, OnChanges {
             }
         } else {
             let targetSystem: MergeSystem;
-            if (!this.isLocal) {
+            if (!this.isWebadmin) {
                 const systemModuleInfo = await this.getSystemInfo(selectedSystem.value);
 
                 for (const system of this.mergeSystems) {

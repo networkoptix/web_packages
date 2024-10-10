@@ -5,13 +5,12 @@ import {
     HttpInterceptor,
     HttpRequest,
 } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, isDevMode } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 import { ToastType } from '@components/toast-container/toast.types';
-import { environment } from '@environments/environment';
 import { nxConfig } from '@services/nx-config/config';
 import { NxToastService } from '@services/toast.service';
 import { selectCurrentUser } from '@store/account/account.selectors';
@@ -26,7 +25,7 @@ export class ServerErrorInterceptor implements HttpInterceptor {
         return next.handle(request).pipe(
             catchError(error => {
                 const flagEnabled = nxConfig.featureFlags.use500ErrorInterceptor;
-                const devEnv = !environment.production;
+                const devEnv = isDevMode();
                 const qaEnv = this.account$$()?.is_staff && location.host.endsWith('.hdw.mx');
                 if (devEnv || (flagEnabled && qaEnv)) {
                     if (error instanceof HttpErrorResponse && error.status === 500) {

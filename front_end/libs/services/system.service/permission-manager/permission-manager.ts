@@ -220,7 +220,7 @@ export class PermissionManager {
     isCloud$$ = computed<boolean>(() => this.type$$() === UserType.cloud);
     isLdap$$ = computed<boolean>(() => this.type$$() === UserType.ldap);
     isTemporaryLocal$$ = computed<boolean>(() => this.type$$() === UserType.temporaryLocal);
-    isLocal$$ = computed<boolean>(
+    isWebadmin$$ = computed<boolean>(
         () => this.type$$() === UserType.local || this.isTemporaryLocal$$(),
     );
     private checkIsOwner = (
@@ -277,7 +277,7 @@ export class PermissionManager {
                 )?.name ||
                 customRole?.name ||
                 '';
-        } else if (!environment.isLocal) {
+        } else if (!environment.isWebadmin) {
             // If roles is empty that means we couldn't fetch them from the system.
             // As a fallback for cloud we can try to get the accessRole from cdb.
             accessRole = (user as CloudUserCompat).accessRole;
@@ -478,10 +478,10 @@ export class PermissionManager {
                 return false;
             }),
             timeout({
-                first: environment.isLocal ? 10_000 : 5_000,
+                first: environment.isWebadmin ? 10_000 : 5_000,
                 with: async () => {
                     const currentUser = this.currentUser$$();
-                    if (environment.isLocal || currentUser) {
+                    if (environment.isWebadmin || currentUser) {
                         return currentUser;
                     }
                     await this.getCurrentUserFromCloud();

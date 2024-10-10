@@ -8,7 +8,7 @@
         [ngStyle]="{ 'minWidth.px': '320', 'minHeight.px': '80' }"
         [src]="
             icons.dirSectionPlaceholder +
-            (environment.isLocal ? 'local_header' : 'cloud_header') +
+            (environment.isWebadmin ? 'local_header' : 'cloud_header') +
             '.svg'
         "
         [svgStyle]="{ 'width.px': '320', 'height.px': '80' }"

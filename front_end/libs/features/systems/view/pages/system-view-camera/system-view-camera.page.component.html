@@ -63,7 +63,7 @@
         </div>
     </header>
     <nx-camera-details
-        *ngIf="(isLocal || CONFIG.featureFlags.viewCameraDetails) && cameraDetailsShown"
+        *ngIf="(isWebadmin || CONFIG.featureFlags.viewCameraDetails) && cameraDetailsShown"
         [camera]="camera"
         (close)="toggleCameraDetails(false)"
     >
@@ -139,7 +139,7 @@
             </ng-template>
         </div>
         <div
-            *ngIf="isLocal || CONFIG.featureFlags.viewCameraDetails"
+            *ngIf="isWebadmin || CONFIG.featureFlags.viewCameraDetails"
             class="section camera-details-toggler"
             (click)="toggleCameraDetails()"
             translate

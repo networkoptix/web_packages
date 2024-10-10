@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, isDevMode, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
@@ -90,7 +90,7 @@ export class NxLandingComponent implements OnInit {
             this.router.navigateByUrl('new-landing', { skipLocationChange: true });
         }
 
-        this.createUrl = environment.production
+        this.createUrl = !isDevMode()
             ? '/authorize?client_type=create'
             : `https://${environment.cloudHost}/authorize?redirect_uri=${window.location.href}&client_type=create`;
     }

@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, isDevMode, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 
@@ -22,7 +22,7 @@ import type { NxSystemInfo } from './systems.service.types';
     providedIn: 'root',
 })
 export class NxVmsClientService {
-    private host = environment.production ? window.location.host : environment.cloudHost;
+    private host = !isDevMode() ? window.location.host : environment.cloudHost;
 
     constructor(
         private router: Router,
@@ -52,7 +52,7 @@ export class NxVmsClientService {
     }
 
     private async getLinkOauth(systemId: string): Promise<{ code: string; link: string }> {
-        const { code } = environment.isLocal
+        const { code } = environment.isWebadmin
             ? { code: '' }
             : await firstValueFrom(this.cloudApiService.getCode('*'));
         return { code, link: this.generateLink(systemId, '', code) };

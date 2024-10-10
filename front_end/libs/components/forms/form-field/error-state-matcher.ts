@@ -1,6 +1,5 @@
+import { isDevMode } from '@angular/core';
 import type { FormGroupDirective, NgControl } from '@angular/forms';
-
-import { environment } from '@environments/environment';
 
 /** State of a form control, usually a validation error.
  *
@@ -104,7 +103,7 @@ export function errorMatcherFactory(
         }
 
         /* Potential pitfall: forgetting to add the trigger for an error */
-        if (!environment.production) {
+        if (isDevMode()) {
             const notYetTouched = control.untouched && blurErrors.some(e => e in errors);
             const notYetSubmitted = !form.submitted && submitErrors.some(e => e in errors);
             if (!(notYetTouched || notYetSubmitted)) {

@@ -245,7 +245,7 @@ export class NxDashboardComponent implements DashboardGroup {
         }
 
         // Used to prevent cors issue when developing locally
-        const dashboardUrlCleaned = this.environment.isLocal
+        const dashboardUrlCleaned = this.environment.isWebadmin
             ? dashboardUrl
             : last(dashboardUrl.split(this.environment.cloudHost));
 

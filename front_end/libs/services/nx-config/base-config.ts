@@ -59,7 +59,7 @@ export interface BaseConfig {
     integration: Integration | any;
     ipvd: Ipvd;
     isInIframe: boolean;
-    isLocal: boolean;
+    isWebadmin: boolean;
     isDarkTheme: boolean;
     landing: Landing;
     licenseServer: string;

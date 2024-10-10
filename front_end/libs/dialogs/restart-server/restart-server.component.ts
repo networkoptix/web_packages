@@ -133,7 +133,7 @@ export class RestartServerModalContent extends ModalBase<DT['return']> {
                             }
                         }),
                         mergeMap(() => {
-                            if (environment.isLocal) {
+                            if (environment.isWebadmin) {
                                 // give the user chance to read the toaster
                                 setTimeout(() => window.location.reload(), 2000);
                                 throw Error('re-login on restart');

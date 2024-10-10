@@ -54,7 +54,7 @@ export class NxSystemAPIService {
         | NxSystemRestAPI2
         | NxSystemRestAPI3
         | NxSystemRestAPI4 {
-        if (environment.isLocal && this.localApi && !(user || systemId || serverId)) {
+        if (environment.isWebadmin && this.localApi && !(user || systemId || serverId)) {
             return this.localApi;
         }
         const useRest = Math.floor(version) > 4;
@@ -80,7 +80,7 @@ export class NxSystemAPIService {
             skipSettingSystem,
         ] as const;
 
-        if (useRest || environment.isLocal) {
+        if (useRest || environment.isWebadmin) {
             let restApi: NxSystemRestAPI | NxSystemRestAPI2 | NxSystemRestAPI3 | NxSystemRestAPI4;
             if (version > 6.0) {
                 restApi = new NxSystemRestAPI4(...args);
@@ -91,7 +91,7 @@ export class NxSystemAPIService {
             } else {
                 restApi = new NxSystemRestAPI(...args);
             }
-            if (environment.isLocal) {
+            if (environment.isWebadmin) {
                 if (!this.localApi) {
                     this.localApi = restApi;
                 } else {
