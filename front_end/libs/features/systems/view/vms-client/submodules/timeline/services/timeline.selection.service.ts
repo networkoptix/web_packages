@@ -252,6 +252,11 @@ export class TimelineSelectionService {
 
     handleMouseUp(): boolean {
         let result = true;
+
+        // prevent time under the mouse showing up at wrong position.
+        // it will be reset by mouse move and moveInOut method -- [T]
+        this.hoverMode = true;
+
         if (
             this.dragMode === SELECTION_DRAG_MODE.DRAGGING_BACKGROUND &&
             this.timeline.durationToDomWidth(this.selectedRange.duration) <= MIN_SELECTION_WIDTH_PX

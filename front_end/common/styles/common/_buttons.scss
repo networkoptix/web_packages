@@ -191,6 +191,11 @@ button:not([data-escape-global-style]),
         stroke: var(--btn-dropdown-toggle-color);
         fill: none;
     }
+
+    &.new-header-lang {
+        padding: 0 !important;
+        margin-top: 4px !important;
+    }
 }
 
 .btn.btn-primary {
