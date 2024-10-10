@@ -1,0 +1,10 @@
+slack-review-bot:
+  image:
+    name: ${DJANGO_PYTHON_IMAGE}:${DJANGO_PYTHON_IMAGE_TAG}
+  script:
+    - pip install requests
+    - python bots/review_bot/check_mrs.py
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: always
+      allow_failure: true

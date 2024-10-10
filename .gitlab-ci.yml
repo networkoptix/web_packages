@@ -11,6 +11,7 @@ include:
   - local: "ci/.shared.yml"
   - local: "ci/.jenkins-builds.yml"
   - local: "ft/ci/.gitlab-ci.yml"
+  - local: "bots/ci/.gitlab-ci.yml"
 
 default:
   tags:
