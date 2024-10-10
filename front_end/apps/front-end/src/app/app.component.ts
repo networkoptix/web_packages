@@ -6,7 +6,6 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import { LocalStorageService } from 'ngx-webstorage';
 
 import { NxDialogsService } from '@dialogs/dialogs.service';
-import { environment } from '@environments/environment';
 import { NxAccountService } from '@services/account.service';
 import { NxApplyService } from '@services/apply.service';
 import { NxAppStateService } from '@services/nx-app-state.service';
@@ -55,9 +54,9 @@ export class AppComponent {
             this.accountService.handleRefreshTokenLogin(refreshToken).finally(() => {
                 this.appStateService.ready = true;
             });
-        } else if (!environment.isLocal && auth) {
+        } else if (auth) {
             this.accountService.handleAuthKeyLogin(auth);
-        } else if (!environment.isLocal && code && !url.toString().includes('cloud-authorize')) {
+        } else if (code && !url.toString().includes('cloud-authorize')) {
             this.accountService.handleCodeLogin(code);
         } else {
             this.accountService.get(true).finally(() => {
@@ -112,14 +111,12 @@ export class AppComponent {
         } // else -> unknown platform or device ... cross fingers and hope for the best
 
         if (!NxBootstrapProvider.isLoaded) {
-            if (!environment.isLocal) {
-                this.router
-                    .navigate(['/503'])
-                    .catch(error => console.error(error))
-                    .finally(() => {
-                        this.appStateService.ready = true;
-                    });
-            }
+            this.router
+                .navigate(['/503'])
+                .catch(error => console.error(error))
+                .finally(() => {
+                    this.appStateService.ready = true;
+                });
             this.appStateService.headerVisibility = false;
             this.appStateService.footerVisibility = false;
             return;
@@ -159,7 +156,7 @@ export class AppComponent {
             this.appStateService.footerVisibility = false;
         }
 
-        if (!environment.isLocal && !nxConfig.isInIframe && !navigator.webdriver) {
+        if (!nxConfig.isInIframe && !navigator.webdriver) {
             if (nxConfig.featureFlags.fullStory && nxConfig.cloudMonitoring.fullStory) {
                 try {
                     FullStory.init({ orgId: nxConfig.cloudMonitoring.fullStory });
