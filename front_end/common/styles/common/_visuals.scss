@@ -18,21 +18,12 @@
     color: var(--search-highlight-color);
 }
 
-.brand-text {
-    color: var(--brand-core) !important;
-}
-
 .ellipsis {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     max-width: 100%;
     line-height: initial;
-}
-
-.process-loading {
-    border: none;
-    box-shadow: none;
 }
 
 .border-left {
@@ -49,10 +40,6 @@
 
 .border-bottom {
     border-bottom: 1px solid var(--border-color) !important;
-}
-
-.light-color {
-    color: theme_variables_common.$gray-light;
 }
 
 .preloader {
