@@ -9,6 +9,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { StoreModule } from '@ngrx/store';
 import { TranslateCompiler, TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
+import { NgxIndexedDBModule } from 'ngx-indexed-db';
 import {
     MESSAGE_FORMAT_CONFIG,
     TranslateMessageFormatCompiler,
@@ -16,6 +17,7 @@ import {
 import { NgxWebstorageModule } from 'ngx-webstorage';
 
 import { cdProviders } from '@common/bootstrap';
+import { dbConfig } from '@services/index_db_config';
 import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
 import { NxUriCacheService } from '@services/uri-cache.service';
 import { WINDOWS_PROVIDERS } from '@services/window-provider';
@@ -44,6 +46,7 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
         }),
         AngularSvgIconModule.forRoot(),
         NgxWebstorageModule.forRoot(),
+        NgxIndexedDBModule.forRoot(dbConfig),
     ],
     providers: [
         ...cdProviders,
