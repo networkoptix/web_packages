@@ -20,11 +20,6 @@ import { getExpirationText } from './bookmark-sharing.util';
 import { NxShareDetailsComponent } from './share-details/share-details.component';
 import { NxShareEditComponent } from './share-edit/share-edit.component';
 
-const DEFAULT_SHARE_PARAMS = {
-    expirationTimeMs: Date.now() + MS.day,
-    password: '',
-};
-
 @Component({
     selector: 'nx-bookmark-share',
     templateUrl: 'bookmark-share.component.html',
@@ -40,6 +35,11 @@ const DEFAULT_SHARE_PARAMS = {
     ],
 })
 export class NxBookmarkShareComponent {
+    DEFAULT_SHARE_PARAMS = {
+        expirationTimeMs: Date.now() + MS.day,
+        password: '',
+    };
+
     mediaServer: NxSystemRestAPI4;
 
     shareUrl: string;
@@ -61,7 +61,7 @@ export class NxBookmarkShareComponent {
 
         // When the user clicks Share and opens this dialog we want to share the bookmark if it's not already shared
         if (!this.bookmark.share) {
-            this.updateBookmarkShareData(DEFAULT_SHARE_PARAMS);
+            this.updateBookmarkShareData(this.DEFAULT_SHARE_PARAMS);
         } else {
             this.loading.set(false);
             this.updateTextDetails();
