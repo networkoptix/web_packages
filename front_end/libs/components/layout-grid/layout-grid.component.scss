@@ -27,6 +27,7 @@
     --z-index-resize-handle: calc(var(--z-index-tile-border) + 1);
     --z-index-status-ribbon: calc(var(--z-index-resize-handle) + 1);
     --z-index-menu-tab: calc(var(--z-index-status-ribbon) + 1);
+    background: var(--body-bg);
 
     width: 100%;
     height: 100%;

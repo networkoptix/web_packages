@@ -1,10 +1,17 @@
 :host {
-    html[data-theme="light"] &, html[data-theme="light-gray"] & {
+
+    html[data-theme="light"] &,
+    html[data-theme="light-gray"] &,
+    .theme-override[data-theme="light-gray"] &,
+    .theme-override[data-theme="light"] & {
         --skeleton-background: var(--light6);
         --skeleton-progress-color: var(--light5);
     }
 
-    html[data-theme="dark"] &, html[data-theme="dark-gray"] & {
+    html[data-theme="dark"] &,
+    html[data-theme="dark-gray"] &,
+    .theme-override[data-theme="dark-gray"] &,
+    .theme-override[data-theme="dark"] & {
         --skeleton-background: var(--dark6);
         --skeleton-progress-color: var(--dark5);
     }
@@ -14,6 +21,6 @@
     --skeleton-margin-bottom: 8px;
 }
 
-::ng-deep ngx-skeleton-loader > .skeleton-loader.progress::before {
+::ng-deep ngx-skeleton-loader>.skeleton-loader.progress::before {
     background-image: var(--progress-background) !important;
 }

@@ -10,10 +10,9 @@ import {
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-import { BehaviorSubject } from 'rxjs';
+import { map, startWith } from 'rxjs';
 
 import { NxAccountService } from '@services/account.service';
-import { nxConfig } from '@services/nx-config/config';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { icons } from '@static-variables';
@@ -30,7 +29,17 @@ export class NxMainActionComponent implements AfterViewInit {
     @Output() widthChange = new EventEmitter<number>();
     @ViewChild('mainAction') mainActionRef: ElementRef<HTMLElement>;
 
-    action$ = new BehaviorSubject<'login' | 'logout' | 'none'>('none');
+    action$ = this.headerService.currentLocation$.pipe(
+        map(currentLocation => currentLocation?.path === '/account'),
+        map(isAccountPage =>
+            isAccountPage
+                ? 'logout'
+                : this.accountService.account?.is_authenticated
+                  ? 'none'
+                  : 'login',
+        ),
+        startWith('none'),
+    );
     icons = icons;
 
     constructor(
@@ -41,17 +50,6 @@ export class NxMainActionComponent implements AfterViewInit {
         scrollMechanics.windowSizeSubject.pipe(untilDestroyed(this)).subscribe(() => {
             this.getMainActionWidth();
         });
-
-        this.headerService.currentLocation$
-            .pipe(untilDestroyed(this))
-            .subscribe(currentLocation => {
-                const path = currentLocation?.path;
-                if (path === '/account') {
-                    this.action$.next('logout');
-                } else {
-                    this.action$.next(nxConfig.preloadedAccount ? 'none' : 'login');
-                }
-            });
 
         this.action$.pipe(untilDestroyed(this)).subscribe(() => {
             setTimeout(() => {

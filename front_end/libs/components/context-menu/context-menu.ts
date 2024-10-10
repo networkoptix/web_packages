@@ -27,6 +27,10 @@ import { icons } from '@static-variables';
         AngularSvgIconModule,
         NxAddSvgSrcDirective,
     ],
+    host: {
+        class: 'theme-override',
+        'data-theme': 'dark',
+    },
 })
 export class NxContextMenu<Context> implements OnInit {
     static POSITIONS: { [key: string]: ConnectedPosition[] } = {

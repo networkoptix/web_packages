@@ -118,6 +118,10 @@ const onlyActiveOrgs = (org: Organization): boolean => org.effectiveState === 'a
         NxPagePlaceholderComponent,
         LayoutStateModule,
     ],
+    host: {
+        class: 'theme-override',
+        'data-theme': 'dark',
+    },
 })
 export class NxLayoutViewComponent {
     LANG = staticLang;
@@ -374,9 +378,9 @@ export class NxLayoutViewComponent {
         this.selectedSystem$.pipe(untilDestroyed(this)).subscribe(system => {
             this.setQueryParamState();
             this.pageService.pageTitle(
-                [staticLang.pageTitles.layouts, system.info.name, this.CONFIG.cloudName].join(
-                    ' - ',
-                ),
+                [staticLang.pageTitles.layouts, system?.info.name, this.CONFIG.cloudName]
+                    .filter(Boolean)
+                    .join(' - '),
             );
         });
         this.#selectedLayout$
