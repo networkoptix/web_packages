@@ -152,6 +152,9 @@ export class NxIpvdComponent implements OnInit, OnDestroy {
         private breakpointObserver: BreakpointObserver,
     ) {
         this.CONFIG = configService.getConfig();
+        this.$searchVendor
+            .pipe(debounceTime(50), takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => this.handleSearchVendor());
 
         this.setupDefaults();
         this.locationSubscription = this.location.subscribe(() => {
@@ -512,7 +515,13 @@ export class NxIpvdComponent implements OnInit, OnDestroy {
         return tags || multiselect || singleSelect || this.filterModel.query !== '';
     }
 
+    $searchVendor = new Subject<void>();
+
     searchVendor(): void {
+        this.$searchVendor.next();
+    }
+
+    handleSearchVendor(): void {
         if (!this.params.camera && this.activeCamera) {
             this.resetActiveCamera();
         }

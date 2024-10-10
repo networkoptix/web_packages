@@ -12,6 +12,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { TranslateCompiler, TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
+import { NgxIndexedDBModule } from 'ngx-indexed-db';
 import { TranslateMessageFormatCompiler } from 'ngx-translate-messageformat-compiler';
 import {
     InMemoryStorageStrategy,
@@ -23,6 +24,7 @@ import * as patchWindow from 'test_utils/patch_window';
 
 import { PipesModule } from '@pipes/pipes.module';
 import { NxAccountService } from '@services/account.service';
+import { dbConfig } from '@services/index_db_config';
 import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
 import { nxConfig } from '@services/nx-config/config';
 import { DynamicConfig } from '@services/nx-config/dynamic-config';
@@ -147,6 +149,7 @@ export const testBedSetupFactory =
             StoreModule.forFeature('channelPartners', channelPartnersReducer),
             EffectsModule.forRoot([AccountSync, SystemsSync]),
             NoopAnimationsModule,
+            NgxIndexedDBModule.forRoot(dbConfig),
         ];
 
         const commonProviders = [

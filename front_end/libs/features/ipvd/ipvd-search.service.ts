@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import type { MultiSelectItem } from '@components/dropdowns/multi-select/multi-select.component.types';
 import type { SearchFilter } from '@components/search/search.component.types';
 import type { Cameras } from '@services/nx-cloud-api/nx-cloud-api.types';
-import { alphabeticalSort } from '@utils/general';
+import { alphabeticalSort, presortCollator } from '@utils/general';
 
 @Injectable({
     providedIn: 'root',
@@ -121,6 +121,7 @@ export class IpvdSearchService {
                     ? queryTerms.every(term => filterCamera(camera, term))
                     : true;
             })
+            .sort((a, b) => presortCollator(a.id, b.id))
             .sort(alphabeticalSort(cam => cam.id));
     }
 }

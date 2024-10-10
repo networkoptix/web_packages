@@ -4,7 +4,7 @@ third party data/types it should probably go in nx.ts instead. */
 
 import { Location } from '@angular/common';
 import { isDevMode } from '@angular/core';
-import { last, zip } from 'lodash-es';
+import { last, memoize, zip } from 'lodash-es';
 import { combineLatest, Observable, timer } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -302,21 +302,53 @@ const initialProcessSteps: ProcessStep[] = [
 
 const fallbackProcessSteps: ProcessStep[] = [];
 
+const getCollator = memoize(
+    (locale: Intl.LocalesArgument, options: Intl.CollatorOptions): Intl.Collator['compare'] =>
+        new Intl.Collator(locale, options).compare,
+    (locale, options) =>
+        [
+            locale,
+            Object.entries(options)
+                .sort(([a], [b]) => (a < b ? -1 : 1))
+                .join(''),
+        ].join('-'),
+);
+
+/**
+ * For use before running alphaNumericSort to presort items.
+ *
+ * The alphaNumericSort does several passes to sort according to our global natural sorting spec.
+ *
+ * This can be inefficient for large unsorted datasets.
+ */
+export const presortCollator = getCollator(navigator.language, {
+    numeric: true,
+    ignorePunctuation: false,
+    caseFirst: 'false' as const,
+    usage: 'sort' as const,
+    sensitivity: 'base' as const,
+});
+
 const initialSortingPasses = (
     options: Intl.CollatorOptions,
 ): ((a: string, b: string) => number)[] => {
-    const ignoreCase = (a: string, b: string): number =>
-        a.toLowerCase().localeCompare(b.toLowerCase(), navigator.language, options);
+    const collatorIgnoreCase = getCollator(navigator.language, {
+        ...options,
+        sensitivity: 'base',
+        caseFirst: 'false',
+    });
+    const collatorUpperFirst = getCollator(navigator.language, {
+        ...options,
+        caseFirst: 'upper',
+    });
 
-    const upperFirst = (a: string, b: string): number =>
-        a.localeCompare(b, navigator.language, { ...options, caseFirst: 'upper' });
-
-    return [ignoreCase, upperFirst];
+    return [collatorIgnoreCase, collatorUpperFirst];
 };
 
 const fallbackSortingPasses = (
     options: Intl.CollatorOptions,
 ): ((a: string, b: string) => number)[] => {
+    const collator = getCollator(navigator.language, options);
     const shortestFirst = (a: string, b: string): number => {
         const firstDiff = zip(a.split(''), b.split(''))
             .map(([diffA = '', diffB = '']) => ({ diffA, diffB }))
@@ -326,7 +358,7 @@ const fallbackSortingPasses = (
             const diffs = [diffA, diffB];
             const dashedLast = diffs.every(Boolean) && diffs.some(diff => diff === '-');
 
-            const result = diffA.localeCompare(diffB, navigator.language, options);
+            const result = collator(diffA, diffB);
             if (dashedLast) {
                 return -result;
             }
@@ -343,6 +375,14 @@ const fallbackSortingPasses = (
  * Numeric segments are sorted numerically, while alphabetic segments are sorted alphabetically.
  *
  * This is to match the sorting behavior used within the thick client.
+ *
+ * **NOTE**
+ *
+ * Sorting could take longer for large unsorted datasets. In such cases, consider using {@link presortCollator}
+ *
+ * ```typescript
+ * const sorted = items.sort(presortCollator, alphaNumericSort(name => name));
+ * ```
  *
  * See global sorting spec for more details:
  *
