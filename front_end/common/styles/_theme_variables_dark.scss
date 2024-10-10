@@ -572,8 +572,8 @@ html[data-theme="dark"], .theme-override[data-theme="dark"] {
 
     --card-simple-warning-bg           : var(--yellow_d2_lighter);
     --card-simple-warning-border-color : var(--yellow_d2_lighter);
-    --card-simple-warning-color        : var(--dark3, #0D0E0F); //$dark3;
-    --card-simple-warning-svg-color    : var(--dark3, #0D0E0F); //$dark3;
+    --card-simple-warning-color        : var(--light4, #E1E7EA); //$light4;
+    --card-simple-warning-svg-color    : var(--light4, #E1E7EA); //$light4;
 
     --card-simple-error-bg           : var(--red_d1_lighter);
     --card-simple-error-border-color : var(--red_d1_lighter);
