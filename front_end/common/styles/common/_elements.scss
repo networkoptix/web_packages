@@ -129,12 +129,6 @@ svg-icon[data-escape-global-style] svg {
     }
 }
 
-h1.process-success {
-    line-height: 1.5;
-    display: flex;
-    justify-content: center;
-}
-
 h1 .badge {
     margin-left: 8px;
 }
@@ -149,10 +143,6 @@ h1 .badge {
     cursor: default !important;
 }
 
-.help-topic {
-    margin-top: 10px;
-}
-
 .min-w-80 {
     min-width: 80px;
 }
@@ -165,27 +155,10 @@ h1 .badge {
     min-width: 120px;
 }
 
-.wide-button {
-    width: 102px;
-}
-
-.help-block-no-height {
-    min-height: 0 !important;
-}
-
-.light-label {
-    font-weight: initial;
-    padding-left: 4px;
-}
-
 .light-text {
     color: var(--light-text-color);
     opacity: var(--light-text-opacity);
     font-size: 13px;
-}
-
-span.marked {
-    background-color: var(--light4);
 }
 
 .pseudo-anchor {
@@ -214,25 +187,6 @@ span.marked {
     &.no-container-background .cdk-dialog-container {
         box-shadow: none;
         background: none;
-    }
-}
-
-.info-note {
-    display: flex;
-    align-items: flex-start;
-    padding: 0 0 0.5rem;
-    width: 60%;
-
-    svg-icon svg .icon-with-fill {
-        fill: var(--svg-table-button) !important;
-    }
-
-    span {
-        margin-left: .5rem;
-        line-height: 1rem;
-        @include typography.regular14nocolor;
-        color: var(--svg-table-button);
-
     }
 }
 
