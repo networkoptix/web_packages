@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { BehaviorSubject, Subject, Subscription } from 'rxjs';
-import { filter, map, take } from 'rxjs/operators';
+import { BehaviorSubject, merge, Subject, Subscription } from 'rxjs';
+import { filter, map, scan, startWith, take } from 'rxjs/operators';
 
 import { environment } from '@environments/environment';
 import staticLang from '@language_static';
@@ -30,6 +31,37 @@ export class NxHeaderService {
     public createAccountButtonType$ = new BehaviorSubject<createButtonType>('primary');
     public authorizeUrl = useNewCloud() ? '/' : '/authorize';
     public createUrl: string;
+
+    private updateRouteHistory$ = new Subject<string[]>();
+
+    public setRouteHistory = (routeHistory: string[]) =>
+        this.updateRouteHistory$.next(routeHistory);
+
+    public routeHistory$$ = toSignal(
+        merge(
+            this.router.events.pipe(
+                filter((event): event is NavigationEnd => event instanceof NavigationEnd),
+                map(event => event.url),
+                startWith(this.router.url),
+            ),
+            this.updateRouteHistory$,
+        ).pipe(
+            scan((acc, url) => {
+                if (Array.isArray(url)) {
+                    return url;
+                }
+
+                if (acc[acc.length - 1] === url) {
+                    return acc;
+                }
+
+                return [...acc, url];
+            }, []),
+        ),
+        {
+            initialValue: [this.router.url],
+        },
+    );
 
     public dynamicRoutes = {};
 

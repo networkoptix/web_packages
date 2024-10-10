@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
+import { Component, computed, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { RouterModule } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
@@ -70,11 +70,54 @@ export class NxHeaderLogoAreaComponent implements OnChanges {
         ),
     );
 
+    systemData$$ = toSignal(this.systemData$);
     activeSystemName$$ = toSignal(this.systemData$.pipe(map(({ name }) => name)));
+    groupLink$$ = toSignal(this.systemData$.pipe(map(({ id }) => `/home/redirect-to-group/${id}`)));
+    backIconLink$$ = computed(() => {
+        const currentSystemId = this.systemData$$()?.id;
+        const currentSystemRoute = `/systems/${currentSystemId}`;
+        const routeHistory = [
+            ...(function* (routeHistory: string[]): Generator<string> {
+                for (const route of routeHistory) {
+                    if (route.includes(currentSystemRoute)) {
+                        yield route;
+                    } else {
+                        break;
+                    }
+                }
+            })(this.headerService.routeHistory$$().toReversed()),
+        ];
 
-    backIconLink$$ = toSignal(
-        this.systemData$.pipe(map(({ id }) => `/home/redirect-to-group/${id}`)),
-    );
+        if (!currentSystemId) {
+            return '/home';
+        }
+        const extractTab = (url: string) => {
+            const segments = url?.split('/') || [];
+            const currentSegment = segments[3];
+
+            if (!currentSegment || ['cameras', 'users', 'servers'].includes(currentSegment)) {
+                return 'settings';
+            }
+
+            return currentSegment;
+        };
+        const currentTab = extractTab(routeHistory[0]);
+
+        if (routeHistory.length === 1) {
+            return currentSystemRoute;
+        } else if (currentTab !== 'settings') {
+            const previousTabRoute = routeHistory.find(route => extractTab(route) !== currentTab);
+            if (previousTabRoute) {
+                return previousTabRoute.split('?')[0];
+            }
+
+            if (!routeHistory.includes(currentSystemRoute)) {
+                return currentSystemRoute;
+            }
+        }
+
+        return this.groupLink$$();
+    });
 
     constructor(
         public headerService: NxHeaderService,
@@ -106,6 +149,14 @@ export class NxHeaderLogoAreaComponent implements OnChanges {
     }
 
     emitClick(clickType: logoClickType): void {
+        const nextRoute = this.backIconLink$$();
+        if (nextRoute) {
+            const routeHistory = this.headerService.routeHistory$$();
+            const fromEnd = routeHistory.findIndex(route => route.split('?')[0] === nextRoute);
+
+            const updatedRouteHistory = routeHistory.slice(0, routeHistory.length - fromEnd - 1);
+            this.headerService.setRouteHistory(updatedRouteHistory);
+        }
         this.logoClick.emit(clickType);
     }
 
