@@ -13,50 +13,6 @@ body {
     margin    : 0;
 }
 
-html.webclient-page {
-    overflow : hidden; /* WEB-564: this is another hack: we hide scroll for view page */
-
-    body {
-        margin-bottom : 0;
-    }
-
-    .navbar {
-        box-shadow    : none;
-        margin-bottom : 0;
-    }
-}
-
-/* inline mode for portal: no header, dialogs behave like full-screen pages */
-.inline-portal header {
-    display : none;
-}
-
-.inline-portal > .container {
-    padding : 0;
-}
-
-.inline-portal .modal {
-    overflow-y : hidden;
-}
-
-.inline-portal .modal-dialog {
-    width   : 100%;
-    height  : 100%;
-    padding : 0;
-    margin  : 0;
-}
-
-.inline-portal .modal-content {
-    box-shadow    : none;
-    border        : none;
-    height        : 100%;
-    border-radius : 0;
-}
-
-.inline-portal .modal-header .close {
-    display : none;
-}
-
 .screen-reader-only {
     position: absolute;
     left: -10000px;
