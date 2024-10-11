@@ -2,6 +2,7 @@
     "jira": {
         "project_keys": [
             "CLOUD",
+            "INFRA",
             "LIC"
         ]
     },
@@ -28,6 +29,51 @@
                         ],
                         "approvers": [
                             "nhartleb"
+                        ]
+                    }
+                ]
+            }
+        },
+        "code_owner_approval": {
+            "approve_ruleset": {
+                "relevance_checker": "match_name_pattern",
+                "rules": [
+                    {
+                        "patterns": [
+                            "build_scripts/.+",
+                            "channel_partners/.+",
+                            "ci/.+",
+                            "cloud/.+",
+                            "deploy/.+",
+                            "desktop_notifications/.+",
+                            "webadmin/.+"
+                        ],
+                        "approvers": [
+                            "nhartleb",
+                            "rbarsegian"
+                        ]
+                    },
+                    {
+                        "patterns": [
+                            "front_end/.+"
+                        ],
+                        "approvers": [
+                            "awu",
+                            "czach",
+                            "nhartleb",
+                            "rbarsegian",
+                            "ttsolov"
+                        ]
+                    },
+                    {
+                        "patterns": [
+                            "ft/.+"
+                        ],
+                        "approvers": [
+                            "azosimov",
+                            "gsovetov",
+                            "visimetov",
+                            "vshebanov"
                         ]
                     }
                 ]
