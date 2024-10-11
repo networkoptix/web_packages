@@ -223,7 +223,7 @@ class TestCloudSessionAuthentication(WithInstanceFixture):
 class TestCustomizationBearerAuthentication(WithInstanceFixture):
     view_class = CustomizationBearerAuthentication
 
-    def test_authenticate_credentials(self, arf, mocker, instance, db):
+    def test_authenticate_credentials_without_account(self, arf, mocker, instance, db):
         cdb_url = f'{uuid4()}'
         token = f'{uuid4()}'
         username = f'{uuid4()}@test.test'
@@ -234,17 +234,49 @@ class TestCustomizationBearerAuthentication(WithInstanceFixture):
         mock_cdb_config = mocker.patch.object(CloudDbConfig, 'url', return_value=cdb_url)
         mock_auth = mocker.patch.object(Clouddb_Auth, 'validate_token', return_value=auth_response)
         request = arf.get('/', headers={"Authorization": f"Bearer {token}"}, META={"HTTP_AUTHORIZATION": f"Bearer {token}"})
-        # test without user
-        assert instance.authenticate_credentials(token, request) == (None, token)
+
+        without_user_actual = instance.authenticate_credentials(token, request)
+        assert without_user_actual[0] is not None
+        assert without_user_actual[0].id is not None
+        assert without_user_actual[0].is_active
+        assert without_user_actual[0].email == username
+        assert without_user_actual[1] == token
+        assert without_user_actual[0].customization == None
+
         mock_auth.assert_called_with(token, cloud_db_url=cdb_url)
-        # test without user
+
+
+    def test_authenticate_credentials_with_account(self, arf, mocker, instance, db):
+        cdb_url = f'{uuid4()}'
+        token = f'{uuid4()}'
+        username = f'{uuid4()}@test.test'
+        auth_response = {
+            'token': token,
+            'username': username
+        }
+        mock_cdb_config = mocker.patch.object(CloudDbConfig, 'url', return_value=cdb_url)
+        mock_auth = mocker.patch.object(Clouddb_Auth, 'validate_token', return_value=auth_response)
+        request = arf.get('/', headers={"Authorization": f"Bearer {token}"}, META={"HTTP_AUTHORIZATION": f"Bearer {token}"})
+
         account = baker.make(Account, email=username)
         assert instance.authenticate_credentials(token, request) == (account, token)
         mock_auth.assert_called_with(token, cloud_db_url=cdb_url)
 
-        # test invalid token
+    def test_authenticate_credentials_invalid_token(self, arf, mocker, instance, db):
+        cdb_url = f'{uuid4()}'
+        token = f'{uuid4()}'
+        username = f'{uuid4()}@test.test'
+        auth_response = {
+            'token': token,
+            'username': username
+        }
+        mock_cdb_config = mocker.patch.object(CloudDbConfig, 'url', return_value=cdb_url)
+        mock_auth = mocker.patch.object(Clouddb_Auth, 'validate_token', return_value=auth_response)
+        request = arf.get('/', headers={"Authorization": f"Bearer {token}"}, META={"HTTP_AUTHORIZATION": f"Bearer {token}"})
+
         mock_auth.side_effect = APINotAuthorisedException('Invalid token')
         assert instance.authenticate_credentials(token, request) is None
+
 
     def test_authenticate(self, arf, mocker, instance):
         token = f'{uuid4()}'

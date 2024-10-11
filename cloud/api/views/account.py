@@ -65,16 +65,19 @@ code__body = openapi.Schema(
 account__response = openapi.Response('Account info.', AccountSerializer)
 
 
-async def create_user(email, first_name=None, last_name=None, customization=None, is_active=False):
-    default_language_code = (await models.Customization.objects.select_related('default_language').\
-        aget(name=customization)).default_language.code
+async def create_user(email, first_name=None, last_name=None, customization=None, is_active=False, use_customization=True):
+    default_language_code = ""
+
+    if customization:
+        customization_obj = await models.Customization.objects.select_related('default_language').aget(name=customization)
+        default_language_code = customization_obj.default_language.code
 
     user = await models.Account.objects.acreate(
         email=email,
         first_name=first_name,
         last_name=last_name,
         language=default_language_code,
-        customization=customization
+        customization=customization if use_customization else None,
     )
     if is_active:
         user.activated_date = timezone.now()

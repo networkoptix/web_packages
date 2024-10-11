@@ -1,13 +1,12 @@
 import re
 from hashlib import sha256
 
+from asgiref.sync import async_to_sync
 from django.conf import settings
-from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import AnonymousUser
 from django.core.cache import caches
 from django.db import transaction
 from django.utils.translation import gettext_lazy as _
-from django.core.exceptions import PermissionDenied
 from django.http import Http404
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
@@ -22,18 +21,19 @@ from rest_framework.response import Response
 from cloud.controllers.cloud_api import Account as Clouddb_Account, System as Clouddb_System, Auth as Clouddb_Auth, CloudDbConfig
 from cloud.customization_context import customization_ctx
 from cloud.helpers.exceptions import (
-    api_success, APINotAuthorisedException, APILogicException, clean_passwords
+    api_success, APINotAuthorisedException, APILogicException,
 )
 from api.models import Account
-from cms.models import Asset, AssetType, Customization, get_cloud_portal_asset
+from api.views.account import create_user
+from cms.models import Customization, get_cloud_portal_asset
 from notifications.tasks import send_push_notification
 from notifications.models import PushNotification, PushDevice
 from notifications.serializers import NotificationSerializer, SubscriptionSerializer, \
-    DeviceSubscriptionsSerializer, UnregisterDeviceSerializer, PROVIDERS_REVERSE_MAP
+    DeviceSubscriptionsSerializer, PROVIDERS_REVERSE_MAP
 
 import json
 import logging
-import traceback
+
 
 
 
@@ -145,18 +145,59 @@ class CustomizationBearerAuthentication(TokenAuthentication):
     model = Account
 
     def authenticate_credentials(self, token, request):
+        """
+        Authenticate credentials using a Bearer token.
+
+        This method validates the provided token by interacting with the cloud database
+        and then retrieves the associated user from the database model.
+
+        Args:
+            token (str): The Bearer token extracted from the request header.
+            request (Request): The request object that contains the credentials.
+
+        Returns:
+            tuple: A tuple of (user, token) if authentication is successful, 
+                   or (None, token) if authentication fails.
+        """
         model = self.get_model()
-        cloud_db_url = CloudDbConfig.url(customization_name=getattr(request, 'CUSTOMIZATION', customization_ctx.get()))
+        customization = getattr(request, 'CUSTOMIZATION', customization_ctx.get())
+
         try:
+            cloud_db_url = CloudDbConfig.url(customization_name=customization)
             validate_token = Clouddb_Auth.validate_token(token, cloud_db_url=cloud_db_url)
         except APINotAuthorisedException:
             return None
+
+        email = validate_token['username']
+        user = None
         try:
-            return model.objects.get(email=validate_token['username']), token
+            user = model.objects.get(email=email)
         except model.DoesNotExist:
-            return None, token
+            try: # Create user if it does not exist
+                user = async_to_sync(create_user)(email=email, customization=customization, use_customization=False)
+            except Exception as e:
+                logger.error(f'Error creating user: {e}')
+        return user, token
 
     def authenticate(self, request):
+        """
+        Authenticate a request using a Bearer token.
+    
+        This method extracts the token from the authorization header and validates 
+        it against the cloud database. If the token is valid and belongs to a user, 
+        the user is authenticated.
+    
+        Args:
+            request (Request): The request object containing the authorization header.
+    
+        Returns:
+            tuple: A tuple of (user, token) if authentication is successful, 
+                   otherwise None.
+        
+        Raises:
+            AuthenticationFailed: If the token header is invalid, or the token string 
+                                  contains invalid characters.
+        """
         auth = get_authorization_header(request)
         auth = auth.decode().split()
         if not auth or auth[0].lower() != self.keyword.lower():
@@ -230,7 +271,10 @@ class DeviceSubscriptionListView(RetrieveAPIView):
 
 class Subscriptions(UpdateModelMixin, CreateModelMixin, RetrieveModelMixin, GenericAPIView):
     authentication_classes = (
-        CustomizationBearerAuthentication, CloudAccountBasicAuthentication, CloudSessionAuthentication)
+        CustomizationBearerAuthentication,
+        CloudAccountBasicAuthentication,
+        CloudSessionAuthentication
+    )
     permission_classes = (IsAuthenticated, )
     serializer_class = SubscriptionSerializer
 
