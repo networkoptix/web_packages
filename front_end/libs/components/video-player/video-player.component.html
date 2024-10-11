@@ -28,7 +28,8 @@
     autoplay
     [muted]="isMuted$$()"
     [style.opacity]="lostConnection ? 0 : 1"
-    [nxRotate]="rotation"
+    [nxRotate]="rotation$$()"
+    (resize)="videoElementSize$$.set($event)"
 ></video>
 
 @defer (when nxVideoPlaying.playbackStarted$$() && !!webRtcStream.duration) {
@@ -44,8 +45,29 @@
     }
 } @placeholder {
     @if (!lostConnection) {
-        <nx-pre-loader></nx-pre-loader>
+        @if (previewLoaded$$()) {
+            <nx-pre-loader />
+        } @else {
+            <nx-block-loader />
+        }
     }
+}
+
+@if (!nxVideoPlaying.isPlaying$$() && lastFrame$$(); as lastFrame) {
+    <div
+        class="last-frame-wrapper"
+        [style.transform]="shiftRotated$$()"
+    >
+        <img
+            #imageRef
+            class="last-frame"
+            [style.display]="previewLoaded$$() ? 'block' : 'none'"
+            [src]="lastFrame"
+            [nxRotate]="rotation$$()"
+            (error)="previewLoaded$$.set(false)"
+            (load)="previewLoaded$$.set(true)"
+        />
+    </div>
 }
 
 @if (error) {

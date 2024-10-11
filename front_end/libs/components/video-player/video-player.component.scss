@@ -9,13 +9,37 @@ video {
     transition: background 0.25s;
 }
 
-img {
+.last-frame-wrapper {
     position: absolute;
     width: 100%;
     height: 100%;
-    z-index: 0;
+    z-index: 2;
+}
+
+@keyframes fade-in {
+    0% {
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 0.25;
+    }
+
+    100% {
+        opacity: 1;
+    }
+
+}
+
+img.last-frame {
+    display: none;
+    opacity: 0;
+    position: relative;
+    width: 100%;
+    height: 100%;
     object-fit: fill;
     border: none;
+    animation: fade-in 250ms ease-out forwards;
 }
 
 video {
@@ -46,11 +70,36 @@ video {
     right: 0;
 }
 
+@keyframes fade-out {
+    0% {
+        opacity: 1;
+    }
+
+    25% {
+        opacity: 75%;
+    }
+
+    100% {
+        opacity: 25%;
+    }
+
+}
+
 nx-pre-loader {
     z-index: 50;
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
+    animation: fade-out 10s forwards;
+}
+
+nx-block-loader {
+    z-index: 50;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
 }
 
 img.poster {

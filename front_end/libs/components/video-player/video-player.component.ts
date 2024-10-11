@@ -18,6 +18,8 @@ import {
     timer,
     throttle,
     BehaviorSubject,
+    mergeMap,
+    distinctUntilChanged,
 } from 'rxjs';
 import staticLang from '@language_static';
 import { LayoutItem } from '@services/system-api.types/layouts.types';
@@ -37,6 +39,9 @@ import { isDewarpingCapable } from '@utils/general';
 import { NxVideoPlayingDirective } from '@directives/video-playing.directive';
 import { NxVideoPlayerQueueService } from './video-player-queue.service';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { pipeSignal } from '@utils/signals';
+import { NxResizeObserver } from '@directives/resize/nx-resize.directive';
+import { NxBlockLoaderComponent } from '@components/skeleton-loader/variants/block-loader/block-loader.component';
 
 type DrawImagePartialTuple = [number, number, number, number];
 
@@ -66,7 +71,7 @@ type DrawImageFullTuple = [number, number, number, number, number, number, numbe
     styleUrls: ['video-player.component.scss'],
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [CommonModule, NxRotateDirective, PipesModule, NxPreLoaderComponent, ServiceModule, NxFisheyeViewerComponent, NxVideoPlayingDirective],
+    imports: [CommonModule, NxRotateDirective, PipesModule, NxPreLoaderComponent, ServiceModule, NxFisheyeViewerComponent, NxVideoPlayingDirective, NxResizeObserver, NxBlockLoaderComponent],
 })
 export class NxVideoPlayerComponent {
     private appStateService = inject(NxAppStateService);
@@ -80,6 +85,36 @@ export class NxVideoPlayerComponent {
 
     volume$ = computed(() => this.muted$$() ? 0 : this.volume$());
 
+    videoElementSize$$ = signal({ width: 0, height: 0 });
+
+    capturedFrame$$ = signal('');
+
+    thumbnail$$ = pipeSignal(this.camera$$, camera$ => camera$.pipe(
+        mergeMap((camera) => camera.previewUrl),
+        distinctUntilChanged(),
+    ), '');
+
+    lastFrame$$ = computed(() => {
+        const capturedFrame = this.capturedFrame$$();
+        if (capturedFrame) {
+            return capturedFrame;
+        }
+
+        return this.thumbnail$$();
+    });
+
+    shiftRotated$$ = computed(() => {
+        const rotation = this.rotation$$();
+        const isRotated = rotation % 180 === 90;
+        if (!isRotated) {
+            return '';
+        }
+        const { height, width } = this.videoElementSize$$();
+        const shift = height - width;
+
+        return `translate(${shift / 2}px, ${-shift / 2}px)`;
+    })
+
     setVolumeEffect = effect(() => {
         if (!this.webRtcStreamRef?.nativeElement) {
             return;
@@ -90,7 +125,7 @@ export class NxVideoPlayerComponent {
     get camera(): NxSystemCamera {
         return this.camera$$();
     }
-    @Input() rotation: number;
+    rotation$$ = input(0, { alias: 'rotation' });
     renderParams = input.required<Pick<LayoutItem, 'zoomTop' | 'zoomRight' | 'zoomBottom' | 'zoomLeft' | 'dewarpingParams' | 'id'>>();
 
     @Input() lostConnectionPlaceholder: TemplateRef<any>;
@@ -120,6 +155,7 @@ export class NxVideoPlayerComponent {
     @ViewChild('originalStream') originalStream: ElementRef<HTMLVideoElement>;
     @ViewChild('zoomCanvas') zoomCanvas: ElementRef<HTMLCanvasElement>;
     @ViewChild('webRtcStream') webRtcStreamRef: ElementRef<HTMLVideoElement>;
+    @ViewChild('nxVideoPlaying') nxVideoPlaying: NxVideoPlayingDirective;
     @HostBinding('class') get class() {
         const { paused, currentTime } = this.webRtcStreamRef?.nativeElement || { paused: true, currentTime: 0 };
         this.connectionEstablished ||= !paused && currentTime > 1000;
@@ -281,6 +317,8 @@ export class NxVideoPlayerComponent {
 
         this.originalStream.nativeElement.onblur = event => event.preventDefault();
         this.webRtcStreamRef.nativeElement.volume = this.volume$$();
+        this.nxVideoPlaying.latestFrame.pipe(untilDestroyed(this)).subscribe(frame => this.capturedFrame$$.set(frame));
+        this.videoElementSize$$.set({ width: this.originalStream.nativeElement.width, height: this.originalStream.nativeElement.height });
 
         const availableStreams: AvailableStreams[] = this.camera.parameters.mediaStreams?.streams?.map(({ encoderIndex }) => encoderIndex).filter(stream => stream !== -1) ?? [AvailableStreams.SECONDARY, AvailableStreams.PRIMARY];
         const hasSecondary = availableStreams.includes(AvailableStreams.SECONDARY);
@@ -360,6 +398,8 @@ export class NxVideoPlayerComponent {
         this.changesNotifier$.next(Date.now());
     }
 
+    previewLoaded$$ = signal(false);
+
     notifyChangesEffect = effect(() => {
         this.resolution$$();
         this.muted$$();
@@ -369,6 +409,11 @@ export class NxVideoPlayerComponent {
         this.dewarpingParams$$();
         this.notifyChanges();
         this.debugInfo$$();
+        this.shiftRotated$$();
+        this.lastFrame$$();
+        this.videoElementSize$$();
+        this.previewLoaded$$();
+        this.cdr.detectChanges();
     });
 
     ngOnDestroy(): void {

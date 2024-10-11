@@ -6,10 +6,13 @@ import {
     ElementRef,
     HostListener,
     inject,
+    Output,
     signal,
 } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { bindCallback, defer, map, repeat, startWith, switchMap, timer } from 'rxjs';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { bindCallback, defer, delay, map, NEVER, repeat, startWith, switchMap, timer } from 'rxjs';
+
+import { frameRateTracker$, throttleByFrameRate } from '@openLibs/webrtc-stream-manager';
 
 @Directive({
     standalone: true,
@@ -41,6 +44,32 @@ export class NxVideoPlayingDirective {
     private playingState$$ = signal(false);
 
     public isPlaying$$ = computed(() => this.playingState$$() && !this.playbackFrozen$$());
+
+    private static canvas = document.createElement('canvas');
+
+    previousFrame: string;
+
+    private score$$ = toSignal(frameRateTracker$.pipe(map(({ score }) => score)), {
+        initialValue: 0,
+    });
+
+    @Output() latestFrame = toObservable(this.isPlaying$$).pipe(
+        switchMap(isPlaying =>
+            isPlaying
+                ? timer(0, 2_500 / (this.score$$() / 100)).pipe(delay(Math.random() * 1_000))
+                : NEVER,
+        ),
+        throttleByFrameRate(),
+        map(() => {
+            NxVideoPlayingDirective.canvas.width = this.element.nativeElement.videoWidth;
+            NxVideoPlayingDirective.canvas.height = this.element.nativeElement.videoHeight;
+            const context = NxVideoPlayingDirective.canvas.getContext('2d')!;
+            context.drawImage(this.element.nativeElement, 0, 0);
+            URL.revokeObjectURL(this.previousFrame);
+            this.previousFrame = NxVideoPlayingDirective.canvas.toDataURL();
+            return this.previousFrame;
+        }),
+    );
 
     public playbackStarted$$ = toSignal(
         defer(
