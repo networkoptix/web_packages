@@ -8,7 +8,7 @@ import {
     inject,
     NgZone,
 } from '@angular/core';
-import { toObservable } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
@@ -27,6 +27,7 @@ import {
 } from 'rxjs';
 import {
     catchError,
+    delay,
     distinctUntilChanged,
     filter,
     map,
@@ -68,8 +69,9 @@ import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
 import { NxSystemInfo } from '@services/systems.service.types';
 import { SystemResourcesSelectors } from '@store/system-resources';
-import { cleanIdLegacy } from '@utils/general';
+import { cleanIdLegacy, MS } from '@utils/general';
 import { generateTour, translateStep } from '@utils/nx';
+import { hostStatusChanged } from '@utils/upstream-monitor/example';
 
 import { registerDemoLogger } from './timeline-service-demo';
 import { createFocusLayoutFactory } from './utils/create-focus-layout-factory';
@@ -311,6 +313,34 @@ export class NxLayoutViewComponent {
                     .subscribe();
             }
         });
+
+        const DISCONNECT = {
+            showDialogDelay: MS.second,
+            pageReloadAfter: MS.second * 3,
+        };
+        hostStatusChanged.disconnected$
+            .pipe(takeUntilDestroyed(), delay(DISCONNECT.showDialogDelay))
+            .subscribe((disconnectedTS: number) => {
+                let reconnectedTS: number;
+                this.dialogsService
+                    .block(
+                        {
+                            title: staticLang.connection.connectionLost,
+                            message: staticLang.connection.waitForConnection,
+                        },
+                        hostStatusChanged.reconnected$.pipe(
+                            tap(reconnected => {
+                                reconnectedTS = reconnected as number;
+                            }),
+                        ),
+                    )
+                    .finally(() => {
+                        // it would make sense in an unstable network with micro disconnects to reload the page after few seconds
+                        if (reconnectedTS - disconnectedTS > DISCONNECT.pageReloadAfter) {
+                            window.location.reload();
+                        }
+                    });
+            });
     }
 
     initialLoad = true;

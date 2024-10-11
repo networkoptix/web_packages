@@ -1,7 +1,7 @@
 import { Dialog, DialogConfig } from '@angular/cdk/dialog';
 import { ComponentType, Overlay } from '@angular/cdk/overlay';
 import { inject, Injectable } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, Observable } from 'rxjs';
 
 import {
     GenericEditModalContent,
@@ -18,7 +18,9 @@ import { NewFeatureTemplate } from './new-feature/new-feature.component.types';
 
 @Injectable({ providedIn: 'root' })
 export class NxDialogsService {
-    constructor(private cdkDialog: Dialog) {}
+    constructor(private cdkDialog: Dialog) {
+        import('./generic/generic.component');
+    }
 
     /* eslint-disable @typescript-eslint/no-explicit-any */
     // public async addWidget(
@@ -133,29 +135,36 @@ export class NxDialogsService {
     private openV2<R, D = never, T = unknown>(
         component: ComponentType<T>,
         customconfig: DialogConfig<D> = {},
-    ): Promise<R> {
+        closeWhen$?: Observable<unknown>,
+    ): Promise<R | undefined> {
         const dialogConfig: DialogConfig<D> = {
             width: DIALOG_SIZE.NORMAL, // Default width
             ...customconfig,
         };
 
         if (useNewCloud()) {
-            return this.openNewCloud<R, D, T>(component, dialogConfig);
+            return this.openNewCloud<R, D, T>(component, dialogConfig, closeWhen$);
+        }
+        const ref = this.cdkDialog.open<R, D>(component, dialogConfig);
+
+        if (closeWhen$) {
+            closeWhen$.subscribe(() => ref.close());
         }
 
-        return firstValueFrom(this.cdkDialog.open<R, D>(component, dialogConfig).closed);
+        return firstValueFrom(ref.closed);
     }
 
     private overlay = inject(Overlay);
 
     private openNewCloud<R, D = never, T = unknown>(
         component: ComponentType<T>,
-        customconfig: DialogConfig<D> = {},
-    ): Promise<R> {
+        customConfig: DialogConfig<D> = {},
+        closeWhen$?: Observable<unknown>,
+    ): Promise<R | undefined> {
         const topMenu = !!document.querySelector('header.top-menu.wrapper');
 
         const dialogConfig: DialogConfig<D> = {
-            ...customconfig,
+            ...customConfig,
             ...(topMenu
                 ? {
                       width: `calc(100vw - 48px)`,
@@ -175,12 +184,18 @@ export class NxDialogsService {
         window.dispatchEvent(
             toggleModalEvent(
                 true,
-                customconfig.width === DIALOG_SIZE.NORMAL ? undefined : customconfig.width,
+                customConfig.width === DIALOG_SIZE.NORMAL ? undefined : customConfig.width,
             ),
         );
 
-        return firstValueFrom(this.cdkDialog.open<R, D>(component, dialogConfig).closed).finally(
-            () => window.dispatchEvent(toggleModalEvent(false)),
+        const ref = this.cdkDialog.open<R, D>(component, dialogConfig);
+
+        if (closeWhen$) {
+            closeWhen$.subscribe(() => ref.close());
+        }
+
+        return firstValueFrom(ref.closed).finally(() =>
+            window.dispatchEvent(toggleModalEvent(false)),
         );
     }
 
@@ -248,6 +263,22 @@ export class NxDialogsService {
             // With action/cancel buttons
         };
         return this.openV1(component, dialogConfig);
+    }
+
+    async block(
+        data: Dt.Generic['data'],
+        closeWhen$?: Observable<unknown>,
+    ): Promise<Dt.Generic['return'] | undefined> {
+        const component = await import('./generic/generic.component').then(
+            m => m.GenericModalContent,
+        );
+        const dialogConfig: DialogConfig<Dt.Generic['data']> = {
+            disableClose: true,
+            panelClass: 'nx-legacy-dialog-style',
+            data: { ...data, disableClose: true },
+        };
+
+        return this.openV2(component, dialogConfig, closeWhen$);
     }
 
     apply = this.dialogV1Factory<Dt.Apply>(

@@ -512,6 +512,10 @@
             }
         }
     },
+    "connection": {
+        "connectionLost": "Connection Lost",
+        "waitForConnection": "Waiting for the connection to be re-established ..."
+    },
     "deviceTypes": {
         "All Device Types": "All Device Types",
         "servers": "Server",
