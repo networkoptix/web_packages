@@ -242,7 +242,7 @@ open-source:open-source-checker:
     - open_source_check_config.json
 
 code-owner-approval:check:
-  stage: check
+  stage: approval
   script:
   - echo -e "\033[0;31mThis MR requires to be approved by code owners.\033[0m"
   - exit 1
