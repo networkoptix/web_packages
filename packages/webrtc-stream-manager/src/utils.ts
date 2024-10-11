@@ -1,6 +1,6 @@
 // Copyright 2018-present Network Optix, Inc. Licensed under MPL 2.0: www.mozilla.org/MPL/2.0/
 
-import { Observable, Subject, defer, mergeMap, scan, take } from "rxjs";
+import { MonoTypeOperatorFunction, Observable, Subject, animationFrames, combineLatest, defer, exhaustMap, firstValueFrom, map, mergeMap, pairwise, repeat, scan, share, shareReplay, skip, switchMap, take, tap, throttle, timer, toArray, windowTime } from "rxjs";
 import { IntRange } from "./types";
 
 /**
@@ -187,3 +187,59 @@ export const streamSupported = (answer: Parameters<typeof readSdpLine>[0]
     const group = readSdpLine(answer, 'a=group:');
     return group?.includes(mid) && !readSdpLine(answer, 'a=inactive')
 }
+
+interface FramesPerSecondOptions {
+    sampleSizeSeconds?: number;
+    updateIntervalSeconds?: number;
+    precision?: number;
+}
+
+let maxFpsOnBootstrap: number;
+
+const animationFrames$ = animationFrames().pipe(shareReplay({ bufferSize: 0, refCount: false }));
+
+export const setMaxFpsOnBootstrap = async () => {
+    const times = await firstValueFrom(animationFrames$.pipe(map(() => Date.now()), pairwise(), take(10), toArray()));
+    maxFpsOnBootstrap = times.reduce((acc, [start, end]) => Math.max(acc, 1000 / end - start), 0)
+    return maxFpsOnBootstrap;
+}
+
+export const framesPerSecondFactory =
+    ({
+        sampleSizeSeconds = 3,
+        updateIntervalSeconds = 1,
+    }: FramesPerSecondOptions = {}): Observable<number> => {
+        setMaxFpsOnBootstrap();
+        return animationFrames$.pipe(
+            windowTime(sampleSizeSeconds * 1000, updateIntervalSeconds * 1000),
+            mergeMap(frames$ => frames$.pipe(toArray())),
+            map(frames => Math.round(frames.length / sampleSizeSeconds)),
+            shareReplay({ bufferSize: 1, refCount: false }),
+        )
+    }
+
+export const frameRateTracker$ = framesPerSecondFactory().pipe(
+    scan(
+        (acc, currentFps) => {
+            const previousFps = [...acc.previousFps, currentFps].slice(acc.previousFps.length - 10);
+            const currentScore = Math.min(Math.round((currentFps / acc.maxFps) * 100), 100);
+            const previousScores = [...acc.previousScores, currentScore].slice(acc.previousScores.length - 10);
+            const maxFps = Math.max(previousScores.length ? Math.max(acc.maxFps, currentFps) : currentFps, maxFpsOnBootstrap || 0);
+            const score = !previousScores.length ? 100 : Math.round(previousScores.reduce((acc, curr) => acc + curr, 0) / previousScores.length);
+            const fps = Math.round(previousFps.reduce((acc, curr) => acc + curr, 0) / previousFps.length)
+            return {
+                fps,
+                maxFps,
+                score,
+                previousScores,
+                previousFps
+            };
+        },
+        { fps: 0, maxFps: 0, score: 100, previousScores: <number[]>[], previousFps: <number[]>[] },
+    ),
+    share({ resetOnRefCountZero: false }),
+);
+
+export const throttleByFrameRateScheduler$ = frameRateTracker$.pipe(take(1), exhaustMap(({ fps }) => timer(1000 / fps)), switchMap(() => animationFrames$), shareReplay({ bufferSize: 1, refCount: false }));
+
+export const throttleByFrameRate = <T>() => throttle<T>(() => throttleByFrameRateScheduler$ , { leading: false, trailing: true });
