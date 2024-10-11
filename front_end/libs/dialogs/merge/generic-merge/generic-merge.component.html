@@ -32,7 +32,8 @@
     <footer class="modal-footer next-button">
         <button
             *ngIf="failedToFindAnySystem || thisSystemHasOutdatedServer"
-            class="btn btn-primary m-0"
+            data-escape-global-style
+            class="nx-button--primary m-0"
             (click)="close.emit()"
             translate
         >

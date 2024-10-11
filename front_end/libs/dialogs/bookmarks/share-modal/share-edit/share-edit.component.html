@@ -58,7 +58,8 @@
         </div>
         <div class="buttons-section">
             <button
-                class="btn btn-primary"
+                data-escape-global-style
+                class="nx-button--primary"
                 (click)="onConfirm()"
                 [disabled]="!shareForm.valid || shareForm.pristine"
                 translate

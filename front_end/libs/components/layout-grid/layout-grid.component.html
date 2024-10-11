@@ -53,7 +53,8 @@
                             @if (layout.items.length) {
                                 <button
                                     (click)="layoutStateService.createNewLayout()"
-                                    class="btn btn-primary"
+                                    data-escape-global-style
+                                    class="nx-button--primary"
                                     translate
                                 >
                                     Add Layout
@@ -683,7 +684,8 @@
                                                     </li>
                                                 </ul>
                                                 <button
-                                                    class="btn btn-primary"
+                                                    data-escape-global-style
+                                                    class="nx-button--primary"
                                                     (click)="layoutStateService.createNewLayout()"
                                                     translate
                                                 >

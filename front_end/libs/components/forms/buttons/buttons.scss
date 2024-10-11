@@ -1,18 +1,17 @@
 @use "resets";
-@use "theme_variables_common" as vars;
 
 @mixin nx-button {
     height: 2rem;
     @include resets.button();
-    border-radius: vars.$border-radius-base;
+    border-radius: 2px;
 
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 0 1rem;
 
-    font-family: vars.$font-family-medium;
-    font-size: vars.$h6-font-size;
+    font-family: var(--font-family-medium);
+    font-size: 0.8125rem;
     line-height: 1rem;
 
     &:disabled {

@@ -66,7 +66,8 @@
                 </ng-container>
             </div>
             <button
-                class="btn btn-primary btn-big"
+                data-escape-global-style
+                class="nx-button--primary btn-big"
                 translate
                 (click)="close(); dialogsService.cloudStorageActivate({ licenseManager })"
             >
@@ -98,7 +99,8 @@
             </div>
             <div class="actions">
                 <button
-                    class="btn btn-primary btn-big"
+                    data-escape-global-style
+                    class="nx-button--primary btn-big"
                     translate
                     (click)="close(true)"
                 >

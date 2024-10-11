@@ -37,7 +37,8 @@
 >
     <button
         #createButton
-        class="btn btn-primary create-button auth-hidden"
+        data-escape-global-style
+        class="nx-button--primary create-button auth-hidden"
         type="button"
         (click)="routeToCreate()"
         (nxOnIntersect)="changeHeaderButton($event)"

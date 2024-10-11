@@ -37,7 +37,8 @@
         <button
             [disabled]="!card.config.sourceUrl || !card.title"
             (click)="useSourceUrl()"
-            class="btn btn-primary mx-auto"
+            data-escape-global-style
+            class="nx-button--primary mx-auto"
             translate
         >
             Save Widget

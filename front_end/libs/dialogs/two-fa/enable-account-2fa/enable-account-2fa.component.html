@@ -177,7 +177,8 @@
 
         <button
             id="nextWizardCode"
-            class="btn btn-primary btn-next"
+            data-escape-global-style
+            class="nx-button--primary btn-next"
             (click)="next()"
         >
             <span translate>Next</span>
@@ -268,7 +269,8 @@
         <button
             id="wizardDone"
             type="button"
-            class="btn btn-primary"
+            data-escape-global-style
+            class="nx-button--primary"
             (click)="close()"
         >
             <span translate>Ok</span>

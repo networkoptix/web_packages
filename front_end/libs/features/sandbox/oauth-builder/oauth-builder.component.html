@@ -121,13 +121,15 @@
         <div class="auth-link">{{ authUrl() }}</div>
         <div class="buttons">
             <button
-                class="btn btn-primary"
+                data-escape-global-style
+                class="nx-button--primary"
                 (click)="copyToClipboard(authUrl() || '')"
             >
                 Copy Link
             </button>
             <button
-                class="btn btn-primary"
+                data-escape-global-style
+                class="nx-button--primary"
                 (click)="open()"
             >
                 Open
@@ -237,7 +239,8 @@
         </form>
         <div class="buttons">
             <button
-                class="btn btn-primary"
+                data-escape-global-style
+                class="nx-button--primary"
                 (click)="login()"
             >
                 Login
@@ -255,7 +258,8 @@
             <div class="buttons">
                 @if (oauthBody?.code | as: string; as code) {
                     <button
-                        class="btn btn-primary"
+                        data-escape-global-style
+                        class="nx-button--primary"
                         (click)="copyToClipboard(code || '')"
                     >
                         Copy Access Code
@@ -263,7 +267,8 @@
                 }
                 @if (oauthBody?.access_token | as: string; as access_token) {
                     <button
-                        class="btn btn-primary"
+                        data-escape-global-style
+                        class="nx-button--primary"
                         (click)="copyToClipboard(access_token || '')"
                     >
                         Copy Auth Token
@@ -271,7 +276,8 @@
                 }
                 @if (oauthBody?.refresh_token | as: string; as refresh_token) {
                     <button
-                        class="btn btn-primary"
+                        data-escape-global-style
+                        class="nx-button--primary"
                         (click)="copyToClipboard(refresh_token || '')"
                     >
                         Copy Refresh Token
