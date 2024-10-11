@@ -76,6 +76,13 @@ export abstract class MediaserverBaseConnection {
     ): Observable<T>;
     protected put?<T>(url: string, data?: Record<string, unknown>, opts?: WithoutRT): Observable<T>;
     protected delete?<T>(url: string, opts?: WithoutRT): Observable<T>;
+    protected jsonRpcHandler?<T>(
+        url: string,
+        opts?: Parameters<MediaserverBaseConnection['get']>[1],
+    ): Observable<T>;
+    public get subscribeTo(): typeof this {
+        return this;
+    }
 }
 
 /**

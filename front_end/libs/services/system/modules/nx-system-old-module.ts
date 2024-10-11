@@ -638,9 +638,13 @@ export class NxSystemOldModule extends NxSystemModuleBase {
 
     killPoll$ = new Subject<boolean>();
 
+    // Need to redo jsonRpc implementation since its a lot of times using 4 or more of our 6 connections to a mediaserver at Once
+    // This prevents being able to make any other requests to the mediaserver or open other websocket connections like for layouts
+    useJsonRpc = environment.isWebadmin;
+
     startPoll(systemId?: string): void {
         if (this.subscriberCount === 0) {
-            if (this.mediaserver instanceof NxSystemRestAPI3) {
+            if (this.mediaserver instanceof NxSystemRestAPI3 && this.useJsonRpc) {
                 this.subscriberCount++;
                 this.killPoll$.next(true);
                 return this.useRpcOverPolling();
@@ -686,7 +690,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
     }
 
     update = (): Promise<any> => {
-        if (this.mediaserver instanceof NxSystemRestAPI3) {
+        if (this.mediaserver instanceof NxSystemRestAPI3 && this.useJsonRpc) {
             return firstValueFrom(this.systemReady$);
         }
         if (!this.updatePromise) {

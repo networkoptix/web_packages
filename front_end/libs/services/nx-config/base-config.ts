@@ -239,6 +239,7 @@ export const FeatureFlagKeys = [
     'newCloudLayoutWrapper',
     'layoutsTimelineSaas',
     'layoutsReplaceViewTab',
+    'layoutsFrameRateDebug',
     // User overrides
     'userOverridesStaffFlags',
     'userOverridesUserBetaFlags',

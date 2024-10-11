@@ -34,37 +34,38 @@ import { Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-import { cloneDeep, flatten, groupBy, isEqual, mapValues, pick, values } from 'lodash-es';
+import { cloneDeep, isEqual, pick } from 'lodash-es';
 import { TourMatMenuModule, TourService } from 'ngx-ui-tour-md-menu';
 import {
     BehaviorSubject,
     combineLatest,
     firstValueFrom,
-    forkJoin,
     from,
     fromEvent,
     interval,
     lastValueFrom,
+    merge,
     Observable,
     of,
     Subject,
     throwError,
+    timer,
 } from 'rxjs';
 import {
     catchError,
+    debounce,
     debounceTime,
     delay,
     delayWhen,
     distinctUntilChanged,
     filter,
     map,
-    repeat,
     retry,
     shareReplay,
     startWith,
     switchMap,
     take,
-    tap,
+    throttleTime,
     timeout,
 } from 'rxjs/operators';
 import { v4 as uuid } from 'uuid';
@@ -89,7 +90,9 @@ import { NxResizeObserver } from '@directives/resize/nx-resize.directive';
 import staticLang from '@language_static';
 import {
     ConnectionError,
+    frameRateTracker$,
     isRequiresTranscoding,
+    throttleByFrameRate,
     WebRTCStreamManager,
 } from '@openLibs/webrtc-stream-manager';
 import { NxImageComponent } from '@pages/health/table-components/image/image.component';
@@ -387,6 +390,14 @@ export class NxLayoutGridComponent {
 
     @HostListener('document:fullscreenchange', ['$event']) onFullscreenChange(event: Event): void {
         this.#fullscreenElement$.next(event.target as Element);
+        if (document.fullscreenElement) {
+            firstValueFrom(
+                frameRateTracker$.pipe(
+                    filter(({ fps, maxFps }) => fps > (maxFps < 60 ? 30 : 45)),
+                    timeout(500),
+                ),
+            ).finally(() => this.cd.detectChanges());
+        }
     }
 
     @ViewChild('gridSection') set gridSection(value: ElementRef) {
@@ -396,6 +407,12 @@ export class NxLayoutGridComponent {
     @ViewChild('otherSystems') set otherSystems(element: ElementRef<HTMLDetailsElement>) {
         this.detailsRef$$.set(element?.nativeElement);
     }
+
+    treeLoaded$$ = computed(() =>
+        this.layoutItemLookup$$().tree.some(
+            node => isResourceParentNode(node) && node.children.length,
+        ),
+    );
 
     otherSitesMenu$$ = viewChild<NxLayoutGridTreeComponent>('otherSitesMenu');
 
@@ -420,12 +437,16 @@ export class NxLayoutGridComponent {
             queryParams: { otherSitesMenuOpen: [open.toString()] },
         });
 
+    otherSystemsReady$$ = computed(
+        () => this.otherSystemsOpen$$() && !!this.layoutItemLookup$$().otherSystems?.length,
+    );
+
     toggleSystemsEffect$$ = effect(() => {
         const otherSystemsDetails = this.detailsRef$$();
-        const otherSystemsOpen = this.otherSystemsOpen$$();
+        const otherSystemsLoaded = this.otherSystemsReady$$();
 
-        if (otherSystemsDetails && otherSystemsOpen) {
-            otherSystemsDetails.open = true;
+        if (otherSystemsDetails) {
+            otherSystemsDetails.open = otherSystemsLoaded;
         }
     });
 
@@ -451,6 +472,21 @@ export class NxLayoutGridComponent {
 
     cameras$$ = computed(() =>
         this.getAllCameras(this.layoutItemLookup$$()).map(({ details }) => details),
+    );
+
+    hasPerformanceIssues$ = WebRTCStreamManager.hasPerformanceIssues$.pipe(distinctUntilChanged());
+
+    framesPerSecond$$ = toSignal(
+        combineLatest([frameRateTracker$, this.hasPerformanceIssues$]).pipe(
+            throttleTime(1000),
+            map(([{ fps, score, maxFps }, performanceIssues]) => {
+                const fpsString = `FPS: ${fps}`.padEnd(12);
+                const scoreString = `Score: ${score}`.padEnd(12);
+                const maxFpsString = `Max FPS: ${maxFps}`.padEnd(12);
+                const performanceIssuesString = performanceIssues ? '(performance issues)' : '';
+                return `${performanceIssuesString} ${fpsString} ${scoreString} ${maxFpsString}`;
+            }),
+        ),
     );
 
     currentLayoutCameras$$ = computed(() => {
@@ -620,7 +656,8 @@ export class NxLayoutGridComponent {
     mouseMoving$ = fromEvent(document, 'mousemove').pipe(
         switchMap(() => of(false).pipe(delay(15_000), startWith(true))),
         distinctUntilChanged(),
-        shareReplay({ bufferSize: 1, refCount: false }),
+        throttleByFrameRate(),
+        shareReplay({ bufferSize: 1, refCount: true }),
     );
 
     mouseMoving$$ = toSignal(this.mouseMoving$, { initialValue: true });
@@ -774,6 +811,7 @@ export class NxLayoutGridComponent {
         this.initialLayout$,
         this.#wrapperSize$,
     ]).pipe(
+        throttleByFrameRate(),
         filter(([layout, _]) => !!layout),
         map(
             ([layout, wrapperSize]) =>
@@ -794,6 +832,7 @@ export class NxLayoutGridComponent {
             renderConfig,
             items: this.annotateWithRenderConfig({ items, renderConfig, ...layout }, size),
         })),
+        throttleByFrameRate(),
         shareReplay({
             bufferSize: 1,
             refCount: true,
@@ -815,6 +854,7 @@ export class NxLayoutGridComponent {
     );
 
     showTooltip$ = this.#wrapperSize$.pipe(
+        throttleByFrameRate(),
         filter(Boolean),
         map(
             ({ width }) =>
@@ -933,6 +973,7 @@ export class NxLayoutGridComponent {
     };
 
     aspectHandler$ = combineLatest([this.#wrapperSize$, this.layout$]).pipe(
+        throttleByFrameRate(),
         filter(([wrapper]) => !!wrapper),
         map(this.calculateAspect),
         shareReplay({
@@ -942,6 +983,7 @@ export class NxLayoutGridComponent {
     );
 
     previewSize$ = this.aspectHandler$.pipe(
+        throttleByFrameRate(),
         map(({ cellSize: { width, height } }) => ({ 'width.px': width, 'height.px': height })),
         shareReplay({
             bufferSize: 1,
@@ -1003,6 +1045,7 @@ export class NxLayoutGridComponent {
         this.#draggingPosition$,
         this.aspectHandler$,
     ]).pipe(
+        throttleByFrameRate(),
         map(
             ([
                 {
@@ -1044,9 +1087,10 @@ export class NxLayoutGridComponent {
         }),
     );
 
-    #collisions$ = this.#distinctDraggingPosition$.pipe(
-        map(({ id, move, resize }) => {
-            const currentlyDragging = this.layout.items.find(({ id: itemId }) => itemId === id);
+    #collisions$ = combineLatest([this.#distinctDraggingPosition$, this.layout$]).pipe(
+        throttleByFrameRate(),
+        map(([{ id, move, resize }, layout]) => {
+            const currentlyDragging = layout.items.find(({ id: itemId }) => itemId === id);
 
             if (!currentlyDragging) {
                 const { y: top, x: left } = move;
@@ -1074,16 +1118,18 @@ export class NxLayoutGridComponent {
                     left: currentlyDragging.left + move.x,
                     right: currentlyDragging.right + move.x + constrainedResize.x,
                 },
+                layout,
             ] as const;
         }),
-        map(([resized, draggingItem]) => {
-            const collisions = this.layout.items.reduce(
-                (collided, item) =>
-                    this.checkCollision(item, draggingItem)
-                        ? { ...collided, [item.id]: item }
-                        : collided,
-                {},
-            );
+        map(([resized, draggingItem, layout]) => {
+            const collisions =
+                layout?.items.reduce(
+                    (collided, item) =>
+                        this.checkCollision(item, draggingItem)
+                            ? { ...collided, [item.id]: item }
+                            : collided,
+                    {},
+                ) || {};
 
             const swap = Object.values(collisions).length === 2 && !resized;
 
@@ -1100,6 +1146,7 @@ export class NxLayoutGridComponent {
     );
 
     collisions$: Observable<Collisions> = combineLatest([this.#collisions$, this.layout$]).pipe(
+        throttleByFrameRate(),
         map(([{ draggingItem, collisions, swap }, { items }]) => {
             const reducedCollisions = Object.keys(collisions).reduce(
                 (collisions, currentId) => {
@@ -1142,10 +1189,13 @@ export class NxLayoutGridComponent {
         }),
     );
 
+    hasCollisions$ = this.collisions$.pipe(map(collisions => Object.keys(collisions).length > 0));
+
     highlightState$: Observable<HighlightState> = combineLatest([
         this.#distinctDraggingPosition$,
         this.collisions$,
     ]).pipe(
+        throttleByFrameRate(),
         map(
             ([
                 {
@@ -1216,13 +1266,13 @@ export class NxLayoutGridComponent {
 
         // TODO - start - following should be moved to layout-greed-tree
         layoutGridService.changeView
-            .pipe(untilDestroyed(this))
+            .pipe(throttleByFrameRate(), untilDestroyed(this))
             .subscribe(resourceNode => this.changeView(resourceNode));
         layoutGridService.addItem
-            .pipe(untilDestroyed(this))
+            .pipe(throttleByFrameRate(), untilDestroyed(this))
             .subscribe(resourceNode => this.addItem(resourceNode));
         layoutGridService.moveAddedItem
-            .pipe(untilDestroyed(this))
+            .pipe(throttleByFrameRate(), untilDestroyed(this))
             .subscribe(({ event, itemParent, type }) =>
                 this.moveAddedItem(event, itemParent, type),
             );
@@ -1494,89 +1544,6 @@ export class NxLayoutGridComponent {
         }
     }
 
-    /**
-     * The nx-video-player player internally handles reconnect behavior for cameras
-     * that were online and successfully connected when the layout was opened.
-     *
-     * The reconnecting logic from within the nx-video-player is more aggressive
-     * because it's mostly meant to handle cases where the connection was lost
-     * for a short ammount of time.
-     *
-     * For cameras that were either offline or initial connection failed we'll
-     * assume that they're still unreachable and use more conservative as not to
-     * spam the mediaservers with requests to open a websocket connection.
-     */
-    pingOfflineCameras(pollingInterval = this.CONFIG.offlineCameraPollingInterval): void {
-        const getOfflineCameras = (): Record<string, NxSystemCamera[]> => {
-            const offlineCameras = this.layout.items
-                .map(({ resourceId }) => this.layoutItemLookup?.[resourceId])
-                .filter((node): node is LayoutResourceTree[keyof LayoutResourceTree] => !!node)
-                .filter(assertResourceOfType.camera)
-                .map(({ details }) => details)
-                .filter(({ status }) => status === CameraStatus.Offline);
-            return groupBy(offlineCameras, 'parentId');
-        };
-
-        const filterByOnlineServers = (
-            groupedCameras: Record<string, NxSystemCamera[]>,
-        ): Observable<NxSystemCamera[]> =>
-            forkJoin(
-                mapValues(groupedCameras, (cameras, serverId) =>
-                    this.system.serverManager.mediaserverConnections[serverId].ping().pipe(
-                        map(() => cameras),
-                        catchError(() => Promise.resolve([])),
-                    ),
-                ),
-            ).pipe(
-                map(groupedCamerasOnlineServers => flatten(values(groupedCamerasOnlineServers))),
-            );
-        const filterByReachableWithWebRtc = (cameras: NxSystemCamera[]): Observable<string[]> =>
-            forkJoin(
-                cameras.reduce(
-                    (acc, { id, webRtcUrl }) => ({
-                        ...acc,
-                        [id]: WebRTCStreamManager.connect(webRtcUrl).pipe(
-                            timeout(10000),
-                            catchError(() => of([])),
-                            take(1),
-                            map(([mediaStream]) => !!mediaStream),
-                        ),
-                    }),
-                    {} as Record<string, Observable<boolean>>,
-                ),
-            ).pipe(
-                map(webRtcStatuses =>
-                    Object.keys(webRtcStatuses).filter(cameraId => webRtcStatuses[cameraId]),
-                ),
-            );
-
-        const updateReachableCameras = (cameraIds: string[]): void =>
-            cameraIds.forEach(cameraId => {
-                const camera = this.layoutItemLookup?.[cameraId];
-
-                if (camera && assertResourceOfType.camera(camera)) {
-                    camera.details.status = CameraStatus.Online;
-                    this.layoutItemsErrorsStore.remove(cameraId, true);
-                }
-            });
-
-        of(true)
-            .pipe(
-                delay(pollingInterval * 1000),
-                map(getOfflineCameras),
-                switchMap(filterByOnlineServers),
-                switchMap(filterByReachableWithWebRtc),
-                tap(updateReachableCameras),
-                repeat(),
-                untilDestroyed(this),
-            )
-            .subscribe();
-    }
-
-    // ngOnInit(): void {
-    //     this.pingOfflineCameras();
-    // }
-
     ngAfterViewInit(): void {
         this.onResize({ target: window });
     }
@@ -1714,6 +1681,10 @@ export class NxLayoutGridComponent {
             ({ minWidth, minHeight }) => width >= minWidth && height >= minHeight,
         );
 
+        if (!config) {
+            return;
+        }
+
         const getPlaceholderState = (height: number): PlaceholderState => {
             if (
                 height > (hasAdditionalMessage ? config.minAdditionalHeight : config.minTitleHeight)
@@ -1748,7 +1719,6 @@ export class NxLayoutGridComponent {
             config.placeholderClass === PlaceholderClasses.SMALL
                 ? Math.min(width, height) - getSizeOffset(renderConfig.placeholderState)
                 : config.maxSize;
-        this.cd.detectChanges();
     };
 
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -2030,6 +2000,9 @@ export class NxLayoutGridComponent {
             HorizontalAlign.RIGHT,
         ],
     ): void => {
+        if (this.layout.items.length === 1) {
+            return;
+        }
         this.#draggingPosition$.next({ [action]: distance, id, alignment });
     };
 
@@ -2060,31 +2033,31 @@ export class NxLayoutGridComponent {
 
     updateLayout = (): void => {
         this.#draggingPosition$.next(this.INITIAL_DRAG_STATE);
-        this.cd.markForCheck();
     };
 
     moveItem = ({ id }: LayoutItem): void => {
         combineLatest([this.highlightState$, this.collisions$])
-            .pipe(take(1))
+            .pipe(throttleByFrameRate(), take(1))
             .subscribe(([{ x, y, resize, swap }, collisions]) => {
-                const unresolvedCollisions = Object.values(collisions).reduce(
-                    (prevCollision, item) => item.moveTo === false,
-                    false,
-                );
-                const notMoved = [x, y, resize.x, resize.y].every(change => !change);
-                const [swapTarget = null] =
-                    Object.entries(collisions).find(([_, { moveTo }]) => moveTo) || [];
+                const moved =
+                    swap ||
+                    ([x, y, resize.x, resize.y].some(Boolean) && !Object.keys(collisions).length);
 
-                if (unresolvedCollisions || notMoved || (swapTarget && !swap)) {
-                    return this.updateLayout();
-                }
+                if (moved && this.layout.items.length > 1) {
+                    const itemIdLookup = structuredClone(this.layout.items).reduce(
+                        (lookup, item) => ({
+                            ...lookup,
+                            [item.id]: item,
+                        }),
+                        <Record<string, LayoutItem>>{},
+                    );
 
-                const swappedItems = this.layout.items.map(item => ({ ...item }));
+                    const movedItem = itemIdLookup[id];
+                    const swappedItemId =
+                        swap && Object.entries(collisions).find(([id]) => id !== movedItem.id)?.[0];
+                    const swappedItem = swappedItemId && itemIdLookup[swappedItemId];
 
-                if (swapTarget) {
-                    const movedItem = swappedItems.find(({ id: itemId }) => itemId === id);
-                    const swappedItem = swappedItems.find(({ id }) => id === swapTarget);
-                    if (movedItem && swappedItem) {
+                    if (swappedItem) {
                         [
                             movedItem.top,
                             movedItem.bottom,
@@ -2104,24 +2077,18 @@ export class NxLayoutGridComponent {
                             movedItem.left,
                             movedItem.right,
                         ];
+                    } else {
+                        const { x: resizeX, y: resizeY } = this.getConstraint(movedItem, resize);
+                        movedItem.top += y;
+                        movedItem.bottom += y + resizeY;
+                        movedItem.left += x;
+                        movedItem.right += x + resizeX;
                     }
+
+                    const items = Object.values(itemIdLookup);
+                    this.layoutStateService.updateLayout({ ...this.layout, items });
                 }
 
-                const items = this.updateItemNames(
-                    swappedItems.map(item => {
-                        const dragging = item.id === id;
-                        if (dragging && !swapTarget) {
-                            const { x: resizeX, y: resizeY } = this.getConstraint(item, resize);
-                            item.top += y;
-                            item.bottom += y + resizeY;
-                            item.left += x;
-                            item.right += x + resizeX;
-                        }
-                        return item;
-                    }),
-                );
-
-                this.layoutStateService.updateLayout({ ...this.layout, items });
                 this.updateLayout();
             });
     };
@@ -2385,9 +2352,18 @@ export class NxLayoutGridComponent {
             name: this.layoutItemLookup?.[dirtyId(item.resourceId)]?.name || item.name,
         }));
 
+    // TODO: This can cause the main thread to be blocked for a while if a node with a lot of items is added.
+    // Revisit once other optimizations are done to see if it persists
     addItem = (node: ResourceNode): void => {
+        const performanceOptimal$ = merge(
+            timer(500),
+            frameRateTracker$.pipe(filter(({ fps, maxFps }) => fps > (maxFps < 60 ? 30 : 45))),
+        );
         combineLatest([this.highlightState$, this.collisions$])
-            .pipe(take(1))
+            .pipe(
+                take(1),
+                debounce(() => performanceOptimal$),
+            )
             .subscribe(([{ x, y, resize }, collisions]) => {
                 const isPlaceholder = Object.values(placeholderNameLookup).includes(
                     this.layout.name,
@@ -2395,8 +2371,8 @@ export class NxLayoutGridComponent {
 
                 if (isPlaceholder) {
                     const items = [this.generateLayoutItem(node, { x: 0, y: 0 })];
-                    const isWebadminLayout = !hasCrossSystemItems(items, this.system.id);
-                    if (isWebadminLayout) {
+                    const isLocalLayout = !hasCrossSystemItems(items, this.system.id);
+                    if (isLocalLayout) {
                         this.layoutStateService.createNewLayout(items);
                     } else {
                         this.layoutStateService.createNewCrossSystemLayout(items);
@@ -2420,7 +2396,10 @@ export class NxLayoutGridComponent {
                         ? createAddedItems(this.layout.items, node.details.items)
                         : (() => {
                               const item = [this.generateLayoutItem(node, { x, y })];
-                              if (!unresolvedCollisions) {
+                              const newItemHasCollisions = this.layout.items.some(existingItem =>
+                                  this.checkCollision(existingItem, item[0]),
+                              );
+                              if (!newItemHasCollisions) {
                                   return item;
                               }
 
@@ -2428,12 +2407,17 @@ export class NxLayoutGridComponent {
                           })()),
                 ]).map(ensureLayoutItemResourcePath(this.system.id));
 
-                const isWebadminLayout = !hasCrossSystemItems(items, this.system.id);
+                const multipleItemsAdded = items.length > 4;
+                if (multipleItemsAdded) {
+                    this.cd.detach();
+                }
+
+                const isLocalLayout = !hasCrossSystemItems(items, this.system.id);
                 const layoutOrFocus = this.layoutItemLookup?.[dirtyId(this.layout.id)];
                 if (
                     layoutOrFocus &&
                     assertResourceOfType.layout(layoutOrFocus) &&
-                    layoutOrFocus.crossSystem === !isWebadminLayout
+                    layoutOrFocus.crossSystem === !isLocalLayout
                 ) {
                     const currentUser = this.system.permissionManager.currentUser$$();
 
@@ -2447,7 +2431,7 @@ export class NxLayoutGridComponent {
                         this.layoutStateService.updateLayout({ ...this.layout, items });
                     }
                 } else {
-                    if (isWebadminLayout) {
+                    if (isLocalLayout) {
                         this.layoutStateService.createNewLayout(items);
                     } else {
                         this.layoutStateService.createNewCrossSystemLayout(
@@ -2460,6 +2444,11 @@ export class NxLayoutGridComponent {
                 if (this.layoutItemLookup?.[`{${this.layout.id}}`]) {
                     this.layout.id = '';
                     this.showPtz.emit();
+                }
+
+                if (multipleItemsAdded) {
+                    this.cd.detectChanges();
+                    this.cd.reattach();
                 }
             });
     };
@@ -2542,7 +2531,7 @@ export class NxLayoutGridComponent {
         action: (): Observable<SystemResourcesTypeMap> =>
             this.layoutStateService
                 .loadSite(this.currentSiteId$$()!, { cameras: true, servers: true })
-                .pipe(debounceTime(1_000), delay(new Date(Date.now() + 2_500))),
+                .pipe(debounceTime(500), throttleByFrameRate()),
         success: () => {},
         error: () => {},
     };

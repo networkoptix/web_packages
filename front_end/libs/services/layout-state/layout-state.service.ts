@@ -11,8 +11,8 @@ import {
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { createSelector, Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
+import { throttleByFrameRate } from 'nx-open-web/packages/webrtc-stream-manager';
 import {
-    animationFrameScheduler,
     combineLatest,
     distinctUntilChanged,
     fromEvent,
@@ -27,7 +27,6 @@ import {
     take,
     takeWhile,
     tap,
-    throttleTime,
     timer,
 } from 'rxjs';
 import { v4 as uuid } from 'uuid';
@@ -573,7 +572,7 @@ export class LayoutStateService {
         map((percentage: number): number => Math.min(percentage, 50)),
         map(vw => `${vw}vw`),
         distinctUntilChanged(),
-        throttleTime(0, animationFrameScheduler),
+        throttleByFrameRate(),
         shareReplay({ bufferSize: 1, refCount: false }),
     );
 

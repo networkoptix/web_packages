@@ -2,7 +2,9 @@ import { ActivatedRouteSnapshot, Route, Routes } from '@angular/router';
 
 const setLogging = (logging: boolean, path?: string) => (route?: ActivatedRouteSnapshot) => {
     if (!logging) {
-        console.info(`[setLogging]: Disabling logging while route ${path} is activated`);
+        console.info(
+            `[setLogging]: Disabling logging while route ${path} is activated. Use window.disableConsole = false; to turn it back on`,
+        );
     }
     window.disableConsole = !logging;
 

@@ -209,7 +209,7 @@ export const generateResourceTree = ([
                 children: webPagesForTree,
             },
         ].filter(item => !!item),
-        otherSystems: otherSystemsInfo.length && otherSystemsForTree,
+        otherSystems: otherSystemsInfo.length ? otherSystemsForTree : [],
         ...parsedResources,
     } as unknown as LayoutResourceTree;
 };

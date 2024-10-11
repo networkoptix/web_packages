@@ -159,6 +159,7 @@ export enum TargetStream {
 export interface WebRtcUrlConfigUnknown {
     systemId: string;
     cameraId: string;
+    serverId?: string;
     accessToken: string | (() => string);
     targetStream: TargetStream;
     position?:  number;
@@ -166,7 +167,6 @@ export interface WebRtcUrlConfigUnknown {
 }
 
 export interface WebRtcUrlConfigV1 extends WebRtcUrlConfigUnknown {
-    serverId?: string;
     allowTranscoding?: boolean;
     apiVersion: ApiVersions.v1;
 }

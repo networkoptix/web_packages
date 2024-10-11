@@ -1,9 +1,6 @@
 import { Action, createReducer, on } from '@ngrx/store';
 
-import {
-    LayoutsResolutionState,
-    Resolution,
-} from '@services/layout-state/store/layouts-resolution/resolution.types';
+import { LayoutsResolutionState } from '@services/layout-state/store/layouts-resolution/resolution.types';
 import { dirtyId } from '@utils/general';
 
 import * as LayoutResolutionActions from './resolution.actions';
@@ -32,8 +29,6 @@ export const layoutsResolutionReducer = createReducer(
                 ...state,
                 [layoutId]: {
                     ...state[layoutId],
-                    resolution:
-                        state[layoutId]?.resolution !== resolution ? Resolution.CUSTOM : resolution,
                     cameras: {
                         ...state[layoutId]?.cameras,
                         [cameraId]: {

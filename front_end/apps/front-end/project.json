@@ -34,6 +34,7 @@
                 "main": "apps/front-end/src/main.ts",
                 "polyfills": "apps/front-end/src/polyfills.ts",
                 "tsConfig": "apps/front-end/tsconfig.app.json",
+                "webWorkerTsConfig": "apps/front-end/tsconfig.worker.json",
                 "assets": [
                     {
                         "glob": "**/*",

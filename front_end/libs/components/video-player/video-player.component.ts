@@ -1,10 +1,10 @@
 /* eslint-disable */
-import { Component, ElementRef, EventEmitter, HostBinding, Injector, Input, Output, TemplateRef, ViewChild, computed, effect, inject, input, runInInjectionContext } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostBinding, Injector, Input, NgZone, Output, TemplateRef, ViewChild, computed, effect, inject, input, runInInjectionContext, signal } from '@angular/core';
 import { v4 as uuid } from 'uuid';
 
 import { NxSystemCamera } from '@services/system.service/camera-manager/camera-manager-types';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { ConnectionError, WebRTCStreamManager, AvailableStreams, TargetStream } from '@openLibs/webrtc-stream-manager';
+import { ConnectionError, WebRTCStreamManager, AvailableStreams, TargetStream, throttleByFrameRate } from '@openLibs/webrtc-stream-manager';
 import {
     of,
     shareReplay,
@@ -13,7 +13,12 @@ import {
     tap,
     interval,
     startWith,
-    map} from 'rxjs';
+    map,
+    merge,
+    timer,
+    throttle,
+    BehaviorSubject,
+} from 'rxjs';
 import staticLang from '@language_static';
 import { LayoutItem } from '@services/system-api.types/layouts.types';
 import { Translatable } from '@pipes/nx-translate.types';
@@ -30,6 +35,8 @@ import { PipesModule } from '@pipes/pipes.module';
 import { ServiceModule } from '@services/services.module';
 import { isDewarpingCapable } from '@utils/general';
 import { NxVideoPlayingDirective } from '@directives/video-playing.directive';
+import { NxVideoPlayerQueueService } from './video-player-queue.service';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 type DrawImagePartialTuple = [number, number, number, number];
 
@@ -58,14 +65,27 @@ type DrawImageFullTuple = [number, number, number, number, number, number, numbe
     templateUrl: 'video-player.component.html',
     styleUrls: ['video-player.component.scss'],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [CommonModule, NxRotateDirective, PipesModule, NxPreLoaderComponent, ServiceModule, NxFisheyeViewerComponent, NxVideoPlayingDirective],
 })
 export class NxVideoPlayerComponent {
     private appStateService = inject(NxAppStateService);
-    camera$$ = input.required<NxSystemCamera>({ alias: 'camera'})
-    muted$$ = input(true, { alias: 'muted' })
+    camera$$ = input.required<NxSystemCamera>({ alias: 'camera' });
+    muted$$ = input(true, { alias: 'muted' });
+    volume$$ = input(1, { alias: 'volume' });
+
+    playerQueue = inject(NxVideoPlayerQueueService);
 
     isMuted$$ = computed(() => this.muted$$() || !this.appStateService.userInteracted$$());
+
+    volume$ = computed(() => this.muted$$() ? 0 : this.volume$());
+
+    setVolumeEffect = effect(() => {
+        if (!this.webRtcStreamRef?.nativeElement) {
+            return;
+        }
+        this.webRtcStreamRef.nativeElement.volume = this.volume$$();
+    })
 
     get camera(): NxSystemCamera {
         return this.camera$$();
@@ -76,7 +96,7 @@ export class NxVideoPlayerComponent {
     @Input() lostConnectionPlaceholder: TemplateRef<any>;
     @Input() skipCredentialsCheck: boolean = false;
 
-    resolution$$ = input.required<Resolution>({ alias: 'resolution'})
+    resolution$$ = input.required<Resolution>({ alias: 'resolution' })
 
     showFisheye = input.required<boolean>()
 
@@ -132,6 +152,7 @@ export class NxVideoPlayerComponent {
             ribbonContent => ribbonContent.duration
                 ? interval(ribbonContent.duration).pipe(map(() => null), startWith(ribbonContent))
                 : of(ribbonContent)),
+        throttleByFrameRate(),
         shareReplay({ bufferSize: 1, refCount: false }),
         untilDestroyed(this),
     );
@@ -140,6 +161,7 @@ export class NxVideoPlayerComponent {
 
     constructor(
         private injector: Injector,
+        public cdr: ChangeDetectorRef,
     ) {
         this.playerId = uuid();
         if (this.CONFIG.trafficRelayHost) {
@@ -229,32 +251,52 @@ export class NxVideoPlayerComponent {
         }
     }
 
-    streamCleanup = (stream?: MediaStream): void => {
+    streamCleanup = async (stream?: MediaStream): Promise<void> => {
         if (this.webRtcStreamRef.nativeElement.srcObject && this.webRtcStreamRef.nativeElement.srcObject instanceof MediaStream) {
             const currentStream = this.webRtcStreamRef.nativeElement.srcObject;
-            if (!stream || currentStream !== stream) {
-                currentStream.getTracks().forEach(track => {
-                    track.stop();
-                    currentStream.removeTrack(track);
-                });
+            if (currentStream !== stream) {
                 this.webRtcStreamRef.nativeElement.srcObject = null;
             }
+            if (!stream) {
+                await new Promise(resolve => setTimeout(resolve, 100));
+                if (this.connection?.mediaStream$.observed) {
+                    return;
+                }
+            }
+            currentStream.getTracks().forEach(track => {
+                track.stop();
+                currentStream.removeTrack(track);
+            });
         }
     }
 
-    ngAfterViewInit(): void {
+    ngZone = inject(NgZone);
+
+    dequeue$ = new BehaviorSubject(0);
+
+    async ngAfterViewInit(): Promise<void> {
         if (!this.camera) {
             return;
         }
 
         this.originalStream.nativeElement.onblur = event => event.preventDefault();
+        this.webRtcStreamRef.nativeElement.volume = this.volume$$();
 
         const availableStreams: AvailableStreams[] = this.camera.parameters.mediaStreams?.streams?.map(({ encoderIndex }) => encoderIndex).filter(stream => stream !== -1) ?? [AvailableStreams.SECONDARY, AvailableStreams.PRIMARY];
         const hasSecondary = availableStreams.includes(AvailableStreams.SECONDARY);
-        const targetStream = availableStreams.length ? TargetStream.AUTO : hasSecondary ? TargetStream.LOW : TargetStream.HIGH
+        const targetStream = availableStreams.length ? TargetStream.AUTO : hasSecondary ? TargetStream.LOW : TargetStream.HIGH;
 
-        const stream$ = WebRTCStreamManager.connect({ cameraId: this.camera.id, systemId: this.camera.systemId, serverId: cleanId(this.camera.parentId), accessToken: this.camera.getAccessToken, targetStream }, this.originalStream.nativeElement).pipe(
+        this.cdr.detach();
+        this.hasChanges$.pipe(throttle(() => timer(500), { leading: false, trailing: true }), throttleByFrameRate(), untilDestroyed(this)).subscribe(() => this.cdr.detectChanges());
+
+        const startStream = () => WebRTCStreamManager.connect({ cameraId: this.camera.id, systemId: this.camera.systemId, serverId: cleanId(this.camera.parentId), accessToken: this.camera.getAccessToken, targetStream }, this.originalStream.nativeElement);
+
+        await this.playerQueue.queue(this);
+
+        this.ngZone.runOutsideAngular(() => startStream().pipe(
             tap(async ([stream, error, connection]) => {
+                this.connection = connection;
+                this.connection.playbackRateUpdateCallback = (rate: number) => this.playbackRate$$.set(rate);
                 this.syncAvailableStreams(connection, hasSecondary)
                 this.streamCleanup(stream);
                 if (stream) {
@@ -303,30 +345,53 @@ export class NxVideoPlayerComponent {
 
                 this.loading = false;
             }),
-            untilDestroyed(this),
-        );
-
-        /**
-         * Checks for authorization issues by fetching the preview image. Specifically for default password error.
-         */
-        this.camera.previewUrl
-            .pipe(
-                switchMap(async objectgUrl => {
-                    const text = await fetch(objectgUrl).then(r => r.blob()).then(b => b.text()).catch(() => null);
-                    return text !== 'unauthorized';
-                }),
-                switchMap(authorized => {
-                    if (authorized) {
-                        return stream$;
-                    }
-                    this.showError.emit(ConnectionError.authorization);
-                    return Promise.resolve();
-                }),
-                untilDestroyed(this)
-            ).subscribe();
+            untilDestroyed(this)
+        ).subscribe(() => {
+            this.notifyChanges();
+            this.dequeue$.next(Date.now());
+        }));
     }
+
+    changesNotifier$ = new Subject<number>();
+
+    hasChanges$ = merge(this.changesNotifier$, this.ribbonContent$, this.dequeue$)
+
+    notifyChanges(): void {
+        this.changesNotifier$.next(Date.now());
+    }
+
+    notifyChangesEffect = effect(() => {
+        this.resolution$$();
+        this.muted$$();
+        this.camera$$();
+        this.renderParams();
+        this.showFisheye();
+        this.dewarpingParams$$();
+        this.notifyChanges();
+        this.debugInfo$$();
+    });
 
     ngOnDestroy(): void {
         this.streamCleanup();
+        this.dequeue$.next(Date.now());
     }
+
+    actualResolution$$ = toSignal(timer(100, 250).pipe(map(() => {
+        const video = this.webRtcStreamRef.nativeElement;
+        const width = video.videoWidth;
+        const height = video.videoHeight;
+        if ([width, height].every(Boolean)) {
+            return `${width} x ${height}`
+        }
+    })));
+
+    playbackRate$$ = signal(1);
+
+    debugInfo$$ = computed(() => {
+        const selectedResolutionString = (this.resolution$$() || Resolution.AUTO).padEnd(5);
+        const actualResolution = this.actualResolution$$();
+        const actualResolutionString = actualResolution ? actualResolution.padEnd(12) : '';
+        const playbackRateString = this.playbackRate$$().toFixed(2).padEnd(6);
+        return `${selectedResolutionString}${actualResolutionString}${playbackRateString}`.trim();
+    });
 }

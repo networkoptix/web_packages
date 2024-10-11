@@ -45,6 +45,14 @@
         transform: translateY(-50%);
         z-index: var(--z-index-preloader);
     }
+
+    .frame-rate {
+        @include typography.regular14nocolor;
+        position: absolute;
+        bottom: 8px;
+        right: 8px;
+        color: var(--light1);
+    }
 }
 
 nx-webgl-canvas, .saas-placeholder {

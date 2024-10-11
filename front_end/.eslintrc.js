@@ -137,6 +137,7 @@ module.exports = {
             parser: '@typescript-eslint/parser',
             parserOptions: {
                 project: ['./tsconfig.json', './libs/nx-components/.storybook/tsconfig.json'],
+                tsconfigRootDir: __dirname,
                 createDefaultProgram: true,
             },
             plugins: ['nx', '@typescript-eslint'],

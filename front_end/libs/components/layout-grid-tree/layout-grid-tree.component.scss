@@ -5,6 +5,14 @@
 
 :host {
     min-height: 0;
+
+    nx-lines-loader {
+        margin-left: 16px;
+
+        &:first-of-type {
+            margin-top: 8px;
+        }
+    }
 }
 
 .resource-tree-wrapper {

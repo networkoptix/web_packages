@@ -174,6 +174,11 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         );
         this.version = 5.0;
         this.injector = injector;
+        this.post = this.post.bind(this);
+        this.put = this.put.bind(this);
+        this.patch = this.patch.bind(this);
+        this.delete = this.delete.bind(this);
+        this.get = this.get.bind(this);
     }
 
     private get storageService() {

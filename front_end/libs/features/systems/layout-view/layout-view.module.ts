@@ -1,6 +1,6 @@
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
-import { NgModule } from '@angular/core';
+import { inject, NgModule, NgZone } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CanDeactivateFn, RouterModule, Routes } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -18,8 +18,9 @@ const CleanupConnections: CanDeactivateFn<unknown> = async (
     _currentState,
     nextState,
 ) => {
+    const ngZone = inject(NgZone);
     if (!nextState.url.includes('/layouts/')) {
-        return WebRTCStreamManager.closeAll();
+        ngZone.runOutsideAngular(() => WebRTCStreamManager.closeAll());
     }
     return true;
 };

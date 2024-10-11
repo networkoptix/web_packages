@@ -8,7 +8,9 @@ import {
     ElementRef,
     EventEmitter,
     HostListener,
+    inject,
     input,
+    NgZone,
     Output,
     signal,
     WritableSignal,
@@ -22,7 +24,10 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import FileSaver from 'file-saver';
 import { round } from 'lodash-es';
 import { TourMatMenuModule } from 'ngx-ui-tour-md-menu';
-import { WebRTCStreamManager } from 'nx-open-web/packages/webrtc-stream-manager';
+import {
+    throttleByFrameRate,
+    WebRTCStreamManager,
+} from 'nx-open-web/packages/webrtc-stream-manager';
 import {
     distinctUntilChanged,
     EMPTY,
@@ -146,6 +151,7 @@ export class NxLayoutGridItemOverlayComponent {
     isMenuOpened$$ = signal(false);
 
     scale$ = this.resizeObserver.resize.pipe(
+        throttleByFrameRate(),
         map(({ width, height }) => {
             const minWidth = 108;
             const minHeight = 72;
@@ -161,6 +167,7 @@ export class NxLayoutGridItemOverlayComponent {
     scaled$$ = toSignal(this.scale$.pipe(map(scale => scale !== 1)), { initialValue: false });
 
     getScaleStyle$ = this.scale$.pipe(
+        throttleByFrameRate(),
         map(scale => ({
             'height.%': scale * 100,
             'width.%': scale * 100,
@@ -266,6 +273,8 @@ export class NxLayoutGridItemOverlayComponent {
         return node ? `: ${node.name}` : '';
     });
 
+    ngZone = inject(NgZone);
+
     bitrateInfo$ = toObservable(this.displayInfo$$).pipe(
         distinctUntilChanged(),
         switchMap(displayInfo => {
@@ -341,9 +350,10 @@ export class NxLayoutGridItemOverlayComponent {
                             params: { codec: codecLookup[currentStream.codec] },
                         };
 
-                        const connectionType = WebRTCStreamManager.getInstance(
-                            cameraNode.details,
-                        )?.connectionType;
+                        const connectionType = this.ngZone.runOutsideAngular(
+                            () =>
+                                WebRTCStreamManager.getInstance(cameraNode.details)?.connectionType,
+                        );
 
                         const debugConnectionInfo = connectionType
                             ? (() => {
@@ -397,6 +407,7 @@ export class NxLayoutGridItemOverlayComponent {
                 return EMPTY;
             }
         }),
+        throttleByFrameRate(),
         untilDestroyed(this),
     );
 
@@ -665,6 +676,7 @@ export class NxLayoutGridItemOverlayComponent {
             fromEvent<KeyboardEvent>(document, 'keydown'),
             fromEvent<MouseEvent>(document, 'mousedown'),
         ).pipe(
+            throttleByFrameRate(),
             sampleTime(250),
             switchMap(() =>
                 timer(5000).pipe(

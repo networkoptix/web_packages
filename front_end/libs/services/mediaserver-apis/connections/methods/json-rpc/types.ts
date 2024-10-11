@@ -26,6 +26,7 @@ interface ErrorDetails {
 }
 
 interface JsonRpcResult<T> {
+    method?: string;
     result: T;
     error?: ErrorDetails;
 }

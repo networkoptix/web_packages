@@ -53,6 +53,14 @@
                                 "key": "cloudLayoutsExperimentalBeta",
                                 "flags": ["layoutsFisheye", "layoutsDeviceSettings"]
                             }
+                        },
+                        {
+                            "name": "Layouts Debug",
+                            "description": "Enabled debug mode for layouts",
+                            "featureConfig": {
+                                "key": "cloudLayoutsDebugMode",
+                                "flags": ["layoutsFrameRateDebug"]
+                            }
                         }
                     ]
                 },

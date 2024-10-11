@@ -120,3 +120,12 @@ img.poster {
     height: 100%;
     z-index: 2;
 }
+
+.debug-info {
+    @include typography.regular14nocolor;
+    position: absolute;
+    bottom: -32px;
+    right: 8px;
+    color: var(--light1);
+    z-index: 120;
+}

@@ -1,4 +1,13 @@
-import { computed, Directive, ElementRef, HostListener, inject, signal } from '@angular/core';
+import {
+    ChangeDetectorRef,
+    computed,
+    Directive,
+    effect,
+    ElementRef,
+    HostListener,
+    inject,
+    signal,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { bindCallback, defer, map, repeat, startWith, switchMap, timer } from 'rxjs';
 
@@ -32,6 +41,24 @@ export class NxVideoPlayingDirective {
     private playingState$$ = signal(false);
 
     public isPlaying$$ = computed(() => this.playingState$$() && !this.playbackFrozen$$());
+
+    public playbackStarted$$ = toSignal(
+        defer(
+            bindCallback(
+                this.element.nativeElement.requestVideoFrameCallback.bind(
+                    this.element.nativeElement,
+                ),
+            ),
+        ).pipe(map(() => true)),
+        { initialValue: false },
+    );
+
+    private cdr = inject(ChangeDetectorRef);
+
+    detectChanges = effect(() => {
+        this.isPlaying$$();
+        this.cdr.detectChanges();
+    });
 
     @HostListener('playing') protected onPlay(): void {
         this.playingState$$.set(true);

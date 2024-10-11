@@ -16,7 +16,6 @@
 
 <video
     #originalStream
-    #nxVideoPlaying="nxVideoPlaying"
     autoplay
     class="original-stream"
     muted
@@ -24,6 +23,7 @@
 
 <video
     #webRtcStream
+    #nxVideoPlaying="nxVideoPlaying"
     class="web-rtc-stream"
     autoplay
     [muted]="isMuted$$()"
@@ -31,25 +31,27 @@
     [nxRotate]="rotation"
 ></video>
 
-@if (dewarpingParams$$(); as dewarpingParams) {
-    @defer {
-        <nx-fisheye-viewer
-            [source]="webRtcStream"
-            [dewarpingParams]="dewarpingParams"
-            [layoutItemId]="renderParams().id"
-            class="fisheye-viewer"
-        ></nx-fisheye-viewer>
+@defer (when nxVideoPlaying.playbackStarted$$() && !!webRtcStream.duration) {
+    @if (dewarpingParams$$(); as dewarpingParams) {
+        @defer {
+            <nx-fisheye-viewer
+                [source]="webRtcStream"
+                [dewarpingParams]="dewarpingParams"
+                [layoutItemId]="renderParams().id"
+                class="fisheye-viewer"
+            ></nx-fisheye-viewer>
+        }
+    }
+} @placeholder {
+    @if (!lostConnection) {
+        <nx-pre-loader></nx-pre-loader>
     }
 }
 
-@if (error || !nxVideoPlaying.isPlaying$$()) {
-    @if (error) {
-        <div class="connection-error">
-            {{ error }}
-        </div>
-    } @else {
-        <nx-pre-loader></nx-pre-loader>
-    }
+@if (error) {
+    <div class="connection-error">
+        {{ error }}
+    </div>
 }
 
 @if (
@@ -64,4 +66,13 @@
     >
         Ptz Controls
     </div>
+}
+
+@if (CONFIG.featureFlags.layoutsFrameRateDebug && debugInfo$$(); as debugInfo) {
+    <pre
+        class="debug-info"
+        data-escape-global-style
+    >
+        {{ debugInfo }}
+    </pre>
 }

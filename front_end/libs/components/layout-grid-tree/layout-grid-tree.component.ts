@@ -26,7 +26,8 @@ import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { TourMatMenuModule, TourService } from 'ngx-ui-tour-md-menu';
-import { BehaviorSubject, Observable, of, Subject, timer } from 'rxjs';
+import { throttleByFrameRate } from 'nx-open-web/packages/webrtc-stream-manager';
+import { BehaviorSubject, identity, Observable, of, Subject, timer } from 'rxjs';
 import {
     debounceTime,
     delay,
@@ -41,7 +42,6 @@ import {
 import { NxContextMenu } from '@components/context-menu/context-menu';
 import { EditableModule } from '@components/editable/editable.module';
 import {
-    assertResourceLeafNode,
     assertResourceOfType,
     assertResourceParentNode,
 } from '@components/layout-grid/layout-grid.type-guards';
@@ -184,7 +184,10 @@ export class NxLayoutGridTreeComponent extends WithMenuItemsByType {
 
     private scrollPosition$ = new BehaviorSubject(0);
 
-    @Output() scrollChange: Observable<number> = this.scrollPosition$.pipe(debounceTime(100));
+    @Output() scrollChange: Observable<number> = this.scrollPosition$.pipe(
+        debounceTime(100),
+        throttleByFrameRate(),
+    );
 
     hideNoResults$$ = input(false, { alias: 'hideNoResults', transform: booleanAttribute });
 
@@ -279,6 +282,9 @@ export class NxLayoutGridTreeComponent extends WithMenuItemsByType {
 
     handleSingleClick = (node: ResourceNode, parent: ResourceNode, event: MouseEvent): void => {
         event.stopPropagation();
+        if (assertResourceOfType.placeholder(node)) {
+            return;
+        }
         const parentId = parent?.details?.id;
         if (node.type) {
             if (assertResourceOfType.system_cloud(node)) {
@@ -296,16 +302,12 @@ export class NxLayoutGridTreeComponent extends WithMenuItemsByType {
                 return;
             }
 
-            if (assertResourceLeafNode(node)) {
-                this.layoutStateService.paramStateHandler.updater(() => ({
-                    queryParams: {
-                        search: '',
-                    },
-                }));
-            }
-
             of(node)
-                .pipe(delay(250), takeUntil(this.doubleClick$))
+                .pipe(
+                    assertResourceOfType.layout(node) ? delay(250) : identity,
+                    throttleByFrameRate(),
+                    takeUntil(this.doubleClick$),
+                )
                 .subscribe(node => this.layoutGridService.changeView.next(node));
         } else if (parentId && node.name === staticLang.layouts.otherSystems.searchCameras) {
             this.layoutStateService.paramStateHandler.updater(() => ({
@@ -321,6 +323,9 @@ export class NxLayoutGridTreeComponent extends WithMenuItemsByType {
 
     handleDoubleClick = (node: ResourceNode, event: MouseEvent): void => {
         event.stopPropagation();
+        if (assertResourceOfType.placeholder(node)) {
+            return;
+        }
         if (
             !nxConfig.featureFlags.layoutsEditable ||
             this.layout.locked ||
@@ -431,6 +436,7 @@ export class NxLayoutGridTreeComponent extends WithMenuItemsByType {
     accountService = inject(NxAccountService);
 
     serverStats$: ServerStatsObservable = this.tooltipTarget$.pipe(
+        throttleByFrameRate(),
         filter(id => !!id),
         distinctUntilChanged(),
         switchMap(serverId =>

@@ -6,18 +6,27 @@ import { dirtyId } from '@utils/general';
 import { selectActiveLayoutState } from '../active-layout/active-layout.selectors';
 
 import { layoutsResolutionFeature } from './layoutsResolutionFeature';
-import { LayoutsResolutionState, Resolution } from './resolution.types';
+import { CamerasResolution, LayoutsResolutionState, Resolution } from './resolution.types';
 
 export const { selectLayoutsResolutionState } = layoutsResolutionFeature;
 
 export const selectLayoutResolution = memoize((layoutId: string) => {
     layoutId = dirtyId(layoutId);
 
-    return createSelector(
-        selectLayoutsResolutionState,
-        (resolution: LayoutsResolutionState) =>
-            (layoutId && resolution[layoutId]?.resolution) || Resolution.AUTO,
-    );
+    return createSelector(selectLayoutsResolutionState, (resolution: LayoutsResolutionState) => {
+        const layoutResolution = (layoutId && resolution[layoutId]?.resolution) || Resolution.AUTO;
+
+        if (
+            layoutId &&
+            Object.values(resolution[layoutId]?.cameras || {}).some(
+                ({ resolution }) => resolution && resolution !== layoutResolution,
+            )
+        ) {
+            return Resolution.CUSTOM;
+        }
+
+        return layoutResolution;
+    });
 });
 
 export const selectCameraResolution = memoize(
@@ -70,6 +79,9 @@ export const selectCurrentLayoutResolution = createSelector(
 
 export const selectCurrentLayoutHighResolution = createSelector(
     selectCurrentLayoutResolution,
-    (resolution: Resolution) =>
-        resolution && ![Resolution.AUTO, Resolution.LOW].includes(resolution),
+    selectCurrentLayoutCamerasLookup,
+    (resolution: Resolution, deviceResolutions: CamerasResolution) =>
+        [resolution, ...Object.values(deviceResolutions).map(({ resolution }) => resolution)].some(
+            resolution => resolution === Resolution.HIGH,
+        ),
 );

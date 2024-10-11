@@ -93,20 +93,19 @@
             (cdkDragMoved)="resizeMenu($event)"
         ></div>
 
-        @defer {
-            <nx-layout-grid-tree
-                [layout]="layout"
-                [system]="system"
-                [layoutItemLookup]="layoutItemLookup"
-                [dataSource]="activeSystemSearchResults$$()"
-                [linkedDataSource]="layoutItemLookup.otherSystems"
-                [treeControl]="treeControl"
-                [showTooltip]="showTooltip$ | async"
-                [changingLayout]="changingLayout"
-                [showFirst]="showFirst$$()"
-            ></nx-layout-grid-tree>
-        }
-        @if (layoutItemLookup.otherSystems?.length && layoutGridService.isLeftMenuOpen$$()) {
+        <nx-layout-grid-tree
+            [layout]="layout"
+            [system]="system"
+            [layoutItemLookup]="layoutItemLookup"
+            [dataSource]="activeSystemSearchResults$$()"
+            [linkedDataSource]="layoutItemLookup.otherSystems"
+            [treeControl]="treeControl"
+            [showTooltip]="showTooltip$ | async"
+            [changingLayout]="changingLayout"
+            [showFirst]="showFirst$$()"
+        ></nx-layout-grid-tree>
+
+        @if (layoutItemLookup.otherSystems?.length) {
             <details
                 #otherSystems
                 (toggle)="toggleOtherSystemsOpen(otherSystems.open)"
@@ -181,7 +180,9 @@
                     }
                 </summary>
                 <div>
-                    @defer (when groupsCacheStore.orgStructuresLoaded$$()) {
+                    @defer (
+                        when groupsCacheStore.orgStructuresLoaded$$() && otherSystemsReady$$()
+                    ) {
                         <ng-template
                             #sitePlaceholder
                             let-svg="svg"
@@ -308,7 +309,10 @@
                                         }
 
                                         @case (LANG.layouts.otherSystems.loadingCameras) {
-                                            <nx-lines-loader randomWidth></nx-lines-loader>
+                                            <nx-lines-loader
+                                                randomWidth
+                                                [count]="10"
+                                            ></nx-lines-loader>
                                         }
 
                                         @default {
@@ -351,37 +355,47 @@
                                 }
                             }
                         }
-                    } @placeholder (minimum 1s) {
-                        <nx-lines-loader randomWidth></nx-lines-loader>
+                    } @loading (minimum 1s) {
+                        <nx-lines-loader
+                            randomWidth
+                            [count]="10"
+                        ></nx-lines-loader>
                     }
                 </div>
             </details>
         }
     </ng-template>
-    @if (useNewCloud) {
-        <div
-            class="projected-wrapper"
-            *nxMenuProjection="true"
-        >
-            <ng-container *ngTemplateOutlet="layoutTree"></ng-container>
-        </div>
-    } @else {
-        <div
-            class="sidebar-wrapper left"
-            tourAnchor="cloud-layouts_left-menu"
-            [ngStyle]="{
-                width:
-                    layoutItemLookup && layoutGridService.isLeftMenuOpen$$()
-                        ? (layoutStateService.menuResizePercentage$ | async)
-                        : null
-            }"
-            [ngClass]="{
-                'open-menu': layoutItemLookup && layoutGridService.isLeftMenuOpen$$(),
-                resizing: resizing
-            }"
-        >
-            <ng-container *ngTemplateOutlet="layoutTree"></ng-container>
-        </div>
+    @defer (when treeLoaded$$(); on viewport; prefetch on idle) {
+        @if (useNewCloud) {
+            <div
+                class="projected-wrapper"
+                *nxMenuProjection="true"
+            >
+                <ng-container *ngTemplateOutlet="layoutTree"></ng-container>
+            </div>
+        } @else {
+            <div
+                class="sidebar-wrapper left"
+                tourAnchor="cloud-layouts_left-menu"
+                [ngStyle]="{
+                    width:
+                        layoutItemLookup && layoutGridService.isLeftMenuOpen$$()
+                            ? (layoutStateService.menuResizePercentage$ | async)
+                            : null
+                }"
+                [ngClass]="{
+                    'open-menu': layoutItemLookup && layoutGridService.isLeftMenuOpen$$(),
+                    resizing: resizing
+                }"
+            >
+                <ng-container *ngTemplateOutlet="layoutTree"></ng-container>
+            </div>
+        }
+    } @placeholder {
+        <nx-lines-loader
+            randomWidth
+            [count]="10"
+        ></nx-lines-loader>
     }
 }
 
@@ -571,31 +585,33 @@
             </div>
         }
         @if (mouseMoving$$() && layoutStateService.resolutionRibbonShown$$(); as secondsLeft) {
-            <div class="resolution-ribbon">
-                <svg-icon
-                    nx-add-svg-src
-                    [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
-                    [src]="icons.dirNonStandard + 'warning.svg'"
-                ></svg-icon>
-                <span
-                    class="ribbon-message"
-                    translate
-                >
-                    Set layout resolution to 'Auto' to increase performance
-                </span>
-                <button
-                    class="ribbon-button"
-                    (click)="setResolutionToAuto()"
-                >
-                    <span translate>Set to "Auto"</span>
-                </button>
-                <button
-                    class="ribbon-button"
-                    (click)="layoutStateService.showResolutionRibbon$.next(0)"
-                >
-                    <span translate>Close</span>
-                </button>
-            </div>
+            @defer (when hasPerformanceIssues$ | async) {
+                <div class="resolution-ribbon">
+                    <svg-icon
+                        nx-add-svg-src
+                        [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
+                        [src]="icons.dirNonStandard + 'warning.svg'"
+                    ></svg-icon>
+                    <span
+                        class="ribbon-message"
+                        translate
+                    >
+                        Set layout resolution to 'Auto' to increase performance
+                    </span>
+                    <button
+                        class="ribbon-button"
+                        (click)="setResolutionToAuto()"
+                    >
+                        <span translate>Set to "Auto"</span>
+                    </button>
+                    <button
+                        class="ribbon-button"
+                        (click)="layoutStateService.showResolutionRibbon$.next(0)"
+                    >
+                        <span translate>Close</span>
+                    </button>
+                </div>
+            }
         }
         @if (layoutItemLookup && layout$$(); as layout) {
             <div
@@ -614,7 +630,10 @@
                             tourAnchor="cloud-layouts_grid"
                             class="centered-anchor"
                         ></div>
-                        @if ((highlightState$ | async)?.added; as added) {
+                        @if (
+                            !(hasCollisions$ | async) && (highlightState$ | async)?.added;
+                            as added
+                        ) {
                             <div
                                 [style.transform]="added.transform || 'translate(0, 0)'"
                                 [style.transform-origin]="added.transformOrigin || 'top left'"
@@ -732,7 +751,7 @@
                                     </h3>
                                 </div>
                             } @else {
-                                @for (item of layout.items; track itemId($index, item)) {
+                                @for (item of layout.items; track item.id; let index = $index) {
                                     @if (layoutItemLookup) {
                                         <div
                                             #layoutItemWrapper
@@ -867,185 +886,199 @@
                                                                     itemStatusPlaceholder;
                                                                     context: {
                                                                         itemDetail,
-                                                                        status: 'offline'
+                                                                        status: 'unavailable'
                                                                     }
                                                                 "
                                                             ></ng-container>
                                                         </ng-template>
-
-                                                        <div class="content-container">
-                                                            @switch (itemDetail.type) {
-                                                                <!-- with a new placeholder ONLY camera and server and webpage are needed here -->
-                                                                <!-- 'else' placeholder is not needed due to checkLayoutItemsErrors -->
-                                                                @case (RESOURCE_TYPE.CAMERA) {
-                                                                    @if (
-                                                                        itemDetail
-                                                                            | narrowWith
-                                                                                : assertResourceOfType.camera
-                                                                    ) {
-                                                                        <div
-                                                                            class="d-flex flex-column h-100 w-100 align-items-center justify-content-center"
-                                                                        >
-                                                                            <nx-video-player
-                                                                                [muted]="
-                                                                                    !layoutSelectionStore.selectedLayoutItem$$() ||
-                                                                                    !item.id.includes(
-                                                                                        layoutSelectionStore.selectedLayoutItem$$()
-                                                                                            .id
-                                                                                    )
-                                                                                "
-                                                                                [showFisheye]="
-                                                                                    overlay.showFisheye$$()
-                                                                                "
-                                                                                [camera]="
-                                                                                    itemDetail.details
-                                                                                "
-                                                                                [rotation]="
-                                                                                    item.rotation
-                                                                                "
-                                                                                (showError)="
-                                                                                    handleVideoError(
-                                                                                        itemDetail,
-                                                                                        $event
-                                                                                    )
-                                                                                "
-                                                                                (showPtz)="
-                                                                                    showPtz.emit(
-                                                                                        $event
-                                                                                    )
-                                                                                "
-                                                                                [renderParams]="
-                                                                                    item
-                                                                                "
-                                                                                [lostConnectionPlaceholder]="
-                                                                                    offlinePlaceholder
-                                                                                "
-                                                                                [skipCredentialsCheck]="
-                                                                                    skipDefaultCredentialsCheck[
-                                                                                        itemDetail
-                                                                                            .details
-                                                                                            .id
-                                                                                    ]
-                                                                                "
-                                                                                [resolution]="
-                                                                                    layoutStateService.cameraResolutionLookup$$()[
-                                                                                        itemDetail
-                                                                                            .details
-                                                                                            .id
-                                                                                    ].resolution
-                                                                                "
-                                                                            >
-                                                                            </nx-video-player>
-                                                                        </div>
-                                                                    }
-                                                                }
-                                                                @case (RESOURCE_TYPE.SERVER) {
-                                                                    @if (
-                                                                        itemDetail
-                                                                            | narrowWith
-                                                                                : assertResourceOfType.server
-                                                                    ) {
-                                                                        @defer {
-                                                                            <nx-monitoring-graph
-                                                                                [systemIdOrResourcePath]="
-                                                                                    item.resourcePath
-                                                                                "
-                                                                                [selectedServerId]="
-                                                                                    itemDetail
-                                                                                        .details.id
-                                                                                "
-                                                                                [lostConnectionPlaceholder]="
-                                                                                    offlinePlaceholder
-                                                                                "
-                                                                                noFrame
-                                                                                class="theme-override"
-                                                                                data-theme="dark"
-                                                                            ></nx-monitoring-graph>
-                                                                        }
-                                                                    }
-                                                                }
-                                                                @case (RESOURCE_TYPE.WEB_PAGE) {
-                                                                    @if (
-                                                                        CONFIG.featureFlags
-                                                                            .layoutsWebpages ||
-                                                                        CONFIG.featureFlags
-                                                                            .layoutsDemo
-                                                                    ) {
-                                                                        <nx-pre-loader></nx-pre-loader>
+                                                        @if (!overlay.scaled$$()) {
+                                                            <div class="content-container">
+                                                                @switch (itemDetail.type) {
+                                                                    <!-- with a new placeholder ONLY camera and server and webpage are needed here -->
+                                                                    <!-- 'else' placeholder is not needed due to checkLayoutItemsErrors -->
+                                                                    @case (RESOURCE_TYPE.CAMERA) {
                                                                         @if (
-                                                                            (itemDetail
+                                                                            itemDetail
                                                                                 | narrowWith
-                                                                                    : assertResourceOfType.webpage) &&
-                                                                                itemDetail;
-                                                                            as itemDetail
+                                                                                    : assertResourceOfType.camera
                                                                         ) {
-                                                                            <iframe
-                                                                                #webpage
-                                                                                (load)="
-                                                                                    checkIframeContent(
+                                                                            <div
+                                                                                class="d-flex flex-column h-100 w-100 align-items-center justify-content-center"
+                                                                            >
+                                                                                @defer {
+                                                                                    <nx-video-player
+                                                                                        [muted]="
+                                                                                            layoutSelectionStore.selectedLayoutItem$$()
+                                                                                                ? !item.id.includes(
+                                                                                                      layoutSelectionStore.selectedLayoutItem$$()
+                                                                                                          .id
+                                                                                                  )
+                                                                                                : !layoutSelectionStore.playingLayoutItem$$()
+                                                                                                      .id ||
+                                                                                                  !item.id.includes(
+                                                                                                      layoutSelectionStore.playingLayoutItem$$()
+                                                                                                          .id
+                                                                                                  )
+                                                                                        "
+                                                                                        [showFisheye]="
+                                                                                            overlay.showFisheye$$()
+                                                                                        "
+                                                                                        [camera]="
+                                                                                            itemDetail.details
+                                                                                        "
+                                                                                        [rotation]="
+                                                                                            item.rotation
+                                                                                        "
+                                                                                        (showError)="
+                                                                                            handleVideoError(
+                                                                                                itemDetail,
+                                                                                                $event
+                                                                                            )
+                                                                                        "
+                                                                                        (showPtz)="
+                                                                                            showPtz.emit(
+                                                                                                $event
+                                                                                            )
+                                                                                        "
+                                                                                        [renderParams]="
+                                                                                            item
+                                                                                        "
+                                                                                        [lostConnectionPlaceholder]="
+                                                                                            offlinePlaceholder
+                                                                                        "
+                                                                                        [skipCredentialsCheck]="
+                                                                                            skipDefaultCredentialsCheck[
+                                                                                                itemDetail
+                                                                                                    .details
+                                                                                                    .id
+                                                                                            ]
+                                                                                        "
+                                                                                        [resolution]="
+                                                                                            layoutStateService.cameraResolutionLookup$$()[
+                                                                                                itemDetail
+                                                                                                    .details
+                                                                                                    .id
+                                                                                            ]
+                                                                                                .resolution
+                                                                                        "
+                                                                                    >
+                                                                                    </nx-video-player>
+                                                                                }
+                                                                            </div>
+                                                                        }
+                                                                    }
+                                                                    @case (RESOURCE_TYPE.SERVER) {
+                                                                        @if (
+                                                                            itemDetail
+                                                                                | narrowWith
+                                                                                    : assertResourceOfType.server
+                                                                        ) {
+                                                                            @defer {
+                                                                                <nx-monitoring-graph
+                                                                                    [systemIdOrResourcePath]="
+                                                                                        item.resourcePath
+                                                                                    "
+                                                                                    [selectedServerId]="
                                                                                         itemDetail
                                                                                             .details
-                                                                                            .id,
-                                                                                        webpage
-                                                                                    )
-                                                                                "
-                                                                                [src]="
-                                                                                    itemDetail
-                                                                                        .details.url
-                                                                                        | safe
-                                                                                            : 'resourceUrl'
-                                                                                "
-                                                                                frameBorder="0"
-                                                                            ></iframe>
-                                                                        }
-                                                                    } @else {
-                                                                        <ng-container
-                                                                            *ngTemplateOutlet="
-                                                                                itemStatusPlaceholder;
-                                                                                context: {
-                                                                                    itemDetail,
-                                                                                    status: RESOURCE_TYPE.WEB_PAGE
-                                                                                }
-                                                                            "
-                                                                        ></ng-container>
-                                                                    }
-                                                                }
-                                                                @case (RESOURCE_TYPE.IO_DEVICE) {
-                                                                    <ng-container
-                                                                        *ngTemplateOutlet="
-                                                                            itemStatusPlaceholder;
-                                                                            context: {
-                                                                                itemDetail,
-                                                                                status: RESOURCE_TYPE.IO_DEVICE
+                                                                                            .id
+                                                                                    "
+                                                                                    [lostConnectionPlaceholder]="
+                                                                                        offlinePlaceholder
+                                                                                    "
+                                                                                    noFrame
+                                                                                    class="theme-override"
+                                                                                    data-theme="dark"
+                                                                                ></nx-monitoring-graph>
                                                                             }
-                                                                        "
-                                                                    ></ng-container>
-                                                                }
-                                                                @default {
-                                                                    <!-- should be a generic not supported placeholder -->
-                                                                    @if (
-                                                                        layoutsItemNewPlaceholder
+                                                                        }
+                                                                    }
+                                                                    @case (RESOURCE_TYPE.WEB_PAGE) {
+                                                                        @if (
+                                                                            CONFIG.featureFlags
+                                                                                .layoutsWebpages ||
+                                                                            CONFIG.featureFlags
+                                                                                .layoutsDemo
+                                                                        ) {
+                                                                            <nx-pre-loader></nx-pre-loader>
+                                                                            @if (
+                                                                                (itemDetail
+                                                                                    | narrowWith
+                                                                                        : assertResourceOfType.webpage) &&
+                                                                                    itemDetail;
+                                                                                as itemDetail
+                                                                            ) {
+                                                                                <iframe
+                                                                                    #webpage
+                                                                                    (load)="
+                                                                                        checkIframeContent(
+                                                                                            itemDetail
+                                                                                                .details
+                                                                                                .id,
+                                                                                            webpage
+                                                                                        )
+                                                                                    "
+                                                                                    [src]="
+                                                                                        itemDetail
+                                                                                            .details
+                                                                                            .url
+                                                                                            | safe
+                                                                                                : 'resourceUrl'
+                                                                                    "
+                                                                                    frameBorder="0"
+                                                                                ></iframe>
+                                                                            }
+                                                                        } @else {
+                                                                            <ng-container
+                                                                                *ngTemplateOutlet="
+                                                                                    itemStatusPlaceholder;
+                                                                                    context: {
+                                                                                        itemDetail,
+                                                                                        status: RESOURCE_TYPE.WEB_PAGE
+                                                                                    }
+                                                                                "
+                                                                            ></ng-container>
+                                                                        }
+                                                                    }
+                                                                    @case (
+                                                                        RESOURCE_TYPE.IO_DEVICE
                                                                     ) {
                                                                         <ng-container
                                                                             *ngTemplateOutlet="
                                                                                 itemStatusPlaceholder;
                                                                                 context: {
                                                                                     itemDetail,
-                                                                                    status: null
+                                                                                    status: RESOURCE_TYPE.IO_DEVICE
                                                                                 }
                                                                             "
                                                                         ></ng-container>
-                                                                    } @else {
-                                                                        <div
-                                                                            class="not-supported"
-                                                                            translate
-                                                                        >
-                                                                            Not supported
-                                                                        </div>
+                                                                    }
+                                                                    @default {
+                                                                        <!-- should be a generic not supported placeholder -->
+                                                                        @if (
+                                                                            layoutsItemNewPlaceholder
+                                                                        ) {
+                                                                            <ng-container
+                                                                                *ngTemplateOutlet="
+                                                                                    itemStatusPlaceholder;
+                                                                                    context: {
+                                                                                        itemDetail,
+                                                                                        status: null
+                                                                                    }
+                                                                                "
+                                                                            ></ng-container>
+                                                                        } @else {
+                                                                            <div
+                                                                                class="not-supported"
+                                                                                translate
+                                                                            >
+                                                                                Not supported
+                                                                            </div>
+                                                                        }
                                                                     }
                                                                 }
-                                                            }
-                                                        </div>
+                                                            </div>
+                                                        }
                                                     } @else {
                                                         <ng-container
                                                             *ngTemplateOutlet="
@@ -1064,9 +1097,10 @@
                                                 </ng-template>
 
                                                 @if (
-                                                    !window.document.fullscreenElement ||
-                                                    window.document.fullscreenElement ===
-                                                        layoutStateService.gridSection
+                                                    layout.items.length !== 1 &&
+                                                    (!window.document.fullscreenElement ||
+                                                        window.document.fullscreenElement ===
+                                                            layoutStateService.gridSection)
                                                 ) {
                                                     @for (
                                                         alignment of alignments;
@@ -1120,7 +1154,11 @@
                                                     (removeItem)="removeItem($event)"
                                                     [system]="system"
                                                 >
-                                                    <ng-container *ngTemplateOutlet="tileContent" />
+                                                    @defer {
+                                                        <ng-container
+                                                            *ngTemplateOutlet="tileContent"
+                                                        />
+                                                    }
                                                 </nx-layout-grid-item-overlay>
                                             </div>
                                         </div>
@@ -1131,6 +1169,11 @@
                     </div>
                 }
             </div>
+            @if (CONFIG.featureFlags.layoutsFrameRateDebug && framesPerSecond$$(); as fps) {
+                <pre class="frame-rate">
+                    {{ fps }}
+                </pre>
+            }
         } @else {
             <nx-pre-loader></nx-pre-loader>
         }

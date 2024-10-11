@@ -13,7 +13,7 @@ import { NxSkeletonLoaderComponent } from '@components/skeleton-loader/skeleton-
     imports: [CommonModule, NxSkeletonLoaderComponent, NgxSkeletonLoaderModule],
 })
 export class NxLinesLoaderComponent {
-    count$$ = input(10, { alias: 'count' });
+    count$$ = input(1, { alias: 'count' });
     randomWidth$$ = input(false, { alias: 'randomWidth', transform: booleanAttribute });
 
     randomWidths$$ = computed(() => {

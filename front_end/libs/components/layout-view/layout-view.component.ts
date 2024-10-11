@@ -6,6 +6,7 @@ import {
     Component,
     effect,
     inject,
+    NgZone,
 } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -14,12 +15,22 @@ import { TranslateService } from '@ngx-translate/core';
 import { cloneDeep } from 'lodash-es';
 import { NgxIndexedDBService } from 'ngx-indexed-db';
 import { TourMatMenuModule, TourService } from 'ngx-ui-tour-md-menu';
-import { combineLatest, firstValueFrom, forkJoin, merge, Observable, Subject, timer } from 'rxjs';
+import {
+    combineLatest,
+    defer,
+    firstValueFrom,
+    forkJoin,
+    merge,
+    Observable,
+    Subject,
+    timer,
+} from 'rxjs';
 import {
     catchError,
     distinctUntilChanged,
     filter,
     map,
+    repeat,
     shareReplay,
     startWith,
     switchMap,
@@ -120,13 +131,16 @@ export class NxLayoutViewComponent {
     useV2api = false;
 
     systemOnline$ = this.selectedSystem$.pipe(
+        filter(system => !!system),
         tap(system => {
             this.useV2api = system.version >= 6.0;
         }),
         switchMap(system =>
-            system.isOnline
-                ? Promise.resolve(true)
-                : system.mediaserver.ping().pipe(map(() => true)),
+            defer(() => system.mediaserver.ping()).pipe(
+                map(() => true),
+                catchError(() => Promise.resolve(false)),
+                repeat({ delay: 5_000 }),
+            ),
         ),
         catchError(() => Promise.resolve(false)),
         startWith(true),
@@ -368,12 +382,14 @@ export class NxLayoutViewComponent {
         );
     };
 
+    ngZone = inject(NgZone);
+
     changeLayout(layout: string | DropdownItem<string>): void {
         const layoutId = typeof layout === 'string' ? cleanIdLegacy(layout) : layout.value;
         this.layoutStateService.paramStateHandler.state$$.set({ params: { layoutId } });
         if (layoutId) {
             this.#fetchingLayout$.next('fetching');
-            WebRTCStreamManager.updatePosition();
+            this.ngZone.runOutsideAngular(() => WebRTCStreamManager.updatePosition());
             this.ptzControlTarget = null;
         }
     }

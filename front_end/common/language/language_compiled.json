@@ -2015,7 +2015,6 @@
     "You cannot add a parent group to its child.": "You cannot add a parent group to its child.",
     "You cannot add yourself": "You cannot add yourself",
     "You cannot log in to this system from %VMS_NAME% Client": "You cannot log in to this system from %VMS_NAME% Client",
-    "You cannot move a folder into itself": "You cannot move a folder into itself",
     "You do not have \"View Live\" permission for this device. Please contact your system administrator to set up access to the device.": "You do not have \"View Live\" permission for this device. Please contact your system administrator to set up access to the device.",
     "You do not have permission to { systemName } system. Please contact your system administrator to arrange access to the system.": "You do not have permission to { systemName } system. Please contact your system administrator to arrange access to the system.",
     "You do not have permissions to perform this action": "You do not have permissions to perform this action",

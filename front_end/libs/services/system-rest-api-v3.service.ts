@@ -2,7 +2,25 @@ import { Location } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Injector } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
-import { combineLatest, firstValueFrom, map, Observable, of, switchMap } from 'rxjs';
+import {
+    combineLatest,
+    defer,
+    filter,
+    finalize,
+    first,
+    firstValueFrom,
+    identity,
+    map,
+    Observable,
+    of,
+    repeat,
+    retry,
+    scan,
+    shareReplay,
+    switchMap,
+} from 'rxjs';
+import { webSocket } from 'rxjs/webSocket';
+import { v4 as uuid } from 'uuid';
 
 import { NxHealthService } from '@pages/health/health.service';
 import { RequestOpts } from '@services/mediaserver-apis/connections/adapters/adapter-target-types';
@@ -18,6 +36,8 @@ import type {
 import { servers } from '@static-variables';
 import { defaultHashFunction, memoizeAsync } from '@utils/memoize';
 
+import { JsonRpcMessage } from './mediaserver-apis/connections/methods/json-rpc/types';
+import { generateJsonRpcPayload } from './mediaserver-apis/utils/use-json-rpc';
 import { NxAppStateService } from './nx-app-state.service';
 import { NxStorageService } from './storage.service';
 import type { AggregatedUsers } from './system-api.aggregated-types';
@@ -36,6 +56,131 @@ import { NxUriCacheService } from './uri-cache.service';
 
 export class NxSystemRestAPI3 extends NxSystemRestAPI2 {
     override readonly version: number;
+
+    jsonRpcConnection$ = defer(() =>
+        this.createTicket().pipe(
+            map(({ token }) =>
+                webSocket<JsonRpcMessage>(
+                    `${window.location.protocol === 'http' ? 'ws' : 'wss'}://${(
+                        this.urlBase || window.location.origin
+                    )
+                        .split('://')
+                        .pop()}/jsonrpc?_ticket=${token}`,
+                ),
+            ),
+            retry({ delay: 250 }),
+        ),
+    ).pipe(shareReplay({ refCount: false, bufferSize: 1 }));
+
+    subscribeNotImplemented = [
+        () => true,
+        endpoint => /^\/rest\/v[1-3]\/servers\/[^\/]+\/events$/.test(endpoint),
+    ];
+
+    public override get subscribeTo(): typeof this {
+        // eslint-disable-next-line @typescript-eslint/no-this-alias
+        const target = this;
+        type Target = typeof target;
+
+        return new Proxy<Target>(target as Target, {
+            get: (target: Target, prop, receiver) => {
+                if (prop === 'get') {
+                    return (url, opts) => {
+                        if (this.subscribeNotImplemented.some(check => check(url))) {
+                            // Need to find out why this only gets called once
+                            return defer(() =>
+                                target.jsonRpcHandler.apply(this, [url, opts, 'get']).pipe(first()),
+                            ).pipe(repeat({ delay: 10_000 }));
+                        }
+                        return target.jsonRpcHandler.apply(this, [url, opts, 'subscribe']);
+                    };
+                }
+                return Reflect.get(target, prop, receiver);
+            },
+        });
+    }
+    protected jsonRpcSubscriptions: string[] = [];
+
+    protected override jsonRpcHandler<T>(
+        url: string,
+        opts?: Parameters<NxSystemRestAPI3['get']>[1],
+        method: Parameters<typeof generateJsonRpcPayload>[2] = 'subscribe',
+    ): Observable<T> {
+        return this.jsonRpcConnection$.pipe(
+            switchMap(connection => {
+                const id = uuid();
+                const payload = generateJsonRpcPayload(url, opts?.params || {}, method);
+                connection.next({ id, jsonrpc: '2.0', ...payload });
+                if (method === 'subscribe') {
+                    this.jsonRpcSubscriptions.push(payload.method);
+                }
+                return connection.asObservable().pipe(
+                    filter(({ id: responseId, method: responseMethod }) => {
+                        const isResponse = responseId === id;
+                        const isSubscriptionUpdate =
+                            method === 'subscribe' &&
+                            responseMethod?.replace('.delete', '.update') ===
+                                payload.method.replace('.subscribe', '.update');
+                        return isResponse || isSubscriptionUpdate;
+                    }),
+                    scan((acc, response) => {
+                        const notSubscription =
+                            method !== 'subscribe' && 'result' in response && response.result;
+                        const initialResult = 'result' in response && response.result;
+
+                        if (notSubscription || initialResult) {
+                            return response.result as T;
+                        }
+
+                        if ('params' in response && response.params) {
+                            const params = response.params as { id: string };
+                            if (Array.isArray(acc)) {
+                                if ('method' in response && response.method.endsWith('.delete')) {
+                                    return acc.filter(
+                                        item => 'id' in item && item.id !== params.id,
+                                    ) as T;
+                                } else if (
+                                    acc.some(item => 'id' in item && item.id === params.id)
+                                ) {
+                                    return acc.map(item => {
+                                        if ('id' in item && item.id === params.id) {
+                                            return { ...item, ...params } as T;
+                                        }
+
+                                        return item;
+                                    }) as T;
+                                } else {
+                                    return [...acc, params] as T;
+                                }
+                            } else {
+                                return response.params as T;
+                            }
+                        }
+
+                        return acc;
+                    }, null as T),
+                    // Need to figure out why this isn't working
+                    method === 'subscribe'
+                        ? finalize(() => {
+                              this.jsonRpcSubscriptions.splice(
+                                  this.jsonRpcSubscriptions.indexOf(payload.method),
+                                  1,
+                              );
+
+                              if (this.jsonRpcSubscriptions.includes(payload.method)) {
+                                  return;
+                              }
+                              connection.next({
+                                  id,
+                                  jsonrpc: '2.0',
+                                  method: payload.method.replace('.subscribe', '.unsubscribe'),
+                              } as JsonRpcMessage);
+                          })
+                        : identity,
+                );
+            }),
+        );
+    }
 
     constructor(
         http: HttpClient,

@@ -10,7 +10,7 @@ import { jsonRpcEnabled } from './json-rpc-enabled';
 
 function parseUrlJsonRpcMethod(
     urlWithoutParams: string,
-    httpMethod: 'list' | 'get' | 'post' | 'patch' | 'delete' = 'get',
+    httpMethod: 'list' | 'get' | 'post' | 'patch' | 'delete' | 'subscribe' = 'get',
 ): string {
     const methodLookup = {
         patch: 'update',
@@ -29,12 +29,12 @@ function parseUrlJsonRpcMethod(
         .filter(val => !!val)
         .join('.')}.${methodLookup[httpMethod] || httpMethod}`;
 }
-function generateJsonRpcPayload<T>(
+export function generateJsonRpcPayload<T>(
     url: string,
     params: T = {} as T,
-    httpMethod: 'list' | 'get' | 'post' | 'patch' | 'delete' = 'get',
+    httpMethod: 'list' | 'get' | 'post' | 'patch' | 'delete' | 'subscribe' = 'get',
 ): JsonRpcPayload<unknown> {
-    return { method: parseUrlJsonRpcMethod(url.split('?').shift(), httpMethod), params };
+    return { method: parseUrlJsonRpcMethod(url.split('?').shift()!, httpMethod), params };
 }
 
 type executeCallback = (endpoint: string) => Observable<unknown>;

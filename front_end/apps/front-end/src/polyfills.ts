@@ -35,6 +35,9 @@ window.disableConsole = false;
 
 window.console = new Proxy(window.console, {
     get(target: Console, prop: keyof Console) {
+        if (prop === 'debug') {
+            return Reflect.get(target, prop);
+        }
         return window.disableConsole ? () => {} : Reflect.get(target, prop);
     },
 });
