@@ -42,7 +42,7 @@
     class="tree-wrapper"
     [class.tree-wrapper--horizontal-scroll]="horizontalScroll()"
 >
-    @if (folderSearchResults().length) {
+    @if (folderSearchResults().length || folderSearch === '') {
         <!-- The behavior here is sort of like an autocomplete dropdown, but always open.
         We block the default left/right/up/down behavior of an input and instead have it
         navigate the tree, so that users can search and nav at the same time.  -->
