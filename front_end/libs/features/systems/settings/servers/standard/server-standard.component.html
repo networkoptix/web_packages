@@ -7,7 +7,7 @@
     </div>
     <nx-alert-block
         *ngIf="certError"
-        class="col-12"
+        class="col-12 mb-3"
         type="error"
         id="certificate-error"
         [iconSrc]="icons.dirNonStandard + 'error.svg'"
@@ -16,7 +16,7 @@
     </nx-alert-block>
     <div
         *ngIf="serverOffline || internalStatus === servers.status.restarting"
-        class="col-12"
+        class="col-12 mb-3"
     >
         <ng-container *ngIf="!checking">
             <nx-alert-block
