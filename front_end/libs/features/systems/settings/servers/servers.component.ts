@@ -1,14 +1,14 @@
 import {
+    booleanAttribute,
     Component,
-    OnDestroy,
-    OnInit,
-    ViewContainerRef,
     Inject,
     Input,
-    Optional,
     OnChanges,
+    OnDestroy,
+    OnInit,
+    Optional,
     signal,
-    booleanAttribute,
+    ViewContainerRef,
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -104,12 +104,18 @@ export class NxSystemServersComponent implements OnInit, OnChanges, OnDestroy {
                 }),
                 retryWhen(err => err.pipe(delay(1000))),
                 switchMap(async () => {
-                    this.system.serverManager.initSystemMediaServers().catch(error => {
-                        const isOnline = this.system.isOnline;
-                        this.isOffline$$.set(!isOnline);
-                        this.serverLoaded$$.set(isOnline);
-                        console.error(error);
-                    });
+                    this.system.serverManager
+                        .initSystemMediaServers()
+                        .then(() => {
+                            // force server-standard component to update current server status
+                            this.server = { ...this.server };
+                        })
+                        .catch(error => {
+                            const isOnline = this.system.isOnline;
+                            this.isOffline$$.set(!isOnline);
+                            this.serverLoaded$$.set(isOnline);
+                            console.error(error);
+                        });
                 }),
                 untilDestroyed(this),
             )

@@ -1,7 +1,7 @@
-import { Component, OnChanges, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { of, SubscriptionLike, Subject, timer, firstValueFrom } from 'rxjs';
+import { firstValueFrom, of, Subject, SubscriptionLike, timer } from 'rxjs';
 import {
     catchError,
     delay,
@@ -13,7 +13,7 @@ import {
     timeout,
 } from 'rxjs/operators';
 
-import { InfoBlockSection, InfoBlockLine } from '@components/info-block/info-block.component.types';
+import { InfoBlockLine, InfoBlockSection } from '@components/info-block/info-block.component.types';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { ToastType } from '@components/toast-container/toast.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
@@ -32,7 +32,7 @@ import type { NxSystemServer } from '@services/system.service/system-types';
 import { NxToastService } from '@services/toast.service';
 import { NxUriService } from '@services/uri.service';
 import { ChildRoutes } from '@services/uri.service.types';
-import { icons, clientMode, menus, servers } from '@static-variables';
+import { clientMode, icons, menus, servers } from '@static-variables';
 import { cleanIdLegacy } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 
@@ -393,7 +393,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
 
     checkIfOnline(serverId: string): Promise<void> {
         return this.system.serverManager
-            .getServers()
+            .getForceServers(false)
             .pipe(untilDestroyed(this))
             .toPromise()
             .then(
