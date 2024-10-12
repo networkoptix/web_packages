@@ -233,10 +233,10 @@ landing-display-component {
         border: 1px solid var(--svg-legend-border-color);
 
         .legend-label {
-            color: var(--body-text-color);
+            color: var(--body-text-color) !important;
 
             .active .legend-label-text {
-                color: var(--body-text-color);
+                color: var(--body-text-color) !important;
             }
         }
     }
