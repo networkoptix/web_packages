@@ -41,12 +41,50 @@ module.exports = (0, utils_1.createRule)({
                 }
             },
             BoundAttribute(node) {
-                const { details } = node.keySpan;
-                if (!details || !details.startsWith('class.')) {
-                    return;
+                const { sourceSpan, keySpan, valueSpan, value } = node;
+                if (!keySpan.details) {
                 }
-                const className = details.split('.').pop();
-                checkForbidden(className, (0, template_utils_1.sourceSpanToLoc)(node.keySpan));
+                else if (keySpan.details === 'class') {
+                    if (sourceSpan.start.offset === keySpan.start.offset) {
+                        const ast = value.ast;
+                        const astStrings = ast.strings
+                            .filter(Boolean)
+                            .flatMap(s => s.split(' ').filter(Boolean));
+                        for (const astString of astStrings) {
+                            checkForbidden(astString.trim(), (0, template_utils_1.sourceSpanToLoc)(valueSpan));
+                        }
+                    }
+                    else {
+                    }
+                }
+                else if (keySpan.details.startsWith('class.')) {
+                    const className = keySpan.details.split('.').pop();
+                    checkForbidden(className, (0, template_utils_1.sourceSpanToLoc)(keySpan));
+                }
+                else if (keySpan.details === 'ngClass') {
+                    const ast = value.ast;
+                    if (ast.type === template_utils_1.TMPL_AST_NODES.LiteralMap) {
+                        const astMap = ast;
+                        for (const keyObj of astMap.keys) {
+                            checkForbidden(keyObj.key, (0, template_utils_1.sourceSpanToLoc)(valueSpan));
+                        }
+                    }
+                    else if (ast.type === template_utils_1.TMPL_AST_NODES.Conditional) {
+                        const astConditional = ast;
+                        if (astConditional.trueExp.type === template_utils_1.TMPL_AST_NODES.LiteralPrimitive) {
+                            const astTrueExp = astConditional.trueExp;
+                            if (typeof astTrueExp.value === 'string') {
+                                checkForbidden(astTrueExp.value, (0, template_utils_1.sourceSpanToLoc)(valueSpan));
+                            }
+                        }
+                        if (astConditional.falseExp.type === template_utils_1.TMPL_AST_NODES.LiteralPrimitive) {
+                            const astFalseExp = astConditional.falseExp;
+                            if (typeof astFalseExp.value === 'string') {
+                                checkForbidden(astFalseExp.value, (0, template_utils_1.sourceSpanToLoc)(valueSpan));
+                            }
+                        }
+                    }
+                }
             },
         };
     },

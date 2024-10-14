@@ -5,6 +5,9 @@ export enum TMPL_AST_NODES {
     Element$1 = 'Element$1',
     Text$3 = 'Text$3',
     BoundText = 'BoundText',
+    LiteralMap = 'LiteralMap',
+    LiteralPrimitive = 'LiteralPrimitive',
+    Conditional = 'Conditional',
 }
 
 /** Add parent attribute since Angular compiler types don't include it. */

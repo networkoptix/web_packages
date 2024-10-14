@@ -1,10 +1,12 @@
 /**
  * @fileoverview Prohibit use of Bootstrap/global styling classes
- *
- * Rule only checks class= and [class.]= to keep things simple
  */
 
 import type {
+    Conditional,
+    Interpolation,
+    LiteralMap,
+    LiteralPrimitive,
     TmplAstBoundAttribute,
     TmplAstTextAttribute,
 } from '@angular-eslint/bundled-angular-compiler';
@@ -13,7 +15,7 @@ import { TSESTree } from '@typescript-eslint/utils';
 import bootstrapClasses from '../data/bootstrap-classes';
 import nxGlobalStyleClasses from '../data/nx-global-style-classes';
 
-import { sourceSpanToLoc } from './template-utils';
+import { sourceSpanToLoc, TMPL_AST_NODES } from './template-utils';
 import { createRule } from './utils';
 
 // ----------------------------------------------------------------------------
@@ -62,13 +64,61 @@ export = createRule({
                 }
             },
             BoundAttribute(node: TmplAstBoundAttribute) {
-                const { details } = node.keySpan;
-                if (!details || !details.startsWith('class.')) {
-                    return;
-                }
+                const { sourceSpan, keySpan, valueSpan, value } = node;
+                if (!keySpan.details) {
+                    // No name yet
+                } else if (keySpan.details === 'class') {
+                    if (sourceSpan.start.offset === keySpan.start.offset) {
+                        // class="foo {{ bar }}"
+                        // Interpolation works on class without square brackets
 
-                const className = details.split('.').pop();
-                checkForbidden(className, sourceSpanToLoc(node.keySpan));
+                        // @ts-expect-error Linter parser only
+                        const ast = value.ast as Interpolation;
+                        // template "foo {{ bar }}" => ast.strings [ 'foo ', '' ]
+                        const astStrings = ast.strings
+                            .filter(Boolean)
+                            .flatMap(s => s.split(' ').filter(Boolean));
+                        for (const astString of astStrings) {
+                            checkForbidden(astString.trim(), sourceSpanToLoc(valueSpan));
+                        }
+                    } else {
+                        // [class]="expression"
+                        // Can't get anything from this
+                    }
+                } else if (keySpan.details.startsWith('class.')) {
+                    // [class.foo]="bool"
+                    const className = keySpan.details.split('.').pop();
+                    checkForbidden(className, sourceSpanToLoc(keySpan));
+                } else if (keySpan.details === 'ngClass') {
+                    // @ts-expect-error Linter parser only
+                    const ast = value.ast;
+                    if (ast.type === TMPL_AST_NODES.LiteralMap) {
+                        const astMap = ast as LiteralMap;
+                        for (const keyObj of astMap.keys) {
+                            checkForbidden(keyObj.key, sourceSpanToLoc(valueSpan));
+                        }
+                    } else if (ast.type === TMPL_AST_NODES.Conditional) {
+                        const astConditional = ast as Conditional;
+                        if (
+                            // @ts-expect-error Linter parser only
+                            astConditional.trueExp.type === TMPL_AST_NODES.LiteralPrimitive
+                        ) {
+                            const astTrueExp = astConditional.trueExp as LiteralPrimitive;
+                            if (typeof astTrueExp.value === 'string') {
+                                checkForbidden(astTrueExp.value, sourceSpanToLoc(valueSpan));
+                            }
+                        }
+                        if (
+                            // @ts-expect-error Linter parser only
+                            astConditional.falseExp.type === TMPL_AST_NODES.LiteralPrimitive
+                        ) {
+                            const astFalseExp = astConditional.falseExp as LiteralPrimitive;
+                            if (typeof astFalseExp.value === 'string') {
+                                checkForbidden(astFalseExp.value, sourceSpanToLoc(valueSpan));
+                            }
+                        }
+                    }
+                }
             },
         };
     },

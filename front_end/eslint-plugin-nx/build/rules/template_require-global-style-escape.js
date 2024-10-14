@@ -11,7 +11,7 @@ module.exports = (0, utils_1.createRule)({
         schema: [
             {
                 title: 'Other element enhancements',
-                description: 'Native element enhancements that don\'t follow the nx-element naming',
+                description: "Native element enhancements that don't follow the nx-element naming",
                 type: 'array',
                 items: {
                     type: 'string',

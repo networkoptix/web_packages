@@ -6,6 +6,9 @@ var TMPL_AST_NODES;
     TMPL_AST_NODES["Element$1"] = "Element$1";
     TMPL_AST_NODES["Text$3"] = "Text$3";
     TMPL_AST_NODES["BoundText"] = "BoundText";
+    TMPL_AST_NODES["LiteralMap"] = "LiteralMap";
+    TMPL_AST_NODES["LiteralPrimitive"] = "LiteralPrimitive";
+    TMPL_AST_NODES["Conditional"] = "Conditional";
 })(TMPL_AST_NODES || (exports.TMPL_AST_NODES = TMPL_AST_NODES = {}));
 function sourceSpanToLoc(sourceSpan, fullStart = false) {
     return {
