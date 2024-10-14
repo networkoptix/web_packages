@@ -115,14 +115,4 @@ describe('NxPagePlaceholderComponent', () => {
         expect(component.message).toBe(staticLang.errorCodes.failedToAccessCamera);
         expect(component.iconName).toBe('NoAccess');
     });
-
-    it('should initialize 404', async () => {
-        const { component } = await setupPagePlaceholderComponent();
-        component.type = '404';
-        component.ngOnInit();
-
-        expect(component.placeholderTitle).toBe(staticLang.pageTitles.pageNotFound);
-        expect(component.message).toBe('');
-        expect(component.iconName).toBe('404');
-    });
 });

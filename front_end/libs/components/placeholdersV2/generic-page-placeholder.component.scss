@@ -4,7 +4,7 @@
 .page-placeholder {
     margin: 0 auto;
     min-height: 400px;
-    height: calc(100% - 48px);
+    height: calc(100% - 100px);
     z-index: 1;
     /*This is used for the preloaders.
      It should always be higher than the video,

@@ -1,7 +1,5 @@
-<nx-page-placeholder
-    *ngIf="systemName"
-    type="FAILED_TO_ACCESS_2FA"
-    [data]="{ systemName: systemName }"
-    withFooter
-    [showMainButton]="true"
-></nx-page-placeholder>
+@if (systemName) {
+    <div class="placeholder-container">
+        <nx-page-placeholder-failed-2fa-access [systemName]="systemName" />
+    </div>
+}

@@ -147,19 +147,6 @@ export class NxPagePlaceholderComponent implements OnInit {
                     this.message = this.LANG.errorCodes.failedToAccessCamera;
                     this.iconName = 'NoAccess';
                     break;
-                case 'FAILED_TO_ACCESS_2FA':
-                    this.placeholderTitle = {
-                        value: this.LANG.pageTitles.failedToAccess2FA,
-                        params: { systemName: this.data.systemName },
-                    };
-                    this.message = this.LANG.errorCodes.failedToAccess2FA;
-                    this.iconName = 'NoAccess';
-                    break;
-                case '404':
-                    this.placeholderTitle ||= this.LANG.pageTitles.pageNotFound;
-                    this.message = '';
-                    this.iconName = '404';
-                    break;
                 case 'NO_SYSTEM_FOUND_API_TOOL':
                     this.iconName = '404';
                     this.message = '';

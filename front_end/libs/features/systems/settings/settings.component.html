@@ -4,13 +4,14 @@
 ></nx-pre-loader>
 
 <div *ngIf="showPlaceholder; else cameras">
-    <nx-page-placeholder
-        *ngIf="system?.show404"
-        type="404"
-        withFooter
-        [showMainButton]="true"
-    >
-    </nx-page-placeholder>
+    @if (system.show404) {
+        <div class="placeholder-container">
+            <nx-page-placeholder-404
+                *ngIf="system?.show404"
+                [showButton]="true"
+            />
+        </div>
+    }
 
     <nx-page-placeholder
         *ngIf="systemNoAccess"
@@ -55,14 +56,11 @@
         </div>
     </nx-page-generic-placeholder-v2>
 
-    <nx-page-placeholder
-        *ngIf="show2faRequired"
-        type="FAILED_TO_ACCESS_2FA"
-        [data]="{ systemName: systemName }"
-        withFooter
-        [showMainButton]="true"
-    >
-    </nx-page-placeholder>
+    @if (show2faRequired) {
+        <div class="placeholder-container">
+            <nx-page-placeholder-failed-2fa-access [systemName]="systemName" />
+        </div>
+    }
 </div>
 
 <ng-template #cameras>

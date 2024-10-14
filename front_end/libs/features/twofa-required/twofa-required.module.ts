@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { NxPagePlaceholderComponent } from '@components/placeholders/page/page-placeholder.component';
+import { NxPagePlaceholderFailed2faAccessComponent } from '@components/placeholdersV2/failed-2fa-access/failed-2fa-access-page-placeholder.component';
 
 import { TwofaRequiredComponent } from './twofa-required.component';
 
@@ -16,6 +16,10 @@ const routes: Routes = [
 
 @NgModule({
     declarations: [TwofaRequiredComponent],
-    imports: [CommonModule, RouterModule.forChild(routes), NxPagePlaceholderComponent],
+    imports: [
+        CommonModule,
+        RouterModule.forChild(routes),
+        NxPagePlaceholderFailed2faAccessComponent,
+    ],
 })
 export class TwofaRequiredModule {}

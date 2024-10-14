@@ -1,0 +1,27 @@
+<nx-page-generic-placeholder-v2>
+    <svg-icon
+        [src]="icons.dirPagePlaceholder + '404.svg'"
+        [svgStyle]="{ 'height.px': 200 }"
+    />
+    <div class="placeholder-body">
+        <h2
+            translate
+            data-escape-global-style
+        >
+            Page not found
+        </h2>
+        @if (showButton()) {
+            <button
+                class="nx-button--primary main-button"
+                data-escape-global-style
+            >
+                <a
+                    routerLink="/"
+                    translate
+                    data-escape-global-style
+                    >Go to Main Page</a
+                >
+            </button>
+        }
+    </div>
+</nx-page-generic-placeholder-v2>

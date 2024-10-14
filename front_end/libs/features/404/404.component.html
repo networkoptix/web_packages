@@ -2,20 +2,7 @@
     <nx-pre-loader type="page"></nx-pre-loader>
 </ng-template>
 
-<nx-page-placeholder
+<nx-page-placeholder-404
     *ngIf="!redirecting; else preloader"
-    type="404"
-    withFooter
-    [placeholderTitle]="message"
->
-    <button
-        data-escape-global-style
-        class="nx-button--primary main-button mx-auto"
-    >
-        <a
-            routerLink="/"
-            translate
-            >Go to Main Page</a
-        >
-    </button>
-</nx-page-placeholder>
+    [showButton]="true"
+/>
