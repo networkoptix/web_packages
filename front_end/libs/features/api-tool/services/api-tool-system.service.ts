@@ -211,7 +211,13 @@ export class NxAPIToolSystemService {
 
         const onlineSystem = systemByQueryParam || this.findOnlineSystem(systems);
         if (onlineSystem) {
-            this.currentSystem = await this.systemService.createSystem('', onlineSystem.id);
+            this.currentSystem = await this.systemService.createSystem(
+                '',
+                onlineSystem.id,
+                undefined,
+                true,
+                true,
+            );
             return;
         }
         if (!environment.isWebadmin && (await this.readonlyAPIService.setReadonlyAPI())) {
@@ -236,7 +242,13 @@ export class NxAPIToolSystemService {
             return;
         }
         if (this.currentSystemId && this.currentSystemId !== this.currentSystem?.id) {
-            this.currentSystem = await this.systemService.createSystem('', this.currentSystemId);
+            this.currentSystem = await this.systemService.createSystem(
+                '',
+                this.currentSystemId,
+                undefined,
+                true,
+                true,
+            );
         }
         const systemInfo = await this.currentSystem.getInfo();
         if (!systemInfo.info.version) {
@@ -306,6 +318,7 @@ export class NxAPIToolSystemService {
                 tap(servers => {
                     if (!servers?.length) {
                         this.handleServerGetError();
+                        this.serversFinishedLoading();
                     }
                 }),
                 untilDestroyed(this),
@@ -402,6 +415,9 @@ export class NxAPIToolSystemService {
                 this.currentSystem = await this.systemService.createSystem(
                     '',
                     this.validSystems[0].id,
+                    undefined,
+                    true,
+                    true,
                 );
                 return;
             }
