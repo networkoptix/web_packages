@@ -27,7 +27,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { TourMatMenuModule, TourService } from 'ngx-ui-tour-md-menu';
 import { throttleByFrameRate } from 'nx-open-web/packages/webrtc-stream-manager';
-import { BehaviorSubject, identity, Observable, of, Subject, timer } from 'rxjs';
+import { BehaviorSubject, Observable, of, Subject, timer } from 'rxjs';
 import {
     debounceTime,
     delay,
@@ -303,11 +303,7 @@ export class NxLayoutGridTreeComponent extends WithMenuItemsByType {
             }
 
             of(node)
-                .pipe(
-                    assertResourceOfType.layout(node) ? delay(250) : identity,
-                    throttleByFrameRate(),
-                    takeUntil(this.doubleClick$),
-                )
+                .pipe(delay(250), throttleByFrameRate(), takeUntil(this.doubleClick$))
                 .subscribe(node => this.layoutGridService.changeView.next(node));
         } else if (parentId && node.name === staticLang.layouts.otherSystems.searchCameras) {
             this.layoutStateService.paramStateHandler.updater(() => ({
