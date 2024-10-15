@@ -74,7 +74,7 @@ export class NxEmailComponent implements ControlValueAccessor, Validator {
             };
         }
 
-        return null; // valid
+        return c.errors && c.touched ? c.errors : null; // null is valid
     }
 
     setValue(newValue): void {

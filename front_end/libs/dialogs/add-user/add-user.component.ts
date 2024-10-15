@@ -78,6 +78,7 @@ export class AddUserModalContent extends ModalBase<DT['return']> {
                 return item.email === this.user.email;
             });
             if (userExists) {
+                this.form.controls.addUserDialogEmail.setErrors({ alreadyExists: true });
                 return Promise.reject('alreadyExists');
             } else {
                 return this.saveUser();
@@ -88,9 +89,7 @@ export class AddUserModalContent extends ModalBase<DT['return']> {
             this.close(user.id);
         },
         error: (err: 'alreadyExists' | unknown) => {
-            if (err === 'alreadyExists') {
-                this.form.controls.addUserDialogEmail.setErrors({ alreadyExists: true });
-            } else {
+            if (err !== 'alreadyExists') {
                 // User cancelled session expired dialog
                 this.toastService.notify(
                     this.LANG.dialogs.updateSession.addUser,
