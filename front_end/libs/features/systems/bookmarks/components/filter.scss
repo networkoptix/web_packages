@@ -1,5 +1,3 @@
-@use 'typography';
-
 @mixin header {
     display: flex;
     justify-content: space-between;
@@ -11,7 +9,7 @@
 
     span {
         font-size: 1rem;
-        font-family: typography.$font-family-medium;
+        font-family: var(--font-family-medium);
         color: var(--card-header-text);
     }
 
@@ -64,7 +62,7 @@ $device-label-height: 1.75rem;
 
             &.selected {
                 span {
-                    font-family: typography.$font-family-bold;
+                    font-family: var(--font-family-bold);
                 }
             }
 
@@ -93,7 +91,7 @@ $tag-gap: 0.5rem;
             border-radius: 2px !important;
             background-color: var(--bookmarks-filter-tag-color);
             color: var(--btn-default-color);
-            font-family: typography.$font-family-regular !important;
+            font-family: var(--font-family-regular) !important;
 
             &:hover {
                 background-color: var(--bookmarks-text-highlight-bg);

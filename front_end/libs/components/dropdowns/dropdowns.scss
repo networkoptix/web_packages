@@ -1,3 +1,4 @@
+@use "sass-rem/rem" as sass-rem;
 @use "theme_variables_common" as *;
 @use "typography";
 @use "mixins";
@@ -241,11 +242,11 @@ header {
 
                 &>span:first-child {
                     @include mixins.ellipsis;
-                    padding: 0 rem(10px);
+                    padding: 0 sass-rem.rem(10px);
                 }
 
                 .text-muted {
-                    font-family: $font-family-regular;
+                    font-family: var(--font-family-regular);
                     color: var(--light16)  !important;
                 }
             }
@@ -322,14 +323,14 @@ header {
         //background-color: $light4;
 
         .btn.btn-dropdown-toggle {
-            font-size: rem(14px) !important;
+            font-size: sass-rem.rem(14px) !important;
         }
 
         .dropdown-menu {
             //background-color: $light4;
 
             .dropdown-item-container .dropdown-item {
-                font-size: rem(14px) !important;
+                font-size: sass-rem.rem(14px) !important;
 
                 &:hover:not(.selected) {
                     //background-color : $light5 !important;

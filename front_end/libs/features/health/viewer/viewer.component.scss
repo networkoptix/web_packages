@@ -78,12 +78,12 @@ nx-health-viewer-component {
   }
 
   .error {
-    font-family: $font-family-medium;
+    font-family: var(--font-family-medium);
     color: var(--error);
   }
 
   .warning {
-    font-family: $font-family-medium;
+    font-family: var(--font-family-medium);
     color: $yellow_d1;
   }
 

@@ -4,7 +4,7 @@
     display: inline-block;
     margin-bottom: unset;
 
-    font-family: vars.$font-family-regular;
+    font-family: var(--font-family-regular);
     font-size: vars.$font-size-base;
     color: var(--label-color-original);
 }

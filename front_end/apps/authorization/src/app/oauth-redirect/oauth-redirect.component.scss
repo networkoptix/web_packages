@@ -1,3 +1,4 @@
+@use "sass-rem/rem" as sass-rem;
 @use "typography";
 @use "mixins";
 @use "theme_variables_common" as *;
@@ -30,7 +31,7 @@
         background-color: var(--brand-core);
         width: 250px;
         height: 120px !important;
-        font-size: rem(32px) !important;
+        font-size: sass-rem.rem(32px) !important;
         border-radius: 15px !important;
     }
 
@@ -47,7 +48,7 @@
 
         width: 250px;
         height: 120px !important;
-        font-size: rem(18px) !important;
+        font-size: sass-rem.rem(18px) !important;
         border-radius: 12px !important;
         display: flex;
         flex-direction: column;

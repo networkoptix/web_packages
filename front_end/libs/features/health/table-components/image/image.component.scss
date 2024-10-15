@@ -20,7 +20,7 @@ img {
 
 .light-camera-preview {
     @extend .hm-camera-preview;
-    font-family: $font-family-regular;
+    font-family: var(--font-family-regular);
     color: var(--light10);
     padding: 16px;
 }
@@ -113,4 +113,3 @@ img {
     background: transparent !important;
     border: 1px solid var(--border-color) !important;
 }
-

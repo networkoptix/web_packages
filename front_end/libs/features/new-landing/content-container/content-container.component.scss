@@ -1,6 +1,3 @@
-@use "theme_variables_common" as *;
-
-
 .root-container {
     max-width: 1440px;
     text-align: center;
@@ -22,7 +19,7 @@
     display: block;
     margin-bottom: 15px;
     margin-top: 80px;
-    font-family: $font-family-medium;
+    font-family: var(--font-family-medium);
     color: var(--dark9);
     font-size: 44px;
     position: relative;

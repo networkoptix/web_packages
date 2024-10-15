@@ -1,13 +1,13 @@
-@use "theme_variables_common" as theme_vars;
+@use "sass-rem/rem" as sass-rem;
 
 
 .title {
-    font-family: theme_vars.$font-family-medium;
+    font-family: var(--font-family-medium);
 }
 
 .subtitle {
     color: var(--light11);
     display: flex;
     align-items: flex-end;
-    height: theme_vars.rem(22px);
+    height: sass-rem.rem(22px);
 }

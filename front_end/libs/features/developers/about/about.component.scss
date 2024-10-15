@@ -1,5 +1,4 @@
 @use "typography";
-@use "theme_variables_common" as *;
 @use "_bootstrap_utils" as bootstrap;
 
 .about-heading {
@@ -14,12 +13,12 @@
     }
 
     &>h1 {
-        font-family: $font-family-light;
+        font-family: var(--font-family-light);
         font-size: 64px !important;
         text-align: center;
 
         @include bootstrap.media-breakpoint-down(xs) {
-            font-family: $font-family-medium  !important;
+            font-family: var(--font-family-medium)  !important;
             font-size: 24px !important;
         }
     }

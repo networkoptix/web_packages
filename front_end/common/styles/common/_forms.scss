@@ -33,7 +33,7 @@
     }
 
     .badge {
-        font-family: $font-family-bold;
+        font-family: var(--font-family-bold);
         font-size: $font-size-ssm;
         line-height: $line-height-ssm;
         padding: .2em .6em .3em;

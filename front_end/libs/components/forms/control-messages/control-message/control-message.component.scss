@@ -8,7 +8,7 @@
 :host {
     display: inline;
 
-    font-family: common.$font-family-regular;
+    font-family: var(--font-family-regular);
     font-size: common.$font-size-base;
     line-height: 1.5;
 

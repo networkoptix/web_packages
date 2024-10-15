@@ -46,7 +46,7 @@
 
 .cloud-header {
     @extend .slide-down-animation;
-    font-family: $font-family-medium;
+    font-family: var(--font-family-medium);
     color: var(--dark9);
     font-size: 64px;
     line-height: 72px;
@@ -58,7 +58,7 @@
 .cloud-sub-header {
     @extend .slide-down-animation;
     animation-delay: 100ms;
-    font-family: $font-family-regular;
+    font-family: var(--font-family-regular);
     font-size: 16px;
     color: var(--dark9);
     line-height: 24px;

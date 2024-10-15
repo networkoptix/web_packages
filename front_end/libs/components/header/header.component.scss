@@ -316,7 +316,7 @@ $header-collapsing-width-1 : 1px;
     padding: 0 8px;
 
     &>a {
-        font-family: $font-family-medium;
+        font-family: var(--font-family-medium);
         color: $font-color-medium;
         font-size: $h6-font-size;
         text-decoration: none;

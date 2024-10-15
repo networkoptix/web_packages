@@ -1,9 +1,8 @@
-@use "theme_variables_common" as *;
 @use "typography";
 @use "_bootstrap_utils" as bootstrap;
 
 .get-started-heading {
-    font-family: $font-family-light;
+    font-family: var(--font-family-light);
     font-size: 56px !important;
     margin: 106px 16px 45px 16px;
     justify-content: center;

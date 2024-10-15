@@ -4,7 +4,7 @@
 @use "bootstrap_utils" as bootstrap;
 
 .camera-settings-info {
-    font-family: $font-family-regular;
+    font-family: var(--font-family-regular);
     font-size: $font-size-base;
     color: var(--card-header-text);
 

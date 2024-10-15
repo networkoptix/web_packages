@@ -1,6 +1,5 @@
 @use "typography";
 @use "mixins";
-@use "theme_variables_common" as theme_vars;
 
 
 .user-name {
@@ -23,7 +22,7 @@
         align-items: center;
 
         .heading-style {
-            font-family: theme_vars.$font-family-medium;
+            font-family: var(--font-family-medium);
             line-height: 40px;
             height: 40px;
             font-size: 24px;

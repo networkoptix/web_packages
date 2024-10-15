@@ -1,5 +1,3 @@
-@use '_theme_variables_common' as *;
-
 :host {
     display: block;
 
@@ -48,7 +46,7 @@
         }
 
         &.tooltipMediumFont {
-            font-family: $font-family-medium;
+            font-family: var(--font-family-medium);
         }
     }
 
@@ -126,4 +124,3 @@
     top: 14%;
     left: -5px;
 }
-

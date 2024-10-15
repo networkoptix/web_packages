@@ -3,7 +3,7 @@
 @use "bootstrap_utils" as bootstrap;
 
 .server-info {
-    font-family: $font-family-regular;
+    font-family: var(--font-family-regular);
     font-size: $font-size-base;
     color: var(--dark9);
 
@@ -18,7 +18,7 @@
             flex-grow: 1;
 
             h2 {
-                font-family: $font-family-regular;
+                font-family: var(--font-family-regular);
                 height: 32px;
                 font-weight: bold;
                 font-size: 24px;

@@ -1,30 +1,31 @@
+@use "sass-rem/rem" as sass-rem;
 .nx-tab-set {
     &-tabs {
         .nav-item {
-            
-            height : rem(48px);
-            
+
+            height : sass-rem.rem(48px);
+
             .nav-link {
                 border-top-left-radius  : 2px;
                 border-top-right-radius : 2px;
                 color                   : var(--tabset-color);
                 font-size               : $h5-font-size;
-                font-family             : $font-family-medium;
+                font-family             : var(--font-family-medium);
                 line-height             : 26px;
                 padding                 : 10px 20px;
                 text-decoration         : none;
-                
+
                 &.active {
                     background-color : var(--tabset-bg) !important;
                     border           : 1px solid var(--border-color);
                     border-bottom    : 1px solid transparent;
-                    
+
                     .tab-heading {
                         border-bottom : 1px solid var(--border-color);
                         padding       : 14px 0;
                     }
                 }
-                
+
                 &:hover {
                     background-color : var(--tabset-hover-bg);
                     border           : 1px solid var(--border-color);
@@ -32,13 +33,13 @@
             }
         }
     }
-    
+
     &-content {
         .card {
             border-top : none;
         }
     }
-    
+
     .nav-tabs {
         border-bottom : 1px solid var(--border-color);
     }

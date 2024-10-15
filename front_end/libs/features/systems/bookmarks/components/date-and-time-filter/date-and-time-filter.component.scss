@@ -1,6 +1,5 @@
 @use '@angular/material';
 @use 'mat';
-@use 'typography';
 @use '../filter.scss';
 
 .dtf-header {
@@ -24,7 +23,7 @@
             max-width: none !important;
             background-color: var(--bookmarks-filter-button-bg);
             color: var(--bookmarks-filter-button-text);
-            font-family: typography.$font-family-regular;
+            font-family: var(--font-family-regular);
 
             &:hover {
                 background-color: var(--btn-default-hover-bg);
@@ -74,7 +73,7 @@
                 // Label text
                 .mdc-button__label {
                     font-size: 0.9375rem;
-                    font-family: typography.$font-family-medium;
+                    font-family: var(--font-family-medium);
                     color: var(--bookmarks-calendar-month-text);
 
                     // Arrow icon
@@ -111,7 +110,7 @@
 
                     &-content {
                         font-size: 0.875rem !important;
-                        font-family: typography.$font-family-regular;
+                        font-family: var(--font-family-regular);
                         border-radius: 2px;
                         color: var(--body-text-color);
                     }
@@ -176,7 +175,7 @@
                 .mat-calendar-table-header {
                     span {
                         font-size: 0.8125rem;
-                        font-family: typography.$font-family-medium;
+                        font-family: var(--font-family-medium);
                         font-weight: normal;
                         color: var(--body-text-color);
                     }
@@ -290,7 +289,7 @@
         gap: 1rem;
         & > div {
             span {
-                font-family: typography.$font-family-medium;
+                font-family: var(--font-family-medium);
             }
             flex: 1;
             display: flex;

@@ -16,14 +16,14 @@
     }
 
     .system-name {
-        font-family: theme_vars.$font-family-medium;
+        font-family: var(--font-family-medium);
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
     }
 
     .reminder {
-        font-family: theme_vars.$font-family-medium;
+        font-family: var(--font-family-medium);
         color: var(--light16);
         margin-left: 28px;
     }

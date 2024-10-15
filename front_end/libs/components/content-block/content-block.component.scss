@@ -1,3 +1,4 @@
+@use "sass-rem/rem" as sass-rem;
 @use "typography";
 @use "theme_variables_common" as *;
 @use "bootstrap_utils" as bootstrap;
@@ -128,7 +129,7 @@
             float: left;
             display: flex;
             align-items: center;
-            height: rem(48px);
+            height: sass-rem.rem(48px);
             max-width: 160px;
             background-size: contain;
             width: 100%;
@@ -414,7 +415,7 @@
     }
 
     &.fixed-height {
-        height: rem(300px);
+        height: sass-rem.rem(300px);
         overflow: hidden;
         margin: 0;
 
@@ -484,7 +485,7 @@
     &.slim-header {
         .card--header {
             height: auto;
-            padding: rem(12px);
+            padding: sass-rem.rem(12px);
 
             .title {
                 line-height: 15px;

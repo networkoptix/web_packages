@@ -1,6 +1,5 @@
 @use "typography";
 @use "mixins";
-@use "theme_variables_common" as theme_vars;
 
 
 .user-name {
@@ -24,7 +23,7 @@
         align-items: center;
 
         .heading-style {
-            font-family: theme_vars.$font-family-medium;
+            font-family: var(--font-family-medium);
             line-height: 40px;
             height: 40px;
             font-size: 24px;
@@ -93,7 +92,7 @@
         padding-bottom: unset;
 
         .group-name {
-            font-family: theme_vars.$font-family-medium;
+            font-family: var(--font-family-medium);
             font-weight: 500 !important;
             color: var(--body-text-color);
             margin-right: 5px;
@@ -102,7 +101,7 @@
 
         .help-block {
             display: unset;
-            font-family: theme_vars.$font-family-light;
+            font-family: var(--font-family-light);
             word-break: break-all;
         }
     }
@@ -113,7 +112,7 @@
     background-color: transparent;
     color: var(--light16);
     font-size: 0.875rem;
-    font-family: theme_vars.$font-family-base;
+    font-family: var(--font-family-base);
     font-style: normal;
     font-weight: 400;
     line-height: normal;

@@ -1,6 +1,5 @@
 @use 'resets';
 @use 'theme_generator' as tg;
-@use "theme_variables_common" as vars;
 
 @include tg.generate-theme-vars((
     '--button-toggle-bg': ('dark': 5, 'light': 3),
@@ -53,7 +52,7 @@ nx-button-toggle {
 
     background-color: var(--button-toggle-bg);
     color: var(--button-toggle-color);
-    font-family: vars.$font-family-medium;
+    font-family: var(--font-family-medium);
     svg-icon {
         path, rect {
             fill: var(--button-toggle-color);

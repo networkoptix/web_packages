@@ -1,6 +1,6 @@
+@use "sass-rem/rem" as sass-rem;
 /* Here we override some default bootstrap styles and behavior for our purposes */
 @use "_theme_variables_common";
-@import "sass-rem/rem";
 
 $font-size-a-bit-large : ceil(theme_variables_common.$font-size-base * 1.15); //~16px - we just need 16px sometimes :-)
 
@@ -22,9 +22,9 @@ $font-size-a-bit-large : ceil(theme_variables_common.$font-size-base * 1.15); //
     box-shadow    : 0 1px 2px transparentize(theme_variables_common.$dark15, 0.9);
 
     .card-body {
-        padding : theme_variables_common.rem(16px);
+        padding : sass-rem.rem(16px);
         h2 {
-            font-size: theme_variables_common.rem(20px);
+            font-size: sass-rem.rem(20px);
             display: inline;
         }
     }
@@ -49,7 +49,7 @@ $font-size-a-bit-large : ceil(theme_variables_common.$font-size-base * 1.15); //
 
             .user-name {
                 font-size     : theme_variables_common.$font-size-sm !important;
-                font-family   : theme_variables_common.$font-family-medium;
+                font-family   : var(--font-family-medium);
                 height        : 16px;
                 margin-bottom : 0 !important;
             }

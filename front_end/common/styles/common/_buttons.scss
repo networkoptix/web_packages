@@ -6,7 +6,7 @@
 
 
 @mixin button {
-    font-family: $font-family-medium;
+    font-family: var(--font-family-medium);
     //color           : $font-color-medium;
     font-size: $h6-font-size  !important;
     height: 2rem !important;
@@ -56,7 +56,7 @@ button:not([data-escape-global-style]),
     color: var(--btn-default-color) !important;
     background-color: var(--btn-default-bg) !important;
     box-shadow: var(--btn-default-shadow);
-    font-family: $font-family-medium;
+    font-family: var(--font-family-medium);
 
     &.svg-icon svg-icon svg .st0 {
         fill: var(--btn-default-color);
@@ -99,7 +99,7 @@ button:not([data-escape-global-style]),
     background-color : var(--btn-clear-bg) !important;
     //box-shadow       : var(--btn-default-shadow);
     border: 1px solid var(--btn-default-bg);
-    font-family      : $font-family-medium;
+    font-family      : var(--font-family-medium);
 
     &.svg-icon svg-icon svg .st0 {
         fill   : var(--btn-default-color);
@@ -174,7 +174,7 @@ button:not([data-escape-global-style]),
     color: var(--btn-dropdown-toggle-color) !important;
     background-color: var(--btn-dropdown-toggle-bg);
     box-shadow: var(--btn-dropdown-toggle-shadow-color);
-    font-family: $font-family-medium;
+    font-family: var(--font-family-medium);
 
     &:hover:not([disabled]):not(.disabled) {
         background-color: var(--btn-dropdown-toggle-hover-bg);

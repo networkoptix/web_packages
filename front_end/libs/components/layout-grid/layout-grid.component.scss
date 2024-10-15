@@ -1,4 +1,5 @@
 @use "common-nonglobal/button-legacy";
+@use "sass-rem/rem" as sass-rem;
 @use 'typography';
 @use 'theme_variables_common' as *;
 @use 'bootstrap_utils' as bootstrap;
@@ -1056,12 +1057,12 @@ iframe {
 
     h3 {
         @include typography.medium16nocolor;
-        font-size: rem(16px) !important;
+        font-size: sass-rem.rem(16px) !important;
     }
 
     p {
         margin-top: 4px;
-        font-size: rem(14px) !important;
+        font-size: sass-rem.rem(14px) !important;
         max-width: min(288px, calc(100dvw - 32px));
     }
 }
@@ -1127,13 +1128,13 @@ nx-lines-loader {
 
         h3 {
             @include typography.medium16nocolor;
-            font-size: rem(16px) !important;
+            font-size: sass-rem.rem(16px) !important;
             color: var(--other-sites-title) !important;
         }
 
         h4 {
             @include typography.regular14nocolor;
-            font-size: rem(14px) !important;
+            font-size: sass-rem.rem(14px) !important;
             color: var(--other-sites-expand-stroke) !important;
             max-width: max(250px, calc(100% - 96px));
         }

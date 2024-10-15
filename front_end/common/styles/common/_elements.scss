@@ -67,7 +67,7 @@ svg-icon[data-escape-global-style] svg {
 
 .group-label {
     margin-bottom: 8px;
-    font-family: $font-family-regular;
+    font-family: var(--font-family-regular);
     color: var(--light16);
 }
 

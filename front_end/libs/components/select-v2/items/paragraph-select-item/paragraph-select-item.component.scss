@@ -1,3 +1,4 @@
+@use "sass-rem/rem" as sass-rem;
 @use "theme_variables_common" as *;
 @use "typography";
 @use "theme_generator" as tg;
@@ -17,7 +18,7 @@
     background-color: var(--dropdown-item-bg-alt);
     line-height: normal;
     user-select: none;
-    padding: rem(12px);
+    padding: sass-rem.rem(12px);
 
     &:hover:not([disabled]):not(.disabled):not([highlighted]):not(.highlighted) {
         background-color: var(--dropdown-item-hover-bg);

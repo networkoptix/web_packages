@@ -2,7 +2,7 @@
 
 
 .icon-additional {
-    font-family: theme_vars.$font-family-medium;
+    font-family: var(--font-family-medium);
     font-size: theme_vars.$font-size-ssm;
     float: left;
     margin-left: 2px;
@@ -31,7 +31,7 @@
 .icon-unknown {
     line-height: 1rem;
     font-size: theme_vars.$font-size-base;
-    font-family: theme_vars.$font-family-medium;
+    font-family: var(--font-family-medium);
     display: flex;
     justify-content: center;
     margin-left: 1px;

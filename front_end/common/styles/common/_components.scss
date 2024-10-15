@@ -90,7 +90,7 @@
 
     .welcome-caption {
         font-size: 64px !important;
-        font-family: $font-family-light;
+        font-family: var(--font-family-light);
         justify-content: center;
         line-height: 1;
         padding: 8px 0;

@@ -3,7 +3,7 @@
 
 .system-settings {
     .system-header-bold {
-        font-family: typography.$font-family-bold;
+        font-family: var(--font-family-bold);
     }
 
     #change-ownership {

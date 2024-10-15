@@ -1,10 +1,8 @@
-@use '_theme_variables_common' as *;
-
 :host {
 
     .close {
         position: relative;
-        font-family: $font-family-regular;
+        font-family: var(--font-family-regular);
         opacity: 1 !important;
     }
 

@@ -1,3 +1,4 @@
+@use "sass-rem/rem" as sass-rem;
 @use "theme_variables_common" as *;
 
 
@@ -32,7 +33,7 @@
             float: left;
             display: flex;
             align-items: center;
-            height: rem(48px);
+            height: sass-rem.rem(48px);
             max-width: 160px;
             background-size: contain;
             width: 100%;
@@ -66,7 +67,7 @@
         }
 
         &.fixed {
-            height: rem(200px);
+            height: sass-rem.rem(200px);
             overflow: hidden;
         }
 

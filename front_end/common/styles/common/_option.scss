@@ -17,7 +17,7 @@
     user-select: none;
 
     .text {
-        font-family: theme_variables_common.$font-family-regular;
+        font-family: var(--font-family-regular);
         user-select: none;
         color: theme_variables_common.$dark9
     }

@@ -1,3 +1,4 @@
+@use "sass-rem/rem" as sass-rem;
 @use "theme_variables_common" as *;
 @use "typography";
 
@@ -13,7 +14,7 @@
     @include typography.medium13nocolor;
     height: 26px;
     line-height: 26px;
-    padding: 0 rem(10px);
+    padding: 0 sass-rem.rem(10px);
 
     // TODO: Set this when focus works
     &.active,

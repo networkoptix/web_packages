@@ -4,7 +4,7 @@
 @use "bootstrap_utils" as bootstrap;
 
 .server-info {
-    font-family: typography.$font-family-regular;
+    font-family: var(--font-family-regular);
     font-size: typography.$font-size-base;
     color: var(--dark9);
 

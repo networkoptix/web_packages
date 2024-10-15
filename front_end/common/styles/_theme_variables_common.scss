@@ -4,7 +4,7 @@ $font-family-medium : "robotomedium", "Helvetica Neue", Helvetica, Arial, sans-s
 $font-family-light : "robotolight", "Helvetica Neue", Helvetica, Arial, sans-serif;
 $font-family-bold : "robotobold", "Helvetica Neue", Helvetica, Arial, sans-serif;
 
-@import "sass-rem/rem";
+@use "sass-rem/rem" as sass-rem;
 // @import './custom/_custom_palette';
 @import "./native-theme/theme_palette";
 @import "_theme_palette";
@@ -83,30 +83,30 @@ $modal-content-border-color:  transparent;
 // Fonts
 // $rem-baseline: 16px;
 
-$font-size-base : rem(13px); // Assumes the browser default, typically `16px`
+$font-size-base : sass-rem.rem(13px); // Assumes the browser default, typically `16px`
 
-$font-size-xxxlg : rem(40px);
-$font-size-xxlg : rem(32px);
-$font-size-xlg : rem(24px);
+$font-size-xxxlg : sass-rem.rem(40px);
+$font-size-xxlg : sass-rem.rem(32px);
+$font-size-xlg : sass-rem.rem(24px);
 $font-size-lg : $font-size-base * 1.25;
-$font-size-sm : rem(12px); //$font-size-base * .785;
+$font-size-sm : sass-rem.rem(12px); //$font-size-base * .785;
 
 
-$h1-font-size : rem(32px); // $font-size-base * 1.4;
-$h2-font-size : rem(24px); // $font-size-base * 1.3;
-$h3-font-size : rem(18px); // $font-size-base * 1.2;
-$h3-alt-size  : rem(17px);
-$h4-font-size : rem(15px); // $font-size-base * 1;
-$h5-font-size : rem(14px); // $font-size-base;
-$h6-font-size : rem(13px); // $font-size-base * .875;
+$h1-font-size : sass-rem.rem(32px); // $font-size-base * 1.4;
+$h2-font-size : sass-rem.rem(24px); // $font-size-base * 1.3;
+$h3-font-size : sass-rem.rem(18px); // $font-size-base * 1.2;
+$h3-alt-size  : sass-rem.rem(17px);
+$h4-font-size : sass-rem.rem(15px); // $font-size-base * 1;
+$h5-font-size : sass-rem.rem(14px); // $font-size-base;
+$h6-font-size : sass-rem.rem(13px); // $font-size-base * .875;
 
-$font-size-ssm : rem(11px);
-$font-size-20 : rem(20px);
-$font-size-22 : rem(22px);
-$font-size-30 : rem(30px);
-$font-size-10 : rem(10px);
+$font-size-ssm : sass-rem.rem(11px);
+$font-size-20 : sass-rem.rem(20px);
+$font-size-22 : sass-rem.rem(22px);
+$font-size-30 : sass-rem.rem(30px);
+$font-size-10 : sass-rem.rem(10px);
 
-$line-height-ssm : rem(13px);
+$line-height-ssm : sass-rem.rem(13px);
 
 // Font colors
 $font-color-medium : $dark9;
@@ -153,12 +153,12 @@ $modal-backdrop-bg:         $dark15;
 $modal-backdrop-opacity:    0.2;
 $modal-content-bg:          $light1;
 // $modal-title-font-weight:   600;
-$modal-title-line-height:   rem(24px);
-$modal-title-padding:       rem(12px);
-$modal-inner-padding:       rem(12px);
+$modal-title-line-height:   sass-rem.rem(24px);
+$modal-title-padding:       sass-rem.rem(12px);
+$modal-inner-padding:       sass-rem.rem(12px);
 $modal-border-radius: 2px;
 
-$form-group-margin-bottom:  rem(12px);
+$form-group-margin-bottom:  sass-rem.rem(12px);
 
 // $state-success-text:             $green3;
 // $state-success-bg:               $green2;
@@ -249,10 +249,10 @@ $fluid-container-max-width: 1440px;
 $scrollbar-height: 8px;
 
 /* badge component */
-$badge-font-size: rem(12px);
-$badge-border-radius: rem(2px);
-$badge-padding-x : rem(8px);
-$badge-padding-y : rem(3px);
+$badge-font-size: sass-rem.rem(12px);
+$badge-border-radius: sass-rem.rem(2px);
+$badge-padding-x : sass-rem.rem(8px);
+$badge-padding-y : sass-rem.rem(3px);
 
 // CSS Grid layout
 $grid-menu-width: 25%;

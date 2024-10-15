@@ -32,7 +32,7 @@
         }
 
         .description {
-            font-family: $font-family-light;
+            font-family: var(--font-family-light);
             font-size: $h3-font-size;
             color: var(--placeholder-description-text);
             word-break: break-word;

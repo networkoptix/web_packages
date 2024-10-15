@@ -1,6 +1,5 @@
 @use "common-nonglobal/button-legacy";
 @use "theme_variables_common" as *;
-
 .bookmark-modal {
 
     .modal-header {
@@ -47,7 +46,7 @@
                     display: none;
                 }
             }
-            
+
              /* We may add the animations for the Video Error placeholder back later
             .clip {
 
@@ -84,7 +83,7 @@
                             opacity 0.50s ease 0.2s,
                             height 0.50s ease 0.2s;
                     }
-    
+
                     &.placeholder--visible {
                         visibility: visible;
                         opacity: 1 !important;
@@ -96,18 +95,18 @@
         }
 
         .date {
-            font-family: $font-family-medium;
+            font-family: var(--font-family-medium);
             font-size: 14px;
             font-weight: 700;
             margin: 15px 0 10px;
         }
-    
+
         .deviceName {
-            font-family: $font-family-medium;
+            font-family: var(--font-family-medium);
             font-size: 14px;
             margin-bottom: 25px;
         }
-    
+
         .name {
             font-size: 20px !important;
             margin-bottom: 10px;
@@ -115,7 +114,7 @@
             white-space: pre-wrap;
             word-break: break-word;
         }
-    
+
         .description {
             max-height: 96px;
             overflow-y: auto;
@@ -123,7 +122,7 @@
             margin-bottom: 15px;
             white-space: pre-line;
         }
-    
+
         .tags {
             display: flex;
             margin-top: 10px;
@@ -141,8 +140,8 @@
 
         .view-recording-button,
         .action-button {
-            font-family: $font-family-regular;
-            
+            font-family: var(--font-family-regular);
+
             svg {
                 margin-right: 5px;
             }

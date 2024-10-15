@@ -115,7 +115,7 @@
 }
 
 .header-title {
-    font-family: $font-family-medium;
+    font-family: var(--font-family-medium);
     color: var(--dark9);
 }
 
@@ -152,7 +152,7 @@
 }
 
 .body-shared {
-    font-family: $font-family-regular;
+    font-family: var(--font-family-regular);
     color: var(--dark9);
     white-space: pre-wrap;
 }

@@ -1,5 +1,4 @@
 @use 'typography';
-@use 'theme_variables_common' as *;
 @use 'mixins';
 
 .menu-level-3 {
@@ -120,7 +119,7 @@
         }
 
         .menu-level-3-additional {
-            font-family: $font-family-regular;
+            font-family: var(--font-family-regular);
         }
     }
 
@@ -223,7 +222,7 @@
 
 .menu-level-3-additional {
     color: var(--left-menu-l3-additional-color);
-    font-family: $font-family-regular;
+    font-family: var(--font-family-regular);
 }
 
 .indent {

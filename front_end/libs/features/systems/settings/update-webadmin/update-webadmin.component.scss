@@ -1,5 +1,3 @@
-@use 'typography';
-
 $control-label-width: 117px;
 
 nx-block:not(:first-child) {
@@ -8,7 +6,7 @@ nx-block:not(:first-child) {
 }
 
 .text-label {
-    font-family: typography.$font-family-bold;
+    font-family: var(--font-family-bold);
 }
 
 .text-label::after, .download-progress::after {

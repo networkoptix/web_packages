@@ -1,5 +1,4 @@
 @use "typography";
-@use "theme_variables_common" as *;
 @use "_bootstrap_utils" as bootstrap;
 
 :host {
@@ -16,7 +15,7 @@
 
     .bullet-point-text {
         font-size: 14px;
-        font-family: $font-family-regular;
+        font-family: var(--font-family-regular);
         text-align: start;
     }
 
@@ -111,7 +110,7 @@
         &>.title {
             margin-top: 23px;
             font-size: 20px !important;
-            font-family: $font-family-medium;
+            font-family: var(--font-family-medium);
             text-align: center;
             height: 24px;
             padding: 0 10px;

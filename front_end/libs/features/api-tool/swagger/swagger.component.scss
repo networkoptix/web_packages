@@ -1,3 +1,4 @@
+@use "sass-rem/rem" as sass-rem;
 @use "typography";
 @use "theme_variables_common" as *;
 @use "buttons" as *;
@@ -55,7 +56,7 @@
 .swagger-ui {
 	/*! normalize.css v7.0.0 | MIT License | github.com/necolas/normalize.css */
 	margin-bottom: 200px;
-	font-family: $font-family-regular;
+	font-family: var(--font-family-regular);
 	color: var(--body-text-color);
 
 	section.models {
@@ -333,7 +334,7 @@
 	label {
 		font-family: robotomonoregular, monospace;
 		font-weight: 400;
-		font-size: rem(13px);
+		font-size: sass-rem.rem(13px);
 	}
 
 	section {
@@ -356,7 +357,7 @@
 	input {
 		display: block;
 		height: 32px;
-		font-size: rem(13px);
+		font-size: sass-rem.rem(13px);
 		line-height: 1.428571429;
 		color: var(--input-color);
 		background-color: var(--input-bg) !important;
@@ -402,7 +403,7 @@
 	.code,
 	code {
 		font-family: robotomonoregular, monospace !important;
-		font-size: rem(13px);
+		font-size: sass-rem.rem(13px);
 		line-height: 1.23;
 
 		span {
@@ -424,7 +425,7 @@
 
 		.media-type {
 			background: none;
-			font-size: rem(13px);
+			font-size: sass-rem.rem(13px);
 			line-height: 16px;
 			font-family: robotomonoregular, monospace !important;
 			color: var(--body-text-color) !important
@@ -935,7 +936,7 @@ nx-swagger-markdown+div#swagger-ui {
 
 .swagger-ui select {
 	color: var(--body-text-color) !important;
-	font-family: $font-family-medium;
+	font-family: var(--font-family-medium);
 	border: none !important;
 	border-radius: 2px;
 	-webkit-appearance: none;
@@ -1068,7 +1069,7 @@ nx-swagger-markdown .changes-table table {
 
 .code-block-common {
 	border-radius: 2px;
-	font-size: rem(12px) !important;
+	font-size: sass-rem.rem(12px) !important;
 	font-weight: 400;
 	line-height: 1.23 !important;
 	letter-spacing: normal;
@@ -1087,7 +1088,7 @@ nx-swagger-markdown .changes-table table {
 .swagger-container .code,
 .swagger-container code {
 	font-family: robotomonoregular, monospace;
-	font-size: rem(13px);
+	font-size: sass-rem.rem(13px);
 	line-height: 1.23;
 }
 
@@ -1119,7 +1120,7 @@ pre,
 			text-align: right;
 			counter-increment: line;
 			content: counter(line);
-			font-size: rem(10px);
+			font-size: sass-rem.rem(10px);
 			display: block;
 			position: absolute;
 			left: 0;

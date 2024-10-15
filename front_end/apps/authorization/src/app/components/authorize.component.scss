@@ -1,9 +1,9 @@
+@use "sass-rem/rem" as sass-rem;
 @use "typography";
 @use "mixins";
 @use "theme_variables_common" as *;
 @use "css-variables/native-theme/theme_palette" as *;
 @use "css-variables/theme_palette" as *;
-@use "css-variables/theme_variables" as *;
 
 
 @media only screen and (max-width: 355px) {
@@ -160,7 +160,7 @@
             @include typography.medium22dark9lh24;
             color: var(--auth-header-color) !important;
             height: 40px;
-            line-height: rem(40px) !important;
+            line-height: sass-rem.rem(40px) !important;
             text-align: center;
             overflow: hidden;
             white-space: nowrap;
@@ -243,7 +243,7 @@
                 .authorize-header {
                     font-size: $font-size-20  !important;
                     color: var(--light1)  !important;
-                    line-height: rem(22px) !important;
+                    line-height: sass-rem.rem(22px) !important;
                 }
 
                 .authorize-subheader {
@@ -260,9 +260,9 @@
         }
 
         main {
-            font-family: $font-family-regular;
+            font-family: var(--font-family-regular);
             font-size: $font-size-base;
-            line-height: rem(16px);
+            line-height: sass-rem.rem(16px);
             max-width: 480px;
             display: flex;
             flex-direction: column;
@@ -394,7 +394,7 @@
 
             &.main-m {
                 background-color: $dark5;
-                line-height: rem(20px);
+                line-height: sass-rem.rem(20px);
 
                 label,
                 p:not(.error-label) {
@@ -457,7 +457,7 @@
                 }
 
                 button.btn.text-button span {
-                    font-family: $font-family-regular;
+                    font-family: var(--font-family-regular);
                     font-size: $font-size-base;
                 }
 

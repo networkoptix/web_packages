@@ -1,4 +1,5 @@
 @use "common-nonglobal/button-legacy";
+@use "sass-rem/rem" as sass-rem;
 @use "typography";
 @use "theme_variables_common" as *;
 
@@ -63,7 +64,7 @@ nx-select {
 pre {
   margin-bottom: 24px;
   border-radius: 2px;
-  font-size: rem(13px);
+  font-size: sass-rem.rem(13px);
   font-weight: normal;
   letter-spacing: normal;
   font-family: robotomonoregular, monospace !important;

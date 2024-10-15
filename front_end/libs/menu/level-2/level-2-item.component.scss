@@ -1,6 +1,4 @@
 @use "typography";
-@use "theme_variables_common" as *;
-
 
 .menu-level-2 {
     @include typography.medium13dark9;
@@ -47,7 +45,7 @@
 
         .menu-level-2-additional {
             color: var(--light1)  !important;
-            font-family: $font-family-regular;
+            font-family: var(--font-family-regular);
         }
     }
 
@@ -62,5 +60,5 @@
 
 .menu-level-2-additional {
     color: var(--light16);
-    font-family: $font-family-regular;
+    font-family: var(--font-family-regular);
 }
