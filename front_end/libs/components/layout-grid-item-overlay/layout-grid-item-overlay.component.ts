@@ -332,11 +332,9 @@ export class NxLayoutGridItemOverlayComponent {
                             ({ resolution }) => resolution === currentResolution,
                         );
 
-                        const codecLookup = {
-                            27: 'H264',
-                            173: 'H265',
-                            7: 'MJPEG',
-                        };
+                        const connection = this.ngZone.runOutsideAngular(() =>
+                            WebRTCStreamManager.getInstance(cameraNode.details),
+                        )!;
 
                         const hasStreamInfo = Boolean(currentStream);
                         const isPrimary = currentStream?.encoderIndex === 0;
@@ -345,15 +343,16 @@ export class NxLayoutGridItemOverlayComponent {
                             : isPrimary
                               ? primary
                               : secondary;
+                        const h265Regex = /hvc1|hev1|hevc/i;
+                        const isH265 = h265Regex.test(connection.mimeType ?? '');
                         const streamDescription = hasStreamInfo && {
                             value: isPrimary ? high : low,
-                            params: { codec: codecLookup[currentStream.codec] },
+                            params: {
+                                codec: isH265 ? 'H265' : 'H264',
+                            },
                         };
 
-                        const connectionType = this.ngZone.runOutsideAngular(
-                            () =>
-                                WebRTCStreamManager.getInstance(cameraNode.details)?.connectionType,
-                        );
+                        const connectionType = connection.connectionType;
 
                         const debugConnectionInfo = connectionType
                             ? (() => {

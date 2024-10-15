@@ -74,6 +74,7 @@ export class WithSkip<T> {
 }
 
 export class ConnectionQueue {
+    static MAX_CONCURRENCY = 5;
     static GROUP: Record<string, ConnectionQueue> = {};
     #queue$ = new Subject<Observable<unknown>>();
     #concurrencyUpdater$ = new Subject<number>();
@@ -115,7 +116,7 @@ export class ConnectionQueue {
     }
 
     private constructor(private origin: string, private logger?: Console) {
-        this.#queue$.pipe(mergeMap(notifier => notifier, 5)).subscribe(state => this.logger?.info(state));
+        this.#queue$.pipe(mergeMap(notifier => notifier, ConnectionQueue.MAX_CONCURRENCY)).subscribe(state => this.logger?.info(state));
         this.#runningTasks$.subscribe(count => this.logger?.info(`[${this.origin}] Running tasks: ${count}`));
     }
 }
@@ -243,3 +244,5 @@ export const frameRateTracker$ = framesPerSecondFactory().pipe(
 export const throttleByFrameRateScheduler$ = frameRateTracker$.pipe(take(1), exhaustMap(({ fps }) => timer(1000 / fps)), switchMap(() => animationFrames$), shareReplay({ bufferSize: 1, refCount: false }));
 
 export const throttleByFrameRate = <T>() => throttle<T>(() => throttleByFrameRateScheduler$ , { leading: false, trailing: true });
+
+export const generateRandomString = () => Math.random().toString(36).slice(2)

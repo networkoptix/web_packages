@@ -203,6 +203,7 @@ export class NxVideoPlayerComponent {
         if (this.CONFIG.trafficRelayHost) {
             WebRTCStreamManager.RELAY_URL = this.CONFIG.trafficRelayHost;
         }
+        WebRTCStreamManager.USE_RELAY_PREFIX = true;
     }
 
     calculateCropParams = (drawParams: DrawImagePartialTuple): DrawImagePartialTuple => {
