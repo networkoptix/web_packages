@@ -718,10 +718,9 @@ export class NxLayoutGridComponent {
         layout: ParsedLayoutWithItems,
         layoutItemLookup: LayoutResourceTree,
     ): void => {
-        this.layoutItemsErrorsStore.reset(['layoutError']);
-
-        layout.items.forEach(item => {
+        const updates = layout.items.reduce((updates, item) => {
             const itemDetail = this.getItem({ item, layoutItemLookup });
+            const resourceId = itemDetail?.details.id || cleanId(item.resourceId);
             const { systemId } = extractSystemAndResourceId(item.resourcePath);
             const systemInfo = this.systemsService.systems$$()?.find(({ id }) => id === systemId);
 
@@ -738,37 +737,32 @@ export class NxLayoutGridComponent {
             const isSystemOffline = systemInfo?.stateOfHealth === 'offline';
             const isSystemIncompatible = systemInfo?.stateOfHealth === 'incompatible';
 
+            const permissionManager = systemInfo
+                ? this.systemsService.systemsPermissionsManager$$()[systemInfo.id]
+                : null;
+
             let layoutItemStatus: string = '';
 
-            if (itemDetail) {
-                layoutItemStatus = this.layoutItemsErrorsStore.statuses$$()[itemDetail.details.id];
+            if (!systemInfo || !permissionManager) {
+                layoutItemStatus = 'systemNoAccess';
+            } else if (!canViewLayouts(systemInfo)) {
+                layoutItemStatus = 'versionNotSupported';
+            } else if (isSystemOffline) {
+                layoutItemStatus = 'systemOffline';
+            } else if (isSystemIncompatible) {
+                layoutItemStatus = 'systemIncompatible';
+            } else if (!permissionManager.canViewDevice(resourceId)) {
+                layoutItemStatus = 'noAccess';
+            }
 
-                if (!systemInfo) {
-                    layoutItemStatus = 'systemNoAccess';
-                } else if (!canViewLayouts(systemInfo)) {
-                    layoutItemStatus = 'versionNotSupported';
-                } else if (isSystemOffline) {
-                    layoutItemStatus = 'systemOffline';
-                } else if (isSystemIncompatible) {
-                    layoutItemStatus = 'systemIncompatible';
-                } else {
-                    const permissionManager =
-                        this.systemsService.systemsPermissionsManager$$()[systemInfo.id];
-                    if (!permissionManager) {
-                        layoutItemStatus = 'systemNoAccess';
-                    } else if (!permissionManager.canViewDevice(cleanId(itemDetail.details.id))) {
-                        layoutItemStatus = 'noAccess';
+            if (systemInfo && !layoutItemStatus) {
+                if (systemInfo?.system2faEnabled && !this.accountService.account.sessionVerified) {
+                    if (this.accountService.account.totpExistsForAccount) {
+                        layoutItemStatus = 'system2faRequired';
+                    } else {
+                        layoutItemStatus = 'account2faDisabled';
                     }
                 }
-            } else if (systemInfo) {
-                layoutItemStatus =
-                    !systemInfo?.system2faEnabled ||
-                    isSystemOffline ||
-                    this.accountService.account.sessionVerified
-                        ? 'systemDeviceNotAvailable'
-                        : this.accountService.account.totpExistsForAccount
-                          ? 'system2faRequired'
-                          : 'account2faDisabled';
             }
 
             if (!layoutItemStatus) {
@@ -801,10 +795,29 @@ export class NxLayoutGridComponent {
                 }
             }
 
-            if (layoutItemStatus) {
-                this.layoutItemsErrorsStore.set(item.id, { layoutError: layoutItemStatus });
+            if (isCamera && isOffline) {
+                // remove dynamic statuses added by player if camera goes offline (based on server response)
+                // this is temporary aid for the dynamic statuses coming from the player not being consistent
+                this.layoutItemsErrorsStore.remove(resourceId, {
+                    message: true,
+                    status: true,
+                    icon: true,
+                });
             }
-        });
+
+            layoutItemStatus ||= this.layoutItemsErrorsStore.statuses$$()[resourceId];
+
+            return {
+                ...updates,
+                [item.id]: {
+                    layoutError: layoutItemStatus,
+                },
+            };
+        }, {});
+
+        this.layoutItemsErrorsStore.reset(['layoutError']);
+
+        this.layoutItemsErrorsStore.setMany(updates);
     };
 
     layout$: Observable<ParsedLayoutWithItems> = combineLatest([
@@ -2147,11 +2160,10 @@ export class NxLayoutGridComponent {
         }
 
         const itemId = itemDetail.details?.id;
-        const showOfflineError = (): void => {
+        const showUnavailableError = (): void => {
             if (!itemDetail.details) {
                 return;
             }
-            itemDetail.details.online = false;
             this.layoutItemsErrorsStore.set(itemId, {
                 status: staticLang.common.cameraStates.unavailable.toLowerCase(),
                 icon: 'offline',
@@ -2192,12 +2204,12 @@ export class NxLayoutGridComponent {
             showDefaultPasswordError();
         } else {
             itemDetail.details.previewUrl.subscribe({
-                next: showOfflineError,
+                next: showUnavailableError,
                 error: (previewError: HttpErrorResponse) => {
                     if (previewError.status === 403) {
                         showDefaultPasswordError();
                     } else {
-                        showOfflineError();
+                        showUnavailableError();
                     }
                 },
             });

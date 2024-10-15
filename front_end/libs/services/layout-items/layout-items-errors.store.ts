@@ -23,6 +23,7 @@ import { nxConfig } from '@services/nx-config/config';
 type Entity = { id: string; value: string };
 type Collection = 'status' | 'layoutError' | 'icon' | 'message';
 type Collections = [Collection];
+type EntityValueParam = { [key in Collection]?: string | Translatable };
 
 const entitiesToObject = (entities: Entity[]): Record<string, string> =>
     entities.reduce(
@@ -65,70 +66,78 @@ export class LayoutItemsErrorsStore extends signalStore(
         icons$$: computed(() => entitiesToObject(store.iconEntities())),
         messages$$: computed(() => entitiesToObject(store.messageEntities())),
     })),
-    withMethods(store => ({
-        set: (
-            id: string,
-            error: {
-                // only message can and should be translatable
-                // ts did not let me shorthand that well
-                [key in Collection]?: string | Translatable;
+    withMethods(store => {
+        function setMultipleEntities(entities: Record<string, EntityValueParam>): void {
+            const updates: PartialStateUpdater<NamedEntityState<Entity, string>>[] = [];
+
+            if (!entities) {
+                return;
+            }
+
+            Object.entries(entities).forEach(([id, error]) => {
+                Object.keys(error).forEach(collection => {
+                    if (error?.[collection] && id) {
+                        updates.push(setEntity({ id, value: error[collection] }, { collection }));
+                    }
+                });
+            });
+
+            patchState(store, ...updates);
+        }
+
+        return {
+            set: (id: string, error: EntityValueParam) => {
+                if (!id) {
+                    return;
+                }
+
+                return setMultipleEntities({ [id]: error });
             },
-        ) => {
-            const updates: PartialStateUpdater<NamedEntityState<Entity, string>>[] = [];
+            setMany: (entities: Record<string, EntityValueParam>) => {
+                return setMultipleEntities(entities);
+            },
+            remove: (
+                id: string,
+                clear:
+                    | true
+                    | {
+                          [key in Collection]?: boolean;
+                      },
+            ) => {
+                const updates: PartialStateUpdater<NamedEntityState<Entity, string>>[] = [];
 
-            if (!error || !id) {
-                return;
-            }
-
-            Object.keys(error).forEach(collection => {
-                if (error?.[collection]) {
-                    updates.push(setEntity({ id, value: error[collection] }, { collection }));
+                if (!id || !clear) {
+                    return;
                 }
-            });
 
-            return patchState(store, ...updates);
-        },
-        remove: (
-            id: string,
-            clear:
-                | true
-                | {
-                      [key in Collection]?: boolean;
-                  },
-        ) => {
-            const updates: PartialStateUpdater<NamedEntityState<Entity, string>>[] = [];
-
-            if (!id || !clear) {
-                return;
-            }
-
-            if (clear === true) {
-                clear = { status: true, icon: true, message: true, layoutError: true };
-            }
-
-            Object.keys(clear).forEach(collection => {
-                if (clear?.[collection]) {
-                    updates.push(removeEntity(id, { collection }));
+                if (clear === true) {
+                    clear = { status: true, icon: true, message: true, layoutError: true };
                 }
-            });
 
-            return patchState(store, ...updates);
-        },
-        reset: (collection?: Collections) =>
-            patchState(
-                store,
-                ...(collection ?? ['status', 'layoutError', 'icon', 'message']).map(
-                    (collection: Collection) => {
-                        switch (collection) {
-                            case 'message':
-                                return setAllEntities(helpGetAdditionalErrorMessages(), {
-                                    collection,
-                                });
-                            default:
-                                return removeAllEntities({ collection });
-                        }
-                    },
+                Object.keys(clear).forEach(collection => {
+                    if (clear?.[collection]) {
+                        updates.push(removeEntity(id, { collection }));
+                    }
+                });
+
+                return patchState(store, ...updates);
+            },
+            reset: (collection?: Collections) =>
+                patchState(
+                    store,
+                    ...(collection ?? ['status', 'layoutError', 'icon', 'message']).map(
+                        (collection: Collection) => {
+                            switch (collection) {
+                                case 'message':
+                                    return setAllEntities(helpGetAdditionalErrorMessages(), {
+                                        collection,
+                                    });
+                                default:
+                                    return removeAllEntities({ collection });
+                            }
+                        },
+                    ),
                 ),
-            ),
-    })),
+        };
+    }),
 ) {}

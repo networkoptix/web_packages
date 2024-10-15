@@ -224,6 +224,10 @@ const SYSTEM_PLACEHOLDERS = {
     account2faDisabled: PLACEHOLDERS.account2faDisabled,
 };
 
+const DEVICE_PLACEHOLDERS = {
+    noAccess: PLACEHOLDERS.noAccess,
+};
+
 @UntilDestroy()
 @Component({
     selector: 'nx-layout-grid-item-placeholder',
@@ -347,6 +351,8 @@ export class NxLayoutGridItemPlaceholderComponent {
                 // hide ioDevice pages ff
                 placeholder = PLACEHOLDERS.ioDevice;
             }
+        } else {
+            placeholder = DEVICE_PLACEHOLDERS[status];
         }
 
         if (SYSTEM_PLACEHOLDERS[status]) {
