@@ -7,7 +7,7 @@ import { FocusTracker, MosScoreTracker, BytesReceivedTracker } from './trackers'
 import { MediaServerPeerConnection } from './media-server-peer-connection';
 import { SignalingMessage, PlaybackDetails, ConnectionError, SdpInit, IceInit, ErrorMsg, StreamQuality, IntRange, MimeInit, AvailableStreams, ApiVersions, Stream, RequiresTranscoding, isRequiresTranscoding, WebRtcUrlFactoryOrConfig, WebRtcUrlFactory, WebRtcUrlConfig, TargetStream, DataChannelMessage, isTimeStampMessage, isStreamChangeMessage, ConnectionType } from './types';
 import { BaseTracker } from './trackers/base-tracker';
-import { ConnectionQueue, WithSkip, getConnectionKey, createConnectionKey, cleanId, fetchWithRedirectAuthorization, cacheSuccess, streamSupported, frameRateTracker$, throttleByFrameRate, throttleByFrameRateScheduler$ } from './utils';
+import { ConnectionQueue, WithSkip, getConnectionKey, createConnectionKey, cleanId, fetchWithRedirectAuthorization, cacheSuccess, streamSupported, frameRateTracker$, throttleByFrameRate, throttleByFrameRateScheduler$, generateRandomString } from './utils';
 
 type StreamsConfig = AvailableStreams | AvailableStreams[];
 
@@ -22,6 +22,13 @@ export class WebRTCStreamManager {
 
     /** Time series to average */
     static PERFORMANCE_SAMPLE_SIZE = 5000
+
+    /**
+     * Prefix relay url to allow more than 6 websocket connections to the same host.
+     *
+     * Defaults to false until relay update is released on production.
+     */
+    static USE_RELAY_PREFIX = false;
 
     /** For Tracking existing connections */
     static EXISTING_CONNECTIONS: Record<string, WebRTCStreamManager> = {};
@@ -759,7 +766,9 @@ export class WebRTCStreamManager {
      */
     public close = (retryAfterSeconds: false | number = false, checkCodec = false): Promise<true> => {
         if (checkCodec) {
-            this.codecChanged++;
+            this.codecChanged = generateRandomString();
+            this.usingMse = false;
+            this.mimeType = '';
         }
         this.stopCurrentStream();
         this.closeWsConnection();
@@ -962,7 +971,7 @@ export class WebRTCStreamManager {
         }
     }
 
-    private mimeType: string;
+    public mimeType: string;
 
     private initializeMse = async (mimeType?: string): Promise<void> => {
         if (mimeType) {
@@ -1192,7 +1201,8 @@ export class WebRTCStreamManager {
     private useProxy = false;
     private serverId: string;
 
-    private codecChanged = 0;
+    private codecCheckKey = generateRandomString();
+    private codecChanged = generateRandomString();
 
     get cameraId() {
         return this.connectionKey.split('_').pop();
@@ -1261,19 +1271,21 @@ export class WebRTCStreamManager {
         const fetchAllStreams = cacheSuccess(() => fetchWithRedirectAuthorization(
             allStreamsInfoEndpoint,
             { headers: { authorization: `Bearer ${this.accessToken()}` }}
-            ), `${systemId}-streams`).then(response => response.json() as Promise<typeof fallback[]>).catch(() => [] as typeof fallback[]);
+            ), `${systemId}-streams-${this.codecCheckKey}`).then(response => response.json() as Promise<typeof fallback[]>).catch(() => [] as typeof fallback[]);
 
         const fetchCurrentStream = () => cacheSuccess(() => fetchWithRedirectAuthorization(
             streamInfoEndpoint,
             { headers: { authorization: `Bearer ${this.accessToken()}` }}
-            ), `${this.connectionKey}-streams-${this.codecChanged}`).then(response => response.json() as Promise<typeof fallback>).catch(() => fallback)
+            ), `${this.connectionKey}-streams-${this.codecCheckKey}`).then(response => response.json() as Promise<typeof fallback>).catch(() => fallback)
 
         const fetchStreams = fetchAllStreams.then(devices => {
             const device = devices.find(({ id }) => cleanId(id) === this.cameraId);
 
-            if (!this.codecChanged && device) {
+            if (this.codecChanged === this.codecCheckKey && device) {
                 return device;
             }
+
+            this.codecCheckKey = this.codecChanged;
 
             return fetchCurrentStream();
         });
@@ -1378,6 +1390,8 @@ export class WebRTCStreamManager {
         this.closeWsConnection();
 
         let retries = 10;
+
+        ConnectionQueue.MAX_CONCURRENCY = WebRTCStreamManager.USE_RELAY_PREFIX ? 64 : 4;
 
         ConnectionQueue.runTask(async (completeCallback, requeueCallback) => {
             const url = webRtcUrl.endsWith('&') ? webRtcUrl.slice(0, -1) : webRtcUrl;
@@ -1527,12 +1541,35 @@ export class WebRTCStreamManager {
         }
     };
 
+    private prefixGenerator = (() => {
+        function* randomStringGenerator() {
+            while(true) {
+                const prefix = generateRandomString()
+                for (let i = 0; i < 5; i++) {
+                    yield prefix;
+                }
+            }
+        }
+        const generators: Record<string, ReturnType<typeof randomStringGenerator>> = {}
+
+        return new Proxy({} as Record<string, string>, {
+            get: (target, prop: string) => {
+                if (!generators[prop]) {
+                    generators[prop] = randomStringGenerator();
+                }
+                return generators[prop].next().value!;
+            }
+        })
+    })()
+
     private generateWebRtcUrl = (config: WebRtcUrlConfig): WebRtcUrlFactory => {
         const systemId = cleanId(config.systemId);
         const cameraId = cleanId(config.cameraId);
         const serverId = cleanId(config.serverId);
 
-        const host = WebRTCStreamManager.RELAY_URL.replace('{systemId}', systemId);
+        const subDomain = WebRTCStreamManager.USE_RELAY_PREFIX ? `${this.prefixGenerator[systemId]}---${systemId}` : systemId;
+
+        const host = WebRTCStreamManager.RELAY_URL.replace('{systemId}', subDomain);
         const useV2 = this.apiVersion === ApiVersions.v2;
         const endpoint = useV2 ? `/rest/v3/devices/${cameraId}/webrtc?` : `/webrtc-tracker/?camera_id=${cameraId}&`
 
