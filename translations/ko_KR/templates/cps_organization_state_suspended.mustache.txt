@@ -1,5 +1,5 @@
-Hello, {{message.userFullName}}
+안녕하세요, {{message.userFullName}}
 
-The status of the {{message.organization_name}} organization is changed to {{message.status_name}}.
+{{message.organization_name}} 조직의 상태가 {{message.status_name}}로 변경되었습니다.
 
-Please contact your partner for more details.
+자세한 내용은 파트너에게 문의하세요.

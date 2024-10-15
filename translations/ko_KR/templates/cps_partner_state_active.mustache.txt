@@ -1,6 +1,6 @@
-Hello, {{message.userFullName}}
+안녕하세요, {{message.userFullName}}
 
-The status of partner {{message.partner_name}} is changed to {{message.status_name}}.
-Functionality is now fully available.
+파트너 {{message.partner_name}} 의 상태가 {{message.status_name}}로 변경됩니다.
+이제 모든 기능을 사용할 수 있습니다.
 
 View in %NX_CONNECT_NAME% Portal: %NX_CONNECT_URL%

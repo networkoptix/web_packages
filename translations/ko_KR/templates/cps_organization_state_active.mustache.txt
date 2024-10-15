@@ -1,6 +1,6 @@
-Hello, {{message.userFullName}}
+안녕하세요, {{message.userFullName}}
 
-{{message.sharer_name}} has shared access to organization  {{message.organization_name}} with you.
-Functionality is now fully available.
+{{message.sharer_name}} 님이 조직  {{message.organization_name}} 에 대한 접근 권한을 귀하와 공유했습니다.
+이제 모든 기능을 사용할 수 있습니다.
 
-View in %CLOUD_NAME% Portal: {{ config.portal_url }}
+%CLOUD_NAME% 포털에서 보기: {{ config.portal_url }}
