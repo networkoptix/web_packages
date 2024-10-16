@@ -2,7 +2,7 @@
 
   아래 링크을 클릭하여 이메일 주소를 확인하고 계정을 활성화하십시오.
 
-{{config.portal_url}}/인증/활성화/{{message.code}}
+{{config.portal_url}}/authorize/activate/{{message.code}}
 
 %CLOUD_NAME%에 등록하지 않았다면이 이메일을 무시하십시오.
 메시지 또는 링크를 다른 사람과 공유하지 마십시오.

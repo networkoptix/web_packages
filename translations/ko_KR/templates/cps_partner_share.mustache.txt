@@ -2,4 +2,4 @@
 
 {{message.sharer_name}} 님이 채널 파트너 "{{message.partner_name}}"에 대한 액세스 권한을 귀하와 공유했습니다.
 
-View in %NX_CONNECT_NAME% Portal: %NX_CONNECT_URL%
+%NX_CONNECT_NAME% 포털에서 보기: %NX_CONNECT_URL%
