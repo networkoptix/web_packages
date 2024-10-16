@@ -17,8 +17,8 @@ import {
 } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { CookieService } from 'ngx-cookie-service';
-import { DeviceDetectorService } from 'ngx-device-detector';
 import type { DeviceInfo } from 'ngx-device-detector';
+import { DeviceDetectorService } from 'ngx-device-detector';
 import { LocalStorageService } from 'ngx-webstorage';
 import { fromEvent } from 'rxjs';
 import { filter, take } from 'rxjs/operators';
@@ -112,16 +112,14 @@ export class AppComponent implements AfterViewInit {
         const { NxRibbonComponent } = await import('@components/ribbon/ribbon.component');
         this.ribbon.createComponent(NxRibbonComponent);
 
-        if (environment.isWebadmin) {
-            await idle();
-            await import('@components/overlay-modal/overlay-modal.module').then(
-                m => m.OverlayModalModule,
-            );
-            const { NxOverlayModalComponent } = await import(
-                '@components/overlay-modal/overlay-modal.component'
-            );
-            this.overlayModalRef.createComponent(NxOverlayModalComponent);
-        }
+        await idle();
+        await import('@components/overlay-modal/overlay-modal.module').then(
+            m => m.OverlayModalModule,
+        );
+        const { NxOverlayModalComponent } = await import(
+            '@components/overlay-modal/overlay-modal.component'
+        );
+        this.overlayModalRef.createComponent(NxOverlayModalComponent);
     };
 
     constructor(
@@ -142,7 +140,7 @@ export class AppComponent implements AfterViewInit {
             window.location.hash = '/';
         }
         if (!this.CONFIG.browserNotSupported) {
-            if (environment.isWebadmin || this.appStateService.ready) {
+            if (this.appStateService.ready) {
                 this.lazyLoadHeader();
             } else {
                 this.appStateService.readySubject
@@ -203,14 +201,6 @@ export class AppComponent implements AfterViewInit {
         } // else -> unknown platform or device ... cross fingers and hope for the best
 
         if (!NxBootstrapProvider.isLoaded) {
-            if (!this.environment.isWebadmin) {
-                this.router
-                    .navigate(['/503'])
-                    .catch(error => console.error(error))
-                    .finally(() => {
-                        this.appStateService.ready = true;
-                    });
-            }
             this.appStateService.headerVisibility = false;
             this.appStateService.footerVisibility = false;
             return;
