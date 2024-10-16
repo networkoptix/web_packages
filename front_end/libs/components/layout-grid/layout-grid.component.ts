@@ -113,6 +113,7 @@ import { Layout, LayoutItem, LayoutItems } from '@services/system-api.types/layo
 import {
     CameraStatus,
     CameraTypeId,
+    Capabilities,
     NxSystemCamera,
     RecordingStatus,
     Status,
@@ -694,7 +695,6 @@ export class NxLayoutGridComponent {
     addingItem$$ = signal(false);
     addOffset = 0;
     changingLayout: string | boolean = true;
-    skipDefaultCredentialsCheck: Record<string, true> = {};
     icons = icons;
     readonly RESOURCE_TYPE = ResourceType;
     readonly EDGE_GAP = 60;
@@ -731,6 +731,7 @@ export class NxLayoutGridComponent {
             const isCamOrSrv = isCamera || isServer;
 
             const isIncompatible = isServer && itemDetail.details.status === Status.Incompatible;
+            const isDefaultPassword = isCamera && itemDetail.details.isDefaultPassword;
             const isUnauthorized = isCamOrSrv && itemDetail.details.status === Status.Unauthorized;
             const isOffline = isCamOrSrv && itemDetail.details.status === Status.Offline;
 
@@ -770,6 +771,8 @@ export class NxLayoutGridComponent {
                     layoutItemStatus = 'offline';
                 } else if (isCamera && itemDetail.details.typeId === CameraTypeId.Virtual) {
                     layoutItemStatus = 'virtualCamera';
+                } else if (isDefaultPassword) {
+                    layoutItemStatus = 'defaultPassword';
                 } else if (isUnauthorized) {
                     layoutItemStatus = 'unauthorized';
                 } else if (isIncompatible) {
@@ -2224,7 +2227,7 @@ export class NxLayoutGridComponent {
         ) {
             return;
         }
-        const defaultPassword = camera.status !== CameraStatus.Unauthorized;
+        const defaultPassword = camera.capabilities.includes(Capabilities.isDefaultPassword);
         const retriesTimeout = 30 * 1000;
         const firstCheckTimeout = 10 * 1000;
         const cameraCredentialUpdateTimeout = 5 * 1000;
@@ -2246,10 +2249,10 @@ export class NxLayoutGridComponent {
                         from(system.cameraManager.getCameras()).pipe(
                             switchMap(cameras => {
                                 const selectedCamera = cameras.find(({ id }) => id === camera.id);
-                                const keepChecking = selectedCamera.status !== CameraStatus.Online;
+                                const keepChecking = selectedCamera?.status !== CameraStatus.Online;
                                 if (keepChecking) {
                                     return throwError(
-                                        selectedCamera.status === CameraStatus.Unauthorized
+                                        selectedCamera?.status === CameraStatus.Unauthorized
                                             ? 'Camera Unauthorized'
                                             : 'Camera Offline',
                                     );
@@ -2274,7 +2277,10 @@ export class NxLayoutGridComponent {
                     return;
                 }
 
-                if (selectedCamera.status === CameraStatus.Unauthorized && !defaultPassword) {
+                if (
+                    selectedCamera.status === CameraStatus.Unauthorized &&
+                    !selectedCamera.capabilities.includes(Capabilities.isDefaultPassword)
+                ) {
                     this.toastService.notify(
                         {
                             value: staticLang.layouts.toasts.unableToAuthorizeCamera,
@@ -2287,9 +2293,6 @@ export class NxLayoutGridComponent {
                         status: true,
                         icon: true,
                     });
-                    if (defaultPassword) {
-                        this.skipDefaultCredentialsCheck[selectedCamera.id] = true;
-                    }
                 }
 
                 // TODO: This needs to be updated to update the resources store once it's setup.

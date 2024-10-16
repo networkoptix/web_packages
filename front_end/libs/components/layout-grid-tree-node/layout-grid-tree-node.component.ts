@@ -255,6 +255,8 @@ export class NxLayoutGridTreeNode {
         const statusForDevice =
             (assertResourceOfType.camera(node) || assertResourceOfType.server(node)) &&
             node.details.status.toLowerCase();
+        const statusForCamera =
+            assertResourceOfType.camera(node) && node.details.isDefaultPassword ? 'warning' : '';
         const statusForCrossSiteSystem = (() => {
             if (assertResourceOfType.system_cloud(node)) {
                 const { status, system2faEnabled, version } = node.details as NxSystemInfo;
@@ -269,7 +271,9 @@ export class NxLayoutGridTreeNode {
             return '';
         })();
         const status =
-            [statusIcon, statusForDevice, statusForCrossSiteSystem].find(status => status) || '';
+            [statusIcon, statusForCamera, statusForDevice, statusForCrossSiteSystem].find(
+                status => status,
+            ) || '';
 
         if (statusForCrossSiteSystem) {
             console.info('Cross site system status:', statusForCrossSiteSystem);

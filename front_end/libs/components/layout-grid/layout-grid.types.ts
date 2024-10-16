@@ -152,6 +152,7 @@ export interface NxSystemCameraWithMappedFields extends NxSystemCamera {
     recordingStatus: RecordingStatus;
     online: boolean;
     unauthorized: boolean;
+    isDefaultPassword: boolean;
     requiresTranscoding: boolean;
 }
 

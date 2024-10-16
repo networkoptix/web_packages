@@ -310,6 +310,8 @@ export class NxLayoutGridItemPlaceholderComponent {
         if (!adjustedStatus) {
             if (isCamera && itemDetail.details.typeId === CameraTypeId.Virtual) {
                 adjustedStatus = 'virtualCamera';
+            } else if (isCamera && itemDetail.details.isDefaultPassword) {
+                adjustedStatus = 'defaultPassword';
             } else if (isUnauthorized) {
                 adjustedStatus = 'unauthorized';
             } else if (!isOnline) {
@@ -361,7 +363,7 @@ export class NxLayoutGridItemPlaceholderComponent {
 
         if (!placeholder) {
             // this is an error state as a matter of fact
-            // we show a fallback placeholder to not to break the layout
+            // we show a fallback placeholder to avoid breaking the layout
             // ff layoutsDebugPlaceholder can provide more info
             return this.getDefaultPlaceholder();
         }
@@ -447,11 +449,10 @@ export class NxLayoutGridItemPlaceholderComponent {
         // this method is weird. We do not have any other actions though so it is fine so far
         const itemDetail = this.itemDetail();
         const isCamera = !!itemDetail && assertResourceOfType.camera(itemDetail);
-        const status = this.adjustedStatus();
 
         const hasAuthorize =
             isCamera &&
-            (status === 'defaultPassword' || itemDetail.details.unauthorized) &&
+            (itemDetail.details.isDefaultPassword || itemDetail.details.unauthorized) &&
             !!this.CONFIG.featureFlags.layoutsAuthorizeCamera &&
             this.systemsService
                 .systemsPermissionsManager$$()

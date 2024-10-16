@@ -73,6 +73,7 @@ export class WebglComponent {
                         online: true,
                         requiresTranscoding: false,
                         unauthorized: false,
+                        isDefaultPassword: false,
                         // type: camera.type,
                         status: camera.status,
                         // selected: true, // camera.id === CAMERA_ID,

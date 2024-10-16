@@ -141,7 +141,7 @@ export interface NxSystemCamera {
     accessToken: string;
     getAccessToken: () => string;
     typeId: string;
-    capabilities: Capabilities[] | [];
+    capabilities: Capabilities[];
 
     // Compatibility patches
     parentId: string; // serverId
@@ -269,7 +269,7 @@ export enum StreamQuality {
     VARIOUS = 'various',
 }
 
-// This is recommend to be used for the newest devices api calls
+// This is recommended to be used for the newest devices api calls
 // Not guaranteed to be available for older api calls
 export const enum Capabilities {
     noCapabilities = 'noCapabilities',

@@ -1,5 +1,6 @@
 import {
     CameraStatus,
+    Capabilities,
     NxSystemCamera,
     RecordingStatus,
 } from '@services/system.service/camera-manager/camera-manager-types';
@@ -30,6 +31,7 @@ describe('mapAdditionalCameraFieldsFactory', () => {
         parentId: 'server1',
         status: CameraStatus.Online,
         recordingStatus: RecordingStatus.Recording,
+        capabilities: [],
         parameters: {
             mediaStreams: {
                 streams: [
@@ -56,6 +58,7 @@ describe('mapAdditionalCameraFieldsFactory', () => {
             parentId: 'server1',
             status: RecordingStatus.Recording,
             recordingStatus: RecordingStatus.Recording,
+            capabilities: [],
             parameters: {
                 mediaStreams: {
                     streams: [
@@ -73,6 +76,7 @@ describe('mapAdditionalCameraFieldsFactory', () => {
             online: true,
             unauthorized: false,
             requiresTranscoding: false,
+            isDefaultPassword: false,
         });
     });
 
@@ -109,5 +113,16 @@ describe('mapAdditionalCameraFieldsFactory', () => {
         };
 
         expect(mapAdditionalCameraFieldsV1System(cameraOnOfflineServer).online).toBe(false);
+    });
+
+    it('should return isDefaultPassword if isDefaultPassword is in the capabilities list', () => {
+        const cameraOnOfflineServer = {
+            ...camera,
+            capabilities: [Capabilities.isDefaultPassword],
+        };
+
+        expect(mapAdditionalCameraFieldsV1System(cameraOnOfflineServer).isDefaultPassword).toBe(
+            true,
+        );
     });
 });

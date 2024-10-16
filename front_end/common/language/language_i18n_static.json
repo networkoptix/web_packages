@@ -507,7 +507,7 @@
             },
             "descriptions": {
                 "expectInFutureVersions": "expect in future versions",
-                "fullScreenAction": "maximize Item to use available action",
+                "fullScreenAction": "Maximize item to use available action.",
                 "systemVersionNotCompatible": "incompatible system version"
             }
         }

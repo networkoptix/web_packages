@@ -2,6 +2,7 @@ import { NxSystemCameraWithMappedFields } from '@components/layout-grid/layout-g
 import { isRequiresTranscoding } from '@openLibs/webrtc-stream-manager';
 import {
     CameraStatus,
+    Capabilities,
     NxSystemCamera,
     RecordingStatus,
 } from '@services/system.service/camera-manager/camera-manager-types';
@@ -19,6 +20,8 @@ export const mapAdditionalCameraFieldsFactory =
         const online =
             isIoOnly(camera) || (camera.status === CameraStatus.Online && parentServerOnline);
         const unauthorized = camera.status === CameraStatus.Unauthorized && parentServerOnline;
+        const isDefaultPassword =
+            camera.capabilities.includes(Capabilities.isDefaultPassword) && parentServerOnline;
         if (!parentServerOnline) {
             if (camera.status === CameraStatus.Unauthorized) {
                 camera.status = CameraStatus.Offline;
@@ -35,5 +38,5 @@ export const mapAdditionalCameraFieldsFactory =
         const requiresTranscoding = nonWebRtcCodec && !useV2api;
 
         const status = (camera.recordingStatus as unknown as CameraStatus) || camera.status;
-        return { ...camera, online, unauthorized, requiresTranscoding, status };
+        return { ...camera, online, unauthorized, isDefaultPassword, requiresTranscoding, status };
     };
