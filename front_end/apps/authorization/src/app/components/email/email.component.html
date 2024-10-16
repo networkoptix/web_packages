@@ -62,7 +62,6 @@
                 required
                 [pattern]="credentialsValidation.emailRegex"
                 [readonly]="emailProcess.processing"
-                email
                 nxFocusMe
                 autocomplete="username"
             />
@@ -78,7 +77,7 @@
                     Enter email
                 </p>
                 <p
-                    *ngIf="email.errors.email || email.errors.pattern"
+                    *ngIf="email.errors.pattern"
                     class="error-label"
                     translate
                 >
