@@ -262,141 +262,150 @@ if not LOCAL_ENVIRONMENT:
 else:
     REDIS_CACHE['LOCATION'] = 'redis://localhost:6379'
 
+
+TEST_WORKER_NUM = int(os.environ.get('PYTEST_XDIST_WORKER', '0').replace("gw", ""))
+
+def get_db_index(db_index: int) -> int:
+    if not TESTING:
+        return db_index
+    return db_index + 32 * TEST_WORKER_NUM
+
+
 CACHES = {
     "dummy": {
         "BACKEND": "django.core.cache.backends.dummy.DummyCache"
     },
     "default": {
         "BACKEND": REDIS_CACHE['BACKEND'],
-        "LOCATION": REDIS_CACHE['LOCATION'] + '/0',
+        "LOCATION": REDIS_CACHE['LOCATION'] + f'/{get_db_index(0)}',
         "TIMEOUT": REDIS_CACHE['TIMEOUT']
     },
     "customization": {
         "BACKEND": REDIS_CACHE['BACKEND'],
-        "LOCATION": REDIS_CACHE['LOCATION'] + '/1',
+        "LOCATION": REDIS_CACHE['LOCATION'] + f'/{get_db_index(1)}',
         "TIMEOUT": REDIS_CACHE['TIMEOUT']
     },
     "deployment": {
         "BACKEND": REDIS_CACHE['BACKEND'],
-        "LOCATION": REDIS_CACHE['LOCATION'] + '/2',
+        "LOCATION": REDIS_CACHE['LOCATION'] + f'/{get_db_index(2)}',
         "TIMEOUT": REDIS_CACHE['TIMEOUT']
     },
     "filters": {
         "BACKEND": REDIS_CACHE['BACKEND'],
-        "LOCATION": REDIS_CACHE['LOCATION'] + '/3',
+        "LOCATION": REDIS_CACHE['LOCATION'] + f'/{get_db_index(3)}',
         "TIMEOUT": REDIS_CACHE['TIMEOUT']
     },
     "push_authentication": {
         "BACKEND": REDIS_CACHE['BACKEND'],
         "TIMEOUT": 60 * 60 * 24,  # 1 day
-        "LOCATION": REDIS_CACHE['LOCATION'] + '/4',
+        "LOCATION": REDIS_CACHE['LOCATION'] + f'/{get_db_index(4)}',
         "KEY_PREFIX": "push_authentication"
     },
     "push_config": {
         "BACKEND": REDIS_CACHE['BACKEND'],
         "TIMEOUT": 15 * 60,  # 15 minutes
-        "LOCATION": REDIS_CACHE['LOCATION'] + '/5',
+        "LOCATION": REDIS_CACHE['LOCATION'] + f'/{get_db_index(5)}',
         "KEY_PREFIX": "push_config"
     },
     "global": {
         "BACKEND": REDIS_CACHE['BACKEND'],
-        "LOCATION": REDIS_CACHE['LOCATION'] + '/6',
+        "LOCATION": REDIS_CACHE['LOCATION'] + f'/{get_db_index(6)}',
         "KEY_PREFIX": "global"
     },
     "integrations": {
         "BACKEND": REDIS_CACHE['BACKEND'],
-        "LOCATION": REDIS_CACHE['LOCATION'] + '/7',
+        "LOCATION": REDIS_CACHE['LOCATION'] + f'/{get_db_index(7)}',
         "KEY_PREFIX": "integrations",
         "TIMEOUT": REDIS_CACHE['TIMEOUT']
     },
     "menus": {
         "BACKEND": REDIS_CACHE['BACKEND'],
         "TIMEOUT": None,
-        "LOCATION": REDIS_CACHE['LOCATION'] + '/8',
+        "LOCATION": REDIS_CACHE['LOCATION'] + f'/{get_db_index(8)}',
         "KEY_PREFIX": "menus"
     },
     "packages": {
         "BACKEND": REDIS_CACHE['BACKEND'],
-        "LOCATION": REDIS_CACHE['LOCATION'] + '/9',
+        "LOCATION": REDIS_CACHE['LOCATION'] + f'/{get_db_index(9)}',
         "KEY_PREFIX": "packages",
         "TIMEOUT": 60 * 60
     },
     "documentation": {
         "BACKEND": REDIS_CACHE['BACKEND'],
         "TIMEOUT": 24 * 60 * 60,  # 1 day
-        "LOCATION": REDIS_CACHE['LOCATION'] + '/10',
+        "LOCATION": REDIS_CACHE['LOCATION'] + f'/{get_db_index(10)}',
         "KEY_PREFIX": 'documentation'
     },
     "article": {
         "BACKEND": REDIS_CACHE['BACKEND'],
         "TIMEOUT": 24 * 60 * 60,  # 1 day
-        "LOCATION": REDIS_CACHE['LOCATION'] + '/11',
+        "LOCATION": REDIS_CACHE['LOCATION'] + f'/{get_db_index(11)}',
         "KEY_PREFIX": 'article'
     },
     "agreement": {
         "BACKEND": REDIS_CACHE['BACKEND'],
         "TIMEOUT": None,
-        "LOCATION": REDIS_CACHE['LOCATION'] + '/12',
+        "LOCATION": REDIS_CACHE['LOCATION'] + f'/{get_db_index(12)}',
         "KEY_PREFIX": 'agreement'
     },
     "emails": {
         "BACKEND": REDIS_CACHE['BACKEND'],
-        "LOCATION": REDIS_CACHE['LOCATION'] + '/14',
+        "LOCATION": REDIS_CACHE['LOCATION'] + f'/{get_db_index(14)}',
         "KEY_PREFIX": "emails",
         "TIMEOUT": 60 * 60  # 1 hour
     },
     "release_notes": {
         "BACKEND": REDIS_CACHE['BACKEND'],
         "TIMEOUT": 24 * 60 * 60,  # 1 day
-        "LOCATION": REDIS_CACHE['LOCATION'] + '/15',
+        "LOCATION": REDIS_CACHE['LOCATION'] + f'/{get_db_index(15)}',
         "KEY_PREFIX": 'release_notes'
     },
     "readonly_apis": {
         "BACKEND": REDIS_CACHE['BACKEND'],
         "TIMEOUT": REDIS_CACHE['TIMEOUT'],
-        "LOCATION": REDIS_CACHE['LOCATION'] + '/16',
+        "LOCATION": REDIS_CACHE['LOCATION'] + f'/{get_db_index(16)}',
         "KEY_PREFIX": 'readonly_apis'
     },
     "license_servers": {
         "BACKEND": REDIS_CACHE['BACKEND'],
         "TIMEOUT" : None,
-        "LOCATION": REDIS_CACHE['LOCATION'] + '/17',
+        "LOCATION": REDIS_CACHE['LOCATION'] + f'/{get_db_index(17)}',
         "KEY_PREFIX": 'license_servers'
     },
     "requests": {
         "BACKEND": REDIS_CACHE['BACKEND'],
         "TIMEOUT": REDIS_CACHE['TIMEOUT'],
-        "LOCATION": REDIS_CACHE['LOCATION'] + '/18',
+        "LOCATION": REDIS_CACHE['LOCATION'] + f'/{get_db_index(18)}',
         "KEY_PREFIX": 'requests'
     },
     "rate_limits": {
         "BACKEND": REDIS_CACHE['BACKEND'],
         "TIMEOUT": REDIS_CACHE['TIMEOUT'],
-        "LOCATION": REDIS_CACHE['LOCATION'] + '/19',
+        "LOCATION": REDIS_CACHE['LOCATION'] + f'/{get_db_index(19)}',
         "KEY_PREFIX": 'rate_limits'
     },
     "assets_values": {
         "BACKEND": REDIS_CACHE['BACKEND'],
         "TIMEOUT": REDIS_CACHE['TIMEOUT'],
-        "LOCATION": REDIS_CACHE['LOCATION'] + '/20',
+        "LOCATION": REDIS_CACHE['LOCATION'] + f'/{get_db_index(20)}',
         "KEY_PREFIX": 'assets_values'
     },
     "sessions": {
         "BACKEND": REDIS_CACHE['BACKEND'],
         "TIMEOUT": REDIS_CACHE['TIMEOUT'],
-        "LOCATION": REDIS_CACHE['LOCATION'] + '/21',
+        "LOCATION": REDIS_CACHE['LOCATION'] + f'/{get_db_index(21)}',
         "KEY_PREFIX": 'sessions'
     },
     "templates": {
         "BACKEND": REDIS_CACHE['BACKEND'],
         "TIMEOUT": REDIS_CACHE['TIMEOUT'],
-        "LOCATION": REDIS_CACHE['LOCATION'] + '/22',
+        "LOCATION": REDIS_CACHE['LOCATION'] + f'/{get_db_index(22)}',
         "KEY_PREFIX": 'templates'
     },
     "permissions": {
         "BACKEND": REDIS_CACHE['BACKEND'],
         "TIMEOUT": REDIS_CACHE['TIMEOUT'],
-        "LOCATION": REDIS_CACHE['LOCATION'] + '/23',
+        "LOCATION": REDIS_CACHE['LOCATION'] + f'/{get_db_index(23)}',
         "KEY_PREFIX": 'permissions'
     },
     "local": {
@@ -409,7 +418,7 @@ if DEBUG:
     CACHES["testing"] = {
         "BACKEND": REDIS_CACHE['BACKEND'],
         "TIMEOUT": None,
-        "LOCATION": REDIS_CACHE['LOCATION'] + '/13',
+        "LOCATION": REDIS_CACHE['LOCATION'] + f'/{get_db_index(13)}',
         "KEY_PREFIX": 'testing'
     }
 

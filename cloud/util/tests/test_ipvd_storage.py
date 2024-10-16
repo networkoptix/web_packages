@@ -23,7 +23,7 @@ class TestIPVDS3Upload:
         data = IPVDS3Upload().ipvd_data()
         assert data == ipvd_data_processed
 
-    @moto.mock_s3
+    @moto.mock_aws
     def test_update_ipvd_data(self, mocker, ipvd_data, ipvd_data_processed):
         conn = boto3.resource("s3", region_name="us-east-1")
         conn.create_bucket(Bucket=settings.AWS_STORAGE_BUCKET_NAME)

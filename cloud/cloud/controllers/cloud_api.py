@@ -10,7 +10,6 @@ from django.conf import settings
 from functools import wraps
 from hashlib import md5, sha256
 
-from numpy.distutils.conv_template import header
 from requests.auth import HTTPBasicAuth, HTTPDigestAuth
 from rest_framework import status
 from rest_framework.authentication import TokenAuthentication

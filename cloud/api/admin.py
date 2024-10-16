@@ -5,7 +5,6 @@ from django.contrib.sessions.models import Session
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import path, re_path
-from django_csv_exports.admin import CSVExportAdmin
 
 from api.forms import *
 from api.models import *
@@ -76,7 +75,7 @@ class GroupFilter(SimpleListFilter):
 
 
 @admin.register(Account)
-class AccountAdmin(CMSAdmin, CSVExportAdmin):
+class AccountAdmin(CMSAdmin):
     list_display = ['short_email', 'short_first_name', 'short_last_name', 'created_date', 'last_login',
                     'is_staff', 'language', 'customization']
     # forbid changing all fields which can be edited by user in cloud portal except sub
@@ -87,9 +86,6 @@ class AccountAdmin(CMSAdmin, CSVExportAdmin):
 
     list_filter = ['is_staff', 'created_date', 'last_login', CustomizationFilter]
     search_fields = ('email', 'first_name', 'last_name', 'customization', 'language', 'groups__name')
-
-    csv_fields = ('email', 'first_name', 'last_name', 'created_date', 'last_login',
-                  'is_staff', 'language', 'customization')
 
     change_list_template = "api/account_changelist.html"
     change_form_template = "api/account_change_form.html"
@@ -199,12 +195,11 @@ class AccountAdmin(CMSAdmin, CSVExportAdmin):
 
 
 @admin.register(AccountLoginHistory)
-class AccountLoginHistoryAdmin(CMSAdmin, CSVExportAdmin):
+class AccountLoginHistoryAdmin(CMSAdmin):
     list_display = ('action', 'email', 'ip', 'date')
     list_filter = ('action', 'date')
     search_fields = ('email', 'ip', 'date')
 
-    csv_fields = ('action', 'email', 'ip', 'date')
     # actions = ['clean_old_records']
 
     def clean_old_records(self, request, queryset):

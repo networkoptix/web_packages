@@ -29,7 +29,7 @@ services:
       - "6379"
     command:
       - redis-server
-      - --databases 32
+      - --databases 96
 
   meilisearch:
     image: getmeili/meilisearch:v0.24.0

@@ -1,0 +1,170 @@
+# GitLab CI/CD configuration file for Cloud Portal python backend
+
+
+include:
+  - project: "dev/ci"
+    file: "pipelines/infra-templates.yml"
+  - project: "dev/ci"
+    file: "pipelines/secrets.yml"
+  - local: "ci/Docker/**/.gitlab-ci.yml"
+  - local: "ci/.shared.yml"
+
+.backend-changes:
+  needs:
+    - job: docker:build-django-python-pulled
+      optional: true
+  rules:
+    - if: !reference [ .enable_for_mr ]
+      changes:
+        - cloud/**/*
+        - cloud/poetry.toml
+        - cloud/poetry.lock
+        - cloud/pyproject.toml
+        - cloud/allowed_licenses.txt
+
+.django-python:
+  extends: .backend-changes
+  image:
+    name: ${DJANGO_PYTHON_IMAGE}:${DJANGO_PYTHON_IMAGE_TAG}
+  needs:
+    - job: docker:build-django-python-pulled
+      optional: true
+  services:
+    - name: mysql:8.0
+      alias: mysql
+    - name: redis:5.0.6-alpine
+      alias: redis
+      command:
+        - redis-server
+        - --databases 96
+  variables:
+    TESTING: "true"
+    PYTHONPATH: "/builds/dev/cloud_portal/common/python"
+    MYSQL_DATABASE: "cloudportal"
+    MYSQL_ROOT_PASSWORD: ""
+    MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+    MYSQL_PASSWORD: ""
+  before_script:
+    - cd cloud
+    - echo "Waiting for mysql server to be ready"
+    - poetry -C /builds/dev/cloud_portal/cloud export --with prod,test,front-build --without-hashes --without-urls -o /app/requirements.txt
+    - >
+      for i in {1..60}; do
+        if ! mysql --host=mysql -u root -e ";"
+        then
+          if [ $i == 60 ]
+          then
+            echo "Could not connect to mysql server after 60 attempts"
+            exit 1
+          else
+            echo "Attempt $i to connect to mysql server failed"
+          fi
+        else
+          echo "Attempt $i Successfully connected to mysql server"
+          break
+        fi
+
+        sleep 5
+      done
+
+.django-unit-test:
+  extends: .django-python
+  stage: test
+  coverage: /^TOTAL.+?(\d+\%)$/
+
+django-checks:
+  extends: .backend-changes
+  image:
+    name: ${DJANGO_PYTHON_IMAGE}:${DJANGO_PYTHON_IMAGE_TAG}
+  stage: check
+  variables:
+    USE_SQLITE: "true"
+    PYTHONPATH: "/builds/dev/cloud_portal/common/python"
+  script:
+    - cd cloud
+    - poetry lock --check
+    - python -m pip install safety==2.3.5
+    - if ! python safety-check.py ; then echo PIP packages need to be updated && exit 1 ; fi
+    - if ! python manage.py makemigrations --dry-run --check ; then echo Missing above migrations && exit 1 ; fi
+    - if ! python manage.py check ; then echo System check failed && exit 1 ; fi
+
+# in case if there is a problem with xdist parallel execution
+#django-unit-test-slow:
+#  extends: .django-unit-test
+#  artifacts:
+#    when: always
+#    reports:
+#      junit: cloud/slow-report.xml
+#      coverage_report:
+#        coverage_format: cobertura
+#        path: cloud/slow-coverage.xml
+#  script:
+#    - pytest -m "integration or slow" --create-db --junitxml=slow-report.xml --cov="." --cov-report xml:slow-coverage.xml --cov-report term
+#
+#django-unit-test-fast:
+#  extends: .django-unit-test
+#  artifacts:
+#    when: always
+#    reports:
+#      junit: cloud/fast-report.xml
+#      coverage_report:
+#        coverage_format: cobertura
+#        path: cloud/fast-coverage.xml
+#  script:
+#    - pytest -m "not integration and not slow" --create-db --junitxml=fast-report.xml --cov="." --cov-report xml:fast-coverage.xml --cov-report term
+
+django-unit-test-all:
+  extends: .django-unit-test
+  artifacts:
+    when: always
+    reports:
+      junit: cloud/fast-report.xml
+      coverage_report:
+        coverage_format: cobertura
+        path: cloud/fast-coverage.xml
+  script:
+    - pytest --create-db --junitxml=fast-report.xml --cov="." --cov-report xml:fast-coverage.xml --cov-report term -n 3
+
+common-python-unit-test:
+  extends: .django-unit-test
+  artifacts:
+    when: always
+    reports:
+      junit: common/python/fast-report.xml
+      coverage_report:
+        coverage_format: cobertura
+        path: common/python/fast-coverage.xml
+  variables:
+    PYTHONPATH: "/builds/dev/cloud_portal/common/python"
+  script:
+    - cd /builds/dev/cloud_portal/common/python
+    - pytest -m "not integration and not slow" --create-db --junitxml=fast-report.xml --cov="." --cov-report xml:fast-coverage.xml --cov-report term
+  rules:
+    - if: !reference [ .enable_for_mr ]
+      changes:
+        - common/python/**/*
+        - cloud/poetry.toml
+        - cloud/poetry.lock
+        - cloud/pyproject.toml
+        - cloud/allowed_licenses.txt
+
+portal-nginx-conf-test:
+  image: nginx:1.14.0-alpine
+  stage: check
+  variables:
+    DATA_HOSTS: "relay.relay.cloud.hdw.mx,relay.cloud.hdw.mx,*.relay.relay.cloud.hdw.mx,*.relay.cloud.hdw.mx,nxcloud-test-integrations-static.s3.amazonaws.com,*.hdw.mx,*.vmsproxy.com"
+    CUSTOMIZATION: "default"
+    PORTAL_HOST: "localhost"
+    PORTAL_BUCKET: "cloud-portal"
+  script:
+    - cd /builds/dev/cloud_portal
+    - mkdir -p etc/nginx
+    - cp deploy/cloud_portal_nginx/nginx.conf.template /etc/nginx/conf.d/nginx.conf.template
+    - cp deploy/cloud_portal_nginx/static_caching.conf /etc/nginx/static_caching.conf
+    - cp deploy/cloud_portal_nginx/one_day_caching.conf /etc/nginx/one_day_caching.conf
+    - cp deploy/cloud_portal_nginx/proxy.conf /etc/nginx/proxy.conf
+    - sh etc/scripts/test_nginx.sh
+  rules:
+    - if: !reference [ .enable_for_mr ]
+      changes:
+        - deploy/cloud_portal_nginx/**/*

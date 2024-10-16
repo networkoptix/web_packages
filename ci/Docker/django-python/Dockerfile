@@ -25,3 +25,10 @@ RUN set -ex \
     #    jsonschema version cannot be solved in correctly
     && python -m pip install --prefer-binary --no-cache-dir jsonschema==4.17.3 \
     && apt autoremove -y --purge && apt clean -y && rm -rf /var/lib/apt/lists/*
+
+
+FROM builder AS runtime
+COPY cloud/pyproject.toml cloud/poetry.lock /app/
+RUN set -ex \
+    && poetry config virtualenvs.create false \
+    && poetry install --only test,prod,piplicenses

@@ -13,7 +13,7 @@ from django.conf import settings
 from django.core.cache import caches
 from django.db import transaction
 from model_bakery import baker
-from moto import mock_s3
+from moto import mock_aws
 
 from cloud.customization_context import customization_ctx
 from cloud.storage_backend import MediaStorage
@@ -194,9 +194,9 @@ class TestS3Static:
                                        "id": dr.id})
         return preloaded_data
 
-    @mock_s3
+    @mock_aws
     def test_conversion_all_records(self, bakery):
-        with mock_s3():
+        with mock_aws():
             # create local bucket
             conn = boto3.resource("s3", region_name="us-east-1")
             conn.create_bucket(Bucket=settings.AWS_STORAGE_BUCKET_NAME)
@@ -218,7 +218,7 @@ class TestS3Static:
                     assert dr.value.startswith('https://')
                     assert dr.external_file.file.read() == base64.b64decode(data["value"])
 
-    @mock_s3
+    @mock_aws
     def create_records(self, review_state=AssetCustomizationReview.REVIEW_STATES.accepted,
                        structures_only=False, value_prefix=None):
         conn = boto3.resource("s3", region_name="us-east-1")
@@ -274,7 +274,7 @@ class TestS3Static:
             actual_value = new_ds.find_actual_value(self.cloud_portal, customization_name=self.customization.name)
             assert actual_value == defaults[new_ds.name]
 
-    @mock_s3
+    @mock_aws
     def test_single_review(self):
         accepted = AssetCustomizationReview.REVIEW_STATES.accepted
         rejected = AssetCustomizationReview.REVIEW_STATES.rejected
@@ -301,7 +301,7 @@ class TestS3Static:
             assert ext_file is not None
             assert ext_file.file.read().decode() == f'single_{old_ds.name}_{accepted}'
 
-    @mock_s3
+    @mock_aws
     def test_multiple_reviews(self):
         accepted = AssetCustomizationReview.REVIEW_STATES.accepted
         rejected = AssetCustomizationReview.REVIEW_STATES.rejected
