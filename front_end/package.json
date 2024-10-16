@@ -4,7 +4,7 @@
     "sideEffects": false,
     "engines": {
         "npm": ">=10 <11",
-        "node": "=18.19.1",
+        "node": "=22.9.0",
         "engineStrict": "true"
     },
     "scripts": {
@@ -42,7 +42,7 @@
         "ci:open": "npm explore nx-open-web -- npm run ci:check && npm explore nx-open-web-candidate -- npm run ci:check",
         "build:ci": "npm run setSkin && npx nx run-many --target=build --configuration=production --all --exclude=unconverted",
         "pretest:ci": "npm run build-open-libs",
-        "test:ci": "npx nx run-many --target test --all",
+        "test:ci": "npx nx run-many --target test --runInBand --logHeapUsage",
         "lint:ci": "npx nx run-many --target=lint --all  --maxWarnings 0 ",
         "// LANGUAGE COMMANDS //": "Commands for language files",
         "update-lang-files": "node checkIfLangNeedsUpdate.mjs && npm run handle:lang || echo 'Lang already up to date'",
@@ -133,7 +133,7 @@
         "drange": "1.0.2",
         "file-saver": "2.0.5",
         "firebase": "9.8.4",
-        "jest-preset-angular": "14.1.0",
+        "jest-preset-angular": "14.2.4",
         "lodash-es": "^4.17.21",
         "marked": "^4.0.17",
         "md5": "2.2.1",

@@ -1,4 +1,4 @@
-FROM node:18.19.1
+FROM node:22.9.0
 
 ARG CHROME_BIN=/usr/bin/google-chrome
 ARG FRONTEND_DIR=/builds/dev/cloud_portal/front_end

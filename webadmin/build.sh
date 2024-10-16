@@ -1,8 +1,8 @@
 #!/bin/bash
 set -e
 
-NODE_VERSION="18.19.1"
-NPM_VERSION="10.2.4"
+NODE_VERSION="22.9.0"
+NPM_VERSION="10.8.3"
 
 WEBADMIN_PACKAGE="webadmin.zip"
 EXTERNAL_PACKAGE="external.dat"
