@@ -782,7 +782,7 @@ export class MergeModalContent {
                             res.error === '0' ||
                             res.resultCode === this.LANG.errorCodes.ok ||
                             !res.failedServers.length) &&
-                        !res.unmergedServers
+                        !res.unmergedServers.length
                     ) {
                         // handles telling the app which systems are getting merged and the proper messaging
                         if (this.environment.isWebadmin) {
