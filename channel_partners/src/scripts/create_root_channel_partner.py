@@ -38,17 +38,17 @@ def create_root_channel_partner(root_name, host_name):
             logger.info(f'Channel partner host is already up to date.')
 
     regular_recording = ChannelPartnerService.objects.get_or_create(
-        created_by_channel_partner=root_channel_partner, name='Device Service',
+        created_by_channel_partner=root_channel_partner, name='Core',
         type=ChannelPartnerService.LOCAL_RECORDING
     )[0]
 
     ChannelPartnerService.objects.get_or_create(
-        created_by_channel_partner=root_channel_partner, name='Demo Device Service',
+        created_by_channel_partner=root_channel_partner, name='Demo Core',
         type=ChannelPartnerService.LOCAL_RECORDING, sub_type=ChannelPartnerService.DEMO, duration=1,
     )
 
     ChannelPartnerService.objects.get_or_create(
-        created_by_channel_partner=root_channel_partner, name='Credit Device Service',
+        created_by_channel_partner=root_channel_partner, name='Credit Core',
         type=ChannelPartnerService.LOCAL_RECORDING, sub_type=ChannelPartnerService.CREDIT, duration=24,
         conversion_service=regular_recording
     )
