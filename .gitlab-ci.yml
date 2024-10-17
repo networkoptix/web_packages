@@ -16,7 +16,7 @@ include:
 
 default:
   tags:
-    - us-service
+    - us-service-cloudportal
 
 variables:
   JUNKSHOP_ENABLED: "false"
