@@ -91,7 +91,7 @@
 		}
 
 		table.parameters tbody tr:nth-child(even) {
-			background-color: $additional_light1;
+			background-color: var(--additional-light1);
 		}
 
 		table:not(.parameters, .live-responses-table):not(.model) td {
@@ -607,7 +607,7 @@
 		}
 
 		thead {
-			background-color: $additional_light1;
+			background-color: var(--additional-light1);
 			@include typography.medium13dark10;
 		}
 
@@ -1047,7 +1047,7 @@ nx-swagger-markdown .changes-table table {
 }
 
 .swagger-ui table.model tr.description {
-	color: $additional_dark1;
+	color: var(--additional_dark1);
 }
 
 .swagger-ui .responses-table {

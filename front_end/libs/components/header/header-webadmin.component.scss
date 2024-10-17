@@ -17,7 +17,7 @@
 }
 
 .breadcrumb-button {
-    color: theme_variables_common.$additional_light1  !important;
+    color: var(--additional-light1)  !important;
 
     &:hover {
         background: var(--dark15);
@@ -30,12 +30,12 @@
     }
 
     &>a {
-        color: theme_variables_common.$additional_light1  !important;
+        color: var(--additional-light1)  !important;
     }
 }
 
 .collapsed-breadcrumb {
     &>a>svg-icon>svg>.arrow-back {
-        stroke: theme_variables_common.$additional_light1  !important;
+        stroke: var(--additional-light1)  !important;
     }
 }

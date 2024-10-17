@@ -6,8 +6,6 @@ $font-family-bold : "robotobold", "Helvetica Neue", Helvetica, Arial, sans-serif
 
 @use "sass-rem/rem" as sass-rem;
 // @import './custom/_custom_palette';
-@import "./native-theme/theme_palette";
-@import "_theme_palette";
 
 @mixin with-html {
     --font-family-base    : #{$font-family-base};
@@ -25,35 +23,35 @@ $font-family-bold : "robotobold", "Helvetica Neue", Helvetica, Arial, sans-serif
 
 // $brand-primary : var(--brand-core, $brand_core);
 // $brand-info : var(--brand-l2, $brand_l2);
-$brand-success        : $green_main;
-$brand-success-bright : $green_l2;
-$brand-warning        : $yellow_d1;
-$brand-warning-bright : $yellow_main;
+$brand-success        : var(--green_main);
+$brand-success-bright : var(--green_l2);
+$brand-warning        : var(--yellow-d1);
+$brand-warning-bright : var(--yellow-main);
 $brand-danger         : var(--error);
 
 // Brand colors
 // -------------------------
 
-$brand-primary:         var(--brand-core, $brand_core);
-$brand-info:            var(--brand-l2, $brand_l2);
+// $brand-primary:         var(--brand-core, $brand_core);
+// $brand-info:            var(--brand-l2, $brand_l2);
 
 // $gray-darker:            $dark7;     //~#222
 // $gray-dark:              $dark11;    //~#333
 // $gray:                   $dark17;    //~#555
-$gray-light:             $light11;   //~#999
+$gray-light:             var(--light11);   //~#999
 // $gray-lighter:           $light3;    //~#EEE
 
 // achromatic color for better transition to light / dark theme
 // $body-bg:                 #808080;
 // ************************************************************
-$text-color:              $dark9;
-$navbar-default-bg:       $light1;
-$navbar-default-link-color: $dark10;
+$text-color:              var(--dark9);
+$navbar-default-bg:       var(--light1);
+$navbar-default-link-color: var(--dark10);
 // $navbar-margin-bottom:    10px;
 $navbar-height:           48px;
 
 
-$common-border-color:   $light5;
+$common-border-color:   var(--light5);
 
 $dropdown-border:                         $common-border-color;
 // $navbar-default-toggle-border-color:      $common-border-color;
@@ -109,7 +107,7 @@ $font-size-10 : sass-rem.rem(10px);
 $line-height-ssm : sass-rem.rem(13px);
 
 // Font colors
-$font-color-medium : $dark9;
+$font-color-medium : var(--dark9);
 // $font-color-regular : $dark9;
 // $font-color-light : $light16;
 // $font-color-disabled : $light10;
@@ -130,7 +128,7 @@ $jumbotron-color : tranparent;
 
 // $input-height-base:       32px;
 //$input-bg:                $light1;
-$input-color:             $dark4;
+$input-color:             var(--dark4);
 // $input-border-focus:      var(--brand-core, $brand_core);
 // $input-bg-disabled:       transparentize($light5,0.75);
 // $cursor-disabled:           default;
@@ -149,9 +147,9 @@ $grid-gutter-width:       16px;
 
 $modal-sm:                  400px;
 
-$modal-backdrop-bg:         $dark15;
+$modal-backdrop-bg:         var(--dark15);
 $modal-backdrop-opacity:    0.2;
-$modal-content-bg:          $light1;
+$modal-content-bg:          var(--light1);
 // $modal-title-font-weight:   600;
 $modal-title-line-height:   sass-rem.rem(24px);
 $modal-title-padding:       sass-rem.rem(12px);
@@ -269,4 +267,4 @@ $grid-narrow-panel-width: 350px;
 $grid-super-wide-table-width: calc(100% - 450px - 1rem);
 $grid-super-wide-panel-width: 450px;
 
-$input-color-placeholder : $light16 !default;
+$input-color-placeholder : var(--light16) !default;

@@ -9,7 +9,7 @@
     bottom: 0;
     transform: translate(-100%, 100%);
     z-index: 100;
-    box-shadow: 0 1rem 2rem 0 transparentize($dark15, 0.4);
+    box-shadow: 0 1rem 2rem 0 rgba(var(--dark15--rgb), 0.6);
 }
 
 section {
@@ -17,7 +17,7 @@ section {
     border-bottom: 1px solid var(--light4);
 
     &.shaded {
-        background: $additional_light1;
+        background: var(--additional-light1);
     }
 
     &.selection-area {

@@ -3,8 +3,8 @@
 @use "theme_variables_common" as theme_vars;
 @use '../nx-modal';
 
-$border-blue: rgba(theme_vars.$blue10, 0.3);
-$body-blue: rgba(theme_vars.$blue10, 0.1);
+$border-blue: rgba(var(--blue10--rgb), 0.3);
+$body-blue: rgba(var(--blue10--rgb), 0.1);
 
 @use 'theme_generator' as tg;
 @include tg.generate-theme-vars((

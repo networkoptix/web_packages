@@ -166,7 +166,7 @@ $custom-xl: 1440px;
         @extend .narrow-section;
         margin: 1rem;
         padding: 2rem 0 1rem 0;
-        border-top: 2px solid $additional_light2;
+        border-top: 2px solid var(--additional-light2);
 
         &>h4 {
             @include typography.medium15dark17;
@@ -255,17 +255,17 @@ $custom-xl: 1440px;
             @extend .code-block-common;
             padding: 2px;
             display: inline-block;
-            color: $additional_dark1;
+            color: var(--additional_dark1);
             line-height: 1;
-            border: solid 1px $additional_light8;
-            background: $additional_light7;
+            border: solid 1px var(--additional-light8);
+            background: var(--additional-light7);
         }
 
         pre {
             @extend .code-block-common;
             border: solid 1px var(--dark11);
             background-color: var(--dark13);
-            color: $additional_light1;
+            color: var(--additional-light1);
             margin: 16px 0 24px 0;
             padding: 12px 8px;
             counter-reset: line;

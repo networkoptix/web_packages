@@ -93,7 +93,7 @@
     }
 
     .light-gray {
-        background: $additional_light1;
+        background: var(--additional-light1);
         border-bottom: 1px solid var(--light3);
     }
 

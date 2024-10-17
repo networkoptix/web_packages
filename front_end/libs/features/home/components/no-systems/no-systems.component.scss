@@ -58,10 +58,10 @@ nx-no-systems-cards {
     }
 
     .red-text {
-        color: colors.$red_main;
+        color: var(--red_main);
     }
 
     .green-text {
-        color: colors.$green_main;
+        color: var(--green_main);
     }
 }

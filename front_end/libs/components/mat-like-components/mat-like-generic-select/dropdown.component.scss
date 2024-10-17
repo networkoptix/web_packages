@@ -45,7 +45,7 @@ nx-select {
     }
 
     .selected .additional-help {
-        color: $light1  !important;
+        color: var(--light1)  !important;
     }
 
     @include mixins.keyframe(bubblingG) {

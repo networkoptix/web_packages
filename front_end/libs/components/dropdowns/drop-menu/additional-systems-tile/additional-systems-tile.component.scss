@@ -3,7 +3,7 @@
 
 
 .active {
-    background: $additional_light4  !important;
+    background: var(--additional-light4)  !important;
 }
 
 .additional-systems-tile {
@@ -21,10 +21,10 @@
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-    background: $additional_light2;
+    background: var(--additional-light2);
 
     &:hover {
-        background: $additional_light3;
+        background: var(--additional-light3);
     }
 
     &:active {

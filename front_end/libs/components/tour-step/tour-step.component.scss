@@ -27,7 +27,7 @@
     &-content {
         border: none !important;
         border-radius: 2px !important;
-        box-shadow: 0 1rem 2rem 0 transparentize(colors.$dark15, 0.8) !important;
+        box-shadow: 0 1rem 2rem 0 rgba(var(--dark15--rgb), 0.2) !important;
     }
 
 

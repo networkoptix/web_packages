@@ -16,7 +16,7 @@ nx-motion-detection-overlay {
     backdrop-filter: brightness(125%) contrast(110%);
     top: 0;
     left: 0;
-    color: theme_vars.$brand-info;
+    color: var(--brand-l2);
     cursor: crosshair;
     -webkit-user-select: none;
     -ms-user-select: none;

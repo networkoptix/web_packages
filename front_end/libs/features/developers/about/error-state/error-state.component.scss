@@ -9,7 +9,7 @@
     background: white;
     flex-direction: column;
     align-items: center;
-    box-shadow: 0 0 6px 0 rgba($dark1, 0.25), 0 0 14px 0 rgba(var(--error), 0.75);
+    box-shadow: 0 0 6px 0 rgba(var(--dark1--rgb), 0.25), 0 0 14px 0 rgba(var(--error), 0.75);
 
     .heading {
         color: var(--error);

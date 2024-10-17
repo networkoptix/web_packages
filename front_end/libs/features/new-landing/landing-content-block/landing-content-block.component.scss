@@ -93,7 +93,7 @@
 }
 
 .content-block:hover {
-    box-shadow: 0px 4px 8px 0px transparentize($dark15, .8);
+    box-shadow: 0px 4px 8px 0px rgba(var(--dark15--rgb), 0.2);
 }
 
 .content-block:hover .arrow-svg {

@@ -9,10 +9,10 @@
         border-top: 1px solid var(--border-color);
         border-bottom: 1px solid var(--border-color);
         background: repeating-linear-gradient(135deg,
-                transparentize($light3, 0.5),
-                transparentize($light3, 0.5) 12px,
-                transparentize($light3, 0.85) 12px,
-                transparentize($light3, 0.85) 24px) !important;
+                rgba(var(--light3--rgb), 0.5),
+                rgba(var(--light3--rgb), 0.5) 12px,
+                rgba(var(--light3--rgb), 0.15) 12px,
+                rgba(var(--light3--rgb), 0.15) 24px) !important;
     }
 
     .preview-wrapper {

@@ -33,8 +33,8 @@
     }
 }
 
-$border-blue: rgba(theme_vars.$blue10, 0.3);
-$body-blue: rgba(theme_vars.$blue10, 0.1);
+$border-blue: rgba(var(--blue10--rgb), 0.3);
+$body-blue: rgba(var(--blue10--rgb), 0.1);
 
 .tfauth-v5-warning {
     border: 1px solid $border-blue;

@@ -97,6 +97,11 @@
 	@include generateVarAndRgb(--additional-light6, $additional_light6);
 	@include generateVarAndRgb(--additional-light7, $additional_light7);
 	@include generateVarAndRgb(--additional-light8, $additional_light8);
+
+	@include generateVarAndRgb(--blue1, $blue1);
+
+	@include generateVarAndRgb(--red2, $red2);
+	@include generateVarAndRgb(--red1, $red1);
 	@include generateVarAndRgb(--red_l2, $red_l2);
 	@include generateVarAndRgb(--red_l1, $red_l1);
 	@include generateVarAndRgb(--red_main, $red_main);

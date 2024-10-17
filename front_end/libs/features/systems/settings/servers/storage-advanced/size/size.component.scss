@@ -62,8 +62,8 @@ $stripes : var(--storage-size-reserved);
         }
 
         &.archive {
-            background-color: rgba(theme_vars.$green_l2, 0.3);
-            border: 1px solid rgba(theme_vars.$green_l1, 0.4);
+            background-color: rgba(var(--green_l2--rgb), 0.3);
+            border: 1px solid rgba(var(--green_l1--rgb), 0.4);
             margin-left: -1px;
         }
 
@@ -118,8 +118,8 @@ $stripes : var(--storage-size-reserved);
                 stroke-miterlimit: 10;
 
                 &.archive {
-                    fill: rgba(theme_vars.$green_l2, 0.7);
-                    stroke: rgba(theme_vars.$green_l1, 0.6);
+                    fill: rgba(var(--green_l2--rgb), 0.7);
+                    stroke: rgba(var(--green_l1--rgb), 0.6);
                 }
 
                 &.used {

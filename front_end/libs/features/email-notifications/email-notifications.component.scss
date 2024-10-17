@@ -70,7 +70,7 @@ pre {
   font-family: robotomonoregular, monospace !important;
   border: solid 1px var(--dark11);
   background-color: var(--dark13);
-  color: $additional_light1;
+  color: var(--additional-light1);
   padding: 12px 8px;
 }
 
@@ -83,7 +83,7 @@ pre {
   padding: 2px 32px 2px 4px;
   margin: 0 4px 4px 0;
   display: inline-block;
-  background: $additional_light1;
+  background: var(--additional-light1);
   border-radius: 4px;
   border: solid 1px var(--light6);
   cursor: pointer;
@@ -99,5 +99,5 @@ pre {
 
 .drop-zone {
   border-radius: 6px;
-  border: 2px dashed transparentize($brand_core, 0.9);
+  border: 2px dashed rgba(var(--brand-core--rgb), 0.1);
 }

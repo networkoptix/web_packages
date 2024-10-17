@@ -14,7 +14,7 @@ h4 svg {
     cursor: pointer;
 
     & * {
-        fill: $blue10;
+        fill: var(--blue10);
     }
 }
 
@@ -77,12 +77,12 @@ a {
     cursor: pointer;
 
     &:hover {
-        background: $additional_light2;
+        background: var(--additional-light2);
     }
 
     &:active,
     &.active {
-        background: $additional_light3  !important;
+        background: var(--additional-light3)  !important;
     }
 }
 

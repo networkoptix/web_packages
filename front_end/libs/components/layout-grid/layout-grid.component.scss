@@ -537,7 +537,7 @@ h2.auto-save-overlay {
     padding: var(--current-layout-gap);
 
     &:has(.cdk-drag-placeholder) {
-        background: rgba($brand_core, 0.1);
+        background: rgba(var(--brand-core--rgb), 0.1);
     }
 
     &.swap {
@@ -924,7 +924,7 @@ iframe {
     z-index: var(--z-index-highlight-adding);
     grid-area: 1 / 1 / 2 / 2;
     opacity: 1 !important;
-    background: rgba($brand_core, 0.1);
+    background: rgba(var(--brand-core--rgb), 0.1);
 }
 
 .help-text {

@@ -19,7 +19,7 @@
     .text {
         font-family: var(--font-family-regular);
         user-select: none;
-        color: theme_variables_common.$dark9
+        color: var(--dark9)
     }
 
     /* Hide the browser's default checkbox */
@@ -40,21 +40,21 @@
 
     & input:hover~.optionmark {
         svg path.circle {
-            fill: theme_variables_common.$dark1;
+            fill: var(--dark1);
         }
 
         &~.text {
-            color: theme_variables_common.$dark1;
+            color: var(--dark1);
         }
     }
 
     & input:active~.optionmark {
         svg path.circle {
-            fill: theme_variables_common.$dark9  !important;
+            fill: var(--dark9)  !important;
         }
 
         &~.text {
-            color: theme_variables_common.$dark9  !important;
+            color: var(--dark9)  !important;
         }
     }
 }
@@ -69,7 +69,7 @@
     margin-top: -2px;
 
     & svg path.circle {
-        fill: theme_variables_common.$dark9;
+        fill: var(--dark9);
     }
 
     & svg circle {

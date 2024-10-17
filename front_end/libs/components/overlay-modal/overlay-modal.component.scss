@@ -10,7 +10,7 @@
     height: 100%;
     z-index: 1200;
     overflow-y: scroll;
-    background-color: rgba($dark16, 0.8);
+    background-color: rgba(var(--dark16--rgb), 0.8);
     transition: visibility 0s linear 0.25s, opacity 0.25s 0s, transform 0.25s;
 
     .overlay-modal-header {
@@ -28,7 +28,7 @@
         button {
             @include typography.regular16light1;
             border-radius: 2px;
-            border: 1px rgba($light4, 0.2) solid !important;
+            border: 1px rgba(var(--light4--rgb), 0.2) solid !important;
             margin-top: 40px;
 
             svg {
@@ -62,12 +62,12 @@
             }
 
             &:hover {
-                background-color: rgba($light4, 0.1);
+                background-color: rgba(var(--light4--rgb), 0.1);
             }
 
             &:active {
-                background-color: rgba($dark9, 0.1);
-                border: 1px rgba($dark9, 0.2) solid;
+                background-color: rgba(var(--dark9--rgb), 0.1);
+                border: 1px rgba(var(--dark9--rgb), 0.2) solid;
             }
         }
 

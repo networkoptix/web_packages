@@ -1,7 +1,6 @@
 @use "sass-rem/rem" as sass-rem;
 @import "theme_variables_common";
 
-
 @mixin font-source($font-family, $size, $color: false, $weight: false, $lh: false) {
     font-family: $font-family;
     font-size: $size  !important;
@@ -20,7 +19,7 @@
 }
 
 @mixin placeholder {
-    @include font-source($font-family-regular, $font-size-base, $light17);
+    @include font-source($font-family-regular, $font-size-base, var(--light17));
 }
 
 
@@ -85,27 +84,27 @@ p[data-escape-global-style] {
 
 // LIGHT
 @mixin light13light16 {
-    @include font-source($font-family-light, $font-size-base, $light16);
+    @include font-source($font-family-light, $font-size-base, var(--light16));
 }
 
 @mixin light14light16 {
-    @include font-source($font-family-light, $h5-font-size, $light16);
+    @include font-source($font-family-light, $h5-font-size, var(--light16));
 }
 
 @mixin light15light16 {
-    @include font-source($font-family-light, $h4-font-size, $light16);
+    @include font-source($font-family-light, $h4-font-size, var(--light16));
 }
 
 @mixin light18light16 {
-    @include font-source($font-family-light, $h3-font-size, $light16);
+    @include font-source($font-family-light, $h3-font-size, var(--light16));
 }
 
 @mixin light18light10 {
-    @include font-source($font-family-light, $h3-font-size, $light10);
+    @include font-source($font-family-light, $h3-font-size, var(--light10));
 }
 
 @mixin light40light10 {
-    @include font-source($font-family-light, $font-size-xxxlg, $light10);
+    @include font-source($font-family-light, $font-size-xxxlg, var(--light10));
 }
 
 // LIGHT
@@ -116,7 +115,7 @@ p[data-escape-global-style] {
 }
 
 @mixin regular11dark9 {
-    @include font-source($font-family-regular, $font-size-ssm, $dark9);
+    @include font-source($font-family-regular, $font-size-ssm, var(--dark9));
 }
 
 @mixin regular11nocolor {
@@ -124,7 +123,7 @@ p[data-escape-global-style] {
 }
 
 @mixin regular11light16 {
-    @include font-source($font-family-regular, $font-size-ssm, $light16);
+    @include font-source($font-family-regular, $font-size-ssm, var(--light16));
 }
 
 @mixin regular12nocolor {
@@ -132,11 +131,11 @@ p[data-escape-global-style] {
 }
 
 @mixin regular12light {
-    @include font-source($font-family-regular, $font-size-sm, $light16);
+    @include font-source($font-family-regular, $font-size-sm, var(--light16));
 }
 
 @mixin regular12light16 {
-    @include font-source($font-family-regular, $font-size-sm, $light16);
+    @include font-source($font-family-regular, $font-size-sm, var(--light16));
 }
 
 @mixin regular12nocolor {
@@ -144,7 +143,7 @@ p[data-escape-global-style] {
 }
 
 @mixin regular13dark9 {
-    @include font-source($font-family-regular, $font-size-base, $dark9);
+    @include font-source($font-family-regular, $font-size-base, var(--dark9));
 }
 
 @mixin regular13nocolor {
@@ -152,23 +151,23 @@ p[data-escape-global-style] {
 }
 
 @mixin regular13light {
-    @include font-source($font-family-regular, $font-size-base, $light16);
+    @include font-source($font-family-regular, $font-size-base, var(--light16));
 }
 
 @mixin regular13light8 {
-    @include font-source($font-family-regular, $font-size-base, $light8);
+    @include font-source($font-family-regular, $font-size-base, var(--light8));
 }
 
 @mixin regular13light10 {
-    @include font-source($font-family-regular, $font-size-base, $light10);
+    @include font-source($font-family-regular, $font-size-base, var(--light10));
 }
 
 @mixin regular14light10 {
-    @include font-source($font-family-regular, $h5-font-size, $light10);
+    @include font-source($font-family-regular, $h5-font-size, var(--light10));
 }
 
 @mixin regular14dark9 {
-    @include font-source($font-family-regular, $h5-font-size, $dark9);
+    @include font-source($font-family-regular, $h5-font-size, var(--dark9));
 }
 
 @mixin regular14nocolor {
@@ -176,23 +175,23 @@ p[data-escape-global-style] {
 }
 
 @mixin regular14dark9lh16 {
-    @include font-source($font-family-regular, $h6-font-size, $dark9, false, sass-rem.rem(16px));
+    @include font-source($font-family-regular, $h6-font-size, var(--dark9), false, sass-rem.rem(16px));
 }
 
 @mixin regular14dark9lh16 {
-    @include font-source($font-family-regular, $h6-font-size, $dark9, false, sass-rem.rem(16px));
+    @include font-source($font-family-regular, $h6-font-size, var(--dark9), false, sass-rem.rem(16px));
 }
 
 @mixin regular14dark10 {
-    @include font-source($font-family-regular, $h5-font-size, $dark10);
+    @include font-source($font-family-regular, $h5-font-size, var(--dark10));
 }
 
 @mixin regular11light7 {
-    @include font-source($font-family-regular, $h5-font-size, $light7);
+    @include font-source($font-family-regular, $h5-font-size, var(--light7));
 }
 
 @mixin regular15light {
-    @include font-source($font-family-regular, $h4-font-size, $light16);
+    @include font-source($font-family-regular, $h4-font-size, var(--light16));
 }
 
 @mixin regular15nocolor {
@@ -200,7 +199,7 @@ p[data-escape-global-style] {
 }
 
 @mixin regular16light1 {
-    @include font-source($font-family-regular, sass-rem.rem(16px), $light1);
+    @include font-source($font-family-regular, sass-rem.rem(16px), var(--light1));
 }
 
 @mixin regular16nocolor {
@@ -216,7 +215,7 @@ p[data-escape-global-style] {
 }
 
 @mixin regular24dark9 {
-    @include font-source($font-family-regular, $font-size-xlg, $dark9);
+    @include font-source($font-family-regular, $font-size-xlg, var(--dark9));
 }
 
 @mixin regular24nocolor {
@@ -231,7 +230,7 @@ p[data-escape-global-style] {
 
 // MEDIUM
 @mixin medium11light1 {
-    @include font-source($font-family-medium, $font-size-ssm, $light1);
+    @include font-source($font-family-medium, $font-size-ssm, var(--light1));
 }
 
 @mixin medium11nocolor {
@@ -243,15 +242,15 @@ p[data-escape-global-style] {
 }
 
 @mixin medium13dark10 {
-    @include font-source($font-family-medium, $font-size-base, $dark10);
+    @include font-source($font-family-medium, $font-size-base, var(--dark10));
 }
 
 @mixin medium13dark9 {
-    @include font-source($font-family-medium, $font-size-base, $dark9);
+    @include font-source($font-family-medium, $font-size-base, var(--dark9));
 }
 
 @mixin medium13dark15 {
-    @include font-source($font-family-medium, $font-size-base, $dark15);
+    @include font-source($font-family-medium, $font-size-base, var(--dark15));
 }
 
 @mixin medium13nocolor {
@@ -259,11 +258,11 @@ p[data-escape-global-style] {
 }
 
 @mixin medium22dark9lh24 {
-    @include font-source($font-family-medium, $font-size-22, $dark9, false, sass-rem.rem(24px));
+    @include font-source($font-family-medium, $font-size-22, var(--dark9), false, sass-rem.rem(24px));
 }
 
 @mixin medium14dark9 {
-    @include font-source($font-family-medium, $h5-font-size, $dark9);
+    @include font-source($font-family-medium, $h5-font-size, var(--dark9));
 }
 
 @mixin medium14nocolor {
@@ -271,15 +270,15 @@ p[data-escape-global-style] {
 }
 
 @mixin medium14light1 {
-    @include font-source($font-family-medium, $h5-font-size, $light1);
+    @include font-source($font-family-medium, $h5-font-size, var(--light1));
 }
 
 @mixin medium14light16 {
-    @include font-source($font-family-medium, $h5-font-size, $light16);
+    @include font-source($font-family-medium, $h5-font-size, var(--light16));
 }
 
 @mixin medium15dark9 {
-    @include font-source($font-family-medium, $h4-font-size, $dark9);
+    @include font-source($font-family-medium, $h4-font-size, var(--dark9));
 }
 
 @mixin medium15nocolor {
@@ -287,7 +286,7 @@ p[data-escape-global-style] {
 }
 
 @mixin medium15dark17 {
-    @include font-source($font-family-medium, $h4-font-size, $dark17);
+    @include font-source($font-family-medium, $h4-font-size, var(--dark17));
 }
 
 @mixin medium16nocolor {
@@ -295,11 +294,11 @@ p[data-escape-global-style] {
 }
 
 @mixin medium16dark9 {
-    @include font-source($font-family-medium, sass-rem.rem(16px), $dark9);
+    @include font-source($font-family-medium, sass-rem.rem(16px), var(--dark9));
 }
 
 @mixin medium17dark9 {
-    @include font-source($font-family-medium, $h3-alt-size, $dark9);
+    @include font-source($font-family-medium, $h3-alt-size, var(--dark9));
 }
 
 @mixin medium18nocolor {
@@ -311,11 +310,11 @@ p[data-escape-global-style] {
 }
 
 @mixin medium24dark9 {
-    @include font-source($font-family-medium, $font-size-xlg, $dark9);
+    @include font-source($font-family-medium, $font-size-xlg, var(--dark9));
 }
 
 @mixin medium24light1 {
-    @include font-source($font-family-medium, $font-size-xlg, $light1);
+    @include font-source($font-family-medium, $font-size-xlg, var(--light1));
 }
 
 @mixin medium24nocolor {
@@ -330,7 +329,7 @@ p[data-escape-global-style] {
 
 // BOLD
 @mixin bold10dark3 {
-    @include font-source($font-family-bold, $font-size-10, $dark3);
+    @include font-source($font-family-bold, $font-size-10, var(--dark3));
 }
 
 @mixin bold13dark9nocolor {

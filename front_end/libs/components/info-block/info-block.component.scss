@@ -67,7 +67,7 @@
                     }
 
                     &.warning {
-                        color: $yellow_d1 !important;
+                        color: var(--yellow-d1) !important;
                     }
                 }
             }

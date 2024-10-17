@@ -81,9 +81,9 @@
 
         &,
         * {
-            color: $light1  !important;
-            fill: $light1  !important;
-            background-color: $light16  !important;
+            color: var(--light1)  !important;
+            fill: var(--light1)  !important;
+            background-color: var(--light16)  !important;
             min-height: auto;
         }
     }

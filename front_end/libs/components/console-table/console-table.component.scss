@@ -36,7 +36,7 @@
 
     tr.data-row {
         &:hover {
-            background: transparentize($brand_core, 0.9);
+            background: rgba(var(--brand-core--rgb), 0.1);
         }
 
         &:not(.ignore-active):active {

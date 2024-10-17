@@ -90,8 +90,8 @@ markdown {
             .addition {
                 span {
                     @extend .symbol-span;
-                    border: .8px solid $green_l1;
-                    background-color: $green_l1;
+                    border: .8px solid var(--green_l1);
+                    background-color: var(--green_l1);
 
                     &:first-of-type {
                         transform: rotate(90deg);

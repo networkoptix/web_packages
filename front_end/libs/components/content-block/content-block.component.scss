@@ -369,20 +369,20 @@
     }
 
     &.simple-alert {
-        background-color: $red2;
-        border: 1px solid $red1;
+        background-color: var(--red2);
+        border: 1px solid var(--red1);
 
         .card--header {
             display: none;
         }
 
         .card--body {
-            background-color: $red2;
-            border-top: 1px solid $red1;
+            background-color: var(--red2);
+            border-top: 1px solid var(--red1);
         }
 
         .card--footer {
-            background-color: $red2;
+            background-color: var(--red2);
         }
     }
 

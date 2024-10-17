@@ -2,7 +2,7 @@
 @use "typography";
 @use "theme_variables_common" as *;
 
-$preloader_circle_color : $light;
+$preloader_circle_color : var(--light);
 $preloader_circle_size : 16px;
 $preloader_circle_distance : 12px;
 
@@ -15,7 +15,7 @@ $preloader_small_circle_distance : 8px;
     }
 
     .circleG {
-        background-color: transparentize($circle_color, 1);
+        background-color: transparent;
         float: left;
         height: $circle_size;
         width: $circle_size;
@@ -50,7 +50,7 @@ $preloader_small_circle_distance : 8px;
         }
 
         80% {
-            background-color: transparentize($circle_color, 1);
+            background-color: transparent;
         }
 
         100% {}
@@ -64,7 +64,7 @@ $preloader_small_circle_distance : 8px;
         }
 
         80% {
-            background-color: transparentize($circle_color, 1);
+            background-color: transparent;
         }
 
         100% {}

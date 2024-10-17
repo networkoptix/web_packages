@@ -237,8 +237,8 @@
             }
 
             &.header-m {
-                background-color: $dark6;
-                border-bottom: 1px solid $dark4;
+                background-color: var(--dark6);
+                border-bottom: 1px solid var(--dark4);
 
                 .authorize-header {
                     font-size: $font-size-20  !important;
@@ -248,11 +248,11 @@
 
                 .authorize-subheader {
                     .for-account {
-                        border: 1px solid $dark8;
+                        border: 1px solid var(--dark8);
 
                         &:not(.span-disabled):active {
-                            background-color: $dark6;
-                            border-color: $dark7;
+                            background-color: var(--dark6);
+                            border-color: var(--dark7);
                         }
                     }
                 }
@@ -344,19 +344,19 @@
                 }
 
                 .ng-untouched input.ng-valid {
-                    color: $light4  !important;
+                    color: var(--light4)  !important;
                 }
 
                 nx-password-input.ng-untouched input {
-                    color: $light4  !important;
+                    color: var(--light4)  !important;
                 }
 
                 nx-password-input.ng-touched.ng-valid input {
-                    color: $light4  !important;
+                    color: var(--light4)  !important;
                 }
 
                 .authorize-header {
-                    color: $light4  !important;
+                    color: var(--light4)  !important;
                 }
 
                 input {
@@ -364,9 +364,9 @@
                     background-color: var(--input-bg);
 
                     &:focus {
-                        background-color: $dark4;
-                        border: 1px solid $dark2;
-                        box-shadow: inset 0 1px 0 0 $dark2;
+                        background-color: var(--dark4);
+                        border: 1px solid var(--dark2);
+                        box-shadow: inset 0 1px 0 0 var(--dark2);
                     }
 
                     &::selection {
@@ -382,42 +382,42 @@
 
                 .new-backup-code {
                     color: var(--light4);
-                    background-color: $dark5;
+                    background-color: var(--dark5);
 
                     &:hover {
-                        background-color: $dark4;
-                        border: 2px solid $dark2;
-                        box-shadow: inset 0 1px 0 0 $dark2;
+                        background-color: var(--dark4);
+                        border: 2px solid var(--dark2);
+                        box-shadow: inset 0 1px 0 0 var(--dark2);
                     }
                 }
             }
 
             &.main-m {
-                background-color: $dark5;
+                background-color: var(--dark5);
                 line-height: sass-rem.rem(20px);
 
                 label,
                 p:not(.error-label) {
-                    color: $light10  !important;
+                    color: var(--light10)  !important;
                 }
 
                 .ng-untouched input.ng-valid {
-                    color: $light4  !important;
+                    color: var(--light4)  !important;
                 }
 
                 .authorize-header {
-                    color: $light4  !important;
+                    color: var(--light4)  !important;
                 }
 
                 input {
-                    color: $light4  !important;
-                    background-color: $dark4  !important;
-                    border: 1px solid $dark1  !important;
+                    color: var(--light4)  !important;
+                    background-color: var(--dark4)  !important;
+                    border: 1px solid var(--dark1)  !important;
 
                     &:focus {
-                        background-color: $dark3;
-                        border: 1px solid $dark1;
-                        box-shadow: inset 0 1px 0 0 $dark1;
+                        background-color: var(--dark3);
+                        border: 1px solid var(--dark1);
+                        box-shadow: inset 0 1px 0 0 var(--dark1);
                     }
 
                     &::selection {
@@ -503,7 +503,7 @@
                 }
 
                 &.footer-d {
-                    border-top: 1px solid $dark6;
+                    border-top: 1px solid var(--dark6);
                     display: flex;
 
                     button.btn.text-button {
@@ -544,7 +544,7 @@
                 }
 
                 &.footer-m {
-                    border-top: 1px solid $dark4;
+                    border-top: 1px solid var(--dark4);
                     display: flex;
 
                     button.btn.text-button {

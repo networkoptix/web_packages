@@ -22,9 +22,9 @@
     pointer-events: auto !important;
     max-width: 959px;
     min-height: 56px;
-    background-color: transparentize($blue14, 0.2);
+    background-color: rgba(var(--blue14--rgb), 0.8);
     border-radius: 2px;
-    border-color: transparentize($blue14, 0.1);
+    border-color: rgba(var(--blue14--rgb), 0.9);
     padding: 12px 16px;
 
     &>p {
@@ -48,7 +48,7 @@
         }
 
         &:hover {
-            box-shadow: 1px 1px 5px transparentize($dark4, 0.5);
+            box-shadow: 1px 1px 5px rgba(var(--dark4--rgb), 0.5);
         }
 
         &:active .close-svg {

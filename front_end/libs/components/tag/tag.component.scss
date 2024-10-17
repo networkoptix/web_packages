@@ -61,7 +61,7 @@ a {
         }
 
         //&:active {
-        //    background-color : $light6;
+        //    background-color : var(--light6);
         //}
     }
 }
@@ -119,9 +119,9 @@ a {
 $nx-theme-colors : "brand" var(--badge-brand-bg) var(--badge-color),
 "default" var(--badge-default-bg) var(--badge-color),
 //"integration" var(--badge-integration-bg) var(--badge-integration-color),
-"default-dark"$light16 $light1,
+"default-dark"var(--light16) var(--light1),
 // Not used?
-"default-inverted"$light4 $light16,
+"default-inverted"var(--light4) var(--light16),
 // Not used?
 "success" var(--badge-success-bg) var(--badge-color),
 "success-bright" var(--badge-success-bright-bg) var(--badge-color),

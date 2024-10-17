@@ -20,7 +20,7 @@ h4 {
 }
 
 .small-alerts {
-    background: $additional_light1;
+    background: var(--additional-light1);
     border: 1px solid var(--light3);
     border-radius: 4px;
     padding: 8px;
@@ -35,7 +35,7 @@ h4 {
     &>div {
         flex: 1;
         padding: 8px;
-        background: $additional_light1;
+        background: var(--additional-light1);
         border: 1px solid var(--light3);
         border-radius: 4px;
     }
@@ -49,7 +49,7 @@ h4 {
 
 .cdk-header-cell {
     color: var(--dark9);
-    background: $additional_light2;
+    background: var(--additional-light2);
 }
 
 .cdk-cell,
@@ -62,7 +62,7 @@ h4 svg {
     cursor: pointer;
 
     & * {
-        fill: $blue10;
+        fill: var(--blue10);
     }
 }
 

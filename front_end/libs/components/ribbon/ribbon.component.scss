@@ -187,22 +187,22 @@
         span {
             text-decoration: underline;
             margin-left: 2px;
-            color: $blue10;
+            color: var(--blue10);
             cursor: pointer;
         }
 
         &:hover {
             span {
-                color: $blue9;
+                color: var(--blue9);
             }
 
             svg * {
-                stroke: $blue9;
+                stroke: var(--blue9);
             }
         }
 
         svg * {
-            stroke: $blue10;
+            stroke: var(--blue10);
         }
     }
 }

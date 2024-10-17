@@ -17,7 +17,7 @@ header.with-child {
         @include typography.regular13dark9;
         padding: 4px 8px;
         border-radius: 2px;
-        background-color: $yellow_main;
+        background-color: var(--yellow-main);
         white-space: nowrap;
     }
 }

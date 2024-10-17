@@ -1,7 +1,7 @@
 @use 'theme_palette' as *;
 
 .carousel {
-    background-color: $additional_light1;
+    background-color: var(--additional-light1);
     border: 1px solid rgba(0, 0, 0, 0.125);
 }
 
@@ -90,7 +90,7 @@
         position: relative;
         height: 2px;
         width: 50%;
-        background-color: $additional_light1;
+        background-color: var(--additional-light1);
     }
 
     &.left span {
