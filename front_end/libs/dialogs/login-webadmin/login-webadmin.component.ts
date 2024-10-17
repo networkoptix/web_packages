@@ -23,6 +23,7 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { OauthService } from '@services/oauth.service';
 import { NxProcessService } from '@services/process.service';
 import type { Process } from '@services/process.service/process';
+import { NxSessionService } from '@services/session.service';
 import { LOGIN_STATE } from '@services/session.service.types';
 import { NxStorageService } from '@services/storage.service';
 import { NxToastService } from '@services/toast.service';
@@ -112,6 +113,7 @@ export class LoginWebadminModalContent extends ModalBase<DT['return']> implement
         private account: NxAccountService,
         public oauthService: OauthService,
         private renderer: Renderer2,
+        private sessionService: NxSessionService,
         private processService: NxProcessService,
         private storageService: NxStorageService,
         private toastService: NxToastService,
@@ -144,8 +146,8 @@ export class LoginWebadminModalContent extends ModalBase<DT['return']> implement
 
     resetForm(): void {
         if (!this.loginForm.valid) {
-            this.loginForm.controls.login_email.setErrors(undefined);
-            this.loginForm.controls.login_password.setErrors(undefined);
+            this.loginForm.controls.login_email.setErrors(null);
+            this.loginForm.controls.login_password.setErrors(null);
             this.wrongCredentials = false;
             this.accountBlocked = false;
         }
@@ -236,8 +238,8 @@ export class LoginWebadminModalContent extends ModalBase<DT['return']> implement
         this.login = this.processService.createProcess(
             () => {
                 this.setEmail(this.loginForm.controls.login_email.value);
-                this.loginForm.controls.login_email.setErrors(undefined);
-                this.loginForm.controls.login_password.setErrors(undefined);
+                this.loginForm.controls.login_email.setErrors(null);
+                this.loginForm.controls.login_password.setErrors(null);
                 this.wrongCredentials = false;
                 this.accountBlocked = false;
 
@@ -360,7 +362,7 @@ export class LoginWebadminModalContent extends ModalBase<DT['return']> implement
         this.account.mediaServerApi.loginTokenUrl(token).subscribe(
             () => {
                 this.account.mediaServerApi.getCurrentUser().then(account => {
-                    this.account.loginState =
+                    this.sessionService.loginState =
                         account.email || account.name
                             ? LOGIN_STATE.AUTHORIZED
                             : LOGIN_STATE.UNAUTHORIZED;

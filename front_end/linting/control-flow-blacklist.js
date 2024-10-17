@@ -220,7 +220,6 @@ const errorCount = {
     "libs/features/ipvd/cam-components/cameras-table/cameras-table.component.html": 3,
     "libs/features/ipvd/cam-components/vendor-list/vendor-list.component.html": 7,
     "libs/features/ipvd/ipvd.component.html": 9,
-    "libs/features/landing/landing.component.html": 4,
     "libs/features/monitoring/graphs/graphs.component.html": 1,
     "libs/features/monitoring/logs/logs.component.html": 1,
     "libs/features/new-landing/background-graphic/background-graphic.component.html": 2,

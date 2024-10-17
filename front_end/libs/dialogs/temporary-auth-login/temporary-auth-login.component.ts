@@ -8,9 +8,9 @@ import type { LoginWebAdmin as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
 import { environment } from '@environments/environment';
 import staticLang from '@language_static';
-import { NxAccountService } from '@services/account.service';
 import { NxLoginService } from '@services/login.service';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { NxSessionService } from '@services/session.service';
 import { LOGIN_STATE } from '@services/session.service.types';
 import { NxSystemAPIService } from '@services/system-api.service';
 import { NxSystemRestAPI3 } from '@services/system-rest-api-v3.service';
@@ -29,9 +29,9 @@ export class TemporaryAuthLoginComponent extends ModalBase<DT['return']> impleme
     LANG = staticLang;
 
     private nxSystemAPIService = inject(NxSystemAPIService);
-    private account = inject(NxAccountService);
     private loginService = inject(NxLoginService);
     private dialogService = inject(NxDialogsService);
+    private sessionService = inject(NxSessionService);
     private temporaryUserToken: string;
 
     protected mediaServerApi: NxSystemRestAPI3;
@@ -46,7 +46,7 @@ export class TemporaryAuthLoginComponent extends ModalBase<DT['return']> impleme
 
     ngOnInit(): void {
         this.mediaServerApi = this.nxSystemAPIService.createConnection({
-            version: this.CONFIG.system.version.major,
+            version: this.CONFIG.system.version?.major || NxSystemRestAPI3.VERSION,
         }) as NxSystemRestAPI3;
 
         this.temporaryUserToken = this.loginService.temporaryUserToken$$();
@@ -59,7 +59,7 @@ export class TemporaryAuthLoginComponent extends ModalBase<DT['return']> impleme
         this.mediaServerApi.temporaryUserTokenExchange(this.temporaryUserToken).subscribe({
             next: res => {
                 this.mediaServerApi.loginTokenUrl(res.token).subscribe(loggedInAccount => {
-                    this.account.loginState = LOGIN_STATE.AUTHORIZED;
+                    this.sessionService.loginState = LOGIN_STATE.AUTHORIZED;
                     setTimeout(() => window.location.reload(), this.urlUpdateTimeout);
                 });
             },
