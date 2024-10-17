@@ -14,14 +14,11 @@ import staticLang from '@language_static';
 import { Auth, MenuNode } from '@services/menus.service.types';
 import { CurrentUser } from '@services/system-user.types';
 import { NxSystem } from '@services/system.service/system';
-import { cleanId } from '@utils/general';
 
 import { apiBase } from '../variables/static-variables';
 
-import { OrgRoleIds } from './nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { MenusStructure, MenuStructure } from './nx-config/base-config';
 import { nxConfig } from './nx-config/config';
-import { AdminGroups } from './system.service/permission-manager/permission-manager';
 import { windowFactory } from './window-provider';
 @UntilDestroy({ checkProperties: true })
 @Injectable({
@@ -422,10 +419,7 @@ export class NxMenusService {
 
         const roleCanViewServices =
             nxConfig.featureFlags.channelPartners &&
-            nxConfig.featureFlags.channelPartnersChangeServicesUI &&
-            activeSystem.info?.roleIds &&
-            (activeSystem.info.roleIds.includes(OrgRoleIds.OrgAdmin) ||
-                activeSystem.info.roleIds.includes(cleanId(AdminGroups.administratorGroup)));
+            nxConfig.featureFlags.channelPartnersChangeServicesUI;
         // Services
         if (
             'organizationId' in activeSystem.info &&
