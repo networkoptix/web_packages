@@ -1759,7 +1759,7 @@
     "collapse all servers": "모든 서버 축소",
     "collapse server + [server name]": "서버축소 + [server name]",
     "confirm password": "비밀번호 확인",
-    "contains a (! @ # $ % ^ & * ( ) _ - +)": "(! @ # $ % ^ & * ( ) _ - +)를 포함합니다",
+    "contains a (! @ # $ % ^ & * ( ) _ - +)": "(! @ # $ % ^ & * ( ) _ - +) 를 포함합니다",
     "contains a lowercase char": "소문자 char를 포함합니다",
     "contains a number": "숫자가 포함되어 있습니다",
     "contains a uppercase char": "대문자 char를 포함합니다",
