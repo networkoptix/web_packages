@@ -1,48 +1,40 @@
-<nx-pre-loader
-    type="page"
-    [ngClass]="{ centered: useNewCloud }"
-    *ngIf="!loaded"
-></nx-pre-loader>
-
 @if (useNewCloud) {
     <iframe
         [ngClass]="{ 'auth-loaded': loaded }"
-        [src]="authorization"
+        [src]="authorizationUrl | safe: 'url'"
         (load)="handleLoad($event)"
     ></iframe>
+} @else if (!loaded) {
+    <nx-pre-loader
+        type="page"
+        [ngClass]="{ centered: useNewCloud }"
+    ></nx-pre-loader>
 } @else {
-    <div
-        class="container"
-        *ngIf="loaded"
-    >
+    <div class="container">
         <div class="jumbotron">
             <nx-landing-display-component></nx-landing-display-component>
 
-            <p
-                *ngIf="!userEmail"
-                class="button d-flex justify-content-center auth-hidden"
-            >
-                <a
-                    data-escape-global-style
-                    class="nx-button--primary"
-                    [href]="createUrl"
-                    role="button"
-                    data-testid="landingComponentLink"
-                    >{{ LANG.createAccount | translate }}</a
-                >
-            </p>
-            <p
-                *ngIf="userEmail"
-                class="button d-flex justify-content-center auth-hidden"
-            >
-                <a
-                    data-escape-global-style
-                    class="nx-button--primary"
-                    routerLink="/login"
-                    role="button"
-                    translate
-                    >Log In</a
-                >
+            <p class="button d-flex justify-content-center auth-hidden">
+                @if (userEmail) {
+                    <a
+                        data-escape-global-style
+                        class="nx-button--primary"
+                        routerLink="/login"
+                        role="button"
+                        translate
+                        >Log In</a
+                    >
+                } @else {
+                    <a
+                        data-escape-global-style
+                        class="nx-button--primary"
+                        [href]="createUrl"
+                        role="button"
+                        data-testid="landingComponentLink"
+                        translate
+                        >Create Account</a
+                    >
+                }
             </p>
         </div>
         <nx-footer [center]="true"></nx-footer>

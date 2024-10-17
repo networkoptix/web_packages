@@ -1,12 +1,14 @@
 import { SimpleChange } from '@angular/core';
 import { ComponentFixture } from '@angular/core/testing';
 
+import { EditableModule } from '@components/editable/editable.module';
+
 import { setupComponent } from '../src/setup';
 
 import { NxTextEditableComponent } from './editable.component';
 
 const handleSetup = async (): ReturnType<typeof setupComponent<NxTextEditableComponent>> => {
-    const setup = await setupComponent(NxTextEditableComponent);
+    const setup = await setupComponent(NxTextEditableComponent, {}, [EditableModule]);
     setup.component?.writeValue('Test');
     setup.fixture?.detectChanges();
     return setup;

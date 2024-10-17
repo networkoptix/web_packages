@@ -109,7 +109,7 @@ export class NxThemePalette extends BaseComponent {
         const backgroundColor = `${colors[backgroundKey]} !important`;
         const color = `${colors[contrastKey]} !important`;
 
-        console.info({ backgroundColor });
+        // console.info({ backgroundColor });
 
         return {
             'background-color': backgroundColor,
@@ -128,7 +128,7 @@ export class NxThemePalette extends BaseComponent {
             6,
         ) as IntRange<1, 19>;
         const contrast = shade.includes('dark') ? 'light' : 'dark';
-        console.info({ shadeInt });
+        // console.info({ shadeInt });
         const colorKey = generateCssVariableName(base, `${contrast}${shadeInt}`);
         const [h, s, l] = colors[backgroundKey]
             .split('(')[1]

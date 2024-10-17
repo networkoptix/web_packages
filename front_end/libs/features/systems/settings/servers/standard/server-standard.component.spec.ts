@@ -1,5 +1,6 @@
 import { BehaviorSubject } from 'rxjs';
 
+import { NxPagePlaceholderNoSettingsComponent } from '@components/placeholdersV2/no-settings/no-settings-page-placeholder.component';
 import { setupComponent } from '@pages/src/setup';
 
 import { NxSystemStandardServerComponent } from './server-standard.component';
@@ -73,7 +74,12 @@ const setupSystemServerComponent = async (): ReturnType<
 > => {
     NxSystemStandardServerComponent.prototype.system =
         {} as typeof NxSystemStandardServerComponent.prototype.system;
-    const setup = await setupComponent(NxSystemStandardServerComponent);
+    const setup = await setupComponent(
+        NxSystemStandardServerComponent,
+        {},
+        [NxPagePlaceholderNoSettingsComponent],
+        [],
+    );
     (setup.component.route.queryParams as BehaviorSubject<unknown>).next({ state: undefined });
     setup.component.dropdownStorages = JSON.parse(
         JSON.stringify(dropdownsMock),

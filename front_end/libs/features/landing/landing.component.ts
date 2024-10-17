@@ -1,15 +1,13 @@
 import { Component, DestroyRef, inject, isDevMode, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { CookieService } from 'ngx-cookie-service';
 
 import { accountSelectors } from '@common/store/account';
 import { environment } from '@environments/environment';
 import staticLang from '@language_static';
 import { NxAccountService } from '@services/account.service';
-import { nxConfig } from '@services/nx-config/config';
+import { OauthService } from '@services/oauth.service';
 import { NxPageService } from '@services/page.service';
 import { useNewCloud } from '@utils/general';
 
@@ -19,22 +17,21 @@ import { useNewCloud } from '@utils/general';
     styleUrls: ['landing.component.scss'],
 })
 export class NxLandingComponent implements OnInit {
-    useNewCloud = useNewCloud() && window.self === window.top;
-    LANG = staticLang;
-    destroyRef = inject(DestroyRef);
-    params;
-    userEmail;
-    login;
-    createUrl: string;
+    private oauthService = inject(OauthService);
+    private LANG = staticLang;
+    private destroyRef = inject(DestroyRef);
+    readonly createUrl = !isDevMode()
+        ? '/authorize?client_type=create'
+        : `https://${environment.cloudHost}/authorize?redirect_uri=${window.location.href}&client_type=create`;
+    readonly authorizationUrl = `${window.location.origin}/authorize${window.location.search}`;
+    readonly useNewCloud = useNewCloud() && window.self === window.top;
 
     loaded: boolean;
-    startParams;
-    startUrl;
-    domSanitizer = inject(DomSanitizer);
-    authorizationUrl = `${window.location.origin}/authorize${window.location.search}`;
-    authorization = this.domSanitizer.bypassSecurityTrustResourceUrl(this.authorizationUrl);
+    userEmail: string;
+    startParams: Record<string, string>;
+    startUrl: string;
 
-    handleLoad = (event: Event) => {
+    handleLoad = (event: Event): void => {
         const contentWindow = (event.target as HTMLIFrameElement).contentWindow;
         if (!contentWindow) {
             return;
@@ -79,20 +76,9 @@ export class NxLandingComponent implements OnInit {
         private pageService: NxPageService,
         private router: Router,
         private store: Store,
-        private cookieService: CookieService,
     ) {
         this.startUrl = this.router.url;
         this.startParams = this.router.parseUrl(this.router.url).queryParams;
-
-        if (this.cookieService.get('devServer')) {
-            this.router.navigateByUrl('dashboard');
-        } else if (nxConfig.featureFlags.landingPage) {
-            this.router.navigateByUrl('new-landing', { skipLocationChange: true });
-        }
-
-        this.createUrl = !isDevMode()
-            ? '/authorize?client_type=create'
-            : `https://${environment.cloudHost}/authorize?redirect_uri=${window.location.href}&client_type=create`;
     }
 
     ngOnInit(): void {
@@ -113,7 +99,7 @@ export class NxLandingComponent implements OnInit {
                         this.userEmail = email;
                     } else {
                         if (this.startUrl.includes('/login') && !this.startParams.code) {
-                            this.accountService.showLogin(false);
+                            this.oauthService.redirectOauth();
                         } else if (this.startParams.next) {
                             return this.router.navigate([this.startParams.next]);
                         } else {

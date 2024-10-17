@@ -181,7 +181,7 @@ export const testBedSetupFactory =
         if (standalone) {
             await TestBed.configureTestingModule({
                 imports: [...commonImports, TargetComponent],
-                providers: commonProviders,
+                providers: [...commonProviders, ...additionalProviders],
             }).compileComponents();
         } else {
             await TestBed.configureTestingModule({

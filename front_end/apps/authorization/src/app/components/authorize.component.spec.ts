@@ -1,4 +1,6 @@
+import { NxAuthorizeModule } from '@authorization/src/app/components/authorize.module';
 import { setupComponent } from '@authorization/src/setup';
+import { ToastContainerModule } from '@components/toast-container/toast-container.module';
 import { AuthorizeParams } from '@services/nx-cloud-api/nx-cloud-api.types';
 import { nxConfig } from '@services/nx-config/config';
 
@@ -67,7 +69,10 @@ describe('NxAuthorizeComponent', () => {
     };
 
     it('should create the component', async () => {
-        const { component } = await setupComponent(NxAuthorizeComponent);
+        const { component } = await setupComponent(NxAuthorizeComponent, {}, [
+            ToastContainerModule,
+            NxAuthorizeModule,
+        ]);
         expect(component).toBeTruthy();
     });
 

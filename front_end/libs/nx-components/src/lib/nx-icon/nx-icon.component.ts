@@ -406,7 +406,7 @@ export class NxIconComponent extends BaseComponent {
                 third: { fill: thirdDefault, stroke: thirdDefault },
             };
             const extracted: PartialSvgColors = extractSvgColors(resolvedIcon, colors);
-            console.info({ extracted: this.colorOverrides() });
+            // console.info({ extracted: this.colorOverrides() });
             const merged = {
                 ...defaults,
                 ...extracted,

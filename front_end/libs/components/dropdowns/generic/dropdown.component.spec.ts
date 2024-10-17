@@ -1,6 +1,7 @@
 import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
 
+import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
 import { setupComponent } from '@components/src/setup';
 
 import { NxGenericDropdown } from './dropdown.component';
@@ -42,7 +43,7 @@ const dropdownItems: DropdownItem<string>[] = [
 const setupDropdownComponent = async (): ReturnType<typeof setupComponent<NxGenericDropdown>> => {
     NxGenericDropdown.prototype.items = dropdownItems;
     NxGenericDropdown.prototype.stillLoading = false;
-    const setup = await setupComponent(NxGenericDropdown);
+    const setup = await setupComponent(NxGenericDropdown, {}, [NxGenericDropdownModule]);
     setup.component.writeValue('1');
     return setup;
 };

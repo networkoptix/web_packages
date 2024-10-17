@@ -6,13 +6,19 @@ import { NxContentBlockComponent } from '@components/content-block/content-block
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { setupComponent } from '@pages/src/setup';
+import { NxSystemLicensesModule } from '@pages/systems/settings/licenses/licenses.module';
 import { NxProcessService } from '@services/process.service';
 
 import { NxLicenseNewComponent } from './new.component';
 
 const setupNewLicenseComponent = (): ReturnType<typeof setupComponent<NxLicenseNewComponent>> =>
     testBedSetupFactory(
-        [NxContentBlockComponent, NxContentBlockSectionComponent, NxProcessButtonComponent],
+        [
+            NxContentBlockComponent,
+            NxContentBlockSectionComponent,
+            NxProcessButtonComponent,
+            NxSystemLicensesModule,
+        ],
         [MockProvider(NxProcessService)],
     )(NxLicenseNewComponent);
 

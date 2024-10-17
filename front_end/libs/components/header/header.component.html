@@ -34,8 +34,8 @@
                 <a
                     class="pl-3 pr-3 d-block w-100 h-100"
                     (click)="headerService.handleNav(breadcrumb, $event)"
-                    [innerText]="breadcrumb.display_name"
-                ></a>
+                    >{{ breadcrumb.display_name }}</a
+                >
             </div>
             <svg-icon
                 nx-add-svg-src

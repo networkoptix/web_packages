@@ -1,4 +1,4 @@
-import { NgModel } from '@angular/forms';
+import { FormControl, FormGroup, NgModel } from '@angular/forms';
 import { ngMocks } from 'ng-mocks';
 
 import { NxPasswordComponent } from '@components/password-input/password.component';
@@ -10,7 +10,10 @@ import { setupComponent } from '../src/setup';
 const setupPasswordComponent = (): ReturnType<typeof setupComponent<NxPasswordComponent>> => {
     nxConfig.commonPasswordsList = { 12345678: 1, test1234: 1 };
     NxPasswordComponent.prototype.component = { valid: true } as NgModel;
-    return setupComponent(NxPasswordComponent);
+    return setupComponent(NxPasswordComponent, {
+        form: { form: new FormGroup({ test: new FormControl('') }) },
+        componentId: 'test',
+    });
 };
 
 describe('NxPasswordComponent', () => {

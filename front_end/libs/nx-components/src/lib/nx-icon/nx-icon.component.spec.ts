@@ -1,5 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { NxIconEnum } from 'nx-icons';
+
 import { NxIconComponent } from './nx-icon.component';
 
 describe('NxIconComponent', () => {
@@ -13,6 +15,7 @@ describe('NxIconComponent', () => {
 
         fixture = TestBed.createComponent(NxIconComponent);
         component = fixture.componentInstance;
+        fixture.componentRef.setInput('icon', NxIconEnum.ARROW_RIGHT_24_X_24);
         fixture.detectChanges();
     });
 

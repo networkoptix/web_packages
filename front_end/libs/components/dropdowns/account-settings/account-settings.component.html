@@ -27,8 +27,8 @@
         <span
             *ngIf="!small"
             class="fs-mask username"
-            [innerText]="environment.isWebadmin ? settings$$().name : settings$$().email"
-        ></span>
+            >{{ environment.isWebadmin ? settings$$().name : settings$$().email }}</span
+        >
     </button>
     <div
         class="dropdown-menu"

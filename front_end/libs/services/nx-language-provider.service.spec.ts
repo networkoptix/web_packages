@@ -11,6 +11,15 @@ const setupLangProvider = async (): Promise<NxLanguageProviderService> => {
 };
 
 describe('Language provider service', () => {
+    beforeAll(() => {
+        const location = window.location;
+        delete window.location;
+        window.location = {
+            ...location,
+            reload: jest.fn(),
+        };
+    });
+
     it('should create the service', async () => {
         const langProvider = await setupLangProvider();
         expect(langProvider).toBeTruthy();
