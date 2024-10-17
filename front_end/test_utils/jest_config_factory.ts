@@ -20,4 +20,8 @@ export const jestConfigFactory = (
             },
         ],
     ],
+    maxWorkers: 4,
+    maxConcurrency: 1,
+    workerIdleMemoryLimit: '1GB',
+    workerThreads: false,
 });
