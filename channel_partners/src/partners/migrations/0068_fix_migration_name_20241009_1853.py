@@ -12,7 +12,7 @@ last migrations names similar in those branches.
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("partners", "0067_merge_20241002_2341"),
+        ("partners", "0067_merge_20241002_2343"),
     ]
 
     operations = []
