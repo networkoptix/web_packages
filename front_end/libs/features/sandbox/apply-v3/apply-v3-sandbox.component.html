@@ -1,4 +1,9 @@
-<h2>Apply V3</h2>
+<h2
+    class="nx-h2"
+    data-escape-global-style
+>
+    Apply V3
+</h2>
 @for (resultType of ['success', 'error']; track $index) {
     <div class="result-container">
         @for (time of timeIntervals; track $index) {
@@ -25,7 +30,6 @@
                         </nx-button-toggle>
                     </nx-button-toggle-group>
                 </nx-form-field>
-                <hr />
                 <nx-apply-v3
                     [action]="actions[resultType][$index]"
                     unchangedBehavior="hidden"

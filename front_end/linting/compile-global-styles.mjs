@@ -3,9 +3,12 @@ import fs from 'fs';
 
 export function compileGlobalStyles() {
     const commonDir = '../common/styles/common';
-    const scssFiles = fs.readdirSync(commonDir).map(f => `${commonDir}/` + f);
+    const scssFiles = fs
+        .readdirSync(commonDir)
+        .filter(f => f !== '_tables.scss')
+        .map(f => `${commonDir}/` + f);
+    // Most of the class selectors in tables are contained in a specific table class
     scssFiles.push('../libs/dialogs/dialogs.scss');
-    // const scssFiles = [`${commonDir}/_typography.scss`];
 
     const AT_RULES = /@(use|import|forward|extend).+;\n/g;
     const INCLUDE = /@include .+?(\(| {|;)/g;

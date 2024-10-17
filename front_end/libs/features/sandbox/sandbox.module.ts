@@ -19,6 +19,7 @@ import { NxCssVariablesComponent } from './css-variables/css-variables.component
 import { NxCustomColorsComponent } from './custom-colors/colors.component';
 import { NxDatetimeSandboxComponent } from './datetime-sandbox/datetime-sandbox.component';
 import { NxDialogsSandboxComponent } from './dialogs/dialogs-sandbox.component';
+import { NxElementStylingSandboxComponent } from './element-styling/element-styling.component';
 import { SandboxFiltersComponent } from './filters/sandbox-filters.component';
 import { FormApplyExampleComponent } from './form-apply-example/form-apply-example.component';
 import { FormElementsComponent } from './form-elements/form-elements.component';
@@ -186,6 +187,10 @@ export const appRoutes: Routes = [
             {
                 path: 'oauth-builder',
                 component: NxOauthBuilderComponent,
+            },
+            {
+                path: 'element-styling',
+                component: NxElementStylingSandboxComponent,
             },
         ],
     },

@@ -10,15 +10,13 @@ import { compileGlobalStyles, rmCompiledGlobalStyles } from './compile-global-st
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 process.chdir(__dirname);
 
-compileGlobalStyles();
-
-/** Get class selectors in CSS files.
+/**
  *
- * @param {string} input CSS input file
- * @param {string} output TS output file
- * @returns {void}
+ * @param {css.StyleRules['rules']} rules
+ * @returns {Set<string>}
  */
-function parseFileForClasses(input, output) {
+function parseRules(rules) {
+    /** @type {Set<string>} */
     const classNames = new Set();
     const CLASS_REGEX = /\.[\w\-]+/g;
 
@@ -39,35 +37,54 @@ function parseFileForClasses(input, output) {
         }
     }
 
-    /**
-     *
-     * @param {css.StyleRules['rules']} rules
-     * @returns {void}
-     */
-    function parseRules(rules) {
-        for (const rule of rules) {
-            if (rule.type === 'rule') {
-                parseRule(rule);
-            } else if ('rules' in rule && rule.rules) {
-                parseRules(rule.rules);
+    for (const rule of rules) {
+        if (rule.type === 'rule') {
+            parseRule(rule);
+        } else if ('rules' in rule && rule.rules) {
+            const nestedRules = parseRules(rule.rules);
+            for (const nested of nestedRules) {
+                classNames.add(nested);
             }
         }
     }
-
-    const file = css.parse(fs.readFileSync(input, { encoding: 'utf-8' }));
-    parseRules(file.stylesheet.rules);
-    const content = [
-        '/* eslint-disable */',
-        `const classes = new Set(${JSON.stringify([...classNames.values()])});`,
-        'export default classes;\n',
-    ].join('\n');
-    fs.writeFileSync(output, content);
+    return classNames;
 }
 
-parseFileForClasses('./collated.css', '../eslint-plugin-nx/src/data/nx-global-style-classes.ts');
-parseFileForClasses(
-    '../node_modules/bootstrap/dist/css/bootstrap.css',
-    '../eslint-plugin-nx/src/data/bootstrap-classes.ts',
-);
+/**
+ *
+ * @param {string} file CSS file
+ * @returns {Set<string>} Found class names
+ */
+function readInputStylesheet(file) {
+    const contents = css.parse(fs.readFileSync(file, { encoding: 'utf-8' }));
+    const classNames = parseRules(contents.stylesheet.rules);
+    return classNames;
+}
 
+/**
+ *
+ * @param {string} file TS file
+ * @param {Set<string>} classNames Found class names
+ * @returns {void}
+ */
+function writeOutputSet(file, classNames) {
+    const content = [
+        '/* eslint-disable */',
+        `const classes = new Set(${JSON.stringify(Array.from(classNames))});`,
+        'export default classes;\n',
+    ].join('\n');
+    fs.writeFileSync(file, content);
+}
+
+compileGlobalStyles();
+const collatedClasses = readInputStylesheet('./collated.css');
+collatedClasses.add('table-wrapper'); // See comment in compile function
+writeOutputSet('../eslint-plugin-nx/src/data/nx-global-style-classes.ts', collatedClasses);
 rmCompiledGlobalStyles();
+
+const bootstrapClasses = readInputStylesheet('../node_modules/bootstrap/dist/css/bootstrap.css');
+const utilClasses = readInputStylesheet('./_bootstrap-utils.css');
+for (const util of utilClasses) {
+    bootstrapClasses.delete(util);
+}
+writeOutputSet('../eslint-plugin-nx/src/data/bootstrap-classes.ts', bootstrapClasses);

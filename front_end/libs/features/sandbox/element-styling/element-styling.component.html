@@ -1,0 +1,167 @@
+<!-- eslint-disable nx/template/no-global-style-class -->
+<!-- eslint-disable nx/template/require-global-style-escape -->
+<h2
+    class="nx-h2"
+    data-escape-global-style
+>
+    Element styling
+</h2>
+<p
+    data-escape-global-style
+    style="margin-bottom: 1rem"
+>
+    This page is for visual testing escaping Bootstrap/legacy global styling
+</p>
+<table>
+    <thead>
+        <tr>
+            <th>Unescaped</th>
+            <th>Escaped</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+                <button class="btn btn-primary">Primary</button>
+            </td>
+            <td>
+                <button
+                    data-escape-global-style
+                    class="nx-button--primary"
+                >
+                    Primary
+                </button>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <button class="btn btn-default">Default</button>
+            </td>
+            <td>
+                <button
+                    data-escape-global-style
+                    class="nx-button--default"
+                >
+                    Default
+                </button>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <button class="btn btn-danger">Danger</button>
+            </td>
+            <td>
+                <button
+                    data-escape-global-style
+                    class="nx-button--danger"
+                >
+                    Danger
+                </button>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <h1>h1</h1>
+            </td>
+            <td>
+                <h1
+                    class="nx-h1"
+                    data-escape-global-style
+                >
+                    h1
+                </h1>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <h2>h2</h2>
+            </td>
+            <td>
+                <h2
+                    class="nx-h2"
+                    data-escape-global-style
+                >
+                    h2
+                </h2>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <h3>h3</h3>
+            </td>
+            <td>
+                <h3
+                    class="nx-h3"
+                    data-escape-global-style
+                >
+                    h3
+                </h3>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <h4>h4</h4>
+            </td>
+            <td>
+                <h4
+                    class="nx-h4"
+                    data-escape-global-style
+                >
+                    h4
+                </h4>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <h5>h5</h5>
+            </td>
+            <td>
+                <h5
+                    class="nx-h5"
+                    data-escape-global-style
+                >
+                    h5
+                </h5>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <h6>h6</h6>
+            </td>
+            <td>
+                <h6
+                    class="nx-h6"
+                    data-escape-global-style
+                >
+                    h6
+                </h6>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>paragraph</p>
+            </td>
+            <td>
+                <p data-escape-global-style>paragraph</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <a
+                    (click)="$event.preventDefault()"
+                    href=""
+                    >anchor</a
+                >
+            </td>
+            <td>
+                <a
+                    class="nx-anchor"
+                    (click)="$event.preventDefault()"
+                    href=""
+                    data-escape-global-style
+                    >anchor</a
+                >
+            </td>
+        </tr>
+    </tbody>
+</table>

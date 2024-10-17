@@ -105,7 +105,7 @@ export async function binnedLint(blacklistFile, options = {}) {
                     /** @type {string} */
                     const stdOut = error.stdout;
 
-                    if (!/✖ \d+ problems \(\d+ errors, \d+ warnings\)/.test(stdOut)) {
+                    if (!/\d+ problems? \(\d+ errors?, \d+ warnings?\)/.test(stdOut)) {
                         /* Might have
                         "X errors and Y warnings potentially fixable with the `--fix` option."
                         after this */

@@ -45,12 +45,6 @@ TODO:
 gets passed into the `@Component` config for common properties like `changeDetection` and `encapsulation`.
 
 ## Styling Reset
-Use the Bootstrap reset to escape from bootstrap styling
-
-```scss
-@use "../styles/bootstrap-reset"; // Should be at the very top of the file
-```
-
 New components will have lint rules to escape element global styling and prevent
 use of global styling classes in templates
 

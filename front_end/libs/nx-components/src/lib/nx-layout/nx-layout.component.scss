@@ -1,7 +1,6 @@
 @use 'sass:meta';
 @use 'sass:list';
 
-@use "../styles/bootstrap-reset";
 @use '../styles/spacing';
 
 @mixin menu-style($border-position) {

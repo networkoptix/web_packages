@@ -1,4 +1,3 @@
-@use 'common-nonglobal/button-legacy';
 
 :host > * + * {
     margin-top: 1rem
@@ -15,7 +14,7 @@ form {
 }
 
 nx-form-field {
-    margin-bottom: 1rem;
+    margin-bottom: 2rem;
     width: 200px;
 
     nx-button-toggle-group {

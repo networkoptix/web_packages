@@ -6,6 +6,7 @@
             <th
                 [ngClass]="{ 'full-palette': !singleColor() }"
                 class="is-header"
+                data-escape-global-style
             >
                 {{ shade }}
             </th>
@@ -21,6 +22,7 @@
                                 [style]="
                                     generateBackground(selectedSingleColor, 'initial', opacity)
                                 "
+                                data-escape-global-style
                             >
                                 {{ opacity }}
                             </th>
@@ -40,6 +42,7 @@
                             <th
                                 [style]="generateBackground(color, 'initial', 100)"
                                 class="full-palette"
+                                data-escape-global-style
                             >
                                 <span [style]="generateLabel(color)">{{ color }}</span>
                                 @if (!configurable.includes(color)) {

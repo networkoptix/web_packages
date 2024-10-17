@@ -1,5 +1,3 @@
-@use "../styles/bootstrap-reset";
-
 @mixin apply-fill-and-stroke($stroke, $fill) {
     color: inherit;
     &[applyFill] {

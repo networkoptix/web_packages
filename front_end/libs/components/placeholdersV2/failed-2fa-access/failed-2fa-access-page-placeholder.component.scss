@@ -1,5 +1,3 @@
-@use 'common-nonglobal/button-legacy';
-
 svg-icon {
   svg {
     .brand_element_cloud {
@@ -32,7 +30,7 @@ h2 {
     font-size: 0.9375rem !important;
     color: var(--placehoder-body-color) !important;
     line-height: 24px;
-  
+
       a {
         color: var(--brand-core) !important;
       }

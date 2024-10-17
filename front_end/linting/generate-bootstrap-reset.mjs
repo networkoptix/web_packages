@@ -27,33 +27,18 @@ function unsetDeclarations(declarations) {
 
 /** @type {(css.Rule | css.Comment)[]} */
 const nonClassRules = [];
-
-/** @type {css.Rule} */
-const rootReset = structuredClone(
-    bootstrap.stylesheet.rules.find(r => isEqual(r.selectors, ['html'])),
-);
-rootReset.selectors = [':host'];
-rootReset.declarations = unsetDeclarations(rootReset.declarations);
-
-/** @type {css.Rule} */
-const body = bootstrap.stylesheet.rules.find(r => isEqual(r.selectors, ['body']));
-rootReset.declarations = rootReset.declarations.concat(
-    unsetDeclarations(body.declarations).filter(
-        bd => !rootReset.declarations.find(rd => rd.property === bd.property),
-    ),
-);
-
 nonClassRules.push({ type: 'comment', comment: ` Generated reset for Bootstrap styling ` });
-nonClassRules.push(rootReset);
-
 const CLASSED_ELEMENT = /^[a-z\d]+(\[.+?\])*?\./;
 const ROOTS = [':root', 'html', 'body'];
+const ELEMENT = /^[a-z\d]+/;
+const escapeElementReplace = [/^([a-z\d]+)/, '$1[data-escape-global-style]'];
 
+const elements = new Set();
 for (const rule of bootstrap.stylesheet.rules) {
     if (rule.type !== 'rule') {
         continue;
     }
-    const selectors = rule.selectors.filter(
+    let selectors = rule.selectors.filter(
         selector =>
             !(
                 ROOTS.includes(selector) ||
@@ -65,21 +50,64 @@ for (const rule of bootstrap.stylesheet.rules) {
     if (!selectors.length) {
         continue;
     }
+    if (
+        isEqual(selectors, [
+            'article',
+            'aside',
+            'figcaption',
+            'figure',
+            'footer',
+            'header',
+            'hgroup',
+            'main',
+            'nav',
+            'section',
+        ])
+    ) {
+        /* article, aside, figcaption, figure, footer, header, hgroup, main, nav, section {
+            display: block;
+        } */
+        // These are all display: block by default
+        continue;
+    }
+    if (isEqual(selectors, ['table'])) {
+        /* table {
+            border-collapse: collapse;
+        } */
+        // This is the preferred default
+        continue;
+    }
+    if (selectors.some(s => s.startsWith('button'))) {
+        selectors = selectors.filter(s => !s.startsWith('[type='));
+        // Redundant with button targeted
+    }
+
     if (rule.declarations.some(d => d.value.includes('!important'))) {
         continue;
     }
-    const declarations = rule.declarations.map(({ value, ...rest }) => ({
-        ...rest,
-        value: 'unset',
-    }));
+    const declarations = unsetDeclarations(rule.declarations);
+    for (const selector of selectors) {
+        const match = selector.match(ELEMENT);
+        if (match) {
+            elements.add(match[0]);
+        }
+    }
     const modified = structuredClone(rule);
-    modified.selectors = selectors;
+    modified.selectors = selectors.map(s =>
+        ELEMENT.test(s)
+            ? s.replace(...escapeElementReplace)
+            : s.replace(']', '][data-escape-global-style]'),
+    );
     modified.declarations = declarations;
     nonClassRules.push(modified);
 }
 
 bootstrap.stylesheet.rules = nonClassRules;
-fs.writeFileSync(
-    '../libs/nx-components/src/lib/styles/_bootstrap-reset.scss',
-    css.stringify(bootstrap),
-);
+fs.writeFileSync('../common/styles/_bootstrap-reset.scss', css.stringify(bootstrap));
+
+const content = [
+    '/* eslint-disable */',
+    `const classes = new Set(${JSON.stringify([...elements.values()])});`,
+    'export default classes;\n',
+].join('\n');
+fs.writeFileSync('../eslint-plugin-nx/src/data/bootstrap-elements.ts', content);

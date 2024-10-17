@@ -57,6 +57,8 @@
 @import "bootstrap/scss/utilities/visibility";
 // @import "bootstrap/scss/print";
 
+@import './bootstrap-reset';
+
 @import '_theme_override';
 
 @import 'mixins';
@@ -89,3 +91,5 @@
 @import 'scrollbars';
 
 @import '_mat';
+
+@import './temp_global';

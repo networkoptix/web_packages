@@ -1,0 +1,77 @@
+@use 'components/forms/buttons/buttons.scss';
+
+/* Temporary global styling while Bootstrap is being removed/Cloud 2.0 is implemented */
+
+// Before <button class="btn btn-primary"
+// After <button class="nx-button--primary" data-escape-global-style>
+button, a {
+    &.nx-button--primary {
+        @include buttons.nx-button();
+        @include buttons.nx-button--primary();
+    }
+}
+button, a {
+    &.nx-button--default {
+    @include buttons.nx-button();
+        @include buttons.nx-button--default();
+    }
+}
+button, a {
+    &.nx-button--danger {
+    @include buttons.nx-button();
+        @include buttons.nx-button--danger();
+    }
+}
+
+@mixin _nx-header-base {
+    font-weight: lighter;
+    line-height: 1.2;
+
+    font-family: var(--font-family-medium);
+}
+
+// Before <h1>
+// After <h1 class="nx-h1" data-escape-global-style>
+h1.nx-h1 {
+    @include _nx-header-base();
+    font-size: 2rem;
+    color: var(--h1);
+}
+h2.nx-h2 {
+    @include _nx-header-base();
+    font-size: 1.5rem;
+    color: var(--h2);
+}
+h3.nx-h3 {
+    @include _nx-header-base();
+    font-size: 1.125rem;
+    color: var(--h3);
+}
+h4.nx-h4 {
+    @include _nx-header-base();
+    font-size: 0.9375rem;
+    color: var(--h4);
+}
+h5.nx-h5 {
+    @include _nx-header-base();
+    font-size: 0.875rem;
+    color: var(--h5);
+}
+h6.nx-h6 {
+    @include _nx-header-base();
+    font-size: 0.8125rem;
+    color: var(--h6);
+}
+
+a.nx-anchor {
+    color: var(--anchor-color);
+    text-decoration: underline;
+    &:hover {
+        color: var(--anchor-hover-color);
+        text-decoration: underline;
+    }
+    &:focus-visible {
+        box-shadow : 0 0 0 2px var(--brand-l2-t40);
+        outline: none;
+    }
+}

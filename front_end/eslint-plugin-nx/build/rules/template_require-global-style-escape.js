@@ -2,6 +2,7 @@
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+const bootstrap_elements_1 = __importDefault(require("../data/bootstrap-elements"));
 const nx_global_style_elements_1 = __importDefault(require("../data/nx-global-style-elements"));
 const template_utils_1 = require("./template-utils");
 const utils_1 = require("./utils");
@@ -28,7 +29,7 @@ module.exports = (0, utils_1.createRule)({
         return {
             Element$1(node) {
                 const nxName = `nx-${node.name}`;
-                if (nx_global_style_elements_1.default.has(node.name) &&
+                if ((bootstrap_elements_1.default.has(node.name) || nx_global_style_elements_1.default.has(node.name)) &&
                     !node.attributes.some(a => a.name === 'data-escape-global-style' ||
                         a.name === nxName ||
                         otherEnhancements.includes(a.name))) {
