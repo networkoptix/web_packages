@@ -11,7 +11,7 @@ include:
 
 default:
   tags:
-    - us-service
+    - us-service-cloudportal
 
 variables:
   JENKINS_JOB_LOG: "true"
