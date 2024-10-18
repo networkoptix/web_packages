@@ -624,13 +624,14 @@ class CloudSystemSerializer(AccessMatrixMixin, FieldAccessModelSerializer):
         return data
 
 
+@extend_schema_serializer(deprecate_fields=('role',))
 class ChannelPartnerUserSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(source='user.email', required=True)
     fullName = serializers.CharField(source='user.full_name', read_only=True)
     roles = serializers.ListField(source='roles_name', read_only=True, default=[], child=serializers.CharField())
     rolesIds = serializers.ListField(source='roles', read_only=True, default=[], child=serializers.CharField())
-    role = (extend_schema_field({'type': 'string', 'deprecated': True})(serializers.SlugRelatedField)(
-        slug_field='name', write_only=True, required=False, queryset=ChannelPartnerRole.objects.all()))
+    role = serializers.SlugRelatedField(
+        slug_field='name', write_only=True, required=False, queryset=ChannelPartnerRole.objects.all())
     roleId = serializers.PrimaryKeyRelatedField(
         queryset=OrganizationRole.objects.all(), write_only=True, required=False)
     created = serializers.DateTimeField(source='created_ts', read_only=True)
@@ -776,14 +777,15 @@ class GroupRolesSerializer(serializers.Serializer):
 
 
 # TODO: This serializer looks like spaghetti code. Need to consider how we store and generate this data.
+@extend_schema_serializer(deprecate_fields=('role',))
 class OrganizationUserSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(required=True)
     fullName = serializers.CharField(source='full_name', read_only=True)
     roles = serializers.SerializerMethodField(method_name='get_roles', read_only=True)
     rolesIds = serializers.SerializerMethodField(method_name='get_roles_ids', read_only=True)
     groupRoles = GroupRolesSerializer(source="organization_relations", many=True, read_only=True)
-    role = (extend_schema_field({'type': 'string', 'deprecated': True})(serializers.SlugRelatedField)(
-        slug_field='name', write_only=True, required=False, queryset=OrganizationRole.objects.all()))
+    role = serializers.SlugRelatedField(
+        slug_field='name', write_only=True, required=False, queryset=OrganizationRole.objects.all())
     # role = serializers.SlugRelatedField(slug_field='name', queryset=OrganizationRole.objects.all(),
     #                                     write_only=True, allow_null=True)
     roleId = serializers.PrimaryKeyRelatedField(
@@ -1917,7 +1919,7 @@ class SystemMembershipSerializer(serializers.Serializer):
 class UserListSerializer(serializers.Serializer):
     users = serializers.ListField()
 
-
+@extend_schema_serializer(deprecate_fields=('roles',))
 class SystemGroupUserSerializer(serializers.ModelSerializer):
     class MembershipSerializer(serializers.Serializer):
 
@@ -1933,9 +1935,9 @@ class SystemGroupUserSerializer(serializers.ModelSerializer):
     roles = serializers.ListField(source='roles_name', allow_empty=True, allow_null=True, read_only=True)
     rolesIds = serializers.ListField(source='roles', read_only=True, default=[], child=serializers.CharField())
     # todo. cache queryset. should we limit it to only roles containing system_role only
-    role = (extend_schema_field({'type': 'string', 'deprecated': True})(serializers.SlugRelatedField)(
+    role = serializers.SlugRelatedField(
         slug_field='name', write_only=True, required=False,
-        queryset=OrganizationRole.objects.exclude(id=OrganizationRoles.ORGANIZATION_ADMINISTRATOR)))
+        queryset=OrganizationRole.objects.exclude(id=OrganizationRoles.ORGANIZATION_ADMINISTRATOR))
     roleId = serializers.PrimaryKeyRelatedField(
         queryset=OrganizationRole.objects.exclude(id=OrganizationRoles.ORGANIZATION_ADMINISTRATOR),
         write_only=True, required=False)
