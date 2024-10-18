@@ -16,9 +16,14 @@
         <span *ngIf="machine.currentState === 'unmergedServers'">
             {{ LANG.dialogs.merge.unmergedServers | translate }}
         </span>
-        <span *ngIf="machine.currentState === 'secondarySystemOffline'">
-            {{ LANG.dialogs.merge.systemsFailedToMerge | translate }}
-        </span>
+        @if (
+            machine.currentState === 'secondarySystemOffline' ||
+            machine.currentState === 'primarySystemOffline'
+        ) {
+            <span>
+                {{ LANG.dialogs.merge.systemsFailedToMerge | translate }}
+            </span>
+        }
     </h1>
     <button
         type="button"
@@ -76,30 +81,47 @@
     </div>
 </form>
 
-<form *ngIf="machine.currentState === 'secondarySystemOffline'">
-    <div class="modal-body">
-        <p
-            [innerHTML]="
-                LANG.dialogs.merge.secondarySystemOffline
-                    | translate
-                        : {
-                              primarySystem: primaryName,
-                              secondarySystem: secondaryName
-                          }
-            "
-        ></p>
+@if (
+    machine.currentState === 'secondarySystemOffline' ||
+    machine.currentState === 'primarySystemOffline'
+) {
+    <div>
+        <div class="modal-body">
+            @if (machine.currentState === 'primarySystemOffline') {
+                <p
+                    [innerHTML]="
+                        LANG.dialogs.merge.primarySystemOffline
+                            | translate
+                                : {
+                                      primarySystem: primaryName,
+                                      secondarySystem: secondaryName
+                                  }
+                    "
+                ></p>
+            } @else {
+                <p
+                    [innerHTML]="
+                        LANG.dialogs.merge.secondarySystemOffline
+                            | translate
+                                : {
+                                      primarySystem: primaryName,
+                                      secondarySystem: secondaryName
+                                  }
+                    "
+                ></p>
+            }
+        </div>
+        <div class="modal-footer">
+            <button
+                class="btn btn-primary m-0"
+                (click)="close()"
+                translate
+            >
+                OK
+            </button>
+        </div>
     </div>
-    <div class="modal-footer">
-        <button
-            data-escape-global-style
-            class="nx-button--primary m-0"
-            (click)="close()"
-            translate
-        >
-            OK
-        </button>
-    </div>
-</form>
+}
 
 <form
     *ngIf="machine.currentState === 'checkMerge'"

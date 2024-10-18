@@ -47,6 +47,7 @@ export interface MergeError {
 
 export interface MergeErrorData {
     data: MergeError;
+    resultCode?: number;
 }
 
 // rest/v1/system/info

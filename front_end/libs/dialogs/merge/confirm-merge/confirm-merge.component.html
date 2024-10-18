@@ -3,16 +3,33 @@
     name="confirmMergeForm"
 >
     <div class="modal-body">
-        <p
-            [innerHTML]="
-                LANG.dialogs.merge.mergeConfirmation
-                    | translate
-                        : {
-                              primarySystem: primaryName,
-                              secondarySystem: secondaryName
-                          }
-            "
-        ></p>
+        @if (primarySystemOffline) {
+            <p
+                [innerHTML]="
+                    LANG.dialogs.merge.primarySystemOffline
+                        | translate: { primarySystem: primaryName, secondarySystem: secondaryName }
+                "
+            ></p>
+        } @else if (secondarySystemOffline) {
+            <p
+                [innerHTML]="
+                    LANG.dialogs.merge.secondarySystemOffline
+                        | translate: { primarySystem: primaryName, secondarySystem: secondaryName }
+                "
+            ></p>
+        } @else {
+            <p
+                [innerHTML]="
+                    LANG.dialogs.merge.mergeConfirmation
+                        | translate
+                            : {
+                                  primarySystem: primaryName,
+                                  secondarySystem: secondaryName
+                              }
+                "
+            ></p>
+        }
+
         <div *ngIf="tooManyServers">
             <p
                 class="error-label"
@@ -97,26 +114,28 @@
             </ng-container>
         </div>
     </div>
-    <div class="modal-footer next-button d-flex justify-between">
-        <button
-            class="btn btn-default svg-icon"
-            id="confirmBackBtn"
-            (click)="setCurrentState.emit()"
-            type="button"
-        >
-            <svg-icon
-                nx-add-svg-src
-                [src]="icons.dir + 'arrow_left.svg'"
-                class="mr-1"
-                [applyClass]="true"
-            ></svg-icon>
-            <span translate>Back</span>
-        </button>
-        <nx-process-button
-            [process]="confirmMergeProcess"
-            [form]="confirmMergeForm"
-            actionType="primary"
-            buttonText="{{ 'Merge Systems' | translate }}"
-        ></nx-process-button>
-    </div>
+    @if (!primarySystemOffline && !secondarySystemOffline) {
+        <div class="modal-footer next-button d-flex justify-between">
+            <button
+                class="btn btn-default svg-icon"
+                id="confirmBackBtn"
+                (click)="setCurrentState.emit()"
+                type="button"
+            >
+                <svg-icon
+                    nx-add-svg-src
+                    [src]="icons.dir + 'arrow_left.svg'"
+                    class="mr-1"
+                    [applyClass]="true"
+                ></svg-icon>
+                <span translate>Back</span>
+            </button>
+            <nx-process-button
+                [process]="confirmMergeProcess"
+                [form]="confirmMergeForm"
+                actionType="primary"
+                buttonText="{{ 'Merge Systems' | translate }}"
+            ></nx-process-button>
+        </div>
+    }
 </form>

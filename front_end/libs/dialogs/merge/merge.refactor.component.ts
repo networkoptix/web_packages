@@ -149,6 +149,8 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
     isWebadmin: boolean = environment.isWebadmin;
     dryRunAvailable: boolean;
     isSessionOauth: boolean;
+    primarySystemOffline$$ = signal<boolean>(false);
+    secondarySystemOffline$$ = signal<boolean>(false);
     systemUrls: { [ip: string]: string } = {};
     mergeSystems: MergeSystem[];
     system: NxSystem;
@@ -833,7 +835,21 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
         }
     }
 
-    handleMergeError(error: MergeErrorData): void {
+    async handleMergeError(error: MergeErrorData): Promise<void> {
+        const primarySystem = this.primarySystem$$() as NxSystem;
+        const secondarySystem = this.secondarySystem$$() as NxSystem;
+
+        if (error.resultCode === 500) {
+            await firstValueFrom(primarySystem.mediaserver.ping()).catch(() => {
+                this.primarySystemOffline$$.set(true);
+            });
+            if (!this.primarySystemOffline$$()) {
+                await firstValueFrom(secondarySystem.mediaserver.ping()).catch(() => {
+                    this.secondarySystemOffline$$.set(true);
+                });
+            }
+        }
+
         const err = cloneDeep(error.data);
         err.primarySystemName = this.primaryName$$();
         err.secondarySystemName = this.secondaryName$$();

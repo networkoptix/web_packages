@@ -9,13 +9,15 @@
 >
     <div class="modal-header">
         <h1 class="modal-title">
-            <ng-template #defaultTitle>
+            @if (this.failedToFindAnySystem) {
+                <span>{{ LANG.dialogs.merge.failedToFindAnySystemHeader | translate }}</span>
+            } @else if (primarySystemOffline$$() || secondarySystemOffline$$()) {
+                <span>
+                    {{ this.LANG.dialogs.merge.mergeFailedTitle }}
+                </span>
+            } @else {
                 <span translate>Merge Systems</span>
-            </ng-template>
-
-            <span *ngIf="this.failedToFindAnySystem; else defaultTitle">{{
-                LANG.dialogs.merge.failedToFindAnySystemHeader | translate
-            }}</span>
+            }
         </h1>
         <!-- check close functionality -->
         <button
@@ -81,6 +83,8 @@
             [isSessionOauth]="isSessionOauth"
             [(password)]="confirmPassword"
             [errorCode]="confirmMergeErrorCode"
+            [primarySystemOffline]="primarySystemOffline$$()"
+            [secondarySystemOffline]="secondarySystemOffline$$()"
             (setCurrentState)="updateStateHistory($event)"
         ></nx-merge-confirm-merge-component>
         <nx-merge-generic-merge-component
@@ -93,5 +97,19 @@
             (close)="close()"
             (setCurrentState)="updateStateHistory($event)"
         ></nx-merge-generic-merge-component>
+
+        @if (primarySystemOffline$$() || secondarySystemOffline$$()) {
+            <div class="modal-footer">
+                <button
+                    type="button"
+                    class="btn btn-primary"
+                    data-dismiss="modal"
+                    aria-label="Close"
+                    (click)="close()"
+                >
+                    {{ LANG.dialogs.buttons.ok }}
+                </button>
+            </div>
+        }
     </div>
 </div>

@@ -872,8 +872,11 @@ export class MergeModalContent {
                     if (!errorCode && error.name === 'TimeoutError') {
                         errorCode = 'fail';
                     }
-                    if (!this.targetSystem.isOnline) {
+
+                    if (!this.targetSystem.moduleInfo) {
                         return this.machine.transition('secondarySystemOffline');
+                    } else if (!this.primarySystem.moduleInfo) {
+                        return this.machine.transition('primarySystemOffline');
                     }
 
                     /** Get the names of the primary and secondary system.
