@@ -203,6 +203,7 @@ const CAMERA_PLACEHOLDERS = {
     incompatible: PLACEHOLDERS.incompatible,
     unavailable: PLACEHOLDERS.unavailableCamera,
     virtualCamera: PLACEHOLDERS.virtualCamera,
+    noAccess: PLACEHOLDERS.noAccess,
     [ConnectionError.transcodingDisabled]: PLACEHOLDERS.codecNotSupported,
     [ConnectionError.mjpegDisabled]: PLACEHOLDERS.codecNotSupported,
 };
