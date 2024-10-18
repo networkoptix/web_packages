@@ -123,7 +123,7 @@ nx-process-button {
                 min-width: calc(100% - 24px);
                 border: 1px solid var(--light6);
                 height: 28px;
-                font-size: $font-size-base;
+                font-size: var(--font-size-base);
                 margin: 0 12px !important;
                 white-space: nowrap;
             }

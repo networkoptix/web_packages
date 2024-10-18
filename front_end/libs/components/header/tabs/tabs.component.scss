@@ -20,7 +20,7 @@
         &>* {
             font-family: var(--font-family-medium);
             color: var(--btn-header-main-color);
-            font-size: $h6-font-size;
+            font-size: var(--h6-font-size);
             text-decoration: none;
             white-space: nowrap;
             line-height: 46px;

@@ -8,7 +8,7 @@
 @mixin button {
     font-family: var(--font-family-medium);
     //color           : $font-color-medium;
-    font-size: $h6-font-size  !important;
+    font-size: var(--h6-font-size)  !important;
     height: 2rem !important;
     border-radius: $border-radius-base  !important;
     font-weight: inherit !important;

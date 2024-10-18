@@ -5,7 +5,7 @@
 
 .server-info {
     font-family: var(--font-family-regular);
-    font-size: typography.$font-size-base;
+    font-size: var(--font-size-base);
     color: var(--dark9);
 
     .header-editable {

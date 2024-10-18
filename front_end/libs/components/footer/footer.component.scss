@@ -35,7 +35,7 @@
         .nav>li>span {
             position: relative;
             display: block;
-            font-size: $font-size-sm;
+            font-size: var(--font-size-sm);
             padding-right: 12px;
             padding-bottom: 3px;
             color: var(--footer-color);

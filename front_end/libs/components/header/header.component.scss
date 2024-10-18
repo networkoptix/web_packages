@@ -63,7 +63,7 @@ $header-collapsing-width-1 : 1px;
     }
 
     .navbar-brand {
-        font-size: $h3-font-size;
+        font-size: var(--h3-font-size);
         margin: 0 $horizontal-spacing  !important;
         padding: 0;
 
@@ -82,7 +82,7 @@ $header-collapsing-width-1 : 1px;
     .nav li {
         margin: 0;
         padding: 0;
-        font-size: $font-size-lg;
+        font-size: var(--font-size-lg);
         display: flex;
         align-items: center;
         height: 100%;
@@ -317,8 +317,8 @@ $header-collapsing-width-1 : 1px;
 
     &>a {
         font-family: var(--font-family-medium);
-        color: $font-color-medium;
-        font-size: $h6-font-size;
+        color: var(--dark9);
+        font-size: var(--h6-font-size);
         text-decoration: none;
         white-space: nowrap;
         line-height: 48px;

@@ -13,7 +13,7 @@
 
     &__code {
         font-family: robotomonoregular, monospace;
-        font-size: $h3-font-size;
+        font-size: var(--h3-font-size);
         text-align: center;
         user-select: none;
 

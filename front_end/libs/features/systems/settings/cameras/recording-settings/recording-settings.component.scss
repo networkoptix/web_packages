@@ -6,7 +6,7 @@
 
 .camera-settings-info {
     font-family: var(--font-family-regular);
-    font-size: $font-size-base;
+    font-size: var(--font-size-base);
     color: var(--card-header-text);
 
     .grid-container {
@@ -56,7 +56,7 @@
 .recording-hint {
     // do not use typography as we can't overwrite color with input-error
     font-family: var(--font-family-regular);
-    font-size: $font-size-base;
+    font-size: var(--font-size-base);
     color: var(--label-color);
     margin: -8px 0 16px 64px;
     pointer-events: none;

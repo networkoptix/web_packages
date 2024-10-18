@@ -1,6 +1,6 @@
 @use "_theme_variables_common" as *;
 @use "bootstrap_utils" as bootstrap;
-@import "sass-rem/rem";
+@use "sass-rem/rem" as sass-rem;
 
 .form-horizontal {
     .form-group {
@@ -34,8 +34,8 @@
 
     .badge {
         font-family: var(--font-family-bold);
-        font-size: $font-size-ssm;
-        line-height: $line-height-ssm;
+        font-size: var(--font-size-xsm);
+        line-height: sass-rem.rem(13px);
         padding: .2em .6em .3em;
     }
 }

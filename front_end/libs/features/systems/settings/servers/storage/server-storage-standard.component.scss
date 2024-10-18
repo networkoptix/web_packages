@@ -139,7 +139,7 @@ form.form-horizontal {
 }
 
 .header-table {
-    font-size: typography.$font-size-base;
+    font-size: var(--font-size-base);
     padding-left: 0;
 
     .header-table-cell {

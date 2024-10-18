@@ -9,7 +9,7 @@
     display: inline;
 
     font-family: var(--font-family-regular);
-    font-size: common.$font-size-base;
+    font-size: var(--font-size-base);
     line-height: 1.5;
 
     &.nx-control-message--info {

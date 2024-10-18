@@ -241,7 +241,7 @@
                 border-bottom: 1px solid var(--dark4);
 
                 .authorize-header {
-                    font-size: $font-size-20  !important;
+                    font-size: sass-rem.rem(20px)  !important;
                     color: var(--light1)  !important;
                     line-height: sass-rem.rem(22px) !important;
                 }
@@ -261,7 +261,7 @@
 
         main {
             font-family: var(--font-family-regular);
-            font-size: $font-size-base;
+            font-size: var(--font-size-base);
             line-height: sass-rem.rem(16px);
             max-width: 480px;
             display: flex;
@@ -286,7 +286,7 @@
 
             input {
                 height: 40px !important;
-                font-size: $h6-font-size  !important;
+                font-size: var(--h6-font-size)  !important;
                 padding: 0 8px;
                 border-radius: 1px !important;
             }
@@ -458,7 +458,7 @@
 
                 button.btn.text-button span {
                     font-family: var(--font-family-regular);
-                    font-size: $font-size-base;
+                    font-size: var(--font-size-base);
                 }
 
                 &.footer-w {

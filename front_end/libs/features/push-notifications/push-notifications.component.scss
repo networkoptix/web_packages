@@ -1,12 +1,10 @@
-@use 'typography';
-
 .foreground-messages-content {
   max-height: 800px;
 }
 
 .footnote {
   font-style: italic;
-  color: typography.$gray-light;
+  color: var(--light11);
   font-size: 11px;
 }
 

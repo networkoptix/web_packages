@@ -33,7 +33,7 @@
     }
 
     .user-name {
-        font-size: theme_vars.$h6-font-size;
+        font-size: var(--h6-font-size);
         color: var(--body-text-color);
         line-height: 16px;
         display: block;

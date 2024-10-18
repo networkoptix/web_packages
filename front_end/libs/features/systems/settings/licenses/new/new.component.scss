@@ -4,7 +4,7 @@
 
 .server-info {
     font-family: var(--font-family-regular);
-    font-size: $font-size-base;
+    font-size: var(--font-size-base);
     color: var(--dark9);
 
     .header-top-bar {
@@ -47,7 +47,7 @@
     }
 
     .header-table {
-        font-size: $font-size-base;
+        font-size: var(--font-size-base);
         padding-left: 0;
 
         .header-table-cell {

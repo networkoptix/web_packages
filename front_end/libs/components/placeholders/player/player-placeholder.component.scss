@@ -33,7 +33,7 @@
 
         .description {
             font-family: var(--font-family-light);
-            font-size: $h3-font-size;
+            font-size: var(--h3-font-size);
             color: var(--placeholder-description-text);
             word-break: break-word;
             text-align: center;

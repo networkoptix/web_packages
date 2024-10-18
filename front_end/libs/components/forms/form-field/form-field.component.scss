@@ -16,7 +16,7 @@
 
     .character-count {
         font-family: var(--font-family-regular);
-        font-size: vars.$font-size-base;
+        font-size: var(--font-size-base);
         color: var(--character-count-color);
 
         &--error {
