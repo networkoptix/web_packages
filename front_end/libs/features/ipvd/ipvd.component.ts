@@ -1,6 +1,7 @@
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { Location } from '@angular/common';
 import {
+    ChangeDetectorRef,
     Component,
     DestroyRef,
     effect,
@@ -266,6 +267,8 @@ export class NxIpvdComponent implements OnInit, OnDestroy {
         }
     }
 
+    cdr = inject(ChangeDetectorRef);
+
     calcRows(isCameraActive?: boolean): void {
         const otherElements = this.isMobile ? OTHER_PAGE_ELEMENTS_MOBILE : OTHER_PAGE_ELEMENTS;
         this.templateRows = this.camerasTable.length
@@ -278,6 +281,7 @@ export class NxIpvdComponent implements OnInit, OnDestroy {
             : isCamera
               ? `1fr ${RIGHT_PANEL_WIDTH}px`
               : '1fr';
+        this.cdr.detectChanges();
     }
 
     menuChanged(isHeight: boolean): void {
