@@ -115,8 +115,11 @@ export const SystemGuard: CanActivateFn = (
                         const info = await firstValueFrom(
                             cloudApiService.cloudChannelPartnersApi.getSystem(systemId),
                         );
-                        menusService.serviceMode(systemId, info.name);
-                        return true;
+                        if (currentRoute === 'services') {
+                            menusService.serviceMode(systemId, info.name);
+                            return true;
+                        }
+                        return router.navigate(['/']);
                     } catch {
                         return router.navigate(['systems', 'no-access'], {
                             skipLocationChange: true,
