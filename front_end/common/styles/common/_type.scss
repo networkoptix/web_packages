@@ -1,45 +1,9 @@
 @use "sass-rem/rem" as sass-rem;
-@use "theme_variables_common" as common;
 @use "typography";
-
-h1:not([data-escape-global-style]),
-h2:not([data-escape-global-style]) {
-    @include typography.font-source(var(--font-family-medium), var(--h1-font-size));
-    color: var(--h1);
-    margin-top: common.$line-height-computed;
-    margin-bottom: common.$line-height-computed;
-    padding: 0;
-    display: flex;
-    align-items: center;
-}
 
 .old-h12 {
     @include typography.font-source(var(--font-family-light), sass-rem.rem(22px), var(--h1));
     line-height: sass-rem.rem(26px);
-}
-
-h2:not([data-escape-global-style]) {
-    @include typography.font-source(var(--font-family-medium), var(--h2-font-size), var(--h2));
-    margin: 0;
-    padding: 0;
-}
-
-h3:not([data-escape-global-style]) {
-    @include typography.font-source(var(--font-family-medium), var(--h3-font-size), var(--h3));
-    margin-top: (common.$line-height-computed * 0.5);
-    margin-bottom: (common.$line-height-computed * 0.25);
-}
-
-h4:not([data-escape-global-style]) {
-    @include typography.font-source(var(--font-family-medium), var(--h4-font-size), var(--h4));
-}
-
-h5:not([data-escape-global-style]) {
-    @include typography.font-source(var(--font-family-medium), var(--h5-font-size), var(--h5));
-}
-
-h6:not([data-escape-global-style]) {
-    @include typography.font-source(var(--font-family-medium), var(--h6-font-size), var(--h6));
 }
 
 .h7 {
@@ -51,20 +15,6 @@ h1>.label {
     vertical-align: 33%;
 }
 
-p {
-    margin-bottom: 0.5rem;
-}
-
-p[data-escape-global-style] {
-    margin-bottom: unset;
-}
-
-// since we use specific fonts <b> and <strong> have no effect on "roboto-regular"
-b:not([data-escape-global-style]),
-strong:not([data-escape-global-style]) {
-    font-family: var(--font-family-bold)  !important;
-}
-
 .text-contrast {
     color: var(--text-contrast);
 
@@ -72,4 +22,36 @@ strong:not([data-escape-global-style]) {
         color: var(--text-contrast);
         font-family: var(--font-family-bold) !important;
     }
+}
+
+.group-label {
+    margin-bottom: 8px;
+    font-family: var(--font-family-regular);
+    color: var(--light16);
+}
+
+.error-label {
+    @include typography.regular13nocolor;
+    color: var(--error-label) !important;
+}
+
+.disabled-label {
+    @include typography.regular13light10;
+}
+
+.warning-label {
+    color: var(--error-label) !important;
+}
+
+
+.light-text {
+    color: var(--light-text-color);
+    opacity: var(--light-text-opacity);
+    font-size: 13px;
+}
+
+.pseudo-anchor {
+    color: var(--brand-core) !important;
+    text-decoration: underline;
+    cursor: pointer;
 }

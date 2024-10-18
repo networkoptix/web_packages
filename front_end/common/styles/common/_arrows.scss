@@ -54,3 +54,40 @@ $arrow-color: var(--light4);
         }
     }
 }
+
+.arrow-flip {
+    svg-icon {
+        position: absolute;
+        right: 10px;
+        bottom: 7px;
+        -webkit-transition: .2s ease-in-out;
+        -moz-transition: .2s ease-in-out;
+        -o-transition: .2s ease-in-out;
+        transition: .2s ease-in-out;
+
+        svg {
+            width: 18px;
+            height: 18px;
+
+            g polyline {
+                stroke: var(--btn-dropdown-toggle-color);
+                stroke-width: 2px;
+                fill: none;
+            }
+        }
+    }
+}
+
+.dropdown-show,
+.multi-select-show,
+.cam-table-show,
+.permissions-show,
+.header-nav-show,
+.dynamic-table-show {
+    .arrow-flip svg-icon {
+        -webkit-transform: rotateX(180deg);
+        -moz-transform: rotateX(180deg);
+        -o-transform: rotateX(180deg);
+        transform: rotateX(180deg);
+    }
+}

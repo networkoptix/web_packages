@@ -1,0 +1,42 @@
+.input-group {
+    &.has-addon input {
+        padding-right : 45px;
+    }
+
+    &-addon {
+        height           : 32px;
+        padding          : 5px 10px;
+        font-size        : 14px;
+        font-weight      : 400;
+        line-height      : 1;
+        color            : #121517;
+        text-align       : center;
+        background-color : transparent !important;
+        border           : none;
+        display          : flex;
+        align-items      : center;
+        justify-items    : center;
+        position         : absolute;
+        right            : 2px;
+        z-index          : 9;
+        top              : 0;
+
+        .glyphicon {
+            margin : 0;
+        }
+
+        svg-icon svg .fill-color-main {
+            fill: var(--card-header-text);
+            stroke: none;
+        }
+
+        svg-icon svg .stroke-color-main {
+            stroke: var(--light-text-color);
+            fill: none;
+        }
+
+         &.confirm {
+             margin-right: -1px;
+        }
+    }
+}

@@ -279,3 +279,49 @@ html[data-theme="dark"] .no-bookmarks .placeholder-icon {
     // This fixes the void when we hide the cloud
     margin-bottom: 0;
 }
+
+.section-placeholder {
+    position: relative;
+    display: flex;
+
+    .page-placeholder {
+        .placeholder-content {
+            transform: none !important;
+
+            .placeholder-icon {
+                margin: 80px 0 40px;
+            }
+        }
+    }
+}
+
+.page-placeholder {
+    position: absolute;
+    z-index: 99;
+    width: 100%;
+    /*If the system is offline this should cover everything.
+                     Must always be the highest z-index*/
+
+    &>.placeholder {
+        opacity: 1;
+    }
+
+    .placeholder>.placeholder-content {
+        top: 40%;
+    }
+
+    &.offline {
+        @media (max-width : 991px) {
+            &>.placeholder {
+                height: auto !important;
+                position: relative;
+                margin: 50px 0;
+
+                &>.placeholder-content {
+                    top: 0;
+                    transform: none;
+                }
+            }
+        }
+    }
+}

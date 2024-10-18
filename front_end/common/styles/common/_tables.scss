@@ -6,6 +6,27 @@
 // @import 'styles/theme_palette';
 // @use 'theme_variables_common' as variables;
 
+.table {
+    th {
+        text-transform : uppercase;
+        font-size      : 13px;
+    }
+}
+
+.table {
+    & thead {
+        & th {
+            padding-left : 0;
+        }
+    }
+
+    & tbody {
+        & td {
+            padding-left : 0;
+        }
+    }
+}
+
 // Work towards making table styles more consistent
 // theme vars need to be generated here to be available
 // to all components using nx-table -- [T]

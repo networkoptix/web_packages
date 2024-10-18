@@ -3,52 +3,6 @@
 @use "components/content-block/content-block.component";
 @use "bootstrap_utils" as bootstrap;
 
-.section-placeholder {
-    position: relative;
-    display: flex;
-
-    .page-placeholder {
-        .placeholder-content {
-            transform: none !important;
-
-            .placeholder-icon {
-                margin: 80px 0 40px;
-            }
-        }
-    }
-}
-
-.page-placeholder {
-    position: absolute;
-    z-index: 99;
-    width: 100%;
-    /*If the system is offline this should cover everything.
-                     Must always be the highest z-index*/
-
-    &>.placeholder {
-        opacity: 1;
-    }
-
-    .placeholder>.placeholder-content {
-        top: 40%;
-    }
-
-    &.offline {
-        @media (max-width : 991px) {
-            &>.placeholder {
-                height: auto !important;
-                position: relative;
-                margin: 50px 0;
-
-                &>.placeholder-content {
-                    top: 0;
-                    transform: none;
-                }
-            }
-        }
-    }
-}
-
 .card {
     &.hoverable {
         margin-bottom: 10px;
@@ -247,13 +201,4 @@ nx-layout-grid-item-overlay:hover nx-monitoring-graph[noframe] .chart-legend {
     top: 60px;
     position: absolute;
     height: fit-content;
-}
-
-pre,
-code {
-    color: var(--body-text-color);
-}
-pre[data-escape-global-style],
-code[data-escape-global-style] {
-    color: reset;
 }

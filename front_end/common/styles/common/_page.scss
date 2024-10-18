@@ -13,6 +13,56 @@ body {
     margin    : 0;
 }
 
+/* The emerging W3C standard
+   that is currently Firefox-only */
+   * {
+	scrollbar-width: thin;
+	scrollbar-color: var(--scrollbar-color) transparent;
+}
+
+/* Works on Chrome/Edge/Safari */
+*::-webkit-scrollbar {
+	width: 8px;
+	height: 8px;
+}
+
+*::-webkit-scrollbar-thumb {
+	-webkit-border-radius: 6px;
+	border-radius: 6px;
+	-webkit-box-shadow: initial;
+	height: auto;
+	background-color: var(--scrollbar-thumb-bg);
+	// fixes dropdown bug ... overwrite elsewhere
+	border: 2px solid var(--scrollbar-thumb-border-color);
+}
+
+*::-webkit-scrollbar-track {
+	-webkit-box-shadow: initial;
+	-webkit-border-radius: initial;
+	border-radius: initial;
+
+	background-color: var(--scrollbar-thumb-border-color);
+}
+
+.outerContainer {
+    display: flex;
+    flex-direction: column;
+}
+
+.headerContainer {
+    z-index: 999;
+}
+
+.mainContainer {
+    //flex: 1 1 auto;
+    overflow-y: auto;
+    height: 100%;
+
+    &.full-screen {
+        overflow: hidden;
+    }
+}
+
 .screen-reader-only {
     position: absolute;
     left: -10000px;

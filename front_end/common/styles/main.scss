@@ -62,33 +62,30 @@
 @import '_theme_override';
 
 @import 'mixins';
+@import 'page';
 @import 'type';
 @import 'visuals';
+
 
 // Components
 @import 'components/placeholders/placeholders';
 @import 'components/dropdowns/dropdowns';
 //@import 'dialogs/dialogs'; // imported in angular.json <- here it's causing an error
 @import 'menu/menu.component';
-@import 'anchor';
 @import 'arrows';
 @import 'buttons';
+@import 'close';
 @import 'components';
 @import 'elements';
+@import 'not-elements';
 @import 'forms';
 @import 'icons';
-@import 'inputs';
-@import 'labels';
-@import 'labels';
+@import 'input-group';
 @import 'languages';
-@import 'navs';
-@import 'option';
-@import 'page';
 @import 'tables';
 @import 'tabset';
 @import 'whatinput';
 @import 'popovers';
-@import 'scrollbars';
 
 @import '_mat';
 
