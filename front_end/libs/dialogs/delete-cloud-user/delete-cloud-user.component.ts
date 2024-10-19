@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
 import type { NgForm, NgModel } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
@@ -18,7 +19,13 @@ import type { DeleteCloudUser as DT } from '../dialogs.types';
     selector: 'nx-modal-delete-cloud-user-content',
     templateUrl: 'delete-cloud-user.component.html',
     standalone: true,
-    imports: [CommonModule, FormsModule, NxProcessButtonComponent, NxProcessCancelButtonComponent],
+    imports: [
+        CommonModule,
+        FormsModule,
+        TranslateModule,
+        NxProcessButtonComponent,
+        NxProcessCancelButtonComponent,
+    ],
 })
 export class DeleteCloudUserModalContent extends ModalBase<DT['return']> {
     LANG = staticLang;

@@ -39,6 +39,7 @@ const PROXY_CONFIG = [
             '/static/lang_en_US',
             '/static/lang_ru_RU',
             '/static/lang_es_ES',
+            '/static/lang_ja_JP',
             '/static/styles',
             // '/static/images', // Uncomment if we want it from cloud for some reason
             '/static/fonts',
