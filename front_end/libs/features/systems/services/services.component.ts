@@ -4,7 +4,7 @@ import { Component, computed, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-import { combineLatest, switchMap, tap } from 'rxjs';
+import { catchError, forkJoin, map, of, switchMap } from 'rxjs';
 
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxDialogsService } from '@dialogs/dialogs.service';
@@ -113,22 +113,35 @@ export class NxServicesComponent {
         { cloudChannelPartnersApi: channelPartnersApi }: NxCloudApiService,
     ) {
         this.systemId = route.snapshot.params.systemId;
-        combineLatest([
-            channelPartnersApi.getSystemSassReport(this.systemId),
+        forkJoin([
+            channelPartnersApi.getSystemSassReport(this.systemId).pipe(catchError(() => of(null))),
             channelPartnersApi.getSystemServices(this.systemId),
         ])
             .pipe(
-                tap(([report, services]) => {
-                    this.partnerId = report.channelPartner.id;
+                map(([report, services]) => {
+                    let quantities: ServiceQuantities = {};
+                    if (report) {
+                        quantities = report.services;
+                        this.partnerId = report.channelPartner.id;
+                    }
                     this.data.set({
+                        quantities,
                         services: services.filter(service => !service.hidden),
-                        quantities: report.services,
                     });
+                    return report;
                 }),
-                switchMap(([report]) =>
-                    channelPartnersApi.getChannelPartner(report.channelPartner.id),
+                switchMap(report =>
+                    report
+                        ? channelPartnersApi
+                              .getChannelPartner(report.channelPartner.id)
+                              .pipe(catchError(() => of(null)))
+                        : of(null),
                 ),
-                tap(partner => {
+                takeUntilDestroyed(), // In case user navigates away while loading things
+            )
+            .subscribe(partner => {
+                this.loading = false;
+                if (partner) {
                     this.hasChangePermission = partner.ownPermissions.includes(
                         ChannelPartnerPermissions.add_remove_service_quantities,
                     );
@@ -136,11 +149,7 @@ export class NxServicesComponent {
                     if (partner.monthlyAdditionalServiceLimit !== '**REDACTED**') {
                         this.monthlyServiceCap = partner.monthlyAdditionalServiceLimit;
                     }
-                }),
-                takeUntilDestroyed(), // In case user navigates away while loading things
-            )
-            .subscribe(() => {
-                this.loading = false;
+                }
             });
     }
 
