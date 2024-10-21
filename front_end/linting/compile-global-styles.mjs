@@ -1,7 +1,8 @@
-import childProcesses from 'child_process';
 import fs from 'fs';
 
-export function compileGlobalStyles() {
+import * as sass from 'sass';
+
+export function compileNxGlobalStyles() {
     const commonDir = '../common/styles/common';
     const scssFiles = fs
         .readdirSync(commonDir)
@@ -16,9 +17,12 @@ export function compileGlobalStyles() {
     const MIXIN_DECLARATION = /@mixin ([\w\-]+)(\(.+?\))? {.+?\n}/gms;
     const VAR_DECLARATION = /^\$[\w\-]+\s*:.+;/gm;
     const FLOATING_VARS = /(([\w\-\_]+\.)|-)?\$[\w\-]+/g; // Catch import name and -$var negation
-    const TRANSPARENTIZE = /transparentize\(.+?\)/g;
 
-    const toCollate = ['@mixin dummy-mixin($args...) { @content; };', '$dummy-variable: 0;'];
+    const toCollate = [
+        '@function dummy-function($args) { @return 0; }',
+        '@mixin dummy-mixin($args...) { @content; };',
+        '$dummy-variable: 0;',
+    ];
 
     /* Bludgeon global style files with regex until they can be compiled on their own */
     for (const file of scssFiles) {
@@ -30,17 +34,19 @@ export function compileGlobalStyles() {
         contents = contents.replace(MIXIN_DECLARATION, '');
         contents = contents.replace(VAR_DECLARATION, '');
         contents = contents.replace(FLOATING_VARS, '$dummy-variable');
+        contents = contents.replaceAll('sass-rem.rem', 'dummy-function');
 
-        contents = contents.replace(TRANSPARENTIZE, 'black'); // 0 doesn't work as arg
         toCollate.push(contents);
     }
 
     const collated = toCollate.join('\n');
-    fs.writeFileSync('collated.scss', collated);
-    childProcesses.execSync(`npx sass collated.scss:collated.css --no-source-map`);
+    const compiled = sass.compileString(collated);
+    return compiled.css;
 }
 
-export function rmCompiledGlobalStyles() {
-    fs.rmSync('./collated.scss');
-    fs.rmSync('./collated.css');
+export function compileLocalBootstrap() {
+    const compiled = sass.compile('../common/styles/bootstrap-4.5.2/entry.scss', {
+        loadPaths: ['../node_modules'],
+    });
+    return compiled.css;
 }

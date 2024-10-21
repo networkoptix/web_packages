@@ -24,11 +24,9 @@ p[data-escape-global-style] {
 abbr[data-escape-global-style][title],
 abbr[data-escape-global-style][data-original-title] {
   text-decoration: unset;
-  -webkit-text-decoration: unset;
   text-decoration: unset;
   cursor: unset;
   border-bottom: unset;
-  -webkit-text-decoration-skip-ink: unset;
   text-decoration-skip-ink: unset;
 }
 
@@ -187,7 +185,7 @@ select[data-escape-global-style] {
   text-transform: unset;
 }
 
-[role="button"][data-escape-global-style] {
+[role=button][data-escape-global-style] {
   cursor: unset;
 }
 
@@ -208,8 +206,8 @@ button[data-escape-global-style]::-moz-focus-inner {
   border-style: unset;
 }
 
-input[data-escape-global-style][type="radio"],
-input[data-escape-global-style][type="checkbox"] {
+input[data-escape-global-style][type=radio],
+input[data-escape-global-style][type=checkbox] {
   box-sizing: unset;
   padding: unset;
 }
@@ -242,17 +240,17 @@ progress[data-escape-global-style] {
   vertical-align: unset;
 }
 
-[type="number"][data-escape-global-style]::-webkit-inner-spin-button,
-[type="number"][data-escape-global-style]::-webkit-outer-spin-button {
+[type=number][data-escape-global-style]::-webkit-inner-spin-button,
+[type=number][data-escape-global-style]::-webkit-outer-spin-button {
   height: unset;
 }
 
-[type="search"][data-escape-global-style] {
+[type=search][data-escape-global-style] {
   outline-offset: unset;
   -webkit-appearance: unset;
 }
 
-[type="search"][data-escape-global-style]::-webkit-search-decoration {
+[type=search][data-escape-global-style]::-webkit-search-decoration {
   -webkit-appearance: unset;
 }
 

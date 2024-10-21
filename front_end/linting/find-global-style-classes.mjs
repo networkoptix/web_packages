@@ -1,3 +1,4 @@
+import childProcess from 'child_process';
 import fs from 'fs';
 import path from 'path';
 import process from 'process';
@@ -5,7 +6,7 @@ import { fileURLToPath } from 'url';
 
 import css from 'css';
 
-import { compileGlobalStyles, rmCompiledGlobalStyles } from './compile-global-styles.mjs';
+import { compileLocalBootstrap, compileNxGlobalStyles } from './compile-global-styles.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 process.chdir(__dirname);
@@ -52,12 +53,12 @@ function parseRules(rules) {
 
 /**
  *
- * @param {string} file CSS file
+ * @param {string} cssString CSS file string
  * @returns {Set<string>} Found class names
  */
-function readInputStylesheet(file) {
-    const contents = css.parse(fs.readFileSync(file, { encoding: 'utf-8' }));
-    const classNames = parseRules(contents.stylesheet.rules);
+function readInputStylesheet(cssString) {
+    const ast = css.parse(cssString);
+    const classNames = parseRules(ast.stylesheet.rules);
     return classNames;
 }
 
@@ -70,21 +71,20 @@ function readInputStylesheet(file) {
 function writeOutputSet(file, classNames) {
     const content = [
         '/* eslint-disable */',
-        `const classes = new Set(${JSON.stringify(Array.from(classNames))});`,
+        `const classes = new Set(${JSON.stringify(Array.from(classNames), null, 4)});`,
         'export default classes;\n',
     ].join('\n');
     fs.writeFileSync(file, content);
 }
 
-compileGlobalStyles();
-const collatedClasses = readInputStylesheet('./collated.css');
+const compiledNxGlobal = compileNxGlobalStyles();
+const collatedClasses = readInputStylesheet(compiledNxGlobal);
 collatedClasses.add('table-wrapper'); // See comment in compile function
 writeOutputSet('../eslint-plugin-nx/src/data/nx-global-style-classes.ts', collatedClasses);
-rmCompiledGlobalStyles();
 
-const bootstrapClasses = readInputStylesheet('../node_modules/bootstrap/dist/css/bootstrap.css');
-const utilClasses = readInputStylesheet('./_bootstrap-utils.css');
-for (const util of utilClasses) {
-    bootstrapClasses.delete(util);
-}
+const compiledBootstrap = compileLocalBootstrap();
+const bootstrapClasses = readInputStylesheet(compiledBootstrap);
 writeOutputSet('../eslint-plugin-nx/src/data/bootstrap-classes.ts', bootstrapClasses);
+
+process.chdir('../eslint-plugin-nx');
+childProcess.execSync('npm run build');

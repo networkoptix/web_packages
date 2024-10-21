@@ -6,7 +6,9 @@
     "scripts": {
         "watch": "tsc --project ./tsconfig.build.json -w",
         "test": "npx ts-mocha --timeout 5000 --require fixtures.js src/tests/*.test.ts",
-        "build": "rm -rf ./build; tsc --project ./tsconfig.build.json",
+        "prebuild": "rm -rf ./build",
+        "build": "tsc --project ./tsconfig.build.json",
+        "postbuild": "bash ./postbuild.sh",
         "build-check": "mv ./build ./build-copy; npm run build; build_diff=$(diff -r ./build ./build-copy); if [ ! -z \"$build_diff\" ]; then exit 1; fi",
         "lint": "cd ..; npx eslint --fix \"./eslint-plugin-nx/**/*.ts\""
     },

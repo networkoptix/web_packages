@@ -1,3 +1,4 @@
+import childProcess from 'child_process';
 import fs from 'fs';
 import path from 'path';
 import process from 'process';
@@ -6,12 +7,13 @@ import { fileURLToPath } from 'url';
 import css from 'css';
 import { isEqual } from 'lodash-es';
 
+import { compileLocalBootstrap } from './compile-global-styles.mjs';
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 process.chdir(__dirname);
 
-const bootstrap = css.parse(
-    fs.readFileSync('../node_modules/bootstrap/dist/css/bootstrap.css', { encoding: 'utf-8' }),
-);
+const compiledBootstrap = compileLocalBootstrap();
+const bootstrap = css.parse(compiledBootstrap);
 
 /**
  *
@@ -107,7 +109,9 @@ fs.writeFileSync('../common/styles/_bootstrap-reset.scss', css.stringify(bootstr
 
 const content = [
     '/* eslint-disable */',
-    `const classes = new Set(${JSON.stringify([...elements.values()])});`,
+    `const classes = new Set(${JSON.stringify(Array.from(elements.values()), null, 4)});`,
     'export default classes;\n',
 ].join('\n');
-fs.writeFileSync('../eslint-plugin-nx/src/data/bootstrap-elements.ts', content);
+process.chdir('../eslint-plugin-nx');
+fs.writeFileSync('./src/data/bootstrap-elements.ts', content);
+childProcess.execSync('npm run build');
