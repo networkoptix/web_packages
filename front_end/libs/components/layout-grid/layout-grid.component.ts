@@ -2449,10 +2449,13 @@ export class NxLayoutGridComponent {
                     if (isLocalLayout) {
                         this.layoutStateService.createNewLayout(items);
                     } else {
+                        const isCopy = layoutOrFocus && assertResourceOfType.layout(layoutOrFocus);
                         this.layoutStateService.createNewCrossSystemLayout(
-                            this.layout.name,
+                            layoutOrFocus && assertResourceOfType.layout(layoutOrFocus)
+                                ? this.layout.name
+                                : '',
                             items,
-                            true,
+                            isCopy,
                         );
                     }
                 }
