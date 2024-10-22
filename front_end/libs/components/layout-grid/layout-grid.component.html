@@ -1,4 +1,4 @@
-@if (layoutItemLookup && system.permissionManager.currentUser$$() && (layout$ | async); as layout) {
+@if (layoutItemLookup && (layout$ | async); as layout) {
     <ng-template #layoutTree>
         @if (
             !layout || !layoutItemLookup
@@ -627,7 +627,7 @@
                 </div>
             }
         }
-        @if (layoutItemLookup && layout$$(); as layout) {
+        @if (layout$$(); as layout) {
             <div
                 class="grid-wrapper"
                 [ngClass]="{ locked: layout.locked || changingLayout, dragging: dragging$$() }"

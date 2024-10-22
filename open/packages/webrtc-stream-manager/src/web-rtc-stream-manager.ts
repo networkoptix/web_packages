@@ -244,8 +244,34 @@ export class WebRTCStreamManager {
             const { score, fps, maxFps } = (await firstValueFrom(frameRateTracker$));
             const clientSidePerformanceIssue = score < 50 && fps < 30;
             const clientSitePerformanceOptimal = fps > (maxFps < 60 ? 40 : 50);
-            const streamsToUpgrade = details.filter(({ stream,  mos }) => clientSitePerformanceOptimal && stream === 1 && mos > WebRTCStreamManager.HIGH_QUALITY_MOS_THRESHOLD);
-            const streamsToDowngrade = details.filter(({ stream, mos }) => clientSidePerformanceIssue || stream === 0 && mos < WebRTCStreamManager.LOW_QUALITY_MOS_THRESHOLD).reverse();
+            const streamsToUpgrade = details.filter(({ stream,  mos, connection }) => {
+                if (stream === AvailableStreams.PRIMARY) {
+                    return false;
+                }
+
+                const hasSecondary = connection.availableStreams.includes(AvailableStreams.SECONDARY);
+                if (!hasSecondary) {
+                    return true;
+                }
+
+                if (connection.allElementsSmall()) {
+                    return false;
+                }
+
+                return clientSitePerformanceOptimal && mos > WebRTCStreamManager.HIGH_QUALITY_MOS_THRESHOLD
+            });
+            const streamsToDowngrade = details.filter(({ stream, mos, connection }) => {
+                const hasPrimary = connection.availableStreams.includes(AvailableStreams.PRIMARY);
+                if (stream === AvailableStreams.SECONDARY) {
+                    return false;
+                }
+
+                if (!hasPrimary || connection.allElementsSmall()) {
+                    return true;
+                }
+
+                return clientSidePerformanceIssue || mos < WebRTCStreamManager.LOW_QUALITY_MOS_THRESHOLD;
+            }).reverse();
             const numStreamsToUpgrade = streamsToUpgrade.length > streamsToDowngrade.length ? streamsToDowngrade.length + 1: streamsToUpgrade.length;
             const numStreamsToDowngrade = streamsToDowngrade.length > streamsToUpgrade.length ? streamsToUpgrade.length + 1: streamsToDowngrade.length;
             const streamsToUpdate = [...streamsToUpgrade.slice(0, numStreamsToUpgrade), ...streamsToDowngrade.slice(0, numStreamsToDowngrade)];
@@ -286,6 +312,10 @@ export class WebRTCStreamManager {
         }),
         throttleByFrameRate(),
     )
+
+    private allElementsSmall(): boolean {
+        return this.videoElements?.length && this.videoElements.every(({ offsetWidth, offsetHeight }) => [offsetWidth, offsetHeight].every(value => value < 400))
+    }
 
     /** Subscriptions for tuning instances */
 
@@ -434,7 +464,7 @@ export class WebRTCStreamManager {
             targetStreams = [AvailableStreams.PRIMARY, AvailableStreams.SECONDARY];
         }
 
-        const availableStreams = Array.isArray(targetStreams) ? targetStreams : targetStreams ? [AvailableStreams.PRIMARY, AvailableStreams.SECONDARY] : [AvailableStreams.PRIMARY];
+        const availableStreams = Array.isArray(targetStreams) ? targetStreams : [targetStreams];
 
         if (!accessToken && 'accessToken' in webRtcUrlFactoryOrConfig) {
             accessToken = webRtcUrlFactoryOrConfig.accessToken;
@@ -727,6 +757,7 @@ export class WebRTCStreamManager {
 
         const observer = new MutationObserver(() => {
             if (!root.contains(element)) {
+                observer.disconnect();
                 this.videoElements.splice(this.videoElements.indexOf(element), 1);
                 this.updateTrackerRefs()
             }
@@ -781,13 +812,6 @@ export class WebRTCStreamManager {
             tracker.destroy();
         })
 
-        if (this.videoRef) {
-            this.videoRef.src = null;
-            this.videoRef.srcObject = null;
-        }
-        this.videoRef?.remove();
-        this.videoRef = null;
-
         if (retryAfterSeconds) {
             setTimeout(this.start, retryAfterSeconds * 1000)
         } else {
@@ -798,6 +822,19 @@ export class WebRTCStreamManager {
     };
 
     private cleanupBuffers = (clearStream = true) => {
+
+        if (clearStream) {
+            if (this.videoRef) {
+                URL.revokeObjectURL(this.videoRef.src);
+                this.videoRef.src = null;
+                this.videoRef.srcObject = null;
+            }
+            if (this.mediaSource?.readyState === 'open') {
+                this.mediaSource.endOfStream();
+            }
+            this.videoRef?.remove();
+            this.videoRef = null;
+        }
         const mediaStream = this.mediaStream$.value?.[0];
         this.video = null;
         if (mediaStream && clearStream) {
@@ -843,8 +880,12 @@ export class WebRTCStreamManager {
      * @param stream - 0 | 1
      */
     public async updateStream(stream?: AvailableStreams): Promise<void> {
-        if (!stream === undefined) {
-            stream = (await firstValueFrom(frameRateTracker$)).score < 50 ? AvailableStreams.SECONDARY : WebRTCStreamManager.getInitialStream();
+        if (stream === undefined) {
+            if (this.availableStreams.includes(AvailableStreams.SECONDARY) && (this.allElementsSmall() || (await firstValueFrom(frameRateTracker$)).score < 50)) {
+                stream = AvailableStreams.SECONDARY;
+            } else {
+                stream = WebRTCStreamManager.getInitialStream();
+            }
         }
 
         const useDataChannelUpdate = this.apiVersion === ApiVersions.v2 && !!this.peerConnection?.remoteDataChannel || this.initialStreamSent;
@@ -855,7 +896,7 @@ export class WebRTCStreamManager {
         if (useDataChannelUpdate) {
             this.peerConnection?.remoteDataChannel?.send(JSON.stringify({ stream }));
         }
-        this.stream$.next(new WithSkip(stream ? AvailableStreams.SECONDARY : AvailableStreams.PRIMARY, useDataChannelUpdate));
+        this.stream$.next(new WithSkip(stream, useDataChannelUpdate));
     }
 
     /**
@@ -864,9 +905,11 @@ export class WebRTCStreamManager {
      * @param stream - 0 | 1
      */
     public updateAvailableStreams(streams: AvailableStreams[]): void {
-        this.availableStreams = streams?.length ? streams: [AvailableStreams.PRIMARY];
+        this.availableStreams = streams?.length ? [...streams].sort() : [AvailableStreams.PRIMARY];
 
-        const targetStream = streams.length > 1 ? WebRTCStreamManager.getInitialStream() : streams[0];
+        const initialStream = this.allElementsSmall() ? AvailableStreams.SECONDARY : WebRTCStreamManager.getInitialStream();
+
+        const targetStream = streams.length > 1 ? initialStream : streams[0];
 
         clearTimeout(this.cooldownLock);
         this.cooldownLock = null;
@@ -1410,7 +1453,7 @@ export class WebRTCStreamManager {
             await firstValueFrom(throttleByFrameRateScheduler$);
 
             this.wsConnection.pipe(
-                timeout({ first: 5_000, with: () => throwError(() => new Error('timeout')) }),
+                timeout({ first: 10_000, with: () => throwError(() => new Error('timeout')) }),
                 takeUntil(this.closeWsConnectionNotifier$)
             ).subscribe({
                 next: this.gotMessageFromServer,
@@ -1435,7 +1478,7 @@ export class WebRTCStreamManager {
             filter((stream) => !!stream),
             takeUntil(this.closeNotifier$),
             // tap(() => this.handleFrozenStream()),
-            timeout({ first: 2500, with: () => Promise.resolve() })
+            timeout({ first: 10_000, with: () => Promise.resolve() })
         ))
     };
 

@@ -21,8 +21,8 @@ interface WithDequeue {
 })
 export class NxVideoPlayerQueueService {
     private maxConcurrency = 8;
-    maxTime = 2_500;
-    performanceTimeout = 250;
+    maxTime = 15_000;
+    performanceTimeout = 1_000;
 
     private queue$ = new Subject<Observable<unknown>>();
 

@@ -9,7 +9,7 @@ import {
     Output,
     signal,
 } from '@angular/core';
-import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { bindCallback, defer, delay, map, NEVER, repeat, startWith, switchMap, timer } from 'rxjs';
 
 import { frameRateTracker$, throttleByFrameRate } from '@openLibs/webrtc-stream-manager';
@@ -69,7 +69,12 @@ export class NxVideoPlayingDirective {
             this.previousFrame = NxVideoPlayingDirective.canvas.toDataURL();
             return this.previousFrame;
         }),
+        takeUntilDestroyed(),
     );
+
+    ngOnDestroy(): void {
+        URL.revokeObjectURL(this.previousFrame);
+    }
 
     public playbackStarted$$ = toSignal(
         defer(
