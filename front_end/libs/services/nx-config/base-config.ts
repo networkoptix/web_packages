@@ -240,6 +240,7 @@ export const FeatureFlagKeys = [
     'layoutsTimelineSaas',
     'layoutsReplaceViewTab',
     'layoutsFrameRateDebug',
+    'layoutsConnectToSystem',
     // User overrides
     'userOverridesStaffFlags',
     'userOverridesUserBetaFlags',

@@ -107,6 +107,16 @@ export class NxLayoutGridTreeNode {
     readonly CONFIG = nxConfig;
     readonly icons = icons;
 
+    hasMenuItems$$ = computed(async () => {
+        const menuItemsOrFactory = this.menuItems$$();
+
+        return !!(
+            Array.isArray(menuItemsOrFactory)
+                ? menuItemsOrFactory
+                : await menuItemsOrFactory(this.node$$())
+        )?.length;
+    });
+
     baseNodeType$$ = computed(() => {
         const node = this.node$$();
         return [assertResourceBaseNode, assertOtherSystemsBaseNode, assertIsNoResultsNode].some(

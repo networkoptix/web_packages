@@ -3,6 +3,7 @@ import { computed } from '@angular/core';
 import { ResourceNodeMap, ResourceType } from '@components/layout-grid/layout-grid.types';
 import staticLang from '@language_static';
 import { LayoutStateService } from '@services/layout-state/layout-state.service';
+import { nxConfig } from '@services/nx-config/config';
 import { NxSystemInfo } from '@services/systems.service.types';
 
 export const systemMenuFactory =
@@ -14,25 +15,27 @@ export const systemMenuFactory =
         ) => void,
     ) =>
     (node: ResourceNodeMap[ResourceType.SYSTEM]) =>
-        [
-            {
-                id: 'connectToSystem',
-                name: staticLang.layouts.treeActions.connectToSystem.name,
-                tooltip: staticLang.layouts.treeActions.connectToSystem.tooltip,
-                disabled$$: computed(() => {
-                    const systems = getSystems();
-                    const system = systems.find(({ id }) => id === node.details.id);
-                    return system?.stateOfHealth !== 'online';
-                }),
-                action: ($event, node) => {
-                    const isSystemLayout = checkIfSystemLayout();
-                    updateRouteParams(({ params }) => ({
-                        params: {
-                            systemId: node.details.id,
-                            layoutId: isSystemLayout || !params ? 'default' : params.layoutId,
-                        },
-                        queryParams: { search: [''] },
-                    }));
-                },
-            },
-        ].filter(Boolean);
+        nxConfig.featureFlags.layoutsConnectToSystem
+            ? [
+                  {
+                      id: 'connectToSystem',
+                      name: staticLang.layouts.treeActions.connectToSystem.name,
+                      tooltip: staticLang.layouts.treeActions.connectToSystem.tooltip,
+                      disabled$$: computed(() => {
+                          const systems = getSystems();
+                          const system = systems.find(({ id }) => id === node.details.id);
+                          return system?.stateOfHealth !== 'online';
+                      }),
+                      action: ($event, node) => {
+                          const isSystemLayout = checkIfSystemLayout();
+                          updateRouteParams(({ params }) => ({
+                              params: {
+                                  systemId: node.details.id,
+                                  layoutId: isSystemLayout || !params ? 'default' : params.layoutId,
+                              },
+                              queryParams: { search: [''] },
+                          }));
+                      },
+                  },
+              ].filter(Boolean)
+            : [];
