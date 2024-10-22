@@ -69,10 +69,11 @@ nx-webgl-canvas, .saas-placeholder {
     padding-top: 16px;
     padding-bottom: 0;
     overflow: hidden;
+    flex-shrink: 0;
 
     &[open] {
         flex-grow: 1;
-        min-height: 50%;
+        max-height: calc(50% + 16px);
     }
 
     & > summary {
@@ -156,7 +157,8 @@ nx-webgl-canvas, .saas-placeholder {
     }
 
     & > div {
-        height: calc(100% - 56px);
+        height: calc(100% - 48px);
+        padding-bottom: 16px;
         overflow-x: hidden;
     }
 }
@@ -182,7 +184,7 @@ nx-webgl-canvas, .saas-placeholder {
     transition-property: width, background;
 
     & > nx-layout-grid-tree {
-        min-height: min(25%, 144px);
+        height: 100%;
         flex-shrink: 1;
         flex-grow: 1;
     }
