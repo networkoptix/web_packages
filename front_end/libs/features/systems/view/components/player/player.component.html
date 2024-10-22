@@ -35,7 +35,7 @@
         [paused]="playbackState.paused"
         [posterUrl]="playbackState.posterUrl | async"
         [rotation]="rotateDeg"
-        [sourceUrl]="playbackState.sourceUrl"
+        [sourceUrl]="playbackState.sourceUrl | async"
         [authorization]="fetchRuntime()"
     >
     </nx-player-js>

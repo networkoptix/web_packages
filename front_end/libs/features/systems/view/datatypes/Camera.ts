@@ -40,7 +40,7 @@ export class ViewCamera {
         public archiveRange: BaseTimeRange,
         public archive: BaseTimeRange[] = [],
         public thumbnailUrl: Observable<string> | undefined = undefined,
-        public getVideoUrl: (transport: string, quality: string, t?: ms) => string,
+        public getVideoUrl: (transport: string, quality: string, t?: ms) => Observable<string>,
         public getPosterUrl: (t?: ms, width?: number, height?: number) => Observable<string>,
         public require2fa: boolean = false,
         public mediaStreams: MediaStream[],

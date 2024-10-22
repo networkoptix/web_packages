@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { ClipboardService } from 'ngx-clipboard';
+import { Observable } from 'rxjs';
 
 import staticLang from '@language_static';
 import type { MediaStream } from '@services/system.service/camera-manager/add-params.types';
@@ -8,7 +9,7 @@ import type { ViewCamera } from '../../datatypes/Camera';
 
 interface ITransport {
     name: string;
-    url: string;
+    url: Observable<string>;
 }
 
 interface ICameraDetails {

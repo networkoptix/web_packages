@@ -34,6 +34,7 @@ import type {
     UserGroup,
 } from '@services/system-user.types';
 import { servers } from '@static-variables';
+import { cleanId } from '@utils/general';
 import { defaultHashFunction, memoizeAsync } from '@utils/memoize';
 
 import { JsonRpcMessage } from './mediaserver-apis/connections/methods/json-rpc/types';
@@ -477,5 +478,95 @@ export class NxSystemRestAPI3 extends NxSystemRestAPI2 {
 
     getCloudSaasState(): Observable<CloudSaasState> {
         return this.get('/rest/v3/system/cloud/saas');
+    }
+
+    override getExportUrl({
+        transport,
+        cameraId,
+        pos,
+        endPos,
+        duration,
+    }: {
+        transport: string;
+        cameraId: string;
+        pos: number;
+        endPos: number;
+        duration: number;
+    }): string {
+        if (!['mp4', 'mkv'].includes(transport)) {
+            transport = 'mkv';
+        }
+        cameraId = cleanId(cameraId);
+        const url = `/rest/v3/devices/${cameraId}/media.${transport}`;
+        const params = {
+            positionMs: pos,
+            endPositionMs: endPos,
+            durationMs: duration * 1000,
+            download: true,
+            export: true,
+        };
+        return this.generateGetUrl(url, params);
+    }
+
+    override getPlaybackUrl(
+        cameraId: string,
+        transport = 'webm',
+        resolution = 'low',
+        position = 0,
+        resolvedRelay = '',
+    ): string {
+        let url: string;
+        function hlsResolutionOrEmpty(res: string): string {
+            switch (res) {
+                case 'hi':
+                case 'lo':
+                    return res;
+                default:
+                    return '';
+            }
+        }
+
+        cameraId = cleanId(cameraId);
+
+        switch (transport) {
+            case 'webRtc':
+                url = `${
+                    resolvedRelay ? `wss://${resolvedRelay}` : this.getUrlBase('wss:')
+                }/webrtc-tracker/?camera_id=${cameraId}&x-server-guid=${cleanId(this.serverId)}&`;
+                break;
+            case 'webRtc2':
+                url = `${
+                    resolvedRelay ? `wss://${resolvedRelay}` : this.getUrlBase('wss:')
+                }/rest/v3/devices/${cameraId}/webrtc?x-server-guid=${cleanId(this.serverId)}&`;
+                break;
+            case 'hls':
+                url = `${this.getUrlBase()}/web/hls/${cameraId}.m3u8?stream=${hlsResolutionOrEmpty(resolution)}&`;
+                if (position) {
+                    url += `pos=${position}&`;
+                }
+                return url;
+            case 'rtsp':
+                let urlBase = this.getUrlBase();
+                // If we are in webadmin we need to have the origin or else https is not replaced with rtsp.
+                if (!urlBase) {
+                    urlBase = window.location.origin;
+                }
+                url = `${urlBase}/${cameraId}?stream=${resolution}&`.replace(
+                    /https?:\/\//,
+                    'rtsp://',
+                );
+                break;
+            default:
+                // Rtsp plays as webm but does not support transcoding.
+                if (transport === 'mjpeg') {
+                    transport = 'webm';
+                }
+                url = `${this.getUrlBase()}/rest/v3/devices/${cameraId}/media.${transport}?resolution=${resolution || ''}`;
+        }
+
+        if (position) {
+            url += `${transport === 'webRtc' ? 'position' : 'positionMs'}=${position}&`;
+        }
+        return url;
     }
 }

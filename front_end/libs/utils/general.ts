@@ -662,6 +662,23 @@ export function extractVideoLayout(videoLayout: string): {
     };
 }
 
+/**
+ * Replace the `auth` query parameter with a `_ticket` query parameter.
+ * If there is no auth query parameter, `_ticket` is appended to the end of the URL.
+ * @param url
+ * @param ticket
+ */
+export function replaceAuthWithTicket(url: string, ticket: string): string {
+    let urlWithTicket = url.replace(/auth=.[^&]+/, `_ticket=${ticket}`);
+    if (!url.includes('auth=')) {
+        urlWithTicket = `${url}${!url.includes('?') ? '?' : '&'}_ticket=${ticket}`;
+    }
+    const serverId = ticket
+        .replace(/vmsTicket-(\w+)-.*/, '$1')
+        .replace(/(\w{8})(\w{4})(\w{4})(\w{4})(\w{12})/, `$1-$2-$3-$4-$5`);
+    return `${urlWithTicket}${urlWithTicket.endsWith('&') ? '' : '&'}X-Server-Guid=${serverId}`;
+}
+
 export function getParameterByName(name: string): string | null {
     const params = new URLSearchParams(window.location.search);
 

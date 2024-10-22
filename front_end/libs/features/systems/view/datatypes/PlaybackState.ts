@@ -27,7 +27,7 @@ export interface StoppedPlaybackState extends AbstractPlaybackState {
 
 export interface ArchivePlaybackState extends AbstractPlaybackState {
     mode: PLAYBACK_MODE.ARCHIVE;
-    sourceUrl: string;
+    sourceUrl: Observable<string>;
     posterUrl?: Observable<string>;
     startTime: ms;
     currentTime: ms;
@@ -40,7 +40,7 @@ export interface ArchivePlaybackState extends AbstractPlaybackState {
 
 export interface LivePlaybackState extends AbstractPlaybackState {
     mode: PLAYBACK_MODE.LIVE;
-    sourceUrl: string;
+    sourceUrl: Observable<string>;
     posterUrl?: Observable<string>;
     currentTime: ms;
     started: boolean;
@@ -65,7 +65,7 @@ export function createInitialStoppedState(
 }
 
 export function createInitialArchiveState(
-    sourceUrl: string,
+    sourceUrl: Observable<string>,
     t: ms,
     quality: PlaybackQuality = 'auto',
     transport: PlaybackTransport = 'webm',
@@ -87,7 +87,7 @@ export function createInitialArchiveState(
 }
 
 export function createInitialLiveState(
-    sourceUrl: string,
+    sourceUrl: Observable<string>,
     quality: PlaybackQuality = 'auto',
     transport: PlaybackTransport = 'webm',
     posterUrl?: Observable<string>,

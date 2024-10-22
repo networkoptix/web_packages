@@ -5,6 +5,7 @@ import { isEqual } from 'lodash-es';
 import {
     BehaviorSubject,
     combineLatest,
+    defer,
     merge,
     Observable,
     of,
@@ -27,6 +28,7 @@ import type {
     BookmarksTags,
     Bookmark as SystemBookmark,
 } from '@services/system-api.types/devices.types';
+import { NxSystemRestAPI3 } from '@services/system-rest-api-v3.service';
 import type { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
@@ -37,6 +39,7 @@ import {
     msToParts,
     offsetDate,
     paramSortFunc,
+    replaceAuthWithTicket,
     useNewCloud,
 } from '@utils/general';
 
@@ -109,6 +112,7 @@ export class NxBookmarksComponent implements OnInit {
     icons = icons;
     noBksImgSrc: string;
     system: NxSystem;
+    systemSupportsV3: boolean = false;
 
     _bookmarks: Bookmark[] = [];
     visibleBookmarksCount: number = 0;
@@ -207,6 +211,7 @@ export class NxBookmarksComponent implements OnInit {
                 }
             }
             this.system = this.systemService.getCurrentSystem();
+            this.systemSupportsV3 = this.system.version >= NxSystemRestAPI3.VERSION;
 
             // We'll use pageService temporarily. We'll remove this when we update TitleResolver/SystemTitleResolver for the Browser Tab criterias from design
             this.pageService.pageTitle(
@@ -403,18 +408,25 @@ export class NxBookmarksComponent implements OnInit {
                 const deviceName = this.deviceMap.get(bk.deviceId).name; // We don't use cleanId() for get() here
                 const canViewBookmark =
                     this.system.permissionManager.canViewDeviceArchive(deviceId);
-                const getLink = (transport: string): string => {
+                const getLink = (transport: string): Observable<string> => {
                     // User will need viewArchives permissions to view and download bookmarks
+                    let link = of('');
                     if (canViewBookmark) {
-                        return this.system.mediaserver.getExportUrl({
+                        const exportLink = this.system.mediaserver.getExportUrl({
                             cameraId: deviceId,
                             duration: Math.floor(bk.durationMs / 1000),
                             endPos: bk.startTimeMs + bk.durationMs,
                             pos: bk.startTimeMs,
                             transport,
                         });
+                        link = of(exportLink);
+                        if (this.systemSupportsV3) {
+                            link = (this.system.mediaserver as NxSystemRestAPI3)
+                                .createTicket()
+                                .pipe(map(({ token }) => replaceAuthWithTicket(exportLink, token)));
+                        }
                     }
-                    return '';
+                    return defer(() => link);
                 };
                 const aspectRatio =
                     this.system.cameraManager.cameras.find(camera => {
@@ -426,7 +438,7 @@ export class NxBookmarksComponent implements OnInit {
                     ...bk,
                     tags: bk.tags ?? [],
                     src: getLink('mp4'),
-                    downloadSrc: getLink('mkv'),
+                    downloadSrc: getLink(this.systemSupportsV3 ? 'mp4' : 'mkv'),
                     thumbnail: this.system.serverManager.getPreviewUrl(
                         deviceId,
                         bk.startTimeMs,

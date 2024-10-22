@@ -7,15 +7,19 @@ import {
     ViewContainerRef,
 } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { defer, Observable, of } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { POS_STRATEGY } from '@components/popover/popover-config';
 import { NxPopoverService } from '@components/popover/popover.service';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { environment } from '@environments/environment';
 import { NxAccountService } from '@services/account.service';
+import { NxSystemRestAPI3 } from '@services/system-rest-api-v3.service';
 import type { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
 import { icons } from '@static-variables';
+import { replaceAuthWithTicket } from '@utils/general';
 import { PlaybackService } from '@view/services/playback.service';
 import { VideoManagementSystemService } from '@view/services/vms.service';
 
@@ -34,7 +38,7 @@ export class TimelineSelectionActionPanelComponent implements OnInit {
     private system: NxSystem;
 
     exportEnabled: boolean;
-    private exportLink: string;
+    private exportLink$: Observable<string>;
     exportName: string;
     icons = icons;
 
@@ -65,7 +69,7 @@ export class TimelineSelectionActionPanelComponent implements OnInit {
                     1000,
                 ).length;
             } else {
-                this.exportLink = '';
+                this.exportLink$ = of('');
                 this.exportBtn.nativeElement.href = '#';
             }
         });
@@ -88,7 +92,9 @@ export class TimelineSelectionActionPanelComponent implements OnInit {
     }
 
     downloadFile(): void {
-        this.exportBtn.nativeElement.href = this.exportLink;
+        this.exportLink$.subscribe(url => {
+            this.exportBtn.nativeElement.href = url;
+        });
     }
 
     private exportUrl(): void {
@@ -97,9 +103,17 @@ export class TimelineSelectionActionPanelComponent implements OnInit {
         if (!['mp4', 'mkv'].includes(transport)) {
             transport = 'mkv';
         }
-        this.exportLink = this.system
-            ? this.system.mediaserver.getExportUrl(this.selection.exportUrlParams)
-            : '';
+        let exportLink = of('');
+        if (this.system) {
+            const exportUrl = this.system.mediaserver.getExportUrl(this.selection.exportUrlParams);
+            exportLink = of(exportUrl);
+            if (this.system.mediaserver.version >= NxSystemRestAPI3.VERSION) {
+                exportLink = (this.system.mediaserver as NxSystemRestAPI3)
+                    .createTicket()
+                    .pipe(map(({ token }) => replaceAuthWithTicket(exportUrl, token)));
+            }
+        }
+        this.exportLink$ = defer(() => exportLink);
 
         this.exportName = `${this.vms.selectedCamera.id}.${transport}`;
     }
