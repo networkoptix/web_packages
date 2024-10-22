@@ -50,7 +50,15 @@ export class NxChannelPartnersUsersTableComponent extends AbstractUserTableDirec
 
     ChannelPartnerRoleIds = ChannelPartnerRoleIds;
     channelPartnerUserRecords$$ = this.channelPartnerUsersStore.entities;
-    filteredRecords$$ = this.channelPartnerUsersStore.filteredRecords$$;
+    filteredRecords$$ = computed(() => {
+        const records = this.channelPartnerUsersStore.filteredRecords$$();
+        return records?.map(record => {
+            if (record.fullName === null) {
+                record.fullName = '';
+            }
+            return record;
+        });
+    });
     headers: HEADER_ITEM[] = [
         {
             name: 'email',
@@ -62,7 +70,11 @@ export class NxChannelPartnersUsersTableComponent extends AbstractUserTableDirec
             value: this.LANG.channelPartners.usersTableHeaders.fullName,
             sort: 'string',
         },
-        { name: 'groups', value: this.LANG.channelPartners.usersTableHeaders.groups },
+        {
+            name: 'roles',
+            value: this.LANG.channelPartners.usersTableHeaders.groups,
+            sort: 'string',
+        },
     ];
     setArrange = ['userId', 'email', 'fullName', 'roles', 'delete'];
     idPropName = 'userId';

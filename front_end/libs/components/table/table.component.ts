@@ -17,7 +17,7 @@ import {
     TemplateRef,
     ViewChild,
 } from '@angular/core';
-import { Params } from '@angular/router';
+import { Params, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';
 import { clamp, isEqual } from 'lodash-es';
@@ -136,6 +136,7 @@ export class NxBaseTableComponent<T> implements AfterContentInit, AfterViewInit,
     constructor(
         private renderer: Renderer2,
         private uri: NxUriService,
+        private router: Router,
     ) {
         this.uri
             .getParams()
@@ -240,6 +241,8 @@ export class NxBaseTableComponent<T> implements AfterContentInit, AfterViewInit,
     }
 
     private sortElements(keepURI: boolean = false): void {
+        this.router.navigate([], { replaceUrl: true, queryParams: {} });
+
         if (this.params.sortBy) {
             const sortBy = this.params.sortBy.split(',');
             this.sortOrderASC = sortBy[1] === 'ASC';
