@@ -363,7 +363,7 @@ export type BookmarkDownload = DialogType<
     {
         bookmarkName: string;
         exportName: string;
-        downloadSrc: string;
+        downloadSrc: Observable<string>;
     },
     void
 >;

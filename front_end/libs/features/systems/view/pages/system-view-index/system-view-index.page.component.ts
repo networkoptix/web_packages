@@ -14,7 +14,7 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { CookieService } from 'ngx-cookie-service';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { firstValueFrom, of, Subject, timer } from 'rxjs';
+import { defer, firstValueFrom, of, Subject, timer } from 'rxjs';
 import { filter, map, take, takeUntil } from 'rxjs/operators';
 
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
@@ -22,6 +22,7 @@ import { ToastType } from '@components/toast-container/toast.types';
 import { environment } from '@environments/environment';
 import staticLang from '@language_static';
 import { nxConfig } from '@services/nx-config/config';
+import { NxSystemRestAPI3 } from '@services/system-rest-api-v3.service';
 import { DeviceType } from '@services/system.service/camera-manager/camera-manager-types';
 import type { NxSystem } from '@services/system.service/system';
 import type { ViewBaseCamera, ViewBaseServer } from '@services/system.service/system-types';
@@ -29,7 +30,7 @@ import { NxSystemsService } from '@services/systems.service';
 import { NxToastService } from '@services/toast.service';
 import { WINDOW } from '@services/window-provider';
 import { icons } from '@static-variables';
-import { cleanIdLegacy } from '@utils/general';
+import { cleanIdLegacy, replaceAuthWithTicket } from '@utils/general';
 import { cleanIds, setServerIpAndPort } from '@utils/nx';
 import { TimelineService } from '@vms-client/submodules/timeline/services/timeline.service';
 import { CAMERA_STATUS, ViewCamera } from '@vms-client/submodules/vms/datatypes/Camera';
@@ -290,8 +291,16 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
             c.status !== 'Offline'
                 ? this.system?.mediaserver.previewUrl(c.id, 0, 128, 128)
                 : of(''),
-            (transport: string, quality: string, t?: ms) =>
-                this.system?.mediaserver.getPlaybackUrl(c.id, transport, quality, t),
+            (transport: string, quality: string, t?: ms) => {
+                const url = this.system?.mediaserver.getPlaybackUrl(c.id, transport, quality, t);
+                let link = of(url);
+                if (this.system.mediaserver.version >= NxSystemRestAPI3.VERSION) {
+                    link = (this.system.mediaserver as NxSystemRestAPI3)
+                        .createTicket()
+                        .pipe(map(({ token }) => replaceAuthWithTicket(url, token)));
+                }
+                return defer(() => link);
+            },
             (t?: ms, width = 128, height = 128) =>
                 c.status !== 'Offline'
                     ? this.system?.mediaserver.previewUrl(c.id, t, width, height)

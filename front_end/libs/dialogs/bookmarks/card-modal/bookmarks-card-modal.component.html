@@ -19,13 +19,13 @@
                 <nx-clip
                     *ngIf="!videoError$$()"
                     [ngClass]="{ 'clip--loading': !videoLoaded$$() }"
-                    [sourceUrl]="bookmark.src"
+                    [sourceUrl]="bookmark.src | async"
                     [posterUrl]="bookmark.thumbnail | async"
                     disableDownload
                     disablePictureInPicture
                     autoplay
                     (error)="videoError$$.set(true); videoLoaded$$.set(true)"
-                    (loadeddata)="videoLoaded$$.set(true)"
+                    (loadeddata)="videoError$$.set(false); videoLoaded$$.set(true)"
                 >
                 </nx-clip>
                 <div

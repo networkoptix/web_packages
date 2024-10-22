@@ -1,14 +1,15 @@
-<video
-    [ngClass]="{ 'd-none': posterLoadingError && false }"
-    [src]="sourceUrl"
-    [poster]="posterLoadingError ? internalPoster : (posterUrl | safe: 'resourceUrl')"
-    (error)="handler($event)"
-    (loadeddata)="handler($event)"
-    preload="auto"
-    playsinline
-    loop
-    controls
-    [controlsList]="disableDownload ? 'nodownload' : ''"
-    [attr.disablePictureInPicture]="disablePictureInPicture"
-    [attr.autoplay]="autoplay"
-></video>
+@if (sourceUrl(); as sourceUrl) {
+    <video
+        [src]="sourceUrl | safe: 'resourceUrl'"
+        [poster]="posterLoadingError() ? internalPoster : (posterUrl() | safe: 'resourceUrl')"
+        (error)="handler($event)"
+        (loadeddata)="handler($event)"
+        preload="auto"
+        playsinline
+        loop
+        controls
+        [controlsList]="disableDownload() ? 'nodownload' : ''"
+        [attr.disablePictureInPicture]="disablePictureInPicture()"
+        [attr.autoplay]="autoplay()"
+    ></video>
+}

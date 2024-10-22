@@ -4,8 +4,8 @@ import type { Bookmark as BookmarkResp, DeviceV1Full } from '@services/system-ap
 
 export interface Bookmark extends BookmarkResp {
     tags: string[];
-    src: string;
-    downloadSrc: string;
+    src: Observable<string>;
+    downloadSrc: Observable<string>;
     thumbnail: Observable<string>;
     isVisible: boolean;
     deviceName: string;

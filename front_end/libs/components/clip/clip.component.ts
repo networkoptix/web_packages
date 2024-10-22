@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { booleanAttribute, Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, input, Output, signal } from '@angular/core';
 
 import { PipesModule } from '@pipes/pipes.module';
 import { icons } from '@static-variables';
@@ -13,29 +13,33 @@ import { VmsClientPlaybackModule } from '@vms-client/submodules/playback/playbac
     standalone: true,
 })
 export class ClipComponent {
-    @Input() sourceUrl: string;
-    @Input() posterUrl: string;
-    @Input({ transform: booleanAttribute }) disableDownload: boolean;
-    @Input({ transform: booleanAttribute }) disablePictureInPicture: boolean;
-    @Input({ transform: booleanAttribute }) autoplay: boolean;
+    readonly internalPoster = icons.dirNonStandardView + 'placeholder_camera_offline.svg';
+
+    sourceUrl = input.required<string>();
+    posterUrl = input.required<string>();
+    disableDownload = input(false, {
+        transform: (v: string | boolean) => Boolean(v),
+    });
+    disablePictureInPicture = input(false, {
+        transform: (v: string | boolean) => Boolean(v),
+    });
+    autoplay = input(false, {
+        transform: (v: string | boolean) => Boolean(v),
+    });
+
     @Output() error = new EventEmitter<void>();
     @Output() loadeddata = new EventEmitter<void>();
 
-    readonly internalPoster: string;
-    posterLoadingError = false;
-
-    constructor() {
-        this.internalPoster = icons.dirNonStandardView + 'placeholder_camera_offline.svg';
-    }
+    posterLoadingError = signal(false);
 
     handler(e: ErrorEvent | Event): void {
         switch (e.type) {
             case 'error':
-                this.posterLoadingError = true;
+                this.posterLoadingError.set(true);
                 this.error.emit();
                 break;
             case 'loadeddata':
-                this.posterLoadingError = false;
+                this.posterLoadingError.set(false);
                 this.loadeddata.emit();
                 break;
             default:
