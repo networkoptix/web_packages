@@ -438,17 +438,6 @@ h2.auto-save-overlay {
     }
 }
 
-@keyframes slide-up-fade-out {
-    from {
-        display: flex;
-    }
-    to {
-        opacity: 0;
-        margin-top: -40px;
-        margin-bottom: 0;
-    }
-}
-
 .saving-ribbon {
     // prevent grid resize while animation is taking place
     position: absolute;
@@ -459,18 +448,24 @@ h2.auto-save-overlay {
         line-height: 20px;
         svg-icon {
             margin-bottom: 3px;
+            .yes {
+                stroke: currentColor;
+            }
         }
     }
 
     &.hide {
-        .animated {
-            animation-duration: 1.5s;
-            animation-name: slide-up-fade-out;
-            display: none;
-        }
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-40px);
+        transition: opacity 2s, transform 2s, visibility 2s;
+        transition-delay: 1s;
     }
-    &.show .animated {
-        display: flex;
+    &.show {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+        transition: opacity 0.25s, transform 0, visibility 0;
     }
 }
 

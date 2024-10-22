@@ -1,5 +1,8 @@
 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<style type="text/css">
+    .yes{stroke-width: 2;stroke:#3A911E;}
+</style>
 <g id="yes">
-<path id="Vector 1" d="M3 10L11 17L21 6" stroke="#3A911E" stroke-width="2"/>
+<path class="yes" d="M3 10L11 17L21 6" />
 </g>
 </svg>
