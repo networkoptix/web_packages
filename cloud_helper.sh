@@ -43,14 +43,15 @@ function build_frontend(){
 }
 
 function brew_install() {
-    echo 'installing n pyenv openssl docker docker-compose mysql-client'
-    brew install n pyenv openssl docker docker-compose mysql-client
+    echo 'installing n pyenv openssl docker docker-compose mysql-client jq'
+    brew install n pyenv openssl docker docker-compose mysql-client jq
     echo "installing virtualenv"
     pip install virtualenv
     echo "installing poetry"
     pip install poetry==1.5.1
-    echo 'Installing node v18.19.1'
-    n 18.19.1
+    NODE_VERSION="$(jq -r '.engines.node' "$(git rev-parse --show-toplevel)/front_end/package.json" | cut -c2-)"
+    echo "Installing node v$NODE_VERSION"
+    n "$NODE_VERSION"
     echo "Installing python: $(cat .python-version)"
     pyenv install $(cat .python-version)
     virtualenv -p "$(pyenv which python)" env
@@ -655,6 +656,9 @@ do
             brew_install
             init_backend
             ;;
+        brew_install)
+            brew_install
+            ;;
         init_frontend)
             init_frontend
             ;;
@@ -850,6 +854,7 @@ do
             echo Usage: cloud_shortcuts '[init_backend|init_frontend|add_env|build_frontend|login_db|rebuild_frontend|set_cloud_instance|setup_cms|setup_db|setup_env|start_celery|start_docker|stop_docker|remove_mediaserver|run_local_servers|stop_mediaserver|start_https_tunnel]'
             echo 'init_backend - Initializes the backend. Only run this once'
             echo 'init_frontend - Initializes the frontend.'
+            echo 'brew_install - Installs Brew and dependencies for frontend and backend'
             echo 'add_env - Adds LOCAL_ENV to your bash profile'
             echo 'build_frontend - Builds the frontend'
             echo 'generate_cms_docs - Creates an html file for each product in cms/cms_structure.json'

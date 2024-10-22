@@ -61,7 +61,7 @@
         "cleardist": "([ -e ./dist ] && rm -rf ./dist) && echo 'Cleared dist folder' || echo 'No Dist to clear' ",
         "explore:js": "source-map-explorer ./dist/*.js",
         "explore:css": "source-map-explorer ./dist/*.css",
-        "set-node-version": "npx n 18.19.1",
+        "set-node-version": "npx n $(jq -r '.engines.node' \"$(git rev-parse --show-toplevel)/front_end/package.json\" | cut -c2-)",
         "postinstall": "npx patch-package && node setSkin.mjs --skin blue && node ./decorate-angular-cli.js",
         "node-modules": "rm -rf node_modules && npm i --legacy-peer-deps",
         "link-local-libs": "node packages/link-libs.js",
