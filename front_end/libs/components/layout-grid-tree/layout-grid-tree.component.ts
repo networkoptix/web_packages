@@ -282,7 +282,14 @@ export class NxLayoutGridTreeComponent extends WithMenuItemsByType {
 
     handleSingleClick = (node: ResourceNode, parent: ResourceNode, event: MouseEvent): void => {
         event.stopPropagation();
-        if (assertResourceOfType.placeholder(node)) {
+        if (
+            [
+                assertResourceOfType.placeholder,
+                assertResourceOfType.systems_group,
+                assertResourceOfType.organization,
+                assertResourceOfType.cameras_group,
+            ].some(assertion => assertion(node))
+        ) {
             return;
         }
         const parentId = parent?.details?.id;
