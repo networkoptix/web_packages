@@ -13,6 +13,8 @@ import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { NxRadioComponent } from '@components/radio/radio.component';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
+import { NxSelectV2ItemComponent } from '@components/select-v2/items/select-item/select-item.component';
+import { NxSelectV2Component } from '@components/select-v2/select-v2.component';
 import { ToastType } from '@components/toast-container/toast.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
@@ -66,6 +68,8 @@ interface NxSystemModuleInfo extends NxUserSystemInfo {
         NxProcessButtonComponent,
         NxAddSvgSrcDirective,
         NxUrlValidatorDirective,
+        NxSelectV2Component,
+        NxSelectV2ItemComponent,
     ],
 })
 export class MergeModalContent {
@@ -139,7 +143,6 @@ export class MergeModalContent {
 
     machine: StateMachine;
 
-    @ViewChild('checkMergeDropdown') mergeDropdown: any;
     @ViewChild('serverUrlInput') serverUrlInput: any;
     @ViewChild('checkMergeUrlInput') serverUrlInputFocus: ElementRef;
     @ViewChild('adminPasswordForm') adminPassword: HTMLFormElement;
@@ -239,10 +242,7 @@ export class MergeModalContent {
                 }
                 if (environment.isWebadmin) {
                     if (this.peerSystems.length) {
-                        this.processedSystems.push(
-                            { name: 'horizontal', value: undefined },
-                            ...this.makeSelectorList(this.peerSystems),
-                        );
+                        this.processedSystems.push(...this.makeSelectorList(this.peerSystems));
                     }
                     this.processedSystems.push(
                         { name: 'horizontal', value: undefined },
@@ -298,7 +298,6 @@ export class MergeModalContent {
             }
             this.systemsLoaded = true;
             this.systemUpdating = false;
-            this.mergeDropdown.dropdownToggleButton.nativeElement.focus();
             this.initProcesses();
         } else {
             this.machine.transition('thisSystemHasOutdatedServerError');
@@ -589,8 +588,6 @@ export class MergeModalContent {
                     }
                     if (this.serverUrlInputFocus) {
                         this.serverUrlInputFocus.nativeElement.focus();
-                    } else {
-                        this.mergeDropdown.dropdownToggleButton.nativeElement.focus();
                     }
                 },
             );
@@ -1119,7 +1116,6 @@ export class MergeModalContent {
         this.adminPassword?.form.markAsUntouched();
         this.machine.goBack();
         this.cdRef.detectChanges();
-        this.mergeDropdown?.dropdownToggleButton.nativeElement.focus();
         this.primaryRadio?.inputRadio.nativeElement.focus();
 
         if (this.machine.currentState === this.checkMerge) {

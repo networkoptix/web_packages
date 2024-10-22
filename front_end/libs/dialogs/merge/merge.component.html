@@ -130,18 +130,34 @@
 >
     <div class="modal-body">
         <p>{{ machine.state.template.bodyTitle | nxTranslate }}</p>
-        <nx-select
-            [componentId]="'mergeSystemSelect'"
-            #checkMergeDropdown
-            *ngIf="machine.state.show.systemDropdown"
-            class="mb-2"
-            [merge]="true"
-            [stillLoading]="!systemsLoaded"
-            [items]="processedSystems"
-            [selected]="targetSystemDropdown"
-            (onSelected)="setTargetSystem($event)"
-            required
-        ></nx-select>
+        @if (machine.state.show.systemDropdown) {
+            <nx-select-v2
+                [placeholder]="
+                    targetSystemDropdown.help
+                        ? targetSystemDropdown.name + ' ' + (targetSystemDropdown.help | translate)
+                        : targetSystemDropdown.name
+                "
+                [ngModel]="targetSystemDropdown.value"
+                (ngModelChange)="setTargetSystem($event)"
+                name="mergeSystemSelect"
+            >
+                @for (system of processedSystems; track system.value) {
+                    <nx-select-item
+                        [value]="system"
+                        [selected]="system.value === targetSystemDropdown.value"
+                    >
+                        <span
+                            class="system-name"
+                            [ngClass]="system.help ? 'system-name-truncate' : ''"
+                            >{{ system.name }}</span
+                        >
+                        @if (system.help) {
+                            <span class="system-help">{{ system.help | translate }}</span>
+                        }
+                    </nx-select-item>
+                }
+            </nx-select-v2>
+        }
         <p
             *ngIf="machine.state.show.helpText"
             class="light-text"

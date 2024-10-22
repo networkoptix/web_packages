@@ -9,10 +9,12 @@ import {
     ViewChild,
 } from '@angular/core';
 import { FormsModule, NgModel } from '@angular/forms';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
+import { NxSelectV2ItemComponent } from '@components/select-v2/items/select-item/select-item.component';
+import { NxSelectV2Component } from '@components/select-v2/select-v2.component';
 import { NxUrlValidatorDirective } from '@directives/nx-url-validator';
 import staticLang from '@language_static';
 import { Process } from '@services/process.service/process';
@@ -30,9 +32,12 @@ import type { MergeDropdownItem, MergeState, MergeSystem } from '../merge.refact
     imports: [
         CommonModule,
         FormsModule,
+        TranslateModule,
         NxGenericDropdownModule,
         NxProcessButtonComponent,
         NxUrlValidatorDirective,
+        NxSelectV2Component,
+        NxSelectV2ItemComponent,
     ],
 })
 export class NxMergeSelectSystemComponent implements OnInit, OnChanges {

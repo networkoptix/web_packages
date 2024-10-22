@@ -11,17 +11,32 @@
         </ng-container>
         <ng-template #normalCheckMerge>
             <p translate>Merge current system with</p>
-            <nx-select
-                [componentId]="'mergeWithSystemSelect'"
-                #checkMergeDropdown
-                class="mb-2 d-block"
-                [merge]="true"
-                [stillLoading]="!systemsProcessed"
-                [items]="processedSystems"
-                [selected]="selectedSystem"
-                (onSelected)="setTargetSystem($event)"
-                required
-            ></nx-select>
+            <nx-select-v2
+                [placeholder]="
+                    selectedSystem.help
+                        ? selectedSystem.name + ' ' + (selectedSystem.help | translate)
+                        : selectedSystem.name
+                "
+                [ngModel]="selectedSystem.value"
+                (ngModelChange)="setTargetSystem($event)"
+                name="mergeSystemSelect"
+            >
+                @for (system of processedSystems; track system.url) {
+                    <nx-select-item
+                        [value]="system"
+                        [selected]="system.value === selectedSystem.value"
+                    >
+                        <span
+                            class="system-name"
+                            [ngClass]="system.help ? 'system-name-truncate' : ''"
+                            >{{ system.name }}</span
+                        >
+                        @if (system.help) {
+                            <span class="system-help">{{ system.help | translate }}</span>
+                        }
+                    </nx-select-item>
+                }
+            </nx-select-v2>
         </ng-template>
         <div
             *ngIf="isWebadmin"

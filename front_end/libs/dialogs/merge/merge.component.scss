@@ -1,6 +1,6 @@
 @use "typography";
 @use "theme_variables_common" as *;
-
+@import "theme_palette";
 
 .radio-group {
     margin-top: 5px;
@@ -90,4 +90,46 @@
 
 .invalid-state {
     border-color: var(--error-label) !important;
+}
+
+nx-select-v2,
+nx-select-item {
+
+    &.selected {
+
+        .system {
+            
+            &-help {
+                color: var(--light1) !important; // light1 for light and dark themes
+            }
+        }
+    }
+
+    .select-box {
+        max-width: 90%;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
+
+    .system {
+
+        &-name {
+            max-width: 100%;
+            display: inline-block;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+            
+        &-name-truncate {
+            white-space: nowrap;
+            vertical-align: top;
+            max-width: 390px; // 390px to fit "offline" text for long names
+        }
+
+        &-help {
+            vertical-align: top;
+            color: var(--light16) !important; // light16 for light and dark themes
+        }
+    }
 }
