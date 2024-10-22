@@ -30,6 +30,7 @@ import {
     GroupStructureItem,
     Organization,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
+import { NxSystemsService } from '@services/systems.service';
 
 export interface GroupStructureCache {
     id: string;
@@ -73,6 +74,7 @@ export const GroupsCacheStore = signalStore(
     withEntities(cloudSystemLightEntity),
     withMethods(store => {
         const channelPartnerService = inject(NxChannelPartnersService);
+        const systemsService = inject(NxSystemsService);
 
         const delay = 60_000 as const;
 
@@ -223,7 +225,10 @@ export const GroupsCacheStore = signalStore(
             orgFilter: (org: Organization) => boolean = () => true,
         ): Observable<OrganizationAndStructure[]> => getAllOrgStructuresMemoized(orgFilter);
 
-        const refreshObservedCaches = (): void => updater$.next();
+        const refreshObservedCaches = (): void => {
+            systemsService.forceUpdateSystems();
+            updater$.next();
+        };
 
         return {
             getOrganizations,
@@ -233,6 +238,7 @@ export const GroupsCacheStore = signalStore(
             getAllOrgStructures,
             refreshObservedCaches,
             orgStructuresLoaded$$,
+            sharedRepeat,
         };
     }),
 );
