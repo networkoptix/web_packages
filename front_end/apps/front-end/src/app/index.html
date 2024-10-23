@@ -54,11 +54,17 @@
 
     <script type="application/javascript">
         if (/msie|trident|edge/.test(window.navigator.userAgent.toLowerCase())) {
+            window.document.styleSheets[0].insertRule(`
+                h1.nx-h1--vertical-margin {
+                    font-family: "robotomedium", "Helvetica Neue", Helvetica, Arial, sans-serif;
+                    color: #2B383F;
+                }
+            `)
             window.document.write('<div class="container d-flex flex-column">\n' +
                 '<div class="jumbotron error-page" style="width: 60%; margin: 0 auto">\n' +
                 '    <img alt="Maintenance is in progress picture" src="/static/images/placeholders/page/Wrong.svg">\n' +
                 '</div>' +
-                '    <h1 class="d-flex flex-column justify-content-center text-center" translate>Your browser is not supported</h1>\n' +
+                '    <h1 class="nx-h1--vertical-margin d-flex flex-column justify-content-center text-center" translate>Your browser is not supported</h1>\n' +
                 '\n' +
                 '    <div class="row">\n' +
                 '        <h4 class="offset-1 col-10 offset-md-3 col-md-6 d-flex flex-column justify-content-center text-center" translate>\n' +
@@ -88,17 +94,6 @@
     </script>
 
     <nx-app>
-        <!--[if !IE]>
-    <div class="app-placeholder">
-        <div class="placeholder-content">
-            <div class="placeholder-preloader">
-                <div class="circleG circleG_1"></div>
-                <div class="circleG circleG_2"></div>
-                <div class="circleG circleG_3"></div>
-            </div>
-        </div>
-    </div>
-<![endif]-->
     </nx-app>
 
     <!-- Google Tag Manager -->

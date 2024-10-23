@@ -15,8 +15,8 @@
 .block {
     margin-top: 16px;
 
-    &>h6 {
-        color: var(--card-header-text) !important;
+    & > h6.nx-h6 {
+        color: var(--card-header-text);
         line-height: 24px;
     }
 

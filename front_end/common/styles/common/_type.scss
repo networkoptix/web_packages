@@ -4,15 +4,12 @@
 .old-h12 {
     @include typography.font-source(var(--font-family-light), sass-rem.rem(22px), var(--h1));
     line-height: sass-rem.rem(26px);
+    font-weight: lighter;
+    margin: 1rem 0;
 }
 
 .h7 {
     @include typography.font-source(var(--font-family-regular), var(--h6-font-size), var(--h7));
-}
-
-h1>.label {
-    font-size: 60%;
-    vertical-align: 33%;
 }
 
 .text-contrast {

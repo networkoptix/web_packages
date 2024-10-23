@@ -11,8 +11,8 @@
         min-height: 200px;
         z-index: 2000;
 
-        > h6 {
-            color: var(--light1) !important;
+        > h6.nx-h6 {
+            color: var(--light1);
         }
 
         > .close-camera-details-button {

@@ -9,12 +9,12 @@
         <h1
             *ngIf="intro.url; else noLinkHeader"
             [routerLink]="intro.url"
-            class="heading-link"
+            class="nx-h1--vertical-margin heading-link"
         >
             {{ intro.title }}
         </h1>
         <ng-template #noLinkHeader>
-            <h1>{{ intro.title }}</h1>
+            <h1 class="nx-h1--vertical-margin">{{ intro.title }}</h1>
         </ng-template>
         <ng-container *ngIf="intro.asset?.shortDescription">
             <p [innerHTML]="intro.asset.shortDescription || '' | safe: 'html'"></p>

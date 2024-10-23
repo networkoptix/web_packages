@@ -18,11 +18,11 @@
     </div>
 
     <ng-container *ngIf="error as error"
-        ><h1>{{ error.code }} — {{ error.msg }}</h1></ng-container
+        ><h1 class="nx-h1--vertical-margin">{{ error.code }} — {{ error.msg }}</h1></ng-container
     >
 
     <ng-container *ngIf="!error">
-        <h1>{{ group.name }}</h1>
+        <h1 class="nx-h1--vertical-margin">{{ group.name }}</h1>
         <ul>
             <li *ngFor="let prop of group | keyvalue">{{ prop.key }}: {{ prop.value | json }}</li>
         </ul>

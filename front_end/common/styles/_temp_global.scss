@@ -26,39 +26,63 @@ button, a {
 @mixin _nx-header-base {
     font-weight: lighter;
     line-height: 1.2;
-
     font-family: var(--font-family-medium);
 }
 
 // Before <h1>
 // After <h1 class="nx-h1" data-escape-global-style>
-h1.nx-h1 {
+.nx-h1 {
     @include _nx-header-base();
+    margin-top: 0;
+    margin-bottom: 0;
+    &--vertical-margin {
+        @extend .nx-h1;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+    }
+    &--bottom-margin {
+        @extend .nx-h1;
+        margin-bottom: 1rem;
+    }
     font-size: 2rem;
     color: var(--h1);
 }
 h2.nx-h2 {
     @include _nx-header-base();
+    margin-top: 0;
+    margin-bottom: 0;
     font-size: 1.5rem;
     color: var(--h2);
 }
 h3.nx-h3 {
     @include _nx-header-base();
+    margin-top: 0;
+    margin-bottom: 0;
     font-size: 1.125rem;
     color: var(--h3);
 }
 h4.nx-h4 {
     @include _nx-header-base();
+    margin-top: 0;
+    margin-bottom: 0;
     font-size: 0.9375rem;
     color: var(--h4);
 }
-h5.nx-h5 {
+.nx-h5 {
     @include _nx-header-base();
+    margin-top: 0;
+    margin-bottom: 0;
+    &--bottom-margin {
+        @extend .nx-h5;
+        margin-bottom: 0.5rem;
+    }
     font-size: 0.875rem;
     color: var(--h5);
 }
-h6.nx-h6 {
+.nx-h6 {
     @include _nx-header-base();
+    margin-top: 0;
+    margin-bottom: 0;
     font-size: 0.8125rem;
     color: var(--h6);
 }

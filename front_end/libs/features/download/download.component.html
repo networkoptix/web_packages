@@ -117,7 +117,10 @@
                                     class="installers"
                                     *ngIf="otherPackages.length > 0"
                                 >
-                                    <h5 *ngIf="activePlatform?.name !== 'sdk'">
+                                    <h5
+                                        class="nx-h5--bottom-margin"
+                                        *ngIf="activePlatform?.name !== 'sdk'"
+                                    >
                                         <b translate>Other packages:</b>
                                     </h5>
                                     <div

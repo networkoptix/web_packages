@@ -19,11 +19,11 @@
     </div>
 
     <ng-container *ngIf="error as error"
-        ><h1>{{ error.code }} — {{ error.msg }}</h1></ng-container
+        ><h1 class="nx-h1--vertical-margin">{{ error.code }} — {{ error.msg }}</h1></ng-container
     >
 
     <ng-container *ngIf="!error">
-        <h1>{{ org?.name }}</h1>
+        <h1 class="nx-h1--vertical-margin">{{ org?.name }}</h1>
         <div
             class="mb-3 d-flex"
             [style]="{ gap: '5px' }"

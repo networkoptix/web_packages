@@ -8,19 +8,21 @@
 </h2>
 <p
     data-escape-global-style
-    style="margin-bottom: 1rem"
+    class="mb-3"
 >
-    This page is for visual testing escaping Bootstrap/legacy global styling
+    This page is for visual testing escaping Bootstrap/legacy global styling.
 </p>
 <table>
     <thead>
         <tr>
+            <th>Browser</th>
             <th>Unescaped</th>
             <th>Escaped</th>
         </tr>
     </thead>
     <tbody>
         <tr>
+            <td>-</td>
             <td>
                 <button class="btn btn-primary">Primary</button>
             </td>
@@ -34,6 +36,7 @@
             </td>
         </tr>
         <tr>
+            <td>-</td>
             <td>
                 <button class="btn btn-default">Default</button>
             </td>
@@ -47,6 +50,7 @@
             </td>
         </tr>
         <tr>
+            <td>-</td>
             <td>
                 <button class="btn btn-danger">Danger</button>
             </td>
@@ -60,19 +64,14 @@
             </td>
         </tr>
         <tr>
+            <td><h1>h1</h1></td>
+            <td>☑</td>
             <td>
-                <h1>h1</h1>
-            </td>
-            <td>
-                <h1
-                    class="nx-h1"
-                    data-escape-global-style
-                >
-                    h1
-                </h1>
+                <h1 class="nx-h1">h1</h1>
             </td>
         </tr>
         <tr>
+            <td>☐</td>
             <td>
                 <h2>h2</h2>
             </td>
@@ -86,6 +85,7 @@
             </td>
         </tr>
         <tr>
+            <td>☐</td>
             <td>
                 <h3>h3</h3>
             </td>
@@ -99,6 +99,7 @@
             </td>
         </tr>
         <tr>
+            <td>☐</td>
             <td>
                 <h4>h4</h4>
             </td>
@@ -112,32 +113,21 @@
             </td>
         </tr>
         <tr>
+            <td><h5>h5</h5></td>
+            <td>☑</td>
             <td>
-                <h5>h5</h5>
-            </td>
-            <td>
-                <h5
-                    class="nx-h5"
-                    data-escape-global-style
-                >
-                    h5
-                </h5>
+                <h5 class="nx-h5">h5</h5>
             </td>
         </tr>
         <tr>
+            <td><h6>h6</h6></td>
+            <td>☑</td>
             <td>
-                <h6>h6</h6>
-            </td>
-            <td>
-                <h6
-                    class="nx-h6"
-                    data-escape-global-style
-                >
-                    h6
-                </h6>
+                <h6 class="nx-h6">h6</h6>
             </td>
         </tr>
         <tr>
+            <td>☐</td>
             <td>
                 <p>paragraph</p>
             </td>
@@ -146,6 +136,7 @@
             </td>
         </tr>
         <tr>
+            <td>☐</td>
             <td>
                 <a
                     (click)="$event.preventDefault()"
