@@ -1,10 +1,7 @@
-import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
 
-import { NxPagePlaceholderComponent } from '@components/placeholders/page/page-placeholder.component';
-import { PipesModule } from '@pipes/pipes.module';
+import { NxPagePlaceholder500Component } from '@components/placeholdersV2/500/500-page-placeholder.component';
 
 import { Nx500Component } from './500.component';
 
@@ -17,13 +14,7 @@ const appRoutes: Routes = [
 ];
 
 @NgModule({
-    imports: [
-        CommonModule,
-        RouterModule.forChild(appRoutes),
-        TranslateModule,
-        NxPagePlaceholderComponent,
-        PipesModule,
-    ],
+    imports: [RouterModule.forChild(appRoutes), NxPagePlaceholder500Component],
     providers: [],
     declarations: [Nx500Component],
     bootstrap: [],

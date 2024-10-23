@@ -1,0 +1,45 @@
+
+.content-container {
+  padding-top: 52px;
+  
+  svg-icon {
+    margin-bottom: 24px !important;
+  
+    svg {
+      .brand_element_cloud {
+        fill: var(--placehoder-cloud-color);
+        opacity: var(--placehoder-cloud-opacity);
+      }
+  
+      .svg_light {
+        fill: var(--placeholder-light-color);
+      }
+  
+      .svg_light2 {
+        fill: var(--placeholder-light2-color);
+      }
+  
+      .svg_accent{
+        fill: var(--placeholder-accent-color);
+      }
+    }
+  }
+  
+  h2 {
+    font-size: 1.5rem;
+    color: var(--h2);
+  }
+  
+  .placeholder-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  
+    .unique-message {
+      font-size: 0.9375rem !important;
+      color: var(--placehoder-body-color) !important;
+      line-height: 24px;
+    }
+  }
+}

@@ -836,12 +836,6 @@
         "morePlugins": "{startTag}{count, plural, =0{#{endTag} more integrations...} one{#{endTag} more integration...} other{#{endTag} more integrations...}}",
         "searchCamPlaceholder": "Search",
         "system": "system",
-        "systemNewVersion": "Update your system",
-        "systemNewVersionMessage": "Your current version is incompatible with this feature. Please update your servers to the latest version to use this feature.",
-        "systemNoAlerts": "No Alerts",
-        "systemNoAlertsMessage": "Your system must be doing well!",
-        "systemOffline": "System Offline",
-        "systemOfflineMessage": "This system is offline and cannot be accessed right now.",
         "systemServerError": "Internal server error",
         "systemServerErrorMessage": "An error occurred, please try again later. If the problem continues, please contact your support team.",
         "systemUnreachable": "SYSTEM IS UNREACHABLE",
@@ -1699,9 +1693,7 @@
         "download": "Download %VMS_NAME%",
         "downloadPlatform": "Download %VMS_NAME% for ",
         "failedToAccess2FA": "Failed to access \"{systemName}\" system",
-        "failedToAccessSystem": "Failed to access system",
         "systemSuspendedShutdown": "Failed to access \"{systemName}\" system",
-        "failedToAccessCamera": "Failed to access camera",
         "integrations": "%VMS_NAME% Integrations",
         "layouts": "Layouts",
         "login": "Log in",
@@ -1770,14 +1762,6 @@
                 "untilFinished": "Until merge is finished, you can log in to this system and watch video, but cannot change any settings.",
                 "whenFinished": "When merge is finished, all users and cameras from this system will become available in {systemName} system, and this system will be deleted."
             }
-        },
-        "noSystemApiTool": {
-            "title": "No Valid System Found",
-            "message": ""
-        },
-        "systemLoadFailureApiTool": {
-            "title": "System failed to load",
-            "message": ""
         },
         "noSystems": {
             "connected": "If the system is <span class=\"text-contrast-bold\">connected</span> to %CLOUD_NAME%",

@@ -70,16 +70,32 @@
 </ng-template>
 
 <ng-template #loadingError>
-    <nx-page-placeholder [type]="APIToolService.loadingErrorType">
-        <button
-            data-escape-global-style
-            class="nx-button--primary main-button mx-auto"
-        >
+    <nx-page-generic-placeholder-v2 class="api-placeholder">
+        <svg-icon
+            [src]="icons.dirPagePlaceholder + '404.svg'"
+            [svgStyle]="{ 'height.px': 200 }"
+        />
+        @if (APIToolService.loadingErrorType === 'NO_SYSTEM_FOUND_API_TOOL') {
+            <h2
+                class="title"
+                translate
+            >
+                No Valid System Found
+            </h2>
+        } @else {
+            <h2
+                class="title"
+                translate
+            >
+                System failed to load
+            </h2>
+        }
+        <button class="btn btn-primary main-button mx-auto">
             <a
                 routerLink="/"
                 translate
                 >Go to Main Page</a
             >
         </button>
-    </nx-page-placeholder>
+    </nx-page-generic-placeholder-v2>
 </ng-template>

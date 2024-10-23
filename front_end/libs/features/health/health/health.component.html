@@ -6,38 +6,39 @@
         *ngSwitchCase="false"
         class="h-100"
     >
-        <nx-page-placeholder
-            *ngIf="canShowOffline()"
-            [condition]="system && !system.isOnline"
-            type="OFFLINE"
-            [preloader]="!healthService.ready"
-        >
-        </nx-page-placeholder>
+        @if (canShowOffline()) {
+            @if (!healthService.ready) {
+                <nx-pre-loader />
+            } @else {
+                <nx-page-placeholder-offline />
+            }
+        }
 
-        <nx-page-placeholder
-            *ngIf="hasServerError"
-            type="500"
-            withFooter
-        >
-            <button
-                data-escape-global-style
-                class="nx-button--primary support-button mx-auto"
-            >
-                <a
-                    [href]="CONFIG.company.links.support"
-                    target="_blank"
-                    rel="noopener"
+        @if (hasServerError) {
+            <nx-page-placeholder-500 />
+        }
+
+        @if (outdatedVersion) {
+            <nx-page-generic-placeholder-v2>
+                <svg-icon
+                    [src]="icons.dirPagePlaceholder + 'NewVersion.svg'"
+                    [svgStyle]="{ 'height.px': 200 }"
+                />
+                <h2
+                    class="title"
                     translate
-                    >Go to Support Page</a
                 >
-            </button>
-        </nx-page-placeholder>
-
-        <nx-page-placeholder
-            *ngIf="outdatedVersion"
-            type="NEW_VERSION"
-        >
-        </nx-page-placeholder>
+                    Update your system
+                </h2>
+                <div
+                    class="unique-message"
+                    translate
+                >
+                    Your current version is incompatible with this feature. Please update your
+                    servers to the latest version to use this feature.
+                </div>
+            </nx-page-generic-placeholder-v2>
+        }
         <ng-template [ngTemplateOutlet]="fileUpload"></ng-template>
     </div>
 

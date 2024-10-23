@@ -1,19 +1,14 @@
 <div class="layout-wrapper">
-    @if (systemOnline$ | async) {
-        @defer (when selectedSystem$ | async) {
-            <nx-layout-grid
-                (layoutChanged)="updateLayout($event)"
-                (showPtz)="ptzControlTarget = $event"
-                [layout]="selectedLayout$ | async"
-                [layoutItemLookup]="layoutItemLookup$ | async"
-                [system]="selectedSystem$ | async"
-            ></nx-layout-grid>
-        }
-    } @else {
-        <nx-page-placeholder
-            type="OFFLINE"
-            class="page-placeholder"
-        ></nx-page-placeholder>
+    @defer (when systemOnline$ | async) {
+        <nx-layout-grid
+            (layoutChanged)="updateLayout($event)"
+            (showPtz)="ptzControlTarget = $event"
+            [layout]="selectedLayout$ | async"
+            [layoutItemLookup]="layoutItemLookup$ | async"
+            [system]="selectedSystem$ | async"
+        ></nx-layout-grid>
+    } @placeholder {
+        <nx-page-placeholder-offline />
     }
 
     @defer (

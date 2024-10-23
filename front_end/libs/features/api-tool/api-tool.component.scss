@@ -131,3 +131,26 @@
         }
     }
 }
+
+.api-placeholder {
+    svg-icon {
+        svg {
+            .brand_element_cloud {
+                fill: var(--placehoder-cloud-color);
+                opacity: var(--placehoder-cloud-opacity);
+            }
+
+            .svg_light2 {
+                fill: var(--placeholder-light2-color);
+            }
+        }
+    }
+
+    button {
+        margin: 40px auto 0 auto;
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+    }
+}

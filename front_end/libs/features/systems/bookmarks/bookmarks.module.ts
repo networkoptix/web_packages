@@ -12,9 +12,9 @@ import { NxChipFilterItemComponent } from '@components/filters/filter-items/chip
 import { NxRadioFilterItemComponent } from '@components/filters/filter-items/radio-filter-item/radio-filter-item.component';
 import { NxMultiFilterComponent } from '@components/filters/multi-filter.component';
 import { NxSingleFilterComponent } from '@components/filters/single-filter.component';
-import { NxPagePlaceholderComponent } from '@components/placeholders/page/page-placeholder.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxPagePlaceholderGenericComponent } from '@components/placeholdersV2/generic-page-placeholder.component';
+import { NxPagePlaceholderOfflineComponent } from '@components/placeholdersV2/offline/offline-page-placeholder.component';
 import { NxSimpleSearchComponent } from '@components/simple-search/simple-search.component';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { NxIntersectionObserver } from '@directives/nx-intersection.directive';
@@ -46,7 +46,6 @@ const appRoutes: Routes = [
         NxSimpleSearchComponent,
         NxAlertBlockComponent,
         NxPreLoaderComponent,
-        NxPagePlaceholderComponent,
         NxAddSvgSrcDirective,
         NxIntersectionObserver,
         DummyBookmarkComponent,
@@ -58,6 +57,7 @@ const appRoutes: Routes = [
         NxRadioFilterItemComponent,
         NxMenuProjectionDirective,
         NxPagePlaceholderGenericComponent,
+        NxPagePlaceholderOfflineComponent,
     ],
     providers: [],
     declarations: [NxBookmarksComponent],

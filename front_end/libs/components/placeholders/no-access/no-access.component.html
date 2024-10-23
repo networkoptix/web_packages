@@ -1,7 +1,26 @@
-<nx-page-placeholder
-    type="SYSTEM_SUSPENDED_SHUTDOWN"
-    withFooter
-    [data]="{ systemName: systemName$$() }"
-    [showMainButton]="true"
->
-</nx-page-placeholder>
+<nx-page-generic-placeholder-v2>
+    <svg-icon
+        [src]="icons.dirPagePlaceholder + 'NoAccess.svg'"
+        [svgStyle]="{ 'height.px': 200 }"
+    />
+    <h2
+        class="title"
+        data-escape-global-style
+    >
+        {{
+            this.LANG.pageTitles.systemSuspendedShutdown | translate: { systemName: systemName$$() }
+        }}
+    </h2>
+    <div class="unique-message">{{ this.LANG.errorCodes.systemSuspendedShutdown | translate }}</div>
+    <button
+        class="nx-button--primary main-butto"
+        data-escape-global-style
+    >
+        <a
+            routerLink="/"
+            translate
+            data-escape-global-style
+            >Go to Main Page</a
+        >
+    </button>
+</nx-page-generic-placeholder-v2>

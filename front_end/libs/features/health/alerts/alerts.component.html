@@ -1,10 +1,22 @@
 <div [ngSwitch]="healthService.alertsValues ? healthService.alertsValues.length : 0">
-    <nx-page-placeholder
-        *ngSwitchCase="0"
-        type="NO_ALERTS"
-        class="section-placeholder"
-    >
-    </nx-page-placeholder>
+    <nx-page-generic-placeholder-v2>
+        <svg-icon
+            [src]="icons.dirPagePlaceholder + 'NoActions.svg'"
+            [svgStyle]="{ 'height.px': 200 }"
+        />
+        <h2
+            class="title"
+            translate
+        >
+            No Alerts
+        </h2>
+        <div
+            class="unique-message"
+            translate
+        >
+            Your system must be doing well!
+        </div>
+    </nx-page-generic-placeholder-v2>
 
     <div *ngSwitchDefault>
         <div

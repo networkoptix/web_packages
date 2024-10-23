@@ -12,6 +12,9 @@ import { NxInfoBlockComponent } from '@components/info-block/info-block.componen
 import { NxPaginatorComponent } from '@components/paginator/paginator.component';
 import { NxPagePlaceholderComponent } from '@components/placeholders/page/page-placeholder.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
+import { NxPagePlaceholder500Component } from '@components/placeholdersV2/500/500-page-placeholder.component';
+import { NxPagePlaceholderGenericComponent } from '@components/placeholdersV2/generic-page-placeholder.component';
+import { NxPagePlaceholderOfflineComponent } from '@components/placeholdersV2/offline/offline-page-placeholder.component';
 import { NxSearchComponent } from '@components/search/search.component';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { AuthGuard } from '@guards/authGuard';
@@ -99,12 +102,15 @@ const appRoutes: Routes = [
         MenuModule,
         NxImageComponent,
         NxPagePlaceholderComponent,
+        NxPagePlaceholderGenericComponent,
         NxPaginatorComponent,
         PipesModule,
         NxPreLoaderComponent,
         NxSearchComponent,
         NxAddSvgSrcDirective,
         NxMenuProjectionDirective,
+        NxPagePlaceholder500Component,
+        NxPagePlaceholderOfflineComponent,
     ],
     providers: [NxHealthLayoutService],
     declarations: [

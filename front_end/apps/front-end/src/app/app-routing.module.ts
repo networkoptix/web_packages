@@ -64,14 +64,9 @@ const lazyRoutes: Routes = [
     {
         path: 'systems/no-access',
         loadComponent: () =>
-            import('@components/placeholders/page/page-placeholder.component').then(
-                c => c.NxPagePlaceholderComponent,
-            ),
-        resolve: {
-            type: () => 'FAILED_TO_ACCESS_SYSTEM',
-            withFooter: () => true,
-            showMainButton: () => true,
-        },
+            import(
+                '@components/placeholdersV2/failed-system-access/failed-system-access-page-placeholder.component'
+            ).then(c => c.NxPagePlaceholderFailedSystemAccessComponent),
     },
     {
         path: 'systems/:systemId/no-access/:systemName',

@@ -181,3 +181,24 @@ nx-system-health-component {
 .new-cloud-health-menu-wrapper {
   padding-top: 16px;
 }
+
+svg-icon {
+  svg {
+    .brand_element_cloud {
+      fill: var(--placehoder-cloud-color);
+      opacity: var(--placehoder-cloud-opacity);
+    }
+    .svg_light2 {
+      fill: var(--placeholder-light2-color);
+    }
+    .svg_accent {
+      fill: var(--placeholder-accent-color);
+    }
+  }
+}
+
+.unique-message {
+  font-size: 0.9375rem !important;
+  color: var(--placehoder-body-color) !important;
+  line-height: 24px;
+}

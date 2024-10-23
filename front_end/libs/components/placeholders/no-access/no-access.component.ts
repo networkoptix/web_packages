@@ -1,28 +1,25 @@
-import { CommonModule } from '@angular/common';
 import { Component, input /* input */ } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { NxFooterComponent } from '@components/footer/footer.component';
-import { NxPagePlaceholderComponent } from '@components/placeholders/page/page-placeholder.component';
-
+import { NxPagePlaceholderGenericComponent } from '@components/placeholdersV2/generic-page-placeholder.component';
+import staticLang from '@language_static';
+import { icons } from '@static-variables';
 @Component({
     selector: 'nx-system-no-access-component',
     standalone: true,
     imports: [
-        CommonModule,
-        FormsModule,
         RouterModule,
         TranslateModule,
         AngularSvgIconModule,
-        NxFooterComponent,
-        NxPagePlaceholderComponent,
+        NxPagePlaceholderGenericComponent,
     ],
     templateUrl: 'no-access.component.html',
     styleUrls: ['no-access.component.scss'],
 })
 export class NxSystemNoAccessComponent {
+    LANG = staticLang;
+    icons = icons;
     systemName$$ = input.required<string>({ alias: 'systemName' });
 }

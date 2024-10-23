@@ -1,0 +1,36 @@
+<nx-page-generic-placeholder-v2>
+    <div class="content-container">
+        <svg-icon
+            [src]="icons.dirPagePlaceholder + '500.svg'"
+            [svgStyle]="{ 'height.px': 200, 'width.px': 560 }"
+        />
+        <div class="placeholder-text">
+            <h2
+                translate
+                data-escape-global-style
+            >
+                Internal server error
+            </h2>
+            <div
+                class="unique-message"
+                translate
+            >
+                An error occurred, please try again later. If the problem continues, please contact
+                your support team.
+            </div>
+            <button
+                class="nx-button--primary main-button"
+                data-escape-global-style
+            >
+                <a
+                    [href]="CONFIG.company.links.support"
+                    target="_blank"
+                    rel="noopener"
+                    translate
+                    data-escape-global-style
+                    >Go to Support Page</a
+                >
+            </button>
+        </div>
+    </div>
+</nx-page-generic-placeholder-v2>

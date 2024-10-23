@@ -9,6 +9,8 @@ import { NxVmsClientTextComponent } from '@components/open-vms-client/vms-client
 import { NxPagePlaceholderComponent } from '@components/placeholders/page/page-placeholder.component';
 import { NxPlayerPlaceholderComponent } from '@components/placeholders/player/player-placeholder.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
+import { NxPagePlaceholderGenericComponent } from '@components/placeholdersV2/generic-page-placeholder.component';
+import { NxPagePlaceholderOfflineComponent } from '@components/placeholdersV2/offline/offline-page-placeholder.component';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { PipesModule } from '@pipes/pipes.module';
 import { currentSystemResolver } from '@resolvers/current-system-resolver';
@@ -59,6 +61,8 @@ import { VmsClientTimelineModule } from './vms-client/submodules/timeline/timeli
         PlayerComponent,
         NxVmsClientTextComponent,
         NxMenuProjectionDirective,
+        NxPagePlaceholderOfflineComponent,
+        NxPagePlaceholderGenericComponent,
     ],
     providers: [CookieService],
     declarations: [

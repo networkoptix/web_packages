@@ -1,6 +1,8 @@
 svg-icon {
+  margin-top: 16px;
+  margin-bottom: 24px !important;
   svg {
-    .brand_element_cloud { 
+    .brand_element_cloud {
       fill: var(--placehoder-cloud-color);
       opacity: var(--placehoder-cloud-opacity);
     }
@@ -15,6 +17,19 @@ svg-icon {
   }
 }
 
+h2 {
+  font-size: 1.5rem;
+  color: var(--h2);
+}
+
+.placeholder-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  width: 560px;
+}
+
 .unique-message {
   font-size: 0.9375rem !important;
   color: var(--placehoder-body-color) !important;
@@ -22,7 +37,7 @@ svg-icon {
 }
 
 .main-button {
-  margin: 40px auto 0 auto;
+  margin: 24px auto 0 auto;
   a {
     text-decoration: none;
     color: inherit;

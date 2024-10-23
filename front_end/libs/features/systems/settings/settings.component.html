@@ -6,55 +6,51 @@
 <div *ngIf="showPlaceholder; else cameras">
     @if (system.show404) {
         <div class="placeholder-container">
-            <nx-page-placeholder-404
-                *ngIf="system?.show404"
-                [showButton]="true"
-            />
+            <nx-page-placeholder-404 [showButton]="true" />
         </div>
     }
 
-    <nx-page-placeholder
-        *ngIf="systemNoAccess"
-        type="FAILED_TO_ACCESS_SYSTEM"
-        withFooter
-        [data]="{ systemName: systemName }"
-        [showMainButton]="true"
-    >
-    </nx-page-placeholder>
+    @if (systemNoAccess) {
+        <div class="placeholder-container">
+            <nx-page-placeholder-failed-system-access />
+        </div>
+    }
 
-    <nx-page-generic-placeholder-v2
-        class="merge-placeholder"
-        *ngIf="secondaryMerge"
-    >
-        <svg-icon
-            [src]="icons.dirPagePlaceholder + 'Merge.svg'"
-            [svgStyle]="{ 'height.px': 200 }"
-        ></svg-icon>
-        <h2 class="title">
-            {{
-                LANG.placeholderTexts.merge.title
-                    | translate: { systemName: mergeTargetSystem.system }
-            }}
-        </h2>
-        <div class="message">
-            <p translate>
-                Depending on the size of the database, this may take up to several hours.
-            </p>
-            <p
-                class="mt-2"
-                translate
-            >
-                Until merge is finished, you can log in to this system and watch video, but cannot
-                change any settings.
-            </p>
-            <p class="mt-2">
+    @if (secondaryMerge) {
+        <nx-page-generic-placeholder-v2
+            class="generic-placeholder"
+            *ngIf="secondaryMerge"
+        >
+            <svg-icon
+                [src]="icons.dirPagePlaceholder + 'Merge.svg'"
+                [svgStyle]="{ 'height.px': 200 }"
+            ></svg-icon>
+            <h2 class="title">
                 {{
-                    LANG.placeholderTexts.merge.message.whenFinished
+                    LANG.placeholderTexts.merge.title
                         | translate: { systemName: mergeTargetSystem.system }
                 }}
-            </p>
-        </div>
-    </nx-page-generic-placeholder-v2>
+            </h2>
+            <div class="message">
+                <p translate>
+                    Depending on the size of the database, this may take up to several hours.
+                </p>
+                <p
+                    class="mt-2"
+                    translate
+                >
+                    Until merge is finished, you can log in to this system and watch video, but
+                    cannot change any settings.
+                </p>
+                <p class="mt-2">
+                    {{
+                        LANG.placeholderTexts.merge.message.whenFinished
+                            | translate: { systemName: mergeTargetSystem.system }
+                    }}
+                </p>
+            </div>
+        </nx-page-generic-placeholder-v2>
+    }
 
     @if (show2faRequired) {
         <div class="placeholder-container">

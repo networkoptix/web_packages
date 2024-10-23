@@ -1,14 +1,9 @@
-<nx-pre-loader *ngIf="!initialized; else uninitialized"></nx-pre-loader>
-
-<ng-template #uninitialized>
-    <nx-page-placeholder
-        *ngIf="initializedWithError; else primary"
-        type="OFFLINE"
-        class="page-placeholder"
-    >
-    </nx-page-placeholder>
-
-    <ng-template #primary>
+@if (!initialized) {
+    <nx-pre-loader />
+} @else {
+    @if (initializedWithError) {
+        <nx-page-placeholder-offline />
+    } @else {
         @if (useNewCloud) {
             <nx-media-server-list
                 *nxMenuProjection
@@ -17,40 +12,40 @@
                 [mediaservers]="mediaservers"
             ></nx-media-server-list>
         } @else {
-            <div
-                class="nx-view-sidebar"
-                *ngIf="hasCameras; else noCameras"
-            >
-                <nx-media-server-list
-                    [selectedCameraId]="selectedCameraId"
-                    [systemId]="systemId"
-                    [mediaservers]="mediaservers"
-                ></nx-media-server-list>
-                <div
-                    class="sidebar-toggling-ear--wrapper"
-                    [ngClass]="{
-                        shown: isSidebarShown,
-                        visible: isSidebarShown || showElementsInFSM
-                    }"
-                    (click)="handleSidebarTogglingEarClick()"
-                >
-                    <div class="sidebar-toggling-ear">
-                        <svg-icon
-                            nx-add-svg-src
-                            [src]="icons.dirTextButtons + 'arrow_expand.svg'"
-                        ></svg-icon>
+            @if (hasCameras) {
+                <div class="nx-view-sidebar">
+                    <nx-media-server-list
+                        [selectedCameraId]="selectedCameraId"
+                        [systemId]="systemId"
+                        [mediaservers]="mediaservers"
+                    ></nx-media-server-list>
+                    <div
+                        class="sidebar-toggling-ear--wrapper"
+                        [ngClass]="{
+                            shown: isSidebarShown,
+                            visible: isSidebarShown || showElementsInFSM
+                        }"
+                        (click)="handleSidebarTogglingEarClick()"
+                    >
+                        <div class="sidebar-toggling-ear">
+                            <svg-icon
+                                nx-add-svg-src
+                                [src]="icons.dirTextButtons + 'arrow_expand.svg'"
+                            ></svg-icon>
+                        </div>
                     </div>
                 </div>
-            </div>
+            } @else {
+                <ng-template #noCameras>
+                    <div
+                        class="no-cameras-placeholder"
+                        translate
+                    >
+                        No Cameras
+                    </div>
+                </ng-template>
+            }
         }
         <router-outlet *ngIf="hasCameras"></router-outlet>
-        <ng-template #noCameras>
-            <div
-                class="no-cameras-placeholder"
-                translate
-            >
-                No Cameras
-            </div>
-        </ng-template>
-    </ng-template>
-</ng-template>
+    }
+}

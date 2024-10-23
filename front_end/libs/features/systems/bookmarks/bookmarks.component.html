@@ -1,11 +1,6 @@
-<nx-page-placeholder
-    *ngIf="system && !system.isOnline; else page"
-    type="OFFLINE"
-    class="page-placeholder"
->
-</nx-page-placeholder>
-
-<ng-template #page>
+@if (system && !system.isOnline) {
+    <nx-page-placeholder-offline />
+} @else {
     <div class="page">
         <ng-template #sidebar>
             <nx-date-and-time-filter
@@ -192,4 +187,4 @@
             </ng-container>
         </div>
     </div>
-</ng-template>
+}
