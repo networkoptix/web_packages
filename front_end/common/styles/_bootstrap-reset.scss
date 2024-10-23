@@ -6,13 +6,6 @@ hr[data-escape-global-style] {
   overflow: unset;
 }
 
-h2[data-escape-global-style],
-h3[data-escape-global-style],
-h4[data-escape-global-style] {
-  margin-top: unset;
-  margin-bottom: unset;
-}
-
 p[data-escape-global-style] {
   margin-top: unset;
   margin-bottom: unset;
@@ -267,26 +260,6 @@ summary[data-escape-global-style] {
 
 template[data-escape-global-style] {
   display: unset;
-}
-
-h2[data-escape-global-style],
-h3[data-escape-global-style],
-h4[data-escape-global-style] {
-  margin-bottom: unset;
-  font-weight: unset;
-  line-height: unset;
-}
-
-h2[data-escape-global-style] {
-  font-size: unset;
-}
-
-h3[data-escape-global-style] {
-  font-size: unset;
-}
-
-h4[data-escape-global-style] {
-  font-size: unset;
 }
 
 hr[data-escape-global-style] {

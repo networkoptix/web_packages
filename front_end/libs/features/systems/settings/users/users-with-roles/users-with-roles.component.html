@@ -17,7 +17,7 @@
                     class="header-username"
                     [ngClass]="{ 'mb-2': isCloud$$() }"
                 >
-                    <h2 class="fs-mask heading-style">{{ username }}</h2>
+                    <h2 class="h2 fs-mask heading-style">{{ username }}</h2>
                     <div class="user-status-switch-wrapper">
                         <span
                             *ngIf="!userRoleForm.controls.isEnabled.value"
@@ -67,7 +67,7 @@
                     </nx-permissions-select>
                 </div>
                 <ng-template #roleName>
-                    <h4>{{ role | translate }}</h4>
+                    <h4 class="h4">{{ role | translate }}</h4>
                 </ng-template>
                 <div>
                     <span

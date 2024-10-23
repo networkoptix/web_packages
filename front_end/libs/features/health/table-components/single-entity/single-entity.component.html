@@ -3,7 +3,7 @@
     *ngFor="let paramGroup of copyParams.values; first as isFirst"
 >
     <header>
-        <h4>
+        <h4 class="h4">
             <span *ngIf="isFirst">{{ entityName }}&nbsp;</span>
             <span>{{ paramGroup.name | translate }}</span>
         </h4>

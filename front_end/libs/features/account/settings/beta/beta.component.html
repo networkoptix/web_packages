@@ -10,7 +10,7 @@
             <header>
                 @if (node.featureConfig?.key; as key) {
                     <label [for]="key">
-                        <h3>
+                        <h3 class="h3">
                             <span>{{ node.name }}</span>
                         </h3>
                         <span>{{ node.description }}</span>
@@ -24,7 +24,7 @@
                     />
                 } @else {
                     <div>
-                        <h3>{{ node.name }}</h3>
+                        <h3 class="h3">{{ node.name }}</h3>
                         <span>{{ node.description }}</span>
                     </div>
                 }

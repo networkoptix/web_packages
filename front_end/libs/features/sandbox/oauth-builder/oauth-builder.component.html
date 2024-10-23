@@ -1,6 +1,6 @@
 <nx-block>
     <header>
-        <h2>Oauth Dialog Builder</h2>
+        <h2 class="h2">Oauth Dialog Builder</h2>
     </header>
     <nx-section>
         <form [formGroup]="authConfigFormGroup">
@@ -117,7 +117,7 @@
         </form>
     </nx-section>
     <nx-section>
-        <h2>Oauth Url</h2>
+        <h2 class="h2">Oauth Url</h2>
         <div class="auth-link">{{ authUrl() }}</div>
         <div class="buttons">
             <button
@@ -139,7 +139,7 @@
 </nx-block>
 <nx-block>
     <header>
-        <h2>Auth without dialog (No 2fa Support)</h2>
+        <h2 class="h2">Auth without dialog (No 2fa Support)</h2>
     </header>
     <nx-section>
         <form [formGroup]="loginFormGroup">
@@ -251,7 +251,7 @@
 @if (oauthRequestBody(); as oauthBody) {
     <nx-block>
         <header>
-            <h2>Auth Response</h2>
+            <h2 class="h2">Auth Response</h2>
         </header>
         <nx-section>
             <pre>{{ oauthBody | json }}</pre>
@@ -285,7 +285,7 @@
                 }
             </div>
             @if (parsedToken(); as parsedToken) {
-                <h2>Parsed JWT (Access Token)</h2>
+                <h2 class="h2">Parsed JWT (Access Token)</h2>
                 <pre>{{ parsedToken | json }}</pre>
             }
         </nx-section>

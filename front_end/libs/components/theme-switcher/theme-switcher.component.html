@@ -1,6 +1,11 @@
 <nx-block *ngIf="layout !== 'test'">
     <header>
-        <h4 translate>Themes</h4>
+        <h4
+            class="h4"
+            translate
+        >
+            Themes
+        </h4>
     </header>
 
     <nx-section>
@@ -79,7 +84,12 @@
 @if (useNewColors && account.is_staff) {
     <nx-block>
         <header>
-            <h4 translate>Presets</h4>
+            <h4
+                class="h4"
+                translate
+            >
+                Presets
+            </h4>
         </header>
         <nx-section>
             <div class="theme-options">
@@ -115,7 +125,12 @@
     </nx-block>
     <nx-block>
         <header>
-            <h4 translate>Theme Options</h4>
+            <h4
+                class="h4"
+                translate
+            >
+                Theme Options
+            </h4>
         </header>
         <nx-section>
             <div class="theme-options">
@@ -173,7 +188,12 @@
     </nx-block>
     <nx-block>
         <header>
-            <h4 translate>Theme Colors</h4>
+            <h4
+                class="h4"
+                translate
+            >
+                Theme Colors
+            </h4>
         </header>
         <nx-section>
             <div class="theme-options">
@@ -217,7 +237,12 @@
     @if (unmappedColors$$().length) {
         <nx-block>
             <header>
-                <h4 translate>Unmapped Colors</h4>
+                <h4
+                    class="h4"
+                    translate
+                >
+                    Unmapped Colors
+                </h4>
             </header>
             <nx-section>
                 @for (color of unmappedColors$$(); track color) {

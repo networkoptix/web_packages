@@ -33,7 +33,7 @@
             class="header"
             *ngIf="currentPartner$$() as currentPartner"
         >
-            <h2>{{ currentPartner.name }}</h2>
+            <h2 class="h2">{{ currentPartner.name }}</h2>
             <nx-tag
                 *ngIf="currentPartner.effectiveState !== 'active'"
                 [type]="currentPartner.effectiveState === 'suspended' ? 'warning' : 'danger'"
@@ -92,7 +92,7 @@
                                 [icon]="icons.dir + 'organization.svg'"
                                 [svgStyle]="{ 'height.px': '64', 'width.px': '54' }"
                             >
-                                <h3>{{ organization.name }}</h3>
+                                <h3 class="h3">{{ organization.name }}</h3>
 
                                 @if (organization.effectiveState === 'active') {
                                     <div>{{ organization.systemCount }}</div>

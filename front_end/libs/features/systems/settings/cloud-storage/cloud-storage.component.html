@@ -14,7 +14,12 @@
                 [svgStyle]="{ 'width.px': '148', 'height.px': '96' }"
             ></svg-icon>
         </div>
-        <h2 translate>No active Cloud Storage</h2>
+        <h2
+            class="h2"
+            translate
+        >
+            No active Cloud Storage
+        </h2>
         <span translate>You can activate Cloud Storage in your System.</span>
     </div>
     <div class="default-buttons">
@@ -44,7 +49,7 @@
                 class="action"
                 (click)="perform(actionId)"
             >
-                <h4>
+                <h4 class="h4">
                     <svg-icon
                         nx-add-svg-src
                         [src]="icons.dirCloudStorage + actionId + '_storage.svg'"
@@ -66,7 +71,7 @@
 <ng-template #licenseBlock>
     <div class="license-info-block">
         <ng-container *ngIf="(systemLicenses$ | async)?.[0] as license; else preloader">
-            <h2>{{ license.size }}</h2>
+            <h2 class="h2">{{ license.size }}</h2>
             <span>{{ TRANSLATION_BASE.until | translate: license }}</span>
         </ng-container>
     </div>
@@ -86,7 +91,7 @@
 
 <ng-template #usageBlock>
     <div class="usage-info-block">
-        <h4>
+        <h4 class="h4">
             <span *ngIf="(usages$ | async)?.length; else noStorages">{{
                 usageMessage$ | async | nxTranslate
             }}</span>
@@ -157,7 +162,12 @@
     [type]="this.type === 'servers' ? 'mt-3' : ''"
 >
     <header class="with-child">
-        <h4 translate>Cloud Storage</h4>
+        <h4
+            class="h4"
+            translate
+        >
+            Cloud Storage
+        </h4>
         <span
             *ngIf="(licenseManager?.state$ | async) === CLOUD_STORAGE_STATES.DEFAULT"
             class="tag"
@@ -211,7 +221,7 @@
     type="mt-3"
 >
     <header class="with-child">
-        <h4>
+        <h4 class="h4">
             <span translate>Your Keys</span>
             <svg-icon
                 [src]="icons.dirTextButtons + 'info.svg'"

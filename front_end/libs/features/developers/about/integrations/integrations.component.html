@@ -22,7 +22,7 @@
         *ngIf="integrations"
         class="card integrations-block"
     >
-        <h3>{{ integrationsNode.nodes[1].title }}</h3>
+        <h3 class="h3">{{ integrationsNode.nodes[1].title }}</h3>
         <div class="integrations-blocks-wrapper">
             <ng-container *ngFor="let integration of integrations.plugins">
                 <ng-container
@@ -53,20 +53,20 @@
 >
     <h2
         *ngIf="integrationsNode.url; else nonLinkHeader"
-        class="heading-link"
+        class="h2 heading-link"
         [routerLink]="integrationsNode.url"
     >
         {{ integrationsNode.title }}
     </h2>
     <ng-template #nonLinkHeader>
-        <h2 class="heading-non-link">{{ integrationsNode.title }}</h2>
+        <h2 class="h2 heading-non-link">{{ integrationsNode.title }}</h2>
     </ng-template>
     <div class="integrations-wrapper">
         <div
             *ngIf="integrationsShortDescription"
             class="card info-block"
         >
-            <h3>{{ integrationsNode.nodes[0].title }}</h3>
+            <h3 class="h3">{{ integrationsNode.nodes[0].title }}</h3>
             <div [innerHTML]="integrationsShortDescription | safe: 'html'"></div>
             <button
                 *ngIf="integrationsNode.nodes[0]?.url && integrationsNode.nodes[0].title"

@@ -47,21 +47,21 @@ button, a {
     font-size: 2rem;
     color: var(--h1);
 }
-h2.nx-h2 {
+.nx-h2 {
     @include _nx-header-base();
     margin-top: 0;
     margin-bottom: 0;
     font-size: 1.5rem;
     color: var(--h2);
 }
-h3.nx-h3 {
+.nx-h3 {
     @include _nx-header-base();
     margin-top: 0;
     margin-bottom: 0;
     font-size: 1.125rem;
     color: var(--h3);
 }
-h4.nx-h4 {
+.nx-h4 {
     @include _nx-header-base();
     margin-top: 0;
     margin-bottom: 0;

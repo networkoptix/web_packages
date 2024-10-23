@@ -72,7 +72,12 @@
     class="d-block"
 >
     <header>
-        <h4 translate>System Logs</h4>
+        <h4
+            class="h4"
+            translate
+        >
+            System Logs
+        </h4>
     </header>
     <nx-section *ngIf="selectedServerId; else unavailable">
         <ng-template *ngTemplateOutlet="logger"></ng-template>

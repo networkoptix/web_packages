@@ -25,7 +25,7 @@
             ></svg-icon>
         </header>
         <div class="tool-detail">
-            <h3>{{ tool.title }}</h3>
+            <h3 class="h3">{{ tool.title }}</h3>
             <p>{{ tool.asset?.shortDescription }}</p>
         </div>
     </div>
@@ -57,14 +57,14 @@
             class="dev-tools"
         >
             <h2
-                class="heading-link"
+                class="h2 heading-link"
                 *ngIf="devToolsNode.url; else nonLinkHeader"
                 [routerLink]="devToolsNode.url"
             >
                 {{ title }}
             </h2>
             <ng-template #nonLinkHeader>
-                <h2 class="heading">{{ title }}</h2>
+                <h2 class="h2 heading">{{ title }}</h2>
             </ng-template>
             <ng-container *ngTemplateOutlet="blocks; context: { noMargin: true }"></ng-container>
         </section>

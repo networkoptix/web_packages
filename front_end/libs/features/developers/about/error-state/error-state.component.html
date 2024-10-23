@@ -7,7 +7,10 @@
         *ngFor="let error of node | keyvalue"
         [ngClass]="hasMoreErrors(error.value) ? 'error-block' : 'error-text-wrapper'"
     >
-        <h2 *ngIf="error.key !== 'name'">
+        <h2
+            class="h2"
+            *ngIf="error.key !== 'name'"
+        >
             {{ error.key }}:
             <span
                 *ngIf="!hasMoreErrors(error.value)"
@@ -32,7 +35,12 @@
             {{ LANG.pages.developers.menuNodeContainsErrors | translate: { menuNodeName } }}
         </div>
         <div class="error-wrapper error-block">
-            <h2 translate>Errors:</h2>
+            <h2
+                class="h2"
+                translate
+            >
+                Errors:
+            </h2>
             <ng-container
                 *ngTemplateOutlet="errorLevel; context: { node: errorsToDisplay, level: 1 }"
             ></ng-container>

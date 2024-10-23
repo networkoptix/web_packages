@@ -3,19 +3,29 @@
         {{ release.version }}
         <ng-container *ngIf="release.meta_version"> {{ release.meta_version }}</ng-container>
     </h1>
-    <h4 class="m-0 ml-3 subtitle">{{ release.productDescription }}</h4>
+    <h4 class="h4 m-0 ml-3 subtitle">{{ release.productDescription }}</h4>
 </div>
 
-<h4 class="mb-3 subtitle">
+<h4 class="h4 mb-3 subtitle">
     {{ LANG.pages.downloadHistory.published | translate: { date: release.date } }}
 </h4>
 
 <div *ngIf="release.releaseNotes">
-    <h4 translate>Release Notes</h4>
+    <h4
+        class="h4"
+        translate
+    >
+        Release Notes
+    </h4>
     <div [innerHTML]="release.releaseNotes | safe: 'html'"></div>
 </div>
 
-<h4 translate>In-Client Upgrade:</h4>
+<h4
+    class="h4"
+    translate
+>
+    In-Client Upgrade:
+</h4>
 <table>
     <tr>
         <td translate>Build Number:</td>
@@ -34,7 +44,7 @@
 </table>
 
 <h4
-    class="mt-3"
+    class="h4 mt-3"
     translate
 >
     Download Links:

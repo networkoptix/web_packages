@@ -48,22 +48,16 @@ hr {
     margin-bottom : 16px;
 }
 
-h2:not([data-escape-global-style]) {
+.h2 {
     display: flex;
     align-items: center;
-    @include typography.font-source(var(--font-family-medium), var(--h2-font-size), var(--h2));
     margin: 0;
     padding: 0;
 }
 
-h3:not([data-escape-global-style]) {
-    @include typography.font-source(var(--font-family-medium), var(--h3-font-size), var(--h3));
+.h3 {
     margin-top: (common.$line-height-computed * 0.5);
     margin-bottom: (common.$line-height-computed * 0.25);
-}
-
-h4:not([data-escape-global-style]) {
-    @include typography.font-source(var(--font-family-medium), var(--h4-font-size), var(--h4));
 }
 
 label:not([data-escape-global-style]) {

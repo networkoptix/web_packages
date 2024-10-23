@@ -10,7 +10,14 @@
     novalidate
 >
     <nx-block type="mt-3">
-        <header><h4 translate>System Settings</h4></header>
+        <header>
+            <h4
+                class="h4"
+                translate
+            >
+                System Settings
+            </h4>
+        </header>
         <nx-section-placeholder
             *ngIf="(system && settings === false) || !system.isOnline; else systemSettingsTemplate"
             svgFileName="system_settings_placeholder"
@@ -119,7 +126,14 @@
         type="mt-3"
         *ngIf="canEditSecurity"
     >
-        <header><h4 translate>Security</h4></header>
+        <header>
+            <h4
+                class="h4"
+                translate
+            >
+                Security
+            </h4>
+        </header>
         <nx-section-placeholder
             *ngIf="
                 (system && settings === false) || !system.isOnline;

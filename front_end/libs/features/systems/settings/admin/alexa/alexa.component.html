@@ -1,5 +1,12 @@
 <nx-block type="mt-3">
-    <header><h4 translate>Alexa Settings</h4></header>
+    <header>
+        <h4
+            class="h4"
+            translate
+        >
+            Alexa Settings
+        </h4>
+    </header>
     <nx-section>
         <div class="alexa-message">
             <ng-template #preloader>
@@ -7,7 +14,12 @@
             </ng-template>
             <ng-container *ngIf="alexaSettings; else preloader">
                 <ng-template #notLinked>
-                    <h4 translate>Account not linked</h4>
+                    <h4
+                        class="h4"
+                        translate
+                    >
+                        Account not linked
+                    </h4>
                     <p translate>
                         Cloud portal account is not linked to Alexa, to use this system with Alexa
                         first install the Alexa app and link using your cloud portal account.
@@ -15,7 +27,12 @@
                 </ng-template>
                 <ng-container *ngIf="alexaSettings?.accountLinked; else notLinked">
                     <ng-template #notEnabled>
-                        <h4 translate>Alexa not enabled</h4>
+                        <h4
+                            class="h4"
+                            translate
+                        >
+                            Alexa not enabled
+                        </h4>
                         <p translate>
                             Alexa integration is currently disabled, press "Enable Alexa" to turn on
                             integration.
@@ -23,7 +40,12 @@
                     </ng-template>
                     <ng-container *ngIf="alexaSettings?.enabled; else notEnabled">
                         <ng-template #enabledOnAnotherSystem>
-                            <h4 translate>Alexa linked to another system</h4>
+                            <h4
+                                class="h4"
+                                translate
+                            >
+                                Alexa linked to another system
+                            </h4>
                             <p translate>
                                 Alexa is currently enabled but is linked to another system, press
                                 "Use this system with Alexa" to link Alexa to this system.
@@ -35,7 +57,12 @@
                                 else enabledOnAnotherSystem
                             "
                         >
-                            <h4 translate>Alexa linked to this system</h4>
+                            <h4
+                                class="h4"
+                                translate
+                            >
+                                Alexa linked to this system
+                            </h4>
                             <p translate>
                                 Alexa is currently currently linked to this system, to link a
                                 different open the system admin page on cloud portal for that

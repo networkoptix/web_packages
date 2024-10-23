@@ -15,7 +15,12 @@
 <nx-block type="mb-3 storage-info">
     <header>
         <div class="header-top-bar d-flex justify-content-between">
-            <h4 translate>Storage Locations</h4>
+            <h4
+                class="h4"
+                translate
+            >
+                Storage Locations
+            </h4>
             <div
                 *ngIf="canSeeDetailInfo && currentStorageState?.locations.length"
                 class="buttons"
@@ -266,7 +271,7 @@
                 name="archive-backup"
             ></nx-switch>
             <h4
-                class="ml-2"
+                class="h4 ml-2"
                 translate
             >
                 Archive Backup
@@ -320,7 +325,12 @@
 >
     <header>
         <div class="header-top-bar">
-            <h4 translate>Reindex Archive</h4>
+            <h4
+                class="h4"
+                translate
+            >
+                Reindex Archive
+            </h4>
         </div>
     </header>
     <nx-section>

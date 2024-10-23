@@ -25,6 +25,7 @@
     >
     </svg-icon>
     <h3
+        class="h3"
         [ngClass]="{
             'main-panel': renderConfig.placeholderState >= PLACEHOLDER_STATE.WITH_TITLE
         }"
@@ -33,6 +34,7 @@
     </h3>
     @if (placeholderAdditionalMessage) {
         <h4
+            class="h4"
             [ngClass]="{
                 'main-panel': renderConfig.placeholderState === PLACEHOLDER_STATE.FULL
             }"

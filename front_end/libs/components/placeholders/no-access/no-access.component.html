@@ -3,10 +3,7 @@
         [src]="icons.dirPagePlaceholder + 'NoAccess.svg'"
         [svgStyle]="{ 'height.px': 200 }"
     />
-    <h2
-        class="title"
-        data-escape-global-style
-    >
+    <h2 class="title">
         {{
             this.LANG.pageTitles.systemSuspendedShutdown | translate: { systemName: systemName$$() }
         }}

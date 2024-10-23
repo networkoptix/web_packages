@@ -16,9 +16,9 @@
     </button> -->
 </div>
 
-<h2>Channel Partners</h2>
+<h2 class="h2">Channel Partners</h2>
 <div *ngFor="let partner of channelParters$ | ngrxPush">
-    <h4>
+    <h4 class="h4">
         <a [routerLink]="partner.id">{{ partner.name }}</a>
     </h4>
     <ul>
@@ -26,17 +26,17 @@
     </ul>
 </div>
 
-<h2>Partner Roles</h2>
+<h2 class="h2">Partner Roles</h2>
 <div *ngFor="let role of channelPartnerRoles$ | ngrxPush">
-    <h4>{{ role.name }}</h4>
+    <h4 class="h4">{{ role.name }}</h4>
     <ul>
         <li *ngFor="let prop of role | keyvalue">{{ prop.key }}: {{ prop.value | json }}</li>
     </ul>
 </div>
 
-<h2>Organizations</h2>
+<h2 class="h2">Organizations</h2>
 <div *ngFor="let org of organizations$ | ngrxPush">
-    <h4>
+    <h4 class="h4">
         <a [routerLink]="org.channelPartner + '/' + org.id">{{ org.name }}</a>
     </h4>
     <ul>
@@ -44,9 +44,9 @@
     </ul>
 </div>
 
-<h2>Organization Roles</h2>
+<h2 class="h2">Organization Roles</h2>
 <div *ngFor="let role of organizationRoles$ | ngrxPush">
-    <h4>{{ role.name }}</h4>
+    <h4 class="h4">{{ role.name }}</h4>
     <ul>
         <li *ngFor="let prop of role | keyvalue">{{ prop.key }}: {{ prop.value | json }}</li>
     </ul>

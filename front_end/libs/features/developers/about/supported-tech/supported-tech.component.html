@@ -47,13 +47,13 @@
 >
     <h2
         *ngIf="supportedTechNode.url; else noLinkHeader"
-        class="header-link"
+        class="h2 header-link"
         [routerLink]="supportedTechNode.url"
     >
         {{ supportedTechNode.title }}
     </h2>
     <ng-template #noLinkHeader>
-        <h2 class="header-non-link">{{ supportedTechNode.title }}</h2>
+        <h2 class="h2 header-non-link">{{ supportedTechNode.title }}</h2>
     </ng-template>
     <ng-container *ngFor="let node of supportedTechNode.nodes">
         <ng-container *ngIf="node?.nodes?.length">

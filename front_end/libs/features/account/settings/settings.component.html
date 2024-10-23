@@ -2,7 +2,12 @@
     <div class="col-12 p-0">
         <nx-block>
             <header>
-                <h4 translate>Account Information</h4>
+                <h4
+                    class="h4"
+                    translate
+                >
+                    Account Information
+                </h4>
             </header>
 
             <nx-section>
@@ -135,7 +140,12 @@
     <div class="col-12 mt-3 p-0">
         <nx-block>
             <header>
-                <h4 translate>Language</h4>
+                <h4
+                    class="h4"
+                    translate
+                >
+                    Language
+                </h4>
             </header>
 
             <nx-section>
@@ -163,14 +173,19 @@
         <div class="col-12 mt-3 p-0">
             <nx-block>
                 <header>
-                    <h4 translate>Beta Features</h4>
+                    <h4
+                        class="h4"
+                        translate
+                    >
+                        Beta Features
+                    </h4>
                 </header>
                 <nx-section>
                     <nx-beta-settings-component (requiresReload)="requiresReload$$.set(true)" />
                 </nx-section>
                 @if (account.is_staff) {
                     <nx-section>
-                        <h4>{{ 'Internal Staff Overrides' }}</h4>
+                        <h4 class="h4">{{ 'Internal Staff Overrides' }}</h4>
                         <div class="override-feature-flags">
                             <nx-search
                                 [placeholder]="'Search Feature Flags'"

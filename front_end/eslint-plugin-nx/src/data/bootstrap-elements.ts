@@ -1,9 +1,6 @@
 /* eslint-disable */
 const classes = new Set([
     "hr",
-    "h2",
-    "h3",
-    "h4",
     "p",
     "abbr",
     "address",

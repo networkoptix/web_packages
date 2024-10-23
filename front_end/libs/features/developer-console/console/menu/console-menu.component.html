@@ -29,7 +29,10 @@
     </div>
 </ng-template>
 
-<h3 *ngIf="TYPES.EDIT === type && !loading">
+<h3
+    class="h3"
+    *ngIf="TYPES.EDIT === type && !loading"
+>
     <ng-container
         *ngTemplateOutlet="
             icon;

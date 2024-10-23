@@ -9,7 +9,7 @@
     <ng-container *ngIf="cleanSupportNode.url; else noLinkHeading">
         <ng-template #internalLink>
             <h2
-                class="support-link"
+                class="h2 support-link"
                 [routerLink]="cleanSupportNode.url"
             >
                 {{ cleanSupportNode.title }}
@@ -21,11 +21,11 @@
             target="_blank"
             class="heading-link"
         >
-            <h2 class="support-link">{{ cleanSupportNode.title }}</h2>
+            <h2 class="h2 support-link">{{ cleanSupportNode.title }}</h2>
         </a>
     </ng-container>
     <ng-template #noLinkHeading>
-        <h2>{{ cleanSupportNode.title }}</h2>
+        <h2 class="h2">{{ cleanSupportNode.title }}</h2>
     </ng-template>
     <div class="support-wrapper">
         <div class="left-image">

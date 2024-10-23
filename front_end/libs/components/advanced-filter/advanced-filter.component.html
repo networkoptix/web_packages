@@ -6,7 +6,12 @@
         *ngIf="filter.sortable"
         class="shaded"
     >
-        <h4 translate>Sort:</h4>
+        <h4
+            class="h4"
+            translate
+        >
+            Sort:
+        </h4>
         <div class="sort-button-wrapper">
             <button
                 (click)="updateState({ sort: FILTER_SORT.ASC })"

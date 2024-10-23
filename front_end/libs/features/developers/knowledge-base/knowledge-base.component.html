@@ -73,7 +73,7 @@
                 ></svg-icon>
             </div>
             <p>{{ node.cardLead }}</p>
-            <h3>{{ node.title }}</h3>
+            <h3 class="h3">{{ node.title }}</h3>
         </header>
         <nx-section>
             <div
@@ -125,7 +125,7 @@
     #searchResultsTemplate
     let-results="results"
 >
-    <h2 class="results-heading">
+    <h2 class="h2 results-heading">
         <ng-template #resultsHeading>
             <ng-template #noResults>
                 <ng-container translate>No Matching Search Results</ng-container>
@@ -273,7 +273,7 @@
                         class="related-section"
                         *ngIf="(relatedLinksFiltered$ | async).length"
                     >
-                        <h4>
+                        <h4 class="h4">
                             <ng-template #related>
                                 <span translate>RELATED TOPICS</span>
                             </ng-template>

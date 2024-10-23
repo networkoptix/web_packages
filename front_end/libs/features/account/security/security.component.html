@@ -3,7 +3,12 @@
         <nx-block>
             <header>
                 <div class="tfauth-status-header-wrapper">
-                    <h4 translate>Two-factor authentication (2FA)</h4>
+                    <h4
+                        class="h4"
+                        translate
+                    >
+                        Two-factor authentication (2FA)
+                    </h4>
 
                     <nx-tag
                         *ngIf="!(account2faEnabled || totpExistsForAccount)"
@@ -126,7 +131,7 @@
                         class="tfauth-v5-warning"
                         *ngIf="subV5Systems.length && account2faEnabled"
                     >
-                        <h4 class="mt-0">
+                        <h4 class="h4 mt-0">
                             <svg-icon
                                 nx-add-svg-src
                                 [src]="icons.dirNonStandard + 'error.svg'"
@@ -219,7 +224,12 @@
         >
             <header>
                 <div class="tfauth-status-switch-wrapper">
-                    <h4 translate>Backup codes</h4>
+                    <h4
+                        class="h4"
+                        translate
+                    >
+                        Backup codes
+                    </h4>
                 </div>
             </header>
 

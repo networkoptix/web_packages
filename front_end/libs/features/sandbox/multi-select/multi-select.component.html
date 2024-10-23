@@ -98,7 +98,7 @@
     class="mb-3 row m-0 p-3"
     style="border: 1px solid lightgray"
 >
-    <h2>Form Dropdown</h2>
+    <h2 class="h2">Form Dropdown</h2>
     <div style="width: 100%">
         <form
             [formGroup]="dropdownForm"
@@ -203,7 +203,7 @@
     style="border: 1px solid lightgray"
 >
     <div class="col-4 p-4">
-        <h4>Mat like select</h4>
+        <h4 class="h4">Mat like select</h4>
         <nx-mat-like-select
             [componentId]="'ddSSingle'"
             name="ddSSingle"
@@ -215,7 +215,7 @@
         </nx-mat-like-select>
     </div>
     <div class="col-4 p-4">
-        <h4>Simple select: canSearch</h4>
+        <h4 class="h4">Simple select: canSearch</h4>
         <nx-select
             [componentId]="'sandboxDdSSingleOther'"
             name="ddSSingleOther"
@@ -228,7 +228,7 @@
         </nx-select>
     </div>
     <div class="col-4 p-4">
-        <h4>Simple select: disabled</h4>
+        <h4 class="h4">Simple select: disabled</h4>
         <nx-select
             [componentId]="'sandboxSSelectDisabledSelect'"
             name="ddSSingle"
@@ -241,7 +241,7 @@
         </nx-select>
     </div>
     <div class="col-4 p-4">
-        <h4>Basic Searchable</h4>
+        <h4 class="h4">Basic Searchable</h4>
         <nx-basic-search-input formControlName="search"></nx-basic-search-input>
         <cdk-virtual-scroll-viewport
             class="scroll-area"
@@ -258,7 +258,7 @@
     </div>
 
     <div class="col-4 p-4">
-        <h4>Configure Select:</h4>
+        <h4 class="h4">Configure Select:</h4>
         <div
             class="row"
             *ngFor="let booleanProp of booleanConfigurationArray"
@@ -274,8 +274,8 @@
         </div>
     </div>
     <div class="col-4 p-4">
-        <h4>Configurable Select:</h4>
-        <h3>Changing:</h3>
+        <h4 class="h4">Configurable Select:</h4>
+        <h3 class="h3">Changing:</h3>
         <nx-select
             [componentId]="'sandboxSSelectSearchableSelect'"
             name="ddSearchableSingle"
@@ -293,7 +293,7 @@
             [type]="dropdownConfiguration.type"
         >
         </nx-select>
-        <h3>Static, default:</h3>
+        <h3 class="h3">Static, default:</h3>
         <nx-select
             [componentId]="'sandboxSSelectStaticSelect'"
             name="ddSearchableSingle"

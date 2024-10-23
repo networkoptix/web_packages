@@ -1,9 +1,9 @@
 /* eslint-disable */
 const classes = new Set([
-    "h1",
     "h2",
     "h3",
     "h4",
+    "h1",
     "h5",
     "h6",
     "lead",

@@ -7,14 +7,14 @@
             class="btn btn-default"
             (click)="back()"
         >
-            <h2>⬅️ Back</h2>
+            <h2 class="h2">⬅️ Back</h2>
         </button>
         <button
             *ngIf="partner?.parentChannelPartner as parent"
             class="btn btn-default"
             (click)="up(parent)"
         >
-            <h2>⬆️ Up</h2>
+            <h2 class="h2">⬆️ Up</h2>
         </button>
     </div>
 
@@ -45,7 +45,7 @@
             <li *ngFor="let prop of partner | keyvalue">{{ prop.key }}: {{ prop.value | json }}</li>
         </ul>
 
-        <h2>Sub Channel Partners</h2>
+        <h2 class="h2">Sub Channel Partners</h2>
         <button
             class="btn-primary"
             (click)="newChannelPartner(partner.id)"
@@ -53,7 +53,7 @@
             New Sub Partner
         </button>
         <div *ngFor="let sub of subPartners$ | ngrxPush">
-            <h4>
+            <h4 class="h4">
                 <a [routerLink]="'../' + sub.id">{{ sub.name }}</a>
             </h4>
             <button
@@ -67,7 +67,7 @@
             </ul>
         </div>
 
-        <h2>Organizations</h2>
+        <h2 class="h2">Organizations</h2>
         <button
             class="btn-primary"
             (click)="newOrganization(partner.id)"
@@ -75,7 +75,7 @@
             New Organization
         </button>
         <div *ngFor="let org of organizations$ | ngrxPush">
-            <h4>
+            <h4 class="h4">
                 <a [routerLink]="org.id">{{ org.name }}</a>
             </h4>
             <button
@@ -89,7 +89,7 @@
             </ul>
         </div>
 
-        <h2>Users</h2>
+        <h2 class="h2">Users</h2>
         <button
             class="btn-primary"
             (click)="newPartnerUser(partner.id)"
@@ -97,7 +97,7 @@
             New User
         </button>
         <div *ngFor="let user of users$ | ngrxPush">
-            <h4>{{ user.email }}</h4>
+            <h4 class="h4">{{ user.email }}</h4>
             <div
                 class="mb-3 d-flex"
                 [style]="{ gap: '5px' }"

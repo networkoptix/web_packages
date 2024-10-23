@@ -502,5 +502,16 @@ module.exports = {
                 ],
             },
         },
+        // {
+        //     files: ['*.component.html'],
+        //     excludedFiles: [
+        //         'libs/features/dashboard/**',
+        //         '**/*widget*/**',
+        //         'libs/nx-components/**',
+        //     ],
+        //     rules: {
+        //         'nx/template/add-element-class': 'error',
+        //     },
+        // },
     ],
 };

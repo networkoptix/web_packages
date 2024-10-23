@@ -21,7 +21,7 @@
                     class="card-icon"
                     [svgStyle]="{ 'height.px': svg.height, 'width.px': svg.width }"
                 ></svg-icon>
-                <h3 class="title">{{ node.title }}</h3>
+                <h3 class="h3 title">{{ node.title }}</h3>
                 <ul class="bullet-points">
                     <li
                         *ngFor="let block of node.asset.blocks"
@@ -43,7 +43,7 @@
                 class="card-icon"
                 [svgStyle]="{ 'height.px': svg.height, 'width.px': svg.width }"
             ></svg-icon>
-            <h3 class="title">{{ devCapabilitiesNode.nodes[0].title }}</h3>
+            <h3 class="h3 title">{{ devCapabilitiesNode.nodes[0].title }}</h3>
             <ul class="bullet-points-single-card">
                 <li
                     *ngFor="let block of devCapabilitiesNode.nodes[0].asset?.blocks"

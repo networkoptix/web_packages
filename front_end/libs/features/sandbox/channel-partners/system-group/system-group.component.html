@@ -7,13 +7,13 @@
             class="btn btn-default"
             (click)="back()"
         >
-            <h2>⬅️ Back</h2>
+            <h2 class="h2">⬅️ Back</h2>
         </button>
         <button
             class="btn btn-default"
             (click)="up(group.parentId)"
         >
-            <h2>⬆️ Up</h2>
+            <h2 class="h2">⬆️ Up</h2>
         </button>
     </div>
 
@@ -27,11 +27,11 @@
             <li *ngFor="let prop of group | keyvalue">{{ prop.key }}: {{ prop.value | json }}</li>
         </ul>
 
-        <h2>Users</h2>
+        <h2 class="h2">Users</h2>
         <ng-container *ngIf="usersError as error"> {{ error.code }} — {{ error.msg }}</ng-container>
         <ng-container *ngIf="!usersError">
             <div *ngFor="let user of users$ | ngrxPush">
-                <h4>{{ user.email }}</h4>
+                <h4 class="h4">{{ user.email }}</h4>
                 <ul>
                     <li *ngFor="let prop of user | keyvalue">
                         {{ prop.key }}: {{ prop.value | json }}
@@ -40,9 +40,9 @@
             </div>
         </ng-container>
 
-        <h2>Groups</h2>
+        <h2 class="h2">Groups</h2>
         <div *ngFor="let group of group.children">
-            <h4>
+            <h4 class="h4">
                 <a [routerLink]="'../' + group.id">{{ group.name }}</a>
             </h4>
             <ul>

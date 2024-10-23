@@ -50,7 +50,7 @@
                         <div class="card-body flex-md">
                             <div class="col-md-4 pl-md-4 order-2 order-md-2 version-panel">
                                 <b translate>Latest version</b>
-                                <h2 class="version-number d-flex">
+                                <h2 class="h2 version-number d-flex">
                                     <b>
                                         {{ downloadsData.version }}
                                         <ng-container *ngIf="downloadsData.meta_version">
@@ -91,7 +91,12 @@
                                                 ></svg-icon>
                                             </div>
                                             <div class="media-body text-left">
-                                                <h3 translate>Download %VMS_NAME%</h3>
+                                                <h3
+                                                    class="h3"
+                                                    translate
+                                                >
+                                                    Download %VMS_NAME%
+                                                </h3>
                                                 <div class="h7 installer-name">
                                                     <span *ngIf="!downloadButton.niceName">{{
                                                         installerName(activePlatform.name)

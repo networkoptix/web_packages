@@ -4,7 +4,7 @@
     </div>
 </ng-template>
 <div class="container">
-    <h2 class="ml-3 mr-3 pt-3">Email Notification Test</h2>
+    <h2 class="h2 ml-3 mr-3 pt-3">Email Notification Test</h2>
     <nx-block class="mt-3 d-block">
         <header>Send Test Email Notification</header>
         <nx-section [nonPadded]="true">
@@ -39,7 +39,7 @@
                         *ngIf="account$ | async; else preloader"
                         class="h-100"
                     >
-                        <h4>Select system to test email notification</h4>
+                        <h4 class="h4">Select system to test email notification</h4>
                         <nx-select
                             [componentId]="'notificationsSystemSelect'"
                             [items]="systems$ | async"
@@ -54,7 +54,7 @@
                         *ngIf="users$ | async as users; else preloader"
                         class="h-100"
                     >
-                        <h4>Select users to send test email notification</h4>
+                        <h4 class="h4">Select users to send test email notification</h4>
                         <div class="checkbox-wrapper">
                             <div
                                 *ngFor="let user of users"
@@ -81,11 +81,11 @@
                     <div class="h-100">
                         <ng-template #eventSummary>
                             <ng-container *ngIf="!sending; else preloader">
-                                <h3>Endpoint</h3>
+                                <h3 class="h3">Endpoint</h3>
                                 <pre [innerText]="endpoint"></pre>
-                                <h3>Payload</h3>
+                                <h3 class="h3">Payload</h3>
                                 <pre [innerText]="payload"></pre>
-                                <h3>Response</h3>
+                                <h3 class="h3">Response</h3>
                                 <pre [innerText]="response"></pre>
                             </ng-container>
                         </ng-template>
@@ -94,14 +94,14 @@
                             class="send-wrapper"
                         >
                             <div class="send-section h-100">
-                                <h4>Select test notification type</h4>
+                                <h4 class="h4">Select test notification type</h4>
                                 <nx-select
                                     [componentId]="'notificationTypeSelect'"
                                     [items]="notificationTypes"
                                     [selected]="selectedNotificationType"
                                     (onSelected)="updateType($event)"
                                 ></nx-select>
-                                <h4>Test email notification content</h4>
+                                <h4 class="h4">Test email notification content</h4>
                                 <div class="email-content-wrapper">
                                     <label for="systemId">systemId</label>
                                     <input
@@ -221,7 +221,7 @@
                                 </div>
                             </div>
                             <div class="send-section">
-                                <h4>{{ endpoint }}</h4>
+                                <h4 class="h4">{{ endpoint }}</h4>
                                 <pre
                                     [innerText]="payloadPreview"
                                     class="payload-preview"

@@ -6,7 +6,12 @@
     *ngIf="haveAdvSettings; else systemNotReady"
 >
     <header>
-        <h4 translate>Advanced System Settings</h4>
+        <h4
+            class="h4"
+            translate
+        >
+            Advanced System Settings
+        </h4>
     </header>
     <nx-section *ngIf="(systemSettings | keyvalue)?.length > 0">
         <form

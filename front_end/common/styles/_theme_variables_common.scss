@@ -23,6 +23,9 @@ $h4-font-size : sass-rem.rem(15px); // $font-size-base * 1;
 $h5-font-size : sass-rem.rem(14px); // $font-size-base;
 $h6-font-size : sass-rem.rem(13px); // $font-size-base * .875;
 
+$headings-font-family: var(--font-family-medium);
+$headings-color: var(--h1);
+
 @mixin with-html {
     --font-family-base    : #{$font-family-base};
     --font-family-regular : #{$font-family-regular};

@@ -33,6 +33,7 @@
             ) {
                 @if (resultSection.results.length || resultSection.noResults) {
                     <h3
+                        class="h3"
                         [ngClass]="{
                             'sticky-heading': stickyHeading,
                             'no-breadcrumbs': !resultSection.breadcrumbs
@@ -73,7 +74,7 @@
                     </div>
                 } @empty {
                     @if (resultSection.noResults) {
-                        <h4>{{ resultSection.noResults }}</h4>
+                        <h4 class="h4">{{ resultSection.noResults }}</h4>
                     }
                 }
             }
@@ -117,7 +118,7 @@
         [dropdownItems]="groupActions$$()[group.id] || []"
         (toggleShow)="$event && getGroupUsers(group.id)"
     >
-        <h3>
+        <h3 class="h3">
             <nx-search-highlight
                 [text]="group.name"
                 [search]="search$$() || ''"
@@ -143,7 +144,7 @@
         }"
         [dropdownItems]="systemActions$$()[system.systemId]"
     >
-        <h3>
+        <h3 class="h3">
             <nx-search-highlight
                 [text]="system.name"
                 [search]="search$$() || ''"

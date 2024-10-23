@@ -20,7 +20,7 @@
                     >
                         @if (LANG.layouts.helpMessages[message]; as helpMessage) {
                             @if (helpMessage.title; as title) {
-                                <h4 data-escape-global-style>
+                                <h4 class="h4">
                                     <span>{{ title | translate }}</span>
                                     @if (helpMessage.help) {
                                         <svg-icon
@@ -61,10 +61,7 @@
                                 </button>
                             }
                         } @else {
-                            <h4
-                                data-escape-global-style
-                                class="name-message"
-                            >
+                            <h4 class="h4 name-message">
                                 {{ message }}
                             </h4>
                         }
@@ -195,10 +192,12 @@
                                 [svgClass]="small ? 'small' : 'large'"
                                 [src]="icons.dirLayouts + svg + '.svg'"
                             ></svg-icon>
-                            <h3 data-escape-global-style>{{ content.title | translate }}</h3>
+                            <h3 class="h3">
+                                {{ content.title | translate }}
+                            </h3>
                             @if (content.description) {
                                 <h4
-                                    data-escape-global-style
+                                    class="h4"
                                     [innerHtml]="content.description | translate"
                                 ></h4>
                             }
@@ -669,7 +668,7 @@
                                     @case (PLACEHOLDER_NAME_LOOKUP.noLayouts) {
                                         <div class="no-layouts-placeholder">
                                             <h3
-                                                data-escape-global-style
+                                                class="h3"
                                                 translate
                                             >
                                                 Layouts
@@ -723,7 +722,7 @@
                                                 [src]="icons.dirLayouts + 'cameras_placeholder.svg'"
                                             ></svg-icon>
                                             <h3
-                                                data-escape-global-style
+                                                class="h3"
                                                 translate
                                             >
                                                 No Cameras
@@ -759,7 +758,7 @@
                                         [src]="icons.dirLayouts + 'layouts_placeholder.svg'"
                                     ></svg-icon>
                                     <h3
-                                        data-escape-global-style
+                                        class="h3"
                                         translate
                                     >
                                         Layout has been deleted

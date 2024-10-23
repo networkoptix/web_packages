@@ -27,7 +27,7 @@
                 [src]="images.dirDevelopers + capability.icon.split(' ')[0]"
             ></svg-icon>
             <div class="intro-line">{{ capability.subtitle }}</div>
-            <h3>{{ capability.title }}</h3>
+            <h3 class="h3">{{ capability.title }}</h3>
         </header>
         <div
             class="capability-detail"
@@ -41,14 +41,14 @@
     class="capabilities"
 >
     <h2
-        class="heading-link"
+        class="h2 heading-link"
         *ngIf="capabilitiesNode.url; else noLinkHeader"
         [routerLink]="capabilitiesNode.url"
     >
         {{ capabilitiesNode.title }}
     </h2>
     <ng-template #noLinkHeader>
-        <h2 class="heading-non-link">{{ capabilitiesNode.title }}</h2>
+        <h2 class="h2 heading-non-link">{{ capabilitiesNode.title }}</h2>
     </ng-template>
     <div
         class="detail-blocks"

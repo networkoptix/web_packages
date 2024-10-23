@@ -87,6 +87,8 @@
         h2 {
             @extend .card--header;
             @include typography.medium18nocolor;
+            color: var(--h1);
+            margin: 0;
             border-bottom: none;
             line-height: unset;
             padding-top: 124px;

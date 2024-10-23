@@ -21,7 +21,7 @@
                 <img [src]="images.dirDevelopers + block.currentIcon" />
             </div>
             <div class="step-text">
-                <h3>{{ block.title }}</h3>
+                <h3 class="h3">{{ block.title }}</h3>
             </div>
         </div>
     </div>
@@ -29,13 +29,13 @@
 <ng-container *ngIf="!errorManager.hasErrors; else showError">
     <h2
         *ngIf="steps.url; else noLinkHeader"
-        class="get-started-heading-link"
+        class="h2 get-started-heading-link"
         [routerLink]="steps.url"
     >
         {{ steps.title }}
     </h2>
     <ng-template #noLinkHeader>
-        <h2 class="get-started-heading">{{ steps.title }}</h2>
+        <h2 class="h2 get-started-heading">{{ steps.title }}</h2>
     </ng-template>
     <section class="get-started-section">
         <div class="get-started-blocks card-grid">

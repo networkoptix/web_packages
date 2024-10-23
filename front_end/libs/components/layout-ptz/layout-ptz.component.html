@@ -22,7 +22,7 @@
 
 <h3
     (mouseenter)="showPtz = true"
-    class="show-ptz-title"
+    class="h3 show-ptz-title"
     translate
 >
     Show PTZ Controls
@@ -31,7 +31,7 @@
     (mouseleave)="showPtz = false"
     class="control-wrapper"
 >
-    <h3>{{ camera.name }}</h3>
+    <h3 class="h3">{{ camera.name }}</h3>
     <div
         class="control-center"
         (mousedown)="triggerAction($event)"

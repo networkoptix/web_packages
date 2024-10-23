@@ -78,7 +78,7 @@
         (ngModelChange)="toggleCheckAll()"
     />
 </label>
-<h2>Multiple bindings checkBoxes$$</h2>
+<h2 class="h2">Multiple bindings checkBoxes$$</h2>
 @for (checkbox of checkBoxes$$(); track $index) {
     <label>
         Checkbox {{ $index }}
@@ -98,17 +98,17 @@
     />
 </label>
 @if (isTyping$$()) {
-    <h3>Typing...</h3>
+    <h3 class="h3">Typing...</h3>
 } @else {
-    <h3>Not typing</h3>
+    <h3 class="h3">Not typing</h3>
 }
 
-<h2>Recursive mapped model signal binding example</h2>
+<h2 class="h2">Recursive mapped model signal binding example</h2>
 <recursive-component
     [children]="5"
     [(modelBinding)]="source1$$"
 ></recursive-component>
-<h2>Model Signal ngModel: {{ ngModelBinding }}</h2>
+<h2 class="h2">Model Signal ngModel: {{ ngModelBinding }}</h2>
 
 <input
     type="text"

@@ -13,7 +13,10 @@
                 class="swagger-description"
                 *ngIf="!openAPIJSONService.isMarkdownNode"
             >
-                <h2 [innerHTML]="this.swaggerMenuDescription.title | safe: 'html'"></h2>
+                <h2
+                    class="h2"
+                    [innerHTML]="this.swaggerMenuDescription.title | safe: 'html'"
+                ></h2>
                 <ng-container *ngIf="this.singleAPIRouteShowing">
                     <p
                         class="description-path"

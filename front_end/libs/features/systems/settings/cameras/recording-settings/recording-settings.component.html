@@ -3,7 +3,12 @@
         <header>
             <div class="d-flex align-items-center">
                 <ng-template #notAvailable>
-                    <h4 translate>Recording</h4>
+                    <h4
+                        class="h4"
+                        translate
+                    >
+                        Recording
+                    </h4>
                 </ng-template>
                 <div *ngIf="!system.useRest; else notAvailable">
                     <nx-switch
@@ -47,7 +52,7 @@
         <ng-container *ngIf="!system.useRest && recording">
             <nx-section>
                 <h4
-                    class="mb-3"
+                    class="h4 mb-3"
                     translate
                 >
                     Mode
@@ -78,7 +83,7 @@
             </nx-section>
             <nx-section *ngIf="!selectedCamera.isStream">
                 <h4
-                    class="mb-3"
+                    class="h4 mb-3"
                     translate
                 >
                     Quality
