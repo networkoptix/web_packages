@@ -24,6 +24,7 @@ import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { NxIntersectionObserver } from '@directives/nx-intersection.directive';
 import { NxThemeAttributeDirective } from '@directives/theme-attribute.directive';
+import staticLang from '@language_static';
 import { PermissionsStore } from '@pages/home/store/permissions/permissions.store';
 import { ChannelPartnersRouteState } from '@pages/home/store/route-state/route-state.store';
 import { PartnerRedirect } from '@pages/home/utils/redirect';
@@ -68,6 +69,7 @@ import { NxCardComponent } from '../card/card.component';
 })
 export class NxSubchannelsComponent {
     permissionsStore = inject(PermissionsStore);
+    LANG = staticLang;
     icons = icons;
     canCreatePartners$$ = this.permissionsStore.canCreateSubChannels$$;
     currentPartnerId$ = this.store.select<string>(selectCurrentPartnerId);
