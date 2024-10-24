@@ -4,7 +4,6 @@ const elements = new Set([
     'pre',
     'code',
     // 'svg-icon', // Moving away from using this element entirely in 2.0
-    'fieldset',
     'label',
     'p',
     'b',

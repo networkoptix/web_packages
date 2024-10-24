@@ -6,6 +6,12 @@
 
 @use 'reset-mixins';
 
+// From Bootstrap
+summary {
+    display: list-item;
+    cursor: pointer;
+  }
+
 @keyframes fadein {
     from {
         opacity: 0;

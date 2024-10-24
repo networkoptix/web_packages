@@ -100,8 +100,7 @@ input.hide-errors {
 
     &:disabled,
     &[disabled],
-    &[readonly],
-    fieldset:not([data-escape-global-style])[disabled] & {
+    &[readonly] {
         opacity: .4;
         color: var(--input-disabled-color) !important;
         border-color: var(--input-disabled-border-color) !important;

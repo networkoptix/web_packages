@@ -11,24 +11,8 @@ p[data-escape-global-style] {
   margin-bottom: unset;
 }
 
-abbr[data-escape-global-style][title],
-abbr[data-escape-global-style][data-original-title] {
-  text-decoration: unset;
-  text-decoration: unset;
-  cursor: unset;
-  border-bottom: unset;
-  text-decoration-skip-ink: unset;
-}
-
-address[data-escape-global-style] {
-  margin-bottom: unset;
-  font-style: unset;
-  line-height: unset;
-}
-
 ol[data-escape-global-style],
-ul[data-escape-global-style],
-dl[data-escape-global-style] {
+ul[data-escape-global-style] {
   margin-top: unset;
   margin-bottom: unset;
 }
@@ -40,42 +24,9 @@ ul[data-escape-global-style] ol {
   margin-bottom: unset;
 }
 
-dt[data-escape-global-style] {
-  font-weight: unset;
-}
-
-dd[data-escape-global-style] {
-  margin-bottom: unset;
-  margin-left: unset;
-}
-
-blockquote[data-escape-global-style] {
-  margin: unset;
-}
-
 b[data-escape-global-style],
 strong[data-escape-global-style] {
   font-weight: unset;
-}
-
-small[data-escape-global-style] {
-  font-size: unset;
-}
-
-sub[data-escape-global-style],
-sup[data-escape-global-style] {
-  position: unset;
-  font-size: unset;
-  line-height: unset;
-  vertical-align: unset;
-}
-
-sub[data-escape-global-style] {
-  bottom: unset;
-}
-
-sup[data-escape-global-style] {
-  top: unset;
 }
 
 a[data-escape-global-style] {
@@ -100,9 +51,7 @@ a[data-escape-global-style]:not([href]):not([class]):hover {
 }
 
 pre[data-escape-global-style],
-code[data-escape-global-style],
-kbd[data-escape-global-style],
-samp[data-escape-global-style] {
+code[data-escape-global-style] {
   font-family: unset;
   font-size: unset;
 }
@@ -114,10 +63,6 @@ pre[data-escape-global-style] {
   -ms-overflow-style: unset;
 }
 
-figure[data-escape-global-style] {
-  margin: unset;
-}
-
 img[data-escape-global-style] {
   vertical-align: unset;
   border-style: unset;
@@ -126,14 +71,6 @@ img[data-escape-global-style] {
 svg[data-escape-global-style] {
   overflow: unset;
   vertical-align: unset;
-}
-
-caption[data-escape-global-style] {
-  padding-top: unset;
-  padding-bottom: unset;
-  color: unset;
-  text-align: unset;
-  caption-side: unset;
 }
 
 th[data-escape-global-style] {
@@ -157,7 +94,6 @@ button[data-escape-global-style]:focus {
 input[data-escape-global-style],
 button[data-escape-global-style],
 select[data-escape-global-style],
-optgroup[data-escape-global-style],
 textarea[data-escape-global-style] {
   margin: unset;
   font-family: unset;
@@ -207,29 +143,6 @@ textarea[data-escape-global-style] {
   resize: unset;
 }
 
-fieldset[data-escape-global-style] {
-  min-width: unset;
-  padding: unset;
-  margin: unset;
-  border: unset;
-}
-
-legend[data-escape-global-style] {
-  display: unset;
-  width: unset;
-  max-width: unset;
-  padding: unset;
-  margin-bottom: unset;
-  font-size: unset;
-  line-height: unset;
-  color: unset;
-  white-space: unset;
-}
-
-progress[data-escape-global-style] {
-  vertical-align: unset;
-}
-
 [type=number][data-escape-global-style]::-webkit-inner-spin-button,
 [type=number][data-escape-global-style]::-webkit-outer-spin-button {
   height: unset;
@@ -249,34 +162,11 @@ progress[data-escape-global-style] {
   -webkit-appearance: unset;
 }
 
-output[data-escape-global-style] {
-  display: unset;
-}
-
-summary[data-escape-global-style] {
-  display: unset;
-  cursor: unset;
-}
-
-template[data-escape-global-style] {
-  display: unset;
-}
-
 hr[data-escape-global-style] {
   margin-top: unset;
   margin-bottom: unset;
   border: unset;
   border-top: unset;
-}
-
-small[data-escape-global-style] {
-  font-size: unset;
-  font-weight: unset;
-}
-
-mark[data-escape-global-style] {
-  padding: unset;
-  background-color: unset;
 }
 
 code[data-escape-global-style] {
@@ -289,20 +179,6 @@ a[data-escape-global-style] > code {
   color: unset;
 }
 
-kbd[data-escape-global-style] {
-  padding: unset;
-  font-size: unset;
-  color: unset;
-  background-color: unset;
-  border-radius: unset;
-}
-
-kbd[data-escape-global-style] kbd {
-  padding: unset;
-  font-size: unset;
-  font-weight: unset;
-}
-
 pre[data-escape-global-style] {
   display: unset;
   font-size: unset;
@@ -313,8 +189,4 @@ pre[data-escape-global-style] code {
   font-size: unset;
   color: unset;
   word-break: unset;
-}
-
-fieldset[data-escape-global-style]:disabled a.btn {
-  pointer-events: unset;
 }

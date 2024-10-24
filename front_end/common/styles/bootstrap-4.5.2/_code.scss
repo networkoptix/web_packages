@@ -10,23 +10,6 @@ code {
   }
 }
 
-// User input typically entered via keyboard
-kbd {
-  padding: $kbd-padding-y $kbd-padding-x;
-  @include font-size($kbd-font-size);
-  color: $kbd-color;
-  background-color: $kbd-bg;
-  @include border-radius($border-radius-sm);
-  @include box-shadow($kbd-box-shadow);
-
-  kbd {
-    padding: 0;
-    @include font-size(100%);
-    font-weight: $nested-kbd-font-weight;
-    @include box-shadow(none);
-  }
-}
-
 // Blocks of code
 pre {
   display: block;
