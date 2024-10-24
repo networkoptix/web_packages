@@ -6,7 +6,7 @@
                 [class.selected]="currentTab$$() === tab.route"
             >
                 <a [routerLink]="tab.route | mapWith: routeState.getTabLink$$()">
-                    {{ tab.displayName }}
+                    {{ tab.displayName | translate }}
                 </a>
             </div>
         }

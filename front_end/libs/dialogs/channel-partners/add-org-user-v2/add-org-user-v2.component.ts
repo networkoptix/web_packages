@@ -427,7 +427,7 @@ export class NxAddOrgUserV2ModalContent extends ModalBase<DT['return']> implemen
         success: user => {
             // TODO: Check network errors
             if (user) {
-                this.orgUserStore.updateGroupCache(this.organization.id);
+                this.orgUserStore.updateGroupCache(this.folder()!);
             }
             this.close(user);
         },

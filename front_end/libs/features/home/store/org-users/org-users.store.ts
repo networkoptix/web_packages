@@ -381,7 +381,7 @@ export const OrgUsersStore = signalStore(
                                                 users.push(user);
                                             }
                                             return updateEntity(
-                                                { id: currentGroupId, changes: { users } },
+                                                { id: groupId, changes: { users } },
                                                 {
                                                     collection: usersCacheEntity.collection,
                                                 },

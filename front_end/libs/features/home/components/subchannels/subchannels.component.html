@@ -60,7 +60,12 @@
                                     (channel.effectiveState === 'suspended' ? ' dark-text' : '')
                                 "
                             >
-                                {{ channel.effectiveState | translate | uppercase }}
+                                {{
+                                    LANG.systemGroups.status[channel.effectiveState] ??
+                                        channel.effectiveState
+                                        | translate
+                                        | uppercase
+                                }}
                             </nx-tag>
                         }
                     </nx-card>
