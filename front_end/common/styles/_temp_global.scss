@@ -99,3 +99,20 @@ a.nx-anchor {
         outline: none;
     }
 }
+
+.nx-hr {
+    margin-top: 0rem;
+    margin-bottom: 0rem;
+    border: 0;
+    border-top: 1px solid rgba($black, .1);
+
+    &--vertical-margin {
+        @extend .nx-hr;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+    }
+    &--bottom-margin {
+        @extend .nx-hr;
+        margin-bottom: 1rem;
+    }
+}

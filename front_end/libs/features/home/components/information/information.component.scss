@@ -1,4 +1,3 @@
-@use 'resets';
 @use 'theme_generator' as tg;
 
 @use 'components/forms/forms';
@@ -41,7 +40,6 @@ h4 {
         padding: var(--block-padding);
 
         hr {
-            @include resets.horizontal-rule();
             border-color: var(--hr-color);
             margin-top: 0.25rem;
             margin-bottom: 0.75rem;

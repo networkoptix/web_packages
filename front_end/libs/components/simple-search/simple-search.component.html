@@ -53,7 +53,7 @@
     <ng-container *ngIf="matchSections">
         <li *ngFor="let matchEntry of matchSections; index as i">
             <span class="suggestion__section-name">{{ matchEntry[0] }}</span>
-            <hr />
+            <hr class="nx-hr" />
             <ul>
                 <li
                     *ngFor="let match of matchEntry[1] | slice: 0 : 5; index as j"

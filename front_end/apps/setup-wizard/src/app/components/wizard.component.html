@@ -21,7 +21,7 @@
             [ngClass]="{ normal: fsm?.skip && fsm?.retry }"
             *ngIf="showFooter"
         >
-            <hr />
+            <hr class="nx-hr--bottom-margin" />
             <button
                 *ngIf="fsm?.cancel"
                 class="btn btn-default-clear btn-backward"

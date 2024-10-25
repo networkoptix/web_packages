@@ -82,7 +82,10 @@
                     #dropdownRow
                     [ngSwitch]="item.name"
                 >
-                    <hr *ngSwitchCase="'horizontal'" />
+                    <hr
+                        *ngSwitchCase="'horizontal'"
+                        class="nx-hr--vertical-margin"
+                    />
                     <div
                         *ngSwitchCase="'seperator'"
                         class="seperator"

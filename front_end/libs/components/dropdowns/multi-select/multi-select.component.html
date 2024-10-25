@@ -118,7 +118,10 @@
         }"
         [ngSwitch]="item.id"
     >
-        <hr *ngSwitchCase="'horizontal'" />
+        <hr
+            *ngSwitchCase="'horizontal'"
+            class="nx-hr"
+        />
         <h4
             class="h4 pl-3"
             *ngSwitchCase="'title'"
