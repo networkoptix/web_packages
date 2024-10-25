@@ -36,7 +36,7 @@ from cloud.helpers.exceptions import api_success, handle_exceptions, require_par
     APIRequestException, APIForbiddenException, APINotFoundException, ErrorCodes, APIInternalException
 from nx_drf.drf_async import async_api_view as api_view, async_api_view
 from api.serializers import CustomizationCacheSerializer, SettingsSerializer, IpvdSerializer, process_cameras, \
-    CustomizationNameSerializer, ForceSyncSerializer
+    CustomizationNameSerializer, ForceSyncSerializer, CustomizationSerializer
 from cms.models import Customization, cloud_portal_customization_cache, UserGroupsToAssetPermissions, \
     cloud_portal_customization_cache_async, global_version_key
 from cms.feature_flags.feature_flags import FLAGS, SWITCHES, SAMPLES
@@ -655,8 +655,12 @@ CUSTOMIZATIONS_STAFF_ONLY = f'Customizations list only available to users on the
 async def get_customizations(request):
     if not request.user.email.endswith(settings.SUPERUSER_DOMAIN):
         raise APIForbiddenException(CUSTOMIZATIONS_STAFF_ONLY)
-    customizations = await sync_to_async(Customization.objects.filter(enabled=True).values_list)('name', flat=True)
-    return Response(customizations)
+    is_flat = request.query_params.get('format', None) != 'object'
+    if is_flat:
+        customizations = await sync_to_async(Customization.objects.filter(enabled=True).values_list)('name', flat=True)
+        return Response(customizations)
+    customizations = await sync_to_async(Customization.objects.filter(enabled=True).all)()
+    return Response(CustomizationSerializer(customizations, many=True).data)
 
 
 @swagger_auto_schema(method="GET",

@@ -660,6 +660,7 @@ class Customization(models.Model):
         ordering = ['name']
     name = models.CharField(max_length=255, unique=True)
     enabled = models.BooleanField(default=True)
+    supports_mobile = models.BooleanField(default=True, help_text="Used to identify if the customization supports mobile builds.")
     default_language = models.ForeignKey(
         Language, related_name='default_in_%(class)s', on_delete=models.CASCADE)
     languages = models.ManyToManyField(Language)

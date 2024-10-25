@@ -346,5 +346,13 @@
  "name": "gunicorn",
  "note": "A time-based vulnerability in Gunicorn affected versions allows an attacker to disrupt service by manipulating the system clock, causing premature worker timeouts and potential denial-of-service (DoS) conditions. The issue stems from the use of time.time() in the worker timeout logic, which can be exploited if an attacker gains the ability to change the system time. PVE-2024-72780://data.safetycli.com/v/72521/f17",
  "affected_spec": "<4.2.15"
-  }
+  },
+ "73023": {
+  "name": "django",
+  "note": "A potential denial-of-service vulnerability has been identified in Django's urlize() and urlizetrunc() functions in django.utils.html. This vulnerability can be triggered by inputting huge strings containing a specific sequence of characters. CVE-2024-45230 For more information, please visit https://data.safetycli.com/v/73023/f17"
+  },
+ "73028": {
+  "name": "django",
+  "note": "A security vulnerability has been discovered in certain versions of Django, affecting the password reset functionality. The PasswordResetForm class in django.contrib.auth.forms inadvertently allowed attackers to enumerate user email addresses by exploiting unhandled exceptions during the email sending process. This could be done by issuing password reset requests and observing the responses. To mitigate this risk, Django has implemented a fix where these exceptions are now caught and logged using the django.contrib.auth logger, preventing potential information leakage through error responses. CVE-2024-45231 For more information, please visit https://data.safetycli.com/v/73028/f17"
+ }
 }
