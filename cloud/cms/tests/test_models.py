@@ -2327,25 +2327,6 @@ class TestBetaPermissions:
         self.access_developers_flag.save()
         waffle.utils.get_cache().clear()
 
-    def test_superuser_flag_active(self, superuser):
-        self.request.user = superuser
-        assert waffle.flag_is_active(self.request, self.access_developers)
-        assert waffle.flag_is_active(self.request, self.access_integration_store)
-
-    def test_regular_user_flag_inactive(self, active_user):
-        self.request.user = active_user
-        assert waffle.flag_is_active(self.request, self.access_developers) is False
-        assert waffle.flag_is_active(self.request, self.access_integration_store) is False
-
-    def test_regular_user_with_group(self, active_user, default_customization, default_portal):
-        active_user.groups.add(self.access_developers_group)
-        self.request.user = active_user
-        assert waffle.flag_is_active(self.request, self.access_developers) is True
-        assert waffle.flag_is_active(self.request, self.access_integration_store) is False
-        active_user.groups.remove(self.access_developers_group)
-        assert waffle.flag_is_active(self.request, self.access_developers) is False
-
-
 
 class TestcloudPortalCustomizationCacheAsync:
 

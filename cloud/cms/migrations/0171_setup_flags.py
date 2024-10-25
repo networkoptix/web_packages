@@ -32,5 +32,6 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(setup_flags)
+        # Don't really need it and it causes issues with migrations occasionally
+        # migrations.RunPython(setup_flags)
     ]

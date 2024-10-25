@@ -540,5 +540,9 @@ class CustomizationNameSerializer(serializers.Serializer):
     name = serializers.CharField(required=False, allow_null=True, read_only=True)
 
 
+class CustomizationSerializer(CustomizationNameSerializer):
+    supportsMobile = serializers.BooleanField(required=False, default=False)
+
+
 class ForceSyncSerializer(serializers.Serializer):
     forceSync = serializers.BooleanField(required=False, default=False)

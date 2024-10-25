@@ -23,7 +23,7 @@ from waffle import flag_is_active, switch_is_active, sample_is_active
 
 from api.serializers import CustomizationCacheSerializer, SettingsSerializer, IpvdSerializer, ThemeSerializer, \
     process_cameras, \
-    CustomizationNameSerializer, ForceSyncSerializer
+    CustomizationNameSerializer, CustomizationSerializer, ForceSyncSerializer
 from cloud import settings
 from cloud.customization_context import customization_ctx
 from cloud.helpers.exceptions import api_success, handle_exceptions, require_params, \
@@ -683,8 +683,12 @@ CUSTOMIZATIONS_STAFF_ONLY = f'Customizations list only available to users on the
 async def get_customizations(request):
     if not request.user.email.endswith(settings.SUPERUSER_DOMAIN):
         raise APIForbiddenException(CUSTOMIZATIONS_STAFF_ONLY)
-    customizations = await sync_to_async(Customization.objects.filter(enabled=True).values_list)('name', flat=True)
-    return Response(customizations)
+    is_flat = request.query_params.get('format', None) != 'object'
+    if is_flat:
+        customizations = await sync_to_async(Customization.objects.filter(enabled=True).values_list)('name', flat=True)
+        return Response(customizations)
+    customizations = await sync_to_async(Customization.objects.filter(enabled=True).all)()
+    return Response(CustomizationSerializer(customizations, many=True).data)
 
 
 @swagger_auto_schema(method="GET",
