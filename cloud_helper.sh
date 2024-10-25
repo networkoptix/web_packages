@@ -245,10 +245,15 @@ function start_docker_containers() {
     fi
 }
 
+function copy_nginx_configs() {
+    python etc/scripts/copy_nginx_configs.py --project_dir $(pwd)
+}
+
 function start_nginx_container() {
     if [[ -e ${DOCKER_COMPOSE} ]]; then
+        copy_nginx_configs
         printf "Starting mysql, redis, and meilisearch containers\n\n"
-        docker-compose -f ${DOCKER_COMPOSE}  --profile nginx up -d
+        docker-compose -f ${DOCKER_COMPOSE}  --profile nginx up -d --build
         printf "\n\n"
     else
         printf "No docker-compose file found in ./etc\n\n"
@@ -260,7 +265,7 @@ function test_nginx_docker() {
     RED='\033[0;31m'
     GREEN='\033[0;32m'
     NC='\033[0m' # No Color
-    python etc/scripts/copy_nginx_configs.py --project_dir $(pwd)
+    copy_nginx_configs
     if [[ -e ${DOCKER_COMPOSE} ]]; then
         printf "Starting mysql, redis, and meilisearch containers\n\n"
         docker-compose -f ${DOCKER_COMPOSE}  --profile nginx_test run --rm nginx_test

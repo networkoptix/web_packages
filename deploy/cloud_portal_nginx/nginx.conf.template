@@ -333,7 +333,7 @@ http {
         }
 
         location /favicon.ico {
-            return 301 $scheme://$host/static/images/favicon.ico;
+            return 301 ${DOLLAR}scheme://${DOLLAR}host/static/images/favicon.ico;
         }
 
         location /static {
