@@ -110,24 +110,24 @@ open-source:open-source-checker:
     - open_candidate/**/*
     - open_source_check_config.json
 
-code-owner-approval:check:
-  stage: approval
-  script:
-  - echo -e "\033[0;31mThis MR requires to be approved by code owners.\033[0m"
-  - exit 1
-  rules:
-  - if: $CI_MERGE_REQUEST_ID
-    changes:
-    - build_scripts/**/*
-    - ci/**/*
-    - channel_partners/**/*
-    - cloud/**/*
-    - deploy/**/*
-    - desktop_notifications/**/*
-    - front_end/**/*
-    - webadmin/**/*
-    - ft/**/*
-  allow_failure: true
+#code-owner-approval:check:
+#  stage: approval
+#  script:
+#  - echo -e "\033[0;31mThis MR requires to be approved by code owners.\033[0m"
+#  - exit 1
+#  rules:
+#  - if: $CI_MERGE_REQUEST_ID
+#    changes:
+#    - build_scripts/**/*
+#    - ci/**/*
+#    - channel_partners/**/*
+#    - cloud/**/*
+#    - deploy/**/*
+#    - desktop_notifications/**/*
+#    - front_end/**/*
+#    - webadmin/**/*
+#    - ft/**/*
+#  allow_failure: true
 
 check-python-licenses:
   image:

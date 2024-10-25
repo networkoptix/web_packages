@@ -1,3 +1,11 @@
-[Rules]
-.gitlab-ci.yml
-approval-check.py
+[Backend] @workflow-robocat @rbarsegian @nhartleb
+/cloud/
+
+[Frontend] @workflow-robocat @nhartleb @ttsolov @rbarsegian @awu @czach
+/front_end/
+
+[Build/CI] @workflow-robocat @rbarsegian @nhartleb
+/ci/
+/deploy/
+/build_scripts/
+/webadmin/
