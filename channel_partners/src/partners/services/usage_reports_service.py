@@ -305,7 +305,7 @@ def get_groups_path(system: CloudSystemId, groups: Optional[QuerySet[ChannelPart
         else:
             # Highly unlikely, but just in case
             ret.append({'id': group_id, 'name': 'Unknown Folder'})
-            logger.error("Group not found", group_id=group_id, system_id=system.system_id)
+            logger.error("Group not found", system_group_id=group_id, system_id=system.system_id)
     return ret
 
 

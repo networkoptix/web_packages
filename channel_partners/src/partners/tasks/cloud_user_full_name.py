@@ -44,7 +44,11 @@ def get_emails_from_internal_endpoint(emails: List[str], request_id: str, origin
     try:
         auth_token = get_auth_token()
     except Exception as exc:
-        logger.error("Failed to get auth credentials", exception=exc)
+        logger.error(
+            "Failed to get auth credentials",
+            exception_type=type(exc).__name__,
+            exception_details=str(exc),
+            exc_info=True)
         return []
     auth = BearerTokenAuth(auth_token)
     with httpx.Client() as client:
@@ -58,10 +62,8 @@ def get_emails_from_internal_endpoint(emails: List[str], request_id: str, origin
     if response.status_code != 200:
         logger.error(
             "Failed to get emails from internal endpoint",
-            extra={
-                "status_code": response.status_code,
-                "content": response.content
-            }
+            response_status_code=response.status_code,
+            response_content=response.content,
         )
         response.raise_for_status()
 

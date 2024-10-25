@@ -27,7 +27,7 @@ def on_service_usage_saved(
     def on_commit_callback():
         logger.debug(
             "Service Usage changed - Incrementing CloudSystem's version",
-            id=instance.id,
+            service_usage_id=instance.id,
             cloud_system_id=instance.cloud_system_id)
         instance.cloud_system.increment_version()
 

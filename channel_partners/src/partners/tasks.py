@@ -17,7 +17,7 @@ def celery_health_check():
 
     logger.info(
         "Celery health check",
-        organization_roles=org_roles_cnt,
-        channel_partner_roles=cp_roles_cnt)
+        organization_roles_count=org_roles_cnt,
+        channel_partner_roles_count=cp_roles_cnt)
 
     return {"org_roles_cnt": org_roles_cnt, "cp_roles_cnt": cp_roles_cnt}

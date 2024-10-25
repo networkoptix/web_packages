@@ -49,4 +49,4 @@ def setup_periodic_tasks(sender, **kwargs):
 def heartbeat(task_name):
     import structlog
     logger = structlog.getLogger(__name__)
-    logger.info(f"Heartbeat {task_name}")
+    logger.info("Heartbeat", task_name=task_name)

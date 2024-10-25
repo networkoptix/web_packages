@@ -87,9 +87,10 @@ def forward_cdb_resp(response: httpx.Response, via_exception=False) -> Response:
         content = response.content.decode()
         status_code = response.status_code
 
-        logger.error("Unable to decode response from CDB",
-                     status_code=status_code,
-                     content=content)
+        logger.error(
+            "Unable to decode response from CDB",
+            response_status_code=status_code,
+            response_content=content)
 
         if settings.DEBUG:
             detail = content

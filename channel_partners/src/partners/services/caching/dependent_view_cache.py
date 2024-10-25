@@ -552,7 +552,7 @@ def process_views(
             flush_cache=flush_cache)
     except Exception as exc:
         # This would come from initial validation stages of retrieving from cache
-        logger.error("Error validating and retrieving cache", error=str(exc), exc_info=True)
+        logger.error("Error validating and retrieving cache", error_message=str(exc), exc_info=True)
 
     if cached_response is not None:
         return Response(
@@ -629,7 +629,7 @@ def dispatch_with_cache(
                 self.response.headers[settings.CACHE_ETAG_HEADER_KEY] = etag
                 self.response.headers[settings.CACHE_STATUS_HEADER_KEY] = "miss"
         except Exception as e:
-            logger.error("Error storing in cache", error=str(e), exc_info=True)
+            logger.error("Error storing in cache", error_message=str(e), exc_info=True)
 
     return self.response
 
@@ -656,7 +656,10 @@ def wrap_class_view(view, caches: Dict[ViewAction, DependentCache]) -> T:
         try:
             validation_sources = ValidationSource.build(request, cache.dependencies, **kwargs)
         except Exception as e:
-            logger.error("Error building validation sources", exc_info=True, error=str(e))
+            logger.error("Error building validation sources",
+                         error_type=type(e).__name__,
+                         error_message=str(e),
+                         exc_info=True)
             return original_dispatch(self, request, *args, **kwargs)
 
         return dispatch_with_cache(

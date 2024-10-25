@@ -126,7 +126,11 @@ def generate_report(channel_partner_id: str = None,
     retry_count = current_task.request.retries
     max_retries = current_task.max_retries
     if not channel_partner_id and not organization_id:
-        logger.warning('Missing channel_partner_id or organization_id', task_id=current_task.request.id)
+        logger.warning(
+            'Missing channel_partner_id or organization_id',
+            task_id=current_task.request.id,
+            channel_partner_id=channel_partner_id,
+            organization_id=organization_id)
         raise ValueError('Missing channel_partner_id or organization_id')
     if not user_id:
         logger.warning('Missing user_id', task_id=current_task.request.id)
@@ -178,7 +182,11 @@ def generate_report(channel_partner_id: str = None,
     try:
         fp = generator.stream()
     except Exception as e:
-        logger.error('Failed to generate report', exc_info=True, error=str(e))
+        logger.error(
+            "Failed to generate report",
+            exception_type=type(e).__name__,
+            exception_details=str(e),
+            exc_info=True)
         if retry_count >= max_retries:
             caches['default'].delete(
                 get_usage_report_requests_key(entity_id=channel_partner_id or organization_id,
@@ -192,7 +200,11 @@ def generate_report(channel_partner_id: str = None,
     try:
         filename = storage.save(file_name, fp)
     except Exception as e:
-        logger.error('Failed to save report', exc_info=True, error=str(e))
+        logger.error(
+            "Failed to save report",
+            exception_type=type(e).__name__,
+            exception_details=str(e),
+            exc_info=True)
         if retry_count >= max_retries:
             caches['default'].delete(
                 get_usage_report_requests_key(entity_id=channel_partner_id or organization_id,

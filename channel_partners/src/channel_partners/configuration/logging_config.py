@@ -6,6 +6,10 @@ from typing import (
 
 import structlog
 
+from channel_partners.logging.logging_processors import (
+    convert_uuids_to_strings,
+)
+
 
 def configure_logging(environment: Literal["local", "ci", "prod"], min_level: int) -> Dict:
     logging.basicConfig(level=min_level)
@@ -25,6 +29,7 @@ def configure_logging(environment: Literal["local", "ci", "prod"], min_level: in
                     structlog.stdlib.PositionalArgumentsFormatter(),
                     structlog.processors.format_exc_info,
                     structlog.processors.StackInfoRenderer(),
+                    convert_uuids_to_strings,
                     structlog.processors.CallsiteParameterAdder(
                         {
                             structlog.processors.CallsiteParameter.FILENAME,
@@ -45,6 +50,7 @@ def configure_logging(environment: Literal["local", "ci", "prod"], min_level: in
                     structlog.stdlib.PositionalArgumentsFormatter(),
                     structlog.processors.format_exc_info,
                     structlog.processors.StackInfoRenderer(),
+                    convert_uuids_to_strings,
                     structlog.processors.CallsiteParameterAdder(
                         {
                             structlog.processors.CallsiteParameter.FILENAME,

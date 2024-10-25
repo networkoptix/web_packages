@@ -18,7 +18,10 @@ def save_attrs(email: str, attrs: dict):
         auth_token = get_auth_token()
         auth = BearerTokenAuth(auth_token)
     except Exception as exc:
-        logger.error("Failed to get auth credentials", error=str(exc))
+        logger.error(
+            "Failed to get auth credentials",
+            error_message=str(exc),
+            exc_info=True)
         auth = None
     response = client.put(url=url, json=attrs, auth=auth)
     return response

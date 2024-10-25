@@ -1501,13 +1501,16 @@ class CloudSystemViewSet(VersionedViewMixin,
                 system_id=system_id,
                 headers=headers)
             if response.status_code in [502, 504]:
-                logger.warning("Got server error. Error will be ignored.",
-                               status_code=response.status_code,
-                               response=response.text)
+                logger.warning(
+                    "Got server error. Error will be ignored.",
+                    response_status_code=response.status_code,
+                    response_content=response.text)
         except httpx.TransportError as ex:
             # ignoring transport errors, DecodingError and TooManyRedirects are still raised
-            logger.warning("Got transport error.",
-                           exception=str(ex))
+            logger.warning(
+                "Transport error.",
+                exception_type=type(ex).__name__,
+                exception_details=str(ex))
             ignored_errors = True
 
         if ignored_errors or response.status_code in [200, 502, 504]:

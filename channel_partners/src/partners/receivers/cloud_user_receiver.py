@@ -26,7 +26,7 @@ logger = structlog.getLogger()
 def on_cloud_user_saved(sender: Type[CloudUser], instance: CloudUser, created: bool = False, **kwargs):
     def on_commit_callback():
         if not created:
-            logger.debug("Cloud User changed - Incrementing Version", user=instance.id)
+            logger.debug("Cloud User changed - Incrementing Version", user_id=instance.id)
             instance.increment_version()
             handle_channel_partner_to_user(instance)
             handle_organization_to_user(instance)
@@ -39,7 +39,7 @@ def on_cloud_user_saved(sender: Type[CloudUser], instance: CloudUser, created: b
 def on_cloud_user_deleted(sender: Type[CloudUser], instance: CloudUser, **kwargs):
     # TODO: Do i need to increment all the related organizations and Channel partners?
     def on_commit_callback():
-        logger.debug("Cloud User deleted - Not Incrementing Version", user=instance.id)
+        logger.debug("Cloud User deleted - Not Incrementing Version", user_id=instance.id)
 
     transaction.on_commit(on_commit_callback)
 
@@ -49,8 +49,8 @@ def handle_channel_partner_to_user(instance: CloudUser):
     channel_partner_ids = instance.channel_partners.values_list('id', flat=True)
     logger.debug(
         "Incrementing version of related Channel Partner of Cloud User",
-        user=instance.id,
-        channel_partners=channel_partner_ids)
+        user_id=instance.id,
+        channel_partner_ids=channel_partner_ids)
     if channel_partner_ids:
         CacheService.bulk_increment(
             list(channel_partner_ids),
@@ -64,8 +64,8 @@ def handle_organization_to_user(instance: CloudUser):
     organization_ids = instance.organizations.values_list('id', flat=True)
     logger.debug(
         "Incrementing version of related Organization of Cloud User",
-        user=instance.id,
-        organizations=organization_ids)
+        user_id=instance.id,
+        organization_ids=organization_ids)
     if organization_ids:
         CacheService.bulk_increment(
             list(organization_ids),

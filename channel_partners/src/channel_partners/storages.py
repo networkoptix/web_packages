@@ -34,7 +34,7 @@ class ReportsStorage(S3Boto3Storage):
                 "Couldn't get a presigned URL for client method",
                 filename=filename,
                 bucket=self.bucket.name,
-            )
+                exc_info=True)
             raise
         return url
 

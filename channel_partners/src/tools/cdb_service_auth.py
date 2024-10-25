@@ -40,8 +40,12 @@ def request_auth_token():
     try:
         response = httpx.post(AUTH_URI, data=data, headers={"Content-Type": "application/x-www-form-urlencoded"})
     except httpx.RequestError as exc:
-        logger.critical("Request to auth provider failed",
-                        url=AUTH_URI, exception=exc)
+        logger.critical(
+            "Request to auth provider failed",
+            url=AUTH_URI,
+            exception_type=type(exc).__name__,
+            exception_details=str(exc),
+            exc_info=True)
         raise
     if response.is_error:
         logger.critical("Failed to get auth token", response=response.text)
@@ -49,7 +53,11 @@ def request_auth_token():
     try:
         return response.json()
     except httpx.DecodingError as exc:
-        logger.critical("Failed to decode auth token", exception=exc)
+        logger.critical(
+            "Failed to decode auth token",
+            exception_type=type(exc).__name__,
+            exception_details=str(exc),
+            exc_info=True)
         raise
 
 
@@ -78,7 +86,12 @@ def get_auth_token() -> str:
         return get_internal_token()
     if not settings.IS_PRIVATE_CLOUD:
         raise ValueError("Missing required auth settings.")
-    logger.warning("Auth settings are missing, using random token.")
+    logger.warning(
+        "Auth settings are missing, using random token.",
+        auth_srv_providers=bool(settings.AUTH_SRV_PROVIDERS),
+        auth_srv_id=bool(settings.AUTH_SRV_ID),
+        auth_srv_secret=bool(settings.AUTH_SRV_SECRET),
+        is_private_cloud=bool(settings.IS_PRIVATE_CLOUD))
     return 'token_is_unavailable'
 
 

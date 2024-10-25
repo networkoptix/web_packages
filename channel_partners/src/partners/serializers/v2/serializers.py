@@ -1355,7 +1355,10 @@ class ServiceExtendedSerializer(ServiceSerializer):
     def get_hidden(self, obj: ChannelPartnerService) -> bool:
         if not hasattr(obj, 'expiration_date'):
             # Avoid crashing if the object does not have the expiration_date attribute
-            logger.error("improper_usage", reason="Object must have expiration_date annotated",id=obj.id)
+            logger.error(
+                "Improper usage",
+                reason="Must have expiration_date annotated",
+                object_id=obj.id)
             return False
         return obj.expiration_date.date() < get_today() if obj.expiration_date else False
 
@@ -2245,10 +2248,11 @@ class LegacyLicensesSerializer(serializers.Serializer):
             type=ChannelPartnerService.LOCAL_RECORDING
         ).order_by('created_ts').first()
         if not service:
-            logger.warning(f"No service found.",
-                           system_id=system.system_id,
-                           organization_id=system.organization.id,
-                           channel_partner_id=system.organization.channel_partner_id)
+            logger.warning(
+                "No service found.",
+                system_id=system.system_id,
+                organization_id=system.organization_id,
+                channel_partner_id=system.organization.channel_partner_id)
             raise exceptions.ValidationError({"detail": f"Cannot determine trial service for system {system.system_id}"})
         return service
 
@@ -2270,8 +2274,11 @@ class LegacyLicensesSerializer(serializers.Serializer):
             try:
                 lic_response = licence_client.post(url=url, json=data)
             except httpx.HTTPError as ex:
-                logger.error("Request to license server failed.",
-                             exception=str(ex))
+                logger.error(
+                    "Request to license server failed.",
+                    exception_type=type(ex).__name__,
+                    exception_details=str(ex),
+                    exc_info=True)
                 raise exceptions.APIException(detail="Cannot proceed request.")
             if not lic_response.is_success:
                 # error returned
@@ -2281,8 +2288,10 @@ class LegacyLicensesSerializer(serializers.Serializer):
                 # not parseable json
                 lic_data = lic_response.json()
             except:
-                logger.error("Cannot decode response from license server",
-                             conten=lic_response.content)
+                logger.error(
+                    "Cannot decode response from license server",
+                    response_content=lic_response.content,
+                    exc_info=True)
                 results.failedLicenses.append(license_key)
                 continue
             if not lic_data or not isinstance(lic_data, list):

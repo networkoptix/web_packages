@@ -208,7 +208,9 @@ def versioned_serializer(base_serializer: Union[Type[Serializer], Serializer], v
         if serializer_class := versions_mapping.get(ver, {}).get(base_class):
             return serializer_class
     logger.warning(
-        "Serializer for not found for version", version=version, base_serializer=base_class)
+        "Serializer not found for version",
+        version=version,
+        base_serializer=base_class)
     return base_serializer
 
 

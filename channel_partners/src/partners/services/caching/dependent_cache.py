@@ -100,8 +100,8 @@ class DependentCache:
         except Exception as e:
             logger.error(
                 "Error setting cache",
-                auth_entity=getattr(auth_entity, 'id', None),
-                error=str(e),
+                auth_entity_id=getattr(auth_entity, 'id', None),
+                error_message=str(e),
                 exc_info=True)
 
     def validate_and_retrieve(
@@ -163,8 +163,8 @@ class DependentCache:
         except Exception as e:
             logger.error(
                 "Error validating and retrieving cache",
-                auth_entity=getattr(auth_entity, 'id', None),
-                error=str(e),
+                auth_entity_id=getattr(auth_entity, 'id', None),
+                error_message=str(e),
                 exc_info=True)
             return None
 
@@ -244,7 +244,7 @@ class DependentCache:
         elif isinstance(auth_entity, AnonymousUser):
             return None
         else:
-            logger.error("Unsupported auth entity type", auth_entity=auth_entity)
+            logger.error("Unsupported auth entity type", auth_entity_type=type(auth_entity).__name__)
             raise ValueError(f"Unsupported auth entity type: {auth_entity}")
 
     # ==================== #

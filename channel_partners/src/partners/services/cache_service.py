@@ -79,7 +79,7 @@ def is_email(value: any) -> bool:
     except Exception as e:
         logger.error(
             "Unknown exception occurred while attempting to validate email for cache",
-            error=str(e),
+            error_message=str(e),
             exc_info=True)
         return False
 
@@ -154,16 +154,16 @@ class CacheScriptService(metaclass=Singleton):
         exists = cache.script_exists(sha1)[0]
         if not exists:
             sha1 = cache.script_load(script)
-            logger.info("Redis Lua script loaded", name=script_name, sha1=sha1)
+            logger.info("Redis Lua script loaded", script_name=script_name, sha1=sha1)
         else:
-            logger.info("Redis Lua script already exists", name=script_name, sha1=sha1)
+            logger.info("Redis Lua script already exists", script_name=script_name, sha1=sha1)
         self._registered_scripts[script_name] = sha1
         # Store the original script text for potential re-registration
         self._script_texts[script_name] = script
 
     def get_script(self, script_name: str) -> str:
         if script_name not in self._registered_scripts:
-            logger.error("Redis Lua script not found", name=script_name)
+            logger.error("Redis Lua script not found", script_name=script_name)
             raise ValueError(f"Redis Lua script [{script_name}] not found")
         return self._registered_scripts[script_name]
 
@@ -173,7 +173,7 @@ class CacheScriptService(metaclass=Singleton):
             return cache.evalsha(script_sha1, 0, *args)
         except redis.exceptions.ResponseError as e:
             if "NOSCRIPT" in str(e):
-                logger.info(f"Script {script_name} not found, re-registering and retrying.")
+                logger.info("Script not found, re-registering and retrying.", script_name=script_name)
                 # Re-register the script
                 self.register(script_name, self._script_texts[script_name])
                 # Get the new SHA1 hash
@@ -462,8 +462,8 @@ class CacheService:
             successful, unsuccessful = CacheService._set_versions_in_cache_lua(timestamp, missing_objects)
             if unsuccessful:
                 logger.error(
-                    "Attempted to set versions in cache, but failed",
-                    unsuccessful_keys=list(unsuccessful.keys()))
+                    "Failed to set Versions in cache",
+                    unsuccessful_key_count=list(unsuccessful.keys()))
             inserted_objects.update(successful)
 
         return inserted_objects
@@ -509,8 +509,8 @@ class CacheService:
             successful, unsuccessful = CacheService._set_versions_in_cache_lua(timestamp, missing_objects)
             if unsuccessful:
                 logger.error(
-                    "Attempted to set versions in cache, but failed",
-                    unsuccessful_keys=list(unsuccessful.keys()))
+                    "Failed to set Versions in cache",
+                    unsuccessful_key_count=list(unsuccessful.keys()))
             inserted_objects.update(successful)
         return inserted_objects
 
@@ -567,9 +567,9 @@ class CacheService:
             unsuccessful_pairs = {key: data[key] for key in unsuccessful_keys}
 
             if unsuccessful_pairs:
-                logger.debug("Failed to set versions in cache", unsuccessful_keys=list(unsuccessful_keys))
+                logger.debug("Failed to set versions in cache", unsuccessful_key_count=len(unsuccessful_keys))
 
             return successful_pairs, unsuccessful_pairs
         except Exception as e:
-            logger.error("Redis error when attempting to set via Lua", error=str(e), exc_info=True)
+            logger.error("Redis error when attempting to set via Lua", error_message=str(e), exc_info=True)
             return {}, data

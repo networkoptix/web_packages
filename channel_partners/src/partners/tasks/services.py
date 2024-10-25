@@ -27,7 +27,7 @@ Notes
 def check_expired_services_task():
     from partners.models import ChannelPartnerServiceRecord
     negation_records = ChannelPartnerServiceRecord.check_expired_services()
-    logger.info("Expired services are checked.", negation_records_count=len(negation_records))
+    logger.info("Checking expired services", negation_records_count=len(negation_records))
 
 
 @shared_task
@@ -41,9 +41,8 @@ def new_channel_partner_service_created(channel_partner_service_pk: uuid.UUID) -
         if len(channel_partners) == 0:
             logger.info(
                 "No sub channel partners found",
-                service=service.pk,
-                cp_pk=service.created_by_channel_partner.pk
-            )
+                service_id=service.pk,
+                channel_partner_id=service.created_by_channel_partner.pk)
             return
 
         for channel_partner in channel_partners:
@@ -55,32 +54,26 @@ def new_channel_partner_service_created(channel_partner_service_pk: uuid.UUID) -
             if existing_clone:
                 logger.info(
                     "Clone already exists for this channel partner, skipping",
-                    original_service_pk=service_pk,
-                    existing_clone_pk=existing_clone.pk,
-                    channel_partner_pk=channel_partner.pk,
-                    channel_partner_name=channel_partner.name
-                )
+                    original_service_id=service_pk,
+                    existing_clone_id=existing_clone.pk,
+                    channel_partner_id=channel_partner.pk,
+                    channel_partner_name=channel_partner.name)
                 continue
             try:
                 cloned_service = ChannelPartnerServiceService.clone(channel_partner, service)
             except DuplicatedServiceError as e:
                 logger.warning(
                     "Clone already exists for this channel partner, skipping",
-                    original_service_pk=service_pk,
-                    channel_partner_pk=channel_partner.pk,
-
                     original_service_id=service_pk,
                     channel_partner_id=channel_partner.pk,
-                    channel_partner_name=channel_partner.name
-                )
+                    channel_partner_name=channel_partner.name)
                 continue
             logger.info(
                 "Created new Channel Partner Service",
-                original_service_pk=service_pk,
-                cloned_service_pk=cloned_service.pk,
-                channel_partner_pk=channel_partner.pk,
-                channel_partner_name=channel_partner.name
-            )
+                original_service_id=service_pk,
+                cloned_service_id=cloned_service.pk,
+                channel_partner_id=channel_partner.pk,
+                channel_partner_name=channel_partner.name)
             # Add the cloned service PK to the queue for further processing
             service_pks_to_clone.append(cloned_service.pk)
 
@@ -117,22 +110,17 @@ def new_channel_partner_created(channel_partner_pk: uuid.UUID) -> None:
                 except DuplicatedServiceError as e:
                     logger.warning(
                         "Clone already exists for this channel partner, skipping",
-                        original_service_pk=service.pk,
-                        channel_partner_pk=channel_partner.pk,
-
-                    original_service_id=service.pk,
-                    channel_partner_id=channel_partner.pk,
-                    channel_partner_name=channel_partner.name
-                    )
+                        original_service_id=service.pk,
+                        channel_partner_id=channel_partner.pk,
+                        channel_partner_name=channel_partner.name)
                     continue
 
                 logger.info(
                     "Created new Channel Partner Service",
-                    original_service_pk=service.pk,
-                    cloned_service_pk=cloned_service.pk,
-                    channel_partner_pk=channel_partner.pk,
-                    channel_partner_name=channel_partner.name
-                )
+                    original_service_id=service.pk,
+                    cloned_service_id=cloned_service.pk,
+                    channel_partner_id=channel_partner.pk,
+                    channel_partner_name=channel_partner.name)
 
 
 NEGATION_MAX_RETRIES = 5
@@ -160,8 +148,9 @@ def organization_systems_negation_task(
     try:
         organization = Organization.objects.get(id=organization_id)
     except Organization.DoesNotExist:
-        logger.warning("Cannot find organization. Task cancelled",
-                       organization_id=organization_id)
+        logger.warning(
+            "Task cancelled - can't find organization",
+            organization_id=organization_id)
         return []
     if not caches['default'].add(lock_key, f"{uuid.uuid4()}", timeout=300):
         raise Retry(message=f"There is running negation for organization {organization_id}")
@@ -177,9 +166,12 @@ def organization_systems_negation_task(
             negation_records = ChannelPartnerServiceRecord.negate_services(service_records)
             return [record.id for record in negation_records]
     except Exception as ex:
-        logger.critical("Exception occurred while negating service records",
-                        organization_id=organization_id,
-                        exception=f'{ex}')
+        logger.critical(
+            "Exception occurred while negating service records",
+            organization_id=organization_id,
+            exception_type=type(ex).__name__,
+            exception_details=str(ex),
+            exc_info=True)
         raise Retry(message=f"Exception occurred while negating service "
                             f"records for organization {organization_id}")
     finally:

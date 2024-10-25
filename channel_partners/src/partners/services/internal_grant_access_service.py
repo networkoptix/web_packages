@@ -127,8 +127,11 @@ class InternalGrantAccessService:
             try:
                 customizations = dict(get_customizations(settings.INSTANCE_NAME))
             except Exception as e:
-                logger.error(f"Cannot get customizations from ireg.",
-                             exception=str(e))
+                logger.error(
+                    "Cannot get customizations from ireg.",
+                    exception_type=type(e).__name__,
+                    exception_details=str(e),
+                    exc_info=True)
                 customizations = {}
 
         return customizations

@@ -24,27 +24,29 @@ class CloudSystemService:
         try:
             response: Response = httpx.post(relay_host, json={"waitForDone": False})
         except Exception as ex:
-            logger.error("Got exception during relay request.",
-                         relay_hosts=settings.TRAFFIC_RELAY_DOMAIN,
-                         relay_host=relay_host,
-                         system_id=cloud_system.system_id,
-                         exception=str(ex))
+            logger.error(
+                "Got exception during relay request.",
+                relay_hosts=settings.TRAFFIC_RELAY_DOMAIN,
+                relay_host=relay_host,
+                system_id=cloud_system.system_id,
+                exception_type=type(ex).__name__,
+                exception_details=str(ex),
+                exc_info=True)
             return False
 
         if response.is_success:
             logger.info(
                 "Successfully sent notification",
-                id=cloud_system.pk,
+                cloud_system_id=cloud_system.pk,
                 system_id=cloud_system.system_id,
-                relay_host=relay_host,
-            )
+                relay_host=relay_host)
             return True
         else:
             logger.info(
                 "An issue occurred while sending notification",
-                id=cloud_system.pk,
+                cloud_system_id=cloud_system.pk,
                 system_id=cloud_system.system_id,
-                status_code=response.status_code,
-                response_body=response.text,
+                response_status_code=response.status_code,
+                response_content=response.text,
                 request_url=relay_host)
             return False

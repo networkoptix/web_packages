@@ -30,7 +30,7 @@ def on_organization_saved(sender: Type[Organization], instance: Organization, cr
         if not created:
             logger.debug(
                 "Organization changed - Incrementing Version",
-                organization=instance.id,
+                organization_id=instance.id,
                 path=instance.path,
                 prior_version=instance.version,
                 prior_descendant_version=instance.descendant_version)
@@ -40,8 +40,8 @@ def on_organization_saved(sender: Type[Organization], instance: Organization, cr
         if instance.channel_partner_id:
             logger.debug(
                 "Organization changed - Incrementing Version of Channel Partner",
-                organization=instance.id,
-                channel_partner=instance.channel_partner_id)
+                organization_id=instance.id,
+                channel_partner_id=instance.channel_partner_id)
             instance.channel_partner.increment_descendant_version()
             CacheService.bulk_increment(
                 instance.channel_partner.path,
@@ -57,8 +57,8 @@ def increment_related_users(instance: Organization):
     user_ids = instance.users.values_list('id', flat=True)
     logger.debug(
         "Incrementing version of related Cloud User of Organization",
-        organization=instance.id,
-        users=user_ids)
+        organization_id=instance.id,
+        user_ids=user_ids)
     if user_ids:
         CacheService.bulk_increment(
             list(user_ids),

@@ -168,10 +168,11 @@ class UsageReportsBaseViewSet(ParentLookUpMixin, NestedViewSetMixin, GenericView
             user_id=user_id,
         )
         if result.get('status') != ReportTaskState.success:
-            logger.info("Report generation is not yet completed or failed.",
-                        report_id=result['id'],
-                        status=result['status'],
-                        reason=result['reason'])
+            logger.info(
+                "Report generation is not yet completed or failed.",
+                report_id=result.get('id'),
+                status=result.get('status', None),
+                reason=result.get('reason',None))
         return result
 
     def get_serializer_context(self):

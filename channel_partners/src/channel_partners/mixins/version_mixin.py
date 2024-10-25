@@ -56,7 +56,12 @@ class VersionMixin(models.Model):
             # Update the cache with the new version and the previously retrieved timestamp
             CacheService.set(timestamp, cache_key, updated_instance.version)
         except Exception as e:
-            logger.error("Error incrementing version", id=id, model=cls.__class__.__name__, error=str(e), exc_info=True)
+            logger.error(
+                "Error incrementing version",
+                object_id=id,
+                object_type=cls.__class__.__name__,
+                error_message=str(e),
+                exc_info=True)
 
     @transaction.atomic
     def increment_version(self):
@@ -77,7 +82,12 @@ class VersionMixin(models.Model):
             # Update the cache with the new version and the previously retrieved timestamp
             CacheService.set(timestamp, cache_key, updated_instance.version)
         except Exception as e:
-            logger.error("Error incrementing version", id=self.id, model=self.__class__.__name__, error=str(e), exc_info=True)
+            logger.error(
+                "Error incrementing version",
+                object_id=self.id,
+                object_type=self.__class__.__name__,
+                error_message=str(e),
+                exc_info=True)
 
     @classmethod
     @transaction.atomic
@@ -102,4 +112,9 @@ class VersionMixin(models.Model):
             # Set the cache data
             CacheService.set_many(timestamp, cache_data)
         except Exception as e:
-            logger.error("Error incrementing version in bulk", ids=ids, model=cls.__name__, error=str(e), exc_info=True)
+            logger.error(
+                "Error incrementing version in bulk",
+                object_ids=ids,
+                object_type=cls.__name__,
+                error_message=str(e),
+                exc_info=True)

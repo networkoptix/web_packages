@@ -39,13 +39,16 @@ def bind_system_to_cdb_organization(
         body = response.json()
         return body, response.status_code
     except (httpx.DecodingError, json.JSONDecodeError) as exception:
-        logger.error("Unable to bind system to CDB",
-                     request_headers=response.request.headers,
-                     request_content=response.request.content,
-                     response_status_code=response.status_code,
-                     response_headers=response.headers,
-                     response_content=response.content,
-                     exception=str(exception))
+        logger.error(
+            "Unable to bind system to CDB",
+            request_headers=response.request.headers,
+            request_content=response.request.content,
+            response_status_code=response.status_code,
+            response_headers=response.headers,
+            response_content=response.content,
+            exception_type=type(exception).__name__,
+            exception_details=str(exception),
+            exc_info=True)
         raise exception
 
 

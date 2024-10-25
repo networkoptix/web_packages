@@ -39,7 +39,10 @@ class FieldOriginalMixin:
             None, but logs errors for non-existent fields or out-of-range indices.
         """
         if field_name not in self._audit:
-            logger.error("Field does not exist in audit.", model=self.__class__.__name__, field=field_name)
+            logger.error(
+                "Field does not exist in audit.",
+                object_type=self.__class__.__name__,
+                field=field_name)
             return False
 
         current_value = self._get_field_value(field_name)
@@ -47,7 +50,11 @@ class FieldOriginalMixin:
 
         if idx is not None:
             if idx < 0 or idx >= len(audit_history):
-                logger.error("Index out of range.", model=self.__class__.__name__, field=field_name, idx=idx)
+                logger.error(
+                    "Index out of range.",
+                    object_type=self.__class__.__name__,
+                    field=field_name,
+                    index=idx)
                 return False
             audited_value = audit_history[idx]
         else:
@@ -70,14 +77,21 @@ class FieldOriginalMixin:
             None, but logs errors for non-existent fields or out-of-range indices.
         """
         if field_name not in self._audit:
-            logger.error("Field does not exist in audit.", model=self.__class__.__name__, field=field_name)
+            logger.error(
+                "Field does not exist in audit.",
+                object_type=self.__class__.__name__,
+                field=field_name)
             return []
 
         audit_history = list(self._audit[field_name])
 
         if idx is not None:
             if idx < 0 or idx >= len(audit_history):
-                logger.error("Index out of range.", model=self.__class__.__name__, field=field_name, idx=idx)
+                logger.error(
+                    "Index out of range.",
+                    object_type=self.__class__.__name__,
+                    field=field_name,
+                    index=idx)
                 return None
             return audit_history[idx]
 
@@ -100,7 +114,10 @@ class FieldOriginalMixin:
                     current_value = self._get_field_value(field_name)
                     self._audit[field_name].appendleft(current_value)
                 else:
-                    logger.warning("Field does not exist on model.", model=self.__class__.__name__, field=field_name)
+                    logger.warning(
+                        "Field does not exist on model.",
+                        object_type=self.__class__.__name__,
+                        field=field_name)
 
     def _update_audit(self):
         """
@@ -114,7 +131,10 @@ class FieldOriginalMixin:
                     current_value = self._get_field_value(field_name)
                     self._audit[field_name].appendleft(current_value)
                 else:
-                    logger.warning("Field does not exist on model.", model=self.__class__.__name__, field=field_name)
+                    logger.warning(
+                        "Field does not exist on model.",
+                        object_type=self.__class__.__name__,
+                        field=field_name)
 
     def _field_exists(self, field_name):
         """

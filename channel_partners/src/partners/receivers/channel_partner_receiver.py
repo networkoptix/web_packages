@@ -49,7 +49,7 @@ def on_channel_partner_saved(
 
 def increment_related_users(instance: ChannelPartner):
     # Get the ids of the related CloudUser instances
-    user_ids = instance.users.values_list('id', flat=True)
+    user_ids = list(instance.users.values_list('id', flat=True))
     if user_ids:
         logger.debug(
             "Incrementing version of related Cloud User of Channel Partner",
@@ -57,7 +57,7 @@ def increment_related_users(instance: ChannelPartner):
             users=user_ids)
         # Setting to cache
         CacheService.bulk_increment(
-            list(user_ids),
+            user_ids,
             CloudUser,
             'version',
             VersionMixin)

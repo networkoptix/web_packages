@@ -439,7 +439,11 @@ class CloudSystemId(
                 ServiceUsage.check_excess(self)
                 self.refresh_from_db()
             except Exception as ex:
-                logger.error("Error gotten when refreshing security statuses", exception=str(ex))
+                logger.error(
+                    "Exception refreshing security statuses",
+                    exception_type=type(ex).__name__,
+                    exception_details=str(ex),
+                    exc_info=True)
                 lock.release()
                 raise ex
         lock.release()
@@ -588,7 +592,17 @@ class CloudSystemId(
                 elif self.organization_id:
                     self.path = get_path_from_parent(self.organization)
                 else:
-                    logger.error("Cloud System in an improper state", cloud_system=self.id)
+                    logger.error(
+                        "Cloud System in an improper state",
+                        cloud_system=self.id,
+                        organization_id=self.organization_id,
+                        system_group_id=self.system_group_id,
+                        system_id=self.system_id,
+                        new=new,
+                        orgs_are_different=orgs_are_different,
+                        system_groups_are_different=system_groups_are_different,
+                        path=self.path
+                    )
                     raise ValidationError("Cloud System in an improper state.")
 
             # If this is a new record, invalidate the cache for the organization of the new record

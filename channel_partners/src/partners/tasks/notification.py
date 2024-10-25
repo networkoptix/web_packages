@@ -52,7 +52,8 @@ class TaskWithLogging(Task):
             task_name=self.name,
             args=args,
             kwargs=kwargs,
-            exception=''.join(traceback.format_exception(exc)))
+            exception=''.join(traceback.format_exception(exc)),
+            exc_info=True)
 
     def on_retry(self, exc, task_id, args, kwargs, einfo):
         # needed for printing in
@@ -62,7 +63,8 @@ class TaskWithLogging(Task):
             task_name=self.name,
             args=args,
             kwargs=kwargs,
-            exception=''.join(traceback.format_exception(exc)))
+            exception=''.join(traceback.format_exception(exc)),
+            exc_info=True)
 
 
 def get_user_by_email(task: TaskWithLogging, email: str) -> CloudUser:
@@ -172,11 +174,11 @@ def notification_added_channel_partner_role(
             task_id=task.request.id,
             task_name=task.name,
             channel_partner_id=channel_partner_id,
-            partner=partner,
+            channel_partner_found=bool(partner),
             sharer_id=sharer_id,
-            sharer=sharer,
+            sharer_found=bool(sharer),
             user_id=user_id,
-            user=user)
+            user_found=bool(user))
 
         task.update_state(
             state=states.FAILURE,
@@ -233,11 +235,11 @@ def notification_added_organization_role(
             task_id=task.request.id,
             task_name=task.name,
             organization_id=organization_id,
-            organization=organization,
+            organization_found=bool(organization),
             sharer_id=sharer_id,
-            sharer=sharer,
+            sharer_found=bool(sharer),
             user_id=user_id,
-            user=user)
+            user_found=bool(user))
 
         task.update_state(
             state=states.FAILURE,
@@ -264,9 +266,7 @@ def notification_added_organization_role(
 def state_confirmation_task(self: TaskWithLogging, confirmation_id: int, cloud_host_name: str):
     confirmation = ActionConfirmation.objects.filter(pk=confirmation_id).first()
     if not confirmation:
-        logger.error(
-            "Unable to find confirmation with id",
-            id=confirmation_id)
+        logger.error("Unable to find confirmation", confirmation_id=confirmation_id)
 
         self.update_state(
             state=states.FAILURE,

@@ -32,8 +32,8 @@ def on_channel_partner_to_user_saved(
     def on_commit_callback():
         logger.debug(
             "Channel Partner to User saved - Incrementing Version",
-            channel_partner=instance.channel_partner_id,
-            user=instance.user_id)
+            channel_partner_id=instance.channel_partner_id,
+            user_id=instance.user_id)
         CloudUser.increment_version_by_id(instance.user_id)
         ChannelPartner.increment_version_by_id(instance.channel_partner_id)
         increment_descendant_version_of_ancestors(instance.channel_partner)
@@ -67,8 +67,8 @@ def on_channel_partner_to_user_deleted(
 
         logger.debug(
             "Channel Partner to User deleted - Incrementing Version",
-            channel_partner=channel_partner_id,
-            user=user_id)
+            channel_partner_id=channel_partner_id,
+            user_id=user_id)
 
 
     transaction.on_commit(on_commit_callback)
@@ -79,8 +79,8 @@ def increment_descendant_version_of_ancestors(instance: ChannelPartner):
     ancestor_ids = instance.path
     logger.debug(
         "Incrementing descendant version of ancestor of channel partner",
-        name=instance.name,
-        ancestors=ancestor_ids)
+        channel_partner_name=instance.name,
+        ancestor_ids=ancestor_ids)
     if ancestor_ids:
         CacheService.bulk_increment(
             ancestor_ids,

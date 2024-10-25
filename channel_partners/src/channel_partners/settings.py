@@ -27,6 +27,9 @@ from channel_partners.configuration.logging_config import configure_logging
 from channel_partners.configuration.throttling_config import (
     configure_throttling,
 )
+from channel_partners.logging.logging_processors import (
+    convert_uuids_to_strings,
+)
 from channel_partners.tools.config import (
     get_container_name,
     get_default_host,
@@ -253,6 +256,7 @@ structlog.configure(
         structlog.processors.StackInfoRenderer(),
         structlog.processors.format_exc_info,
         structlog.processors.UnicodeDecoder(),
+        convert_uuids_to_strings,
         structlog.stdlib.ProcessorFormatter.wrap_for_formatter,
     ],
     logger_factory=structlog.stdlib.LoggerFactory(),

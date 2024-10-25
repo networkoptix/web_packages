@@ -187,8 +187,11 @@ def check_system_credentials(
                 username=system_id,
                 password=system_auth_key))
     except httpx.HTTPError as ex:
-        logger.error("Request to cdb failed",
-                     exception=str(ex))
+        logger.error(
+            "Request to cdb failed",
+            exception_type=type(ex).__name__,
+            exception_details=str(ex),
+            exc_info=True)
         return False, None, None
 
     if response.is_success:
@@ -212,10 +215,11 @@ def check_system_credentials(
         if error.get('resultCode') == CREDENTIALS_REMOVED_PERMANENTLY:
             return False, CloudSystemStates.DELETED, None
     # CLOUD-12908. Let's count any error status code as unauthorized
-    logger.info('Authentication failed',
-                system_id=system_id,
-                status_code=response.status_code,
-                response=response.content.decode())
+    logger.info(
+        'Authentication failed',
+        system_id=system_id,
+        response_status_code=response.status_code,
+        response_content=response.content.decode())
     return False, None, None
 
 
@@ -402,7 +406,11 @@ def get_cloud_user_from_token(token: str, cloud_host: str) -> Optional[str]:
         try:
             return authenticate_jwt_token(token)
         except FallbackToRegToken as ex:
-            logger.info('Falling back to regular token.', exception=str(ex), reason=ex.reason)
+            logger.info(
+                'Falling back to regular token.',
+                exception_type=type(ex).__name__,
+                exception_details=str(ex),
+                reason=ex.reason)
     return authenticate_regular_token(token, cloud_host)
 
 
@@ -412,7 +420,10 @@ def authenticate_jwt_token(token: str) -> Optional[str]:
     try:
         verified_payload = settings.JWK_CLIENT.decode_jwt_token(token, verify_exp=True)
     except (InvalidTokenError, JWKMissingKeyError) as ex:
-        logger.debug('Unauthorized token.', exception=str(ex))
+        logger.debug(
+            'Unauthorized token.',
+            exception_type=type(ex).__name__,
+            exception_details=str(ex))
         return None
     logger.debug('Verified JWT')
     TokenCache.set_token(token, verified_payload.sub, expires_in=verified_payload.expires_in)
@@ -431,7 +442,11 @@ def authenticate_regular_token(token: str, cloud_host: str) -> Optional[str]:
     try:
         response: Response = auth_client.token_get(token, headers=headers)
     except httpx.HTTPError as ex:
-        logger.error('Token authentication request failed.', exception=str(ex))
+        logger.error(
+            'Token authentication request failed.',
+            exception_type=type(ex).__name__,
+            exception_details=str(ex),
+            exc_info=True)
         # raise exception to avoid token refresh
         raise ex
 
@@ -444,9 +459,10 @@ def authenticate_regular_token(token: str, cloud_host: str) -> Optional[str]:
     elif response.status_code == 401:
         return None
     # CLOUD-12908. Let's count any error status code as unauthorized
-    logger.info('Authentication failed',
-                status_code=response.status_code,
-                response=response.content.decode())
+    logger.info(
+        'Authentication failed',
+        response_status_code=response.status_code,
+        response_content=response.content.decode())
     return None
 
 

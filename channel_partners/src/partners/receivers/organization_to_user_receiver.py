@@ -37,8 +37,8 @@ def on_organization_to_user_saved(
     def on_commit_callback():
         logger.debug(
             "Organization to User saved - Incrementing Version",
-            organization=instance.organization,
-            user=instance.user_id)
+            organization_id=instance.organization.id,
+            user_id=instance.user_id)
         CloudUser.increment_version_by_id(instance.user_id)
         Organization.increment_version_by_id(instance.organization_id)
         increment_if_group(instance)
@@ -70,8 +70,8 @@ def on_organization_to_user_deleted(
 
         logger.debug(
             "Organization to User deleted - Incrementing Version",
-            organization=organization_id,
-            user=user_id)
+            organization_id=organization_id,
+            user_id=user_id)
 
         increment_if_group(instance)
 
@@ -87,7 +87,9 @@ def increment_if_group(instance: OrganizationToUser):
                 Q(parent_id=instance.system_group_id)
             ).values_list('id', flat=True))
 
-        logger.debug("Incrementing System Group Versions", system_group_count=len(system_group_ids))
+        logger.debug(
+            "Incrementing System Group Versions",
+            system_group_count=len(system_group_ids))
 
         if system_group_ids:
             CacheService.bulk_increment(

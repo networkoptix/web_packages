@@ -28,7 +28,7 @@ def on_service_to_sub_channel_properties_saved(
     def on_commit_callback():
         logger.debug(
             "ServiceToSubChannelProperties changed - Incrementing Version",
-            id=instance.id,
+            object_id=instance.id,
             channel_partner_id=instance.channel_partner_id)
         instance.channel_partner.increment_version()
         increment_descendant_version_of_ancestors(instance)
@@ -39,7 +39,7 @@ def on_service_to_sub_channel_properties_saved(
 def increment_descendant_version_of_ancestors(instance: ServiceToSubChannelProperties):
     # Get the ids of the ancestor ChannelPartner instances
     ancestor_ids = instance.channel_partner.path
-    logger.debug("Incrementing descendant version of ancestor of Channel Partner", ancestors=ancestor_ids)
+    logger.debug("Incrementing descendant version of ancestor of Channel Partner", ancestor_ids=ancestor_ids)
     if ancestor_ids:
         CacheService.bulk_increment(
             ancestor_ids,

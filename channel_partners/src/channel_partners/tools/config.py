@@ -12,17 +12,20 @@ def get_default_host(instance_name: str, instance_domain_name: str) -> str | Non
     try:
         ireg = IReg(instance_name)
     except Exception as ex:
-        logger.warning("Cannot retrieve instance registry.",
-                       instance_name=instance_name,
-                       default_value=instance_domain_name,
-                       exc_info=ex)
+        logger.warning(
+            "Cannot retrieve instance registry.",
+            instance_name=instance_name,
+            default_value=instance_domain_name,
+            exception_type=type(ex).__name__,
+            exception_details=str(ex))
         return instance_domain_name
     hostname = ireg.get_default_host()
     if not hostname:
-        logger.warning("Default customization is missing in instance registry.",
-                       instance_name=instance_name,
-                       default_value=instance_domain_name,
-                       instance_registry=ireg.customizations)
+        logger.warning(
+            "Default customization is missing in instance registry.",
+            instance_name=instance_name,
+            default_value=instance_domain_name,
+            instance_registry=ireg.customizations)
         return instance_domain_name
     return hostname
 

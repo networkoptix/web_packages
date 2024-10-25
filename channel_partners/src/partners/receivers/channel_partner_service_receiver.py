@@ -33,8 +33,8 @@ def on_channel_partner_service_saved(
 ) -> None:
     logger.debug(
         "Channel Partner Service changed - Incrementing Channel Partner that created it",
-        id=instance.id,
-        name=instance.name,
+        object_id=instance.id,
+        channel_partner_service_name=instance.name,
         channel_partner_id=instance.created_by_channel_partner_id)
 
     partner = instance.created_by_channel_partner
@@ -57,8 +57,8 @@ def on_channel_partner_service_deleted(
 ) -> None:
     logger.debug(
         "Channel Partner Service deleted - Incrementing Channel Partner that created it",
-        id=instance.id,
-        name=instance.name,
+        object_id=instance.id,
+        channel_partner_service_name=instance.name,
         channel_partner_id=instance.created_by_channel_partner_id)
     # TODO: FIX THIS -- null values.
     if instance.created_by_channel_partner_id is not None:

@@ -32,10 +32,10 @@ def on_system_group_saved(
 ) -> None:
     def on_commit_callback():
         if not created:
-            logger.debug("System Group changed - Incrementing Version", system=instance.id)
+            logger.debug("System Group changed - Incrementing Version", system_group_id=instance.id)
             instance.increment_version()
         else:
-            logger.debug("System Group created - Not Incrementing Version", system=instance.id)
+            logger.debug("System Group created - Not Incrementing Version", system_group_id=instance.id)
         handle_organization_id_change(instance)
         increment_descendant_version_of_ancestors(instance)
 
@@ -46,7 +46,7 @@ def on_system_group_saved(
 @disable_for_loaddata
 def on_system_group_deleted(sender: Type[SystemGroup], instance: SystemGroup, **kwargs):
     def on_commit_callback():
-        logger.debug("System Group deleted - Incrementing Version", system=instance.id)
+        logger.debug("System Group deleted - Incrementing Version", system_group_id=instance.id)
         handle_organization_id_change(instance)
         increment_descendant_version_of_ancestors(instance)
 
