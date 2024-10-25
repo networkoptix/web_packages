@@ -224,8 +224,7 @@ button:focus {
 
 input,
 button,
-select,
-textarea {
+select {
   margin: 0; // Remove the margin in Firefox and Safari
   font-family: inherit;
   @include font-size(inherit);
@@ -292,13 +291,6 @@ input[type="radio"],
 input[type="checkbox"] {
   box-sizing: border-box; // 1. Add the correct box sizing in IE 10-
   padding: 0; // 2. Remove the padding in IE 10-
-}
-
-
-textarea {
-  overflow: auto; // Remove the default vertical scrollbar in IE.
-  // Textareas should really only resize vertically so they don't break their (horizontal) containers.
-  resize: vertical;
 }
 
 // Correct the cursor style of increment and decrement buttons in Chrome.

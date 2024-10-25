@@ -81,7 +81,6 @@ const classes = new Set([
     "form-control-row",
     "form-control-static",
     "caret",
-    "text-area-input",
     "glyphicon-login",
     "glyphicon-create-user",
     "glyphicon-cloud",

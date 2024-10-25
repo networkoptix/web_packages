@@ -82,8 +82,7 @@ button[data-escape-global-style]:focus {
 
 input[data-escape-global-style],
 button[data-escape-global-style],
-select[data-escape-global-style],
-textarea[data-escape-global-style] {
+select[data-escape-global-style] {
   margin: unset;
   font-family: unset;
   font-size: unset;
@@ -125,11 +124,6 @@ input[data-escape-global-style][type=radio],
 input[data-escape-global-style][type=checkbox] {
   box-sizing: unset;
   padding: unset;
-}
-
-textarea[data-escape-global-style] {
-  overflow: unset;
-  resize: unset;
 }
 
 [type=number][data-escape-global-style]::-webkit-inner-spin-button,

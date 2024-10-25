@@ -1,0 +1,51 @@
+@use 'sass-rem';
+
+@use 'mixins';
+@use 'theme_variables_common' as common;
+
+textarea {
+    margin: 0; // Remove the margin in Firefox and Safari
+    font-family: inherit;
+
+    overflow: auto; // Remove the default vertical scrollbar in IE.
+    // Textareas should really only resize vertically so they don't break their (horizontal) containers.
+    resize: vertical;
+}
+
+.text-area-input {
+    display: block;
+    width: 100%;
+    font-size: sass-rem.rem(14px);
+    line-height: 1.428571429;
+    color: var(--input-color);
+    background-color: var(--input-bg);
+    background-image: none;
+    border: 1px solid var(--input-border-color);
+    border-radius: 1px;
+    transition: none;
+    box-shadow: none;
+    padding: common.$padding-base-vertical common.$padding-input-horizontal;
+    caret-color: var(--input-color);
+
+    @include mixins.placeholder();
+
+    // Override browser stylesheets
+    // https://developer.mozilla.org/en-US/docs/Web/CSS/:autofill
+    // https://stackoverflow.com/a/63589498
+    &:autofill,
+    &:autofill:hover,
+    &:autofill:focus,
+    &:autofill:active,
+    &:-webkit-autofill,
+    &:-webkit-autofill:hover,
+    &:-webkit-autofill:focus,
+    &:-webkit-autofill:active {
+        -webkit-text-fill-color: var(--input-color);
+        -webkit-box-shadow: 0 0 0 40px var(--input-bg) inset !important;
+    }
+
+    &[class*="ng-invalid"]:not(.ng-untouched) {
+        border-color: var(--input-error-border-color);
+        color: var(--input-error-color);
+    }
+}

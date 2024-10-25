@@ -13,7 +13,6 @@ const classes = new Set([
     "th",
     "button",
     "input",
-    "select",
-    "textarea"
+    "select"
 ]);
 export default classes;

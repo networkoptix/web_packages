@@ -25,7 +25,7 @@ type Subject = DropdownItem<string>;
 @Component({
     selector: 'nx-modal-message-content',
     templateUrl: 'message.component.html',
-    styleUrls: [],
+    styleUrls: ['message.component.scss'],
     standalone: true,
     imports: [
         CommonModule,
