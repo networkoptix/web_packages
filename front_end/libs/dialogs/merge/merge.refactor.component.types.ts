@@ -5,6 +5,7 @@ export enum MergeState {
     admin = 'admin',
     primary = 'primary',
     confirm = 'confirm',
+    error = 'error',
     generic = 'generic',
 }
 

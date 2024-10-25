@@ -50,14 +50,14 @@
                 />
             </div>
             <div class="mt-2">
-                <ng-container *ngIf="mergeForm.touched && mergeForm.dirty && mergeForm.invalid">
-                    <div
+                @if (mergeForm.touched && mergeForm.dirty && mergeForm.invalid) {
+                    <p
                         class="input-error"
                         translate
                     >
                         All fields are required
-                    </div>
-                </ng-container>
+                    </p>
+                }
             </div>
         </form>
     </div>

@@ -3,62 +3,70 @@
     name="genericMergeForm"
 >
     <main class="modal-body">
-        <ng-container *ngIf="serverUrlErrorText">
+        @if (serverUrlErrorText) {
             <p [innerHTML]="serverUrlErrorText | translate | safe: 'html'"></p>
-        </ng-container>
-        <ng-container *ngIf="failedToFindAnySystem">
+        }
+        @if (failedToFindAnySystem) {
             <p translate>
                 Make sure you have the Owner role in a cloud system you want to merge with. Or that
                 the system you want to merge with is accessible over the local network to current
                 system.
             </p>
-        </ng-container>
-        <ng-container *ngIf="thisSystemHasOutdatedServer">
-            <p translate>
-                Some of the servers in this system have an outdated software version and can't be
-                merged.
-            </p>
-            <p>
-                <span [innerText]="LANG.dialogs.merge.update | translate | translateCut: 0"></span
-                ><a
-                    routerLink="/download"
-                    target="_blank"
-                    [innerText]="LANG.dialogs.merge.update | translate | translateCut: 1"
-                ></a
-                ><span [innerText]="LANG.dialogs.merge.update | translate | translateCut: 2"></span>
-            </p>
-        </ng-container>
+        }
+        @if (thisSystemHasOutdatedServer) {
+            <div>
+                <p translate>
+                    Some of the servers in this system have an outdated software version and can't
+                    be merged.
+                </p>
+                <p>
+                    <span
+                        [innerText]="LANG.dialogs.merge.update | translate | translateCut: 0"
+                    ></span
+                    ><a
+                        routerLink="/download"
+                        target="_blank"
+                        [innerText]="LANG.dialogs.merge.update | translate | translateCut: 1"
+                    ></a
+                    ><span
+                        [innerText]="LANG.dialogs.merge.update | translate | translateCut: 2"
+                    ></span>
+                </p>
+            </div>
+        }
     </main>
     <footer class="modal-footer next-button">
-        <button
-            *ngIf="failedToFindAnySystem || thisSystemHasOutdatedServer"
-            data-escape-global-style
-            class="nx-button--primary m-0"
-            (click)="close.emit()"
-            translate
-        >
-            OK
-        </button>
-        <ng-container *ngIf="serverUrlErrorText">
+        @if (failedToFindAnySystem || thisSystemHasOutdatedServer) {
             <button
-                class="btn btn-default svg-icon"
-                (click)="setCurrentState.emit()"
-                type="button"
+                data-escape-global-style
+                class="nx-button--primary m-0"
+                (click)="close.emit()"
+                translate
             >
-                <svg-icon
-                    nx-add-svg-src
-                    [src]="icons.dir + 'arrow_left.svg'"
-                    class="mr-1"
-                    [applyClass]="true"
-                ></svg-icon>
-                <span translate>Back</span>
+                OK
             </button>
-            <nx-process-button
-                [process]="genericMergeProcess"
-                [form]="genericMergeForm"
-                actionType="primary"
-                buttonText="{{ 'Try Again' | translate }}"
-            ></nx-process-button>
-        </ng-container>
+        } @else if (serverUrlErrorText) {
+            <div>
+                <button
+                    class="btn btn-default svg-icon"
+                    (click)="setCurrentState.emit()"
+                    type="button"
+                >
+                    <svg-icon
+                        nx-add-svg-src
+                        [src]="icons.dir + 'arrow_left.svg'"
+                        class="mr-1"
+                        [applyClass]="true"
+                    ></svg-icon>
+                    <span translate>Back</span>
+                </button>
+                <nx-process-button
+                    [process]="genericMergeProcess"
+                    [form]="genericMergeForm"
+                    actionType="primary"
+                    buttonText="{{ 'Try Again' | translate }}"
+                ></nx-process-button>
+            </div>
+        }
     </footer>
 </form>

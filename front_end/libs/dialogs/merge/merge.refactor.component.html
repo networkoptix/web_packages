@@ -11,7 +11,7 @@
         <h1 class="modal-title">
             @if (this.failedToFindAnySystem) {
                 <span>{{ LANG.dialogs.merge.failedToFindAnySystemHeader | translate }}</span>
-            } @else if (primarySystemOffline$$() || secondarySystemOffline$$()) {
+            } @else if (currentState$$() === MergeState.error) {
                 <span>
                     {{ this.LANG.dialogs.merge.mergeFailedTitle }}
                 </span>
@@ -30,86 +30,88 @@
             <div class="close-content"></div>
         </button>
     </div>
-    <div
-        class="merge-window"
-        [ngSwitch]="currentState$$()"
-    >
-        <nx-merge-select-system-component
-            #nxMergeSelectSystem
-            *ngSwitchCase="MergeState.select"
-            [selectSystemProcess]="selectSystemProcess"
-            [mergeSystems]="mergeSystems"
-            [system]="system"
-            [isWebadmin]="isWebadmin"
-            [cloudHost]="cloudHost"
-            [(targetSystem)]="targetSystem"
-            [(otherSystem)]="otherSystem"
-            [(serverUrl)]="serverUrl"
-            [cleanUpUrl]="cleanUpUrl"
-            [existingSystems]="systemUrls"
-            [checking]="checking"
-            [checkedOnce]="checkedMergeabilityOnce"
-            [noOtherSystems]="noOtherSystems"
-            [getSystemInfo]="getSystemInfo"
-            [errorCode]="selectSystemErrorCode"
-            (setCurrentState)="updateStateHistory($event)"
-        ></nx-merge-select-system-component>
-        <nx-merge-admin-password-component
-            *ngSwitchCase="MergeState.admin"
-            [adminPasswordProcess]="adminPasswordProcess"
-            [(password)]="adminPassword"
-            [targetSystem]="targetSystem"
-            [isSessionOauth]="isSessionOauth"
-            [errorCode]="adminPasswordErrorCode"
-            (setCurrentState)="updateStateHistory($event)"
-        ></nx-merge-admin-password-component>
-        <nx-merge-choose-primary-component
-            *ngSwitchCase="MergeState.primary"
-            [system]="system"
-            [targetSystem]="targetSystem"
-            [errorCode]="choosePrimaryErrorCode"
-            (setCurrentState)="updateStateHistory($event)"
-            (currentSystemIsPrimaryChange)="checkForChoosePrimary($event)"
-        ></nx-merge-choose-primary-component>
-        <nx-merge-confirm-merge-component
-            *ngSwitchCase="MergeState.confirm"
-            [confirmMergeProcess]="confirmMergeProcess"
-            [primaryName]="primaryName$$()"
-            [secondaryName]="secondaryName$$()"
-            [tooManyServers]="tooManyServers"
-            [maxServers]="maxServers"
-            [supportLink]="CONFIG.company.links.support"
-            [isWebadmin]="isWebadmin"
-            [isSessionOauth]="isSessionOauth"
-            [(password)]="confirmPassword"
-            [errorCode]="confirmMergeErrorCode"
-            [primarySystemOffline]="primarySystemOffline$$()"
-            [secondarySystemOffline]="secondarySystemOffline$$()"
-            (setCurrentState)="updateStateHistory($event)"
-        ></nx-merge-confirm-merge-component>
-        <nx-merge-generic-merge-component
-            *ngSwitchCase="MergeState.generic"
-            [genericMergeProcess]="genericMergeProcess"
-            [thisSystemHasOutdatedServer]="thisSystemHasOutdatedServer"
-            [failedToFindAnySystem]="failedToFindAnySystem"
-            [serverUrlErrorText]="serverUrlErrorText"
-            [errorCode]="genericMergeErrorCode"
-            (close)="close()"
-            (setCurrentState)="updateStateHistory($event)"
-        ></nx-merge-generic-merge-component>
-
-        @if (primarySystemOffline$$() || secondarySystemOffline$$()) {
-            <div class="modal-footer">
-                <button
-                    type="button"
-                    class="btn btn-primary"
-                    data-dismiss="modal"
-                    aria-label="Close"
-                    (click)="close()"
+    <div class="merge-window">
+        @switch (currentState$$()) {
+            @case (MergeState.select) {
+                <nx-merge-select-system-component
+                    #nxMergeSelectSystem
+                    [selectSystemProcess]="selectSystemProcess"
+                    [mergeSystems]="mergeSystems"
+                    [system]="system"
+                    [isWebadmin]="isWebadmin"
+                    [cloudHost]="cloudHost"
+                    [(targetSystem)]="targetSystem"
+                    [(otherSystem)]="otherSystem"
+                    [(serverUrl)]="serverUrl"
+                    [cleanUpUrl]="cleanUpUrl"
+                    [existingSystems]="systemUrls"
+                    [checking]="checking"
+                    [checkedOnce]="checkedMergeabilityOnce"
+                    [noOtherSystems]="noOtherSystems"
+                    [getSystemInfo]="getSystemInfo"
+                    [errorCode]="selectSystemErrorCode"
+                    (setCurrentState)="updateStateHistory($event)"
+                ></nx-merge-select-system-component>
+            }
+            @case (MergeState.admin) {
+                <nx-merge-admin-password-component
+                    [adminPasswordProcess]="adminPasswordProcess"
+                    [(password)]="adminPassword"
+                    [targetSystem]="targetSystem"
+                    [isSessionOauth]="isSessionOauth"
+                    [errorCode]="adminPasswordErrorCode"
+                    (setCurrentState)="updateStateHistory($event)"
+                ></nx-merge-admin-password-component>
+            }
+            @case (MergeState.primary) {
+                <nx-merge-choose-primary-component
+                    [system]="system"
+                    [targetSystem]="targetSystem"
+                    [errorCode]="choosePrimaryErrorCode"
+                    (setCurrentState)="updateStateHistory($event)"
+                    (currentSystemIsPrimaryChange)="checkForChoosePrimary($event)"
+                ></nx-merge-choose-primary-component>
+            }
+            @case (MergeState.confirm) {
+                <nx-merge-confirm-merge-component
+                    [confirmMergeProcess]="confirmMergeProcess"
+                    [primaryName]="primaryName$$()"
+                    [secondaryName]="secondaryName$$()"
+                    [tooManyServers]="tooManyServers"
+                    [maxServers]="maxServers"
+                    [supportLink]="CONFIG.company.links.support"
+                    [isWebadmin]="isWebadmin"
+                    [isSessionOauth]="isSessionOauth"
+                    [(password)]="confirmPassword"
+                    [errorCode]="confirmMergeErrorCode"
+                    [primarySystemOffline]="primarySystemOffline$$()"
+                    [showPreloader]="showPreloader$$()"
+                    [secondarySystemOffline]="secondarySystemOffline$$()"
+                    (setCurrentState)="updateStateHistory($event)"
+                ></nx-merge-confirm-merge-component>
+            }
+            @case (MergeState.error) {
+                <nx-merge-error
+                    [error]="error$$()"
+                    [primarySystemOffline]="primarySystemOffline$$()"
+                    [secondarySystemOffline]="secondarySystemOffline$$()"
+                    [primaryName]="primaryName$$()"
+                    [secondaryName]="secondaryName$$()"
+                    (finishDialog)="close(error$$())"
                 >
-                    {{ LANG.dialogs.buttons.ok }}
-                </button>
-            </div>
+                </nx-merge-error>
+            }
+            @case (MergeState.generic) {
+                <nx-merge-generic-merge-component
+                    [genericMergeProcess]="genericMergeProcess"
+                    [thisSystemHasOutdatedServer]="thisSystemHasOutdatedServer"
+                    [failedToFindAnySystem]="failedToFindAnySystem"
+                    [serverUrlErrorText]="serverUrlErrorText"
+                    [errorCode]="genericMergeErrorCode"
+                    (close)="close()"
+                    (setCurrentState)="updateStateHistory($event)"
+                ></nx-merge-generic-merge-component>
+            }
         }
     </div>
 </div>

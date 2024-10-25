@@ -1,23 +1,11 @@
-<form
-    #confirmMergeForm="ngForm"
-    name="confirmMergeForm"
->
-    <div class="modal-body">
-        @if (primarySystemOffline) {
-            <p
-                [innerHTML]="
-                    LANG.dialogs.merge.primarySystemOffline
-                        | translate: { primarySystem: primaryName, secondarySystem: secondaryName }
-                "
-            ></p>
-        } @else if (secondarySystemOffline) {
-            <p
-                [innerHTML]="
-                    LANG.dialogs.merge.secondarySystemOffline
-                        | translate: { primarySystem: primaryName, secondarySystem: secondaryName }
-                "
-            ></p>
-        } @else {
+@if (showPreloader) {
+    <nx-pre-loader></nx-pre-loader>
+} @else {
+    <form
+        #confirmMergeForm="ngForm"
+        name="confirmMergeForm"
+    >
+        <div class="modal-body">
             <p
                 [innerHTML]="
                     LANG.dialogs.merge.mergeConfirmation
@@ -28,93 +16,98 @@
                               }
                 "
             ></p>
-        }
 
-        <div *ngIf="tooManyServers">
-            <p
-                class="error-label"
-                [innerHTML]="LANG.dialogs.merge.warning | translate: { maxServers: maxServers }"
-            ></p>
-            <p
-                class="error-label"
-                translate
-            >
-                Systems of such size may be unstable and have troubles with updates and
-                synchronization.
-            </p>
-            <p class="mb-3">
-                {{ LANG.dialogs.merge.recommendSupport | translate | translateCut: 0 }}
-                <a
-                    [href]="supportLink"
-                    target="_blank"
-                    >{{ LANG.dialogs.merge.recommendSupport | translate | translateCut: 1 }}</a
+            @if (tooManyServers) {
+                <div>
+                    <p
+                        class="error-label"
+                        [innerHTML]="
+                            LANG.dialogs.merge.warning | translate: { maxServers: maxServers }
+                        "
+                    ></p>
+                    <p
+                        class="error-label"
+                        translate
+                    >
+                        Systems of such size may be unstable and have troubles with updates and
+                        synchronization.
+                    </p>
+                    <p class="mb-3">
+                        {{ LANG.dialogs.merge.recommendSupport | translate | translateCut: 0 }}
+                        <a
+                            [href]="supportLink"
+                            target="_blank"
+                            >{{
+                                LANG.dialogs.merge.recommendSupport | translate | translateCut: 1
+                            }}</a
+                        >
+                        {{ LANG.dialogs.merge.recommendSupport | translate | translateCut: 2 }}
+                    </p>
+                </div>
+            }
+            @if (!isWebadmin && !isSessionOauth) {
+                <div
+                    class="form-group"
+                    [ngClass]="{
+                        'mb-merge':
+                            cloudOwnerPassword.invalid &&
+                            (cloudOwnerPassword.dirty || cloudOwnerPassword.touched)
+                    }"
                 >
-                {{ LANG.dialogs.merge.recommendSupport | translate | translateCut: 2 }}
-            </p>
+                    <label
+                        for="cloudOwnerPassword"
+                        translate
+                    >
+                        Enter password for your account to continue
+                    </label>
+                    <input
+                        class="fs-exclude form-control"
+                        #cloudOwnerPassword="ngModel"
+                        #confirmMergeInput
+                        [ngClass]="{
+                            'invalid-state':
+                                cloudOwnerPassword.touched && cloudOwnerPassword.invalid
+                        }"
+                        id="cloudOwnerPassword"
+                        autocomplete="current-password"
+                        name="cloudOwnerPassword"
+                        type="password"
+                        required
+                        [(ngModel)]="password"
+                    />
+                    @if (
+                        cloudOwnerPassword.invalid &&
+                        (cloudOwnerPassword.dirty || cloudOwnerPassword.touched)
+                    ) {
+                        @if (cloudOwnerPassword.errors.required) {
+                            <label
+                                class="error-label password-label-margin mb-0 mt-2"
+                                for="cloudOwnerPassword"
+                                translate
+                            >
+                                Required
+                            </label>
+                        } @else if (cloudOwnerPassword.errors.wrongPassword) {
+                            <label
+                                class="error-label password-label-margin mb-0 mt-2"
+                                for="cloudOwnerPassword"
+                                translate
+                            >
+                                Wrong password
+                            </label>
+                        } @else if (cloudOwnerPassword.errors.wrongPasswordAdmin) {
+                            <label
+                                class="error-label password-label-margin mb-0 mt-2"
+                                for="cloudOwnerPassword"
+                                translate
+                            >
+                                Password for admin user is wrong
+                            </label>
+                        }
+                    }
+                </div>
+            }
         </div>
-        <div
-            *ngIf="!isWebadmin && !isSessionOauth"
-            class="form-group"
-            [ngClass]="{
-                'mb-merge':
-                    cloudOwnerPassword.invalid &&
-                    (cloudOwnerPassword.dirty || cloudOwnerPassword.touched)
-            }"
-        >
-            <label
-                for="cloudOwnerPassword"
-                translate
-            >
-                Enter password for your account to continue
-            </label>
-            <input
-                class="fs-exclude form-control"
-                #cloudOwnerPassword="ngModel"
-                #confirmMergeInput
-                [ngClass]="{
-                    'invalid-state': cloudOwnerPassword.touched && cloudOwnerPassword.invalid
-                }"
-                id="cloudOwnerPassword"
-                autocomplete="current-password"
-                name="cloudOwnerPassword"
-                type="password"
-                required
-                [(ngModel)]="password"
-            />
-            <ng-container
-                *ngIf="
-                    cloudOwnerPassword.invalid &&
-                    (cloudOwnerPassword.dirty || cloudOwnerPassword.touched)
-                "
-            >
-                <label
-                    *ngIf="cloudOwnerPassword.errors.required"
-                    class="error-label password-label-margin mb-0 mt-2"
-                    for="cloudOwnerPassword"
-                    translate
-                >
-                    Required
-                </label>
-                <label
-                    *ngIf="cloudOwnerPassword.errors.wrongPassword"
-                    class="error-label password-label-margin mb-0 mt-2"
-                    for="cloudOwnerPassword"
-                    translate
-                >
-                    Wrong password
-                </label>
-                <label
-                    *ngIf="cloudOwnerPassword.errors.wrongPasswordAdmin"
-                    class="error-label password-label-margin mb-0 mt-2"
-                    for="cloudOwnerPassword"
-                    translate
-                >
-                    Password for admin user is wrong
-                </label>
-            </ng-container>
-        </div>
-    </div>
-    @if (!primarySystemOffline && !secondarySystemOffline) {
         <div class="modal-footer next-button d-flex justify-between">
             <button
                 class="btn btn-default svg-icon"
@@ -137,5 +130,5 @@
                 buttonText="{{ 'Merge Systems' | translate }}"
             ></nx-process-button>
         </div>
-    }
-</form>
+    </form>
+}

@@ -51,7 +51,13 @@ import { NxMergeAdminPasswordComponent } from './admin-password/admin-password.c
 import { NxMergeChoosePrimaryComponent } from './choose-primary/choose-primary.component';
 import { NxMergeConfirmMergeComponent } from './confirm-merge/confirm-merge.component';
 import { NxMergeGenericMergeComponent } from './generic-merge/generic-merge.component';
-import { MergeErrorData, MergeState, MergeSystem } from './merge.refactor.component.types';
+import { NxMergeMergeError } from './merge-error/merge-error.component';
+import {
+    MergeError,
+    MergeErrorData,
+    MergeState,
+    MergeSystem,
+} from './merge.refactor.component.types';
 import { NxMergeSelectSystemComponent } from './select-system/select-system.component';
 
 const MergeServerErrorCodes = {
@@ -122,6 +128,7 @@ const ResponseStrings = {
         NxMergeChoosePrimaryComponent,
         NxMergeConfirmMergeComponent,
         NxMergeGenericMergeComponent,
+        NxMergeMergeError,
     ],
 })
 export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit, OnDestroy {
@@ -151,9 +158,17 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
     isSessionOauth: boolean;
     primarySystemOffline$$ = signal<boolean>(false);
     secondarySystemOffline$$ = signal<boolean>(false);
+    error$$ = signal<MergeError>({
+        resultCode: '',
+        errorText: '',
+        primarySystemName: '',
+        secondarySystemName: '',
+        failedSystemName: '',
+    });
     systemUrls: { [ip: string]: string } = {};
     mergeSystems: MergeSystem[];
     system: NxSystem;
+    targetSystemInfo: NxSystem;
     targetSystem: MergeSystem;
     cleanUrl: string;
     serverUrl: string;
@@ -220,6 +235,8 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
 
     // update webadmin session
     alertMessage: string;
+
+    showPreloader$$ = signal<boolean>(false);
 
     constructor(
         configService: NxConfigService,
@@ -813,6 +830,7 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
                 );
             }
             targetSystemService.stopPoll();
+            this.targetSystemInfo = targetSystemService;
         }
         this.selectSystem.checkMergeabilityFunction();
         return this.targetSystem.isNew ? isNew : { error: '0' };
@@ -837,9 +855,10 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
 
     async handleMergeError(error: MergeErrorData): Promise<void> {
         const primarySystem = this.primarySystem$$() as NxSystem;
-        const secondarySystem = this.secondarySystem$$() as NxSystem;
+        const secondarySystem = this.targetSystemInfo;
 
         if (error.resultCode === 500) {
+            this.showPreloader$$.set(true);
             await firstValueFrom(primarySystem.mediaserver.ping()).catch(() => {
                 this.primarySystemOffline$$.set(true);
             });
@@ -848,11 +867,19 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
                     this.secondarySystemOffline$$.set(true);
                 });
             }
+            if (this.primarySystemOffline$$() || this.secondarySystemOffline$$()) {
+                this.stateHistory$$.update(history => [...history, MergeState.error]);
+                return;
+            }
+
+            // Fail safe: if both systems are online, continue the function
+            this.showPreloader$$.set(false);
         }
 
         const err = cloneDeep(error.data);
         err.primarySystemName = this.primaryName$$();
         err.secondarySystemName = this.secondaryName$$();
+        this.error$$.set(err);
 
         let system: NxSystemInfo;
         firstValueFrom(this.systemsService.forceUpdateSystems())

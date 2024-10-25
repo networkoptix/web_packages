@@ -1,110 +1,106 @@
-<form
-    *ngIf="mergeSystems?.length"
-    #checkMergeForm="ngForm"
-    name="checkMergeForm"
->
-    <main class="modal-body">
-        <ng-container *ngIf="noOtherSystems; else normalCheckMerge">
-            <p translate>
-                Enter address of any server in the system you want to merge with this one.
-            </p>
-        </ng-container>
-        <ng-template #normalCheckMerge>
-            <p translate>Merge current system with</p>
-            <nx-select-v2
-                [placeholder]="
-                    selectedSystem.help
-                        ? selectedSystem.name + ' ' + (selectedSystem.help | translate)
-                        : selectedSystem.name
-                "
-                [ngModel]="selectedSystem.value"
-                (ngModelChange)="setTargetSystem($event)"
-                name="mergeSystemSelect"
-            >
-                @for (system of processedSystems; track system.url) {
-                    <nx-select-item
-                        [value]="system"
-                        [selected]="system.value === selectedSystem.value"
-                    >
-                        <span
-                            class="system-name"
-                            [ngClass]="system.help ? 'system-name-truncate' : ''"
-                            >{{ system.name }}</span
+@if (mergeSystems?.length) {
+    <form
+        #checkMergeForm="ngForm"
+        name="checkMergeForm"
+    >
+        <main class="modal-body">
+            @if (noOtherSystems) {
+                <p translate>
+                    Enter address of any server in the system you want to merge with this one.
+                </p>
+            } @else {
+                <p translate>Merge current system with</p>
+                <nx-select-v2
+                    [placeholder]="
+                        selectedSystem.help
+                            ? selectedSystem.name + ' ' + (selectedSystem.help | translate)
+                            : selectedSystem.name
+                    "
+                    [ngModel]="selectedSystem.value"
+                    (ngModelChange)="setTargetSystem($event)"
+                    name="mergeSystemSelect"
+                >
+                    @for (system of processedSystems; track system.url) {
+                        <nx-select-item
+                            [value]="system"
+                            [selected]="system.value === selectedSystem.value"
                         >
-                        @if (system.help) {
-                            <span class="system-help">{{ system.help | translate }}</span>
-                        }
-                    </nx-select-item>
-                }
-            </nx-select-v2>
-        </ng-template>
-        <div
-            *ngIf="isWebadmin"
-            class="d-flex flex-column server-url add-specificity"
-            [ngClass]="{
-                'mb-4': !(selectedSystem.status || serverUrlInputValidationErrorText)
-            }"
-        >
-            <label
-                class="server-url-label"
-                for="serverUrl"
-                translate
-                >Server URL</label
-            >
-            <input
-                class="mb-2 form-control"
-                #serverUrlInput="ngModel"
-                #checkMergeUrlInput
-                name="serverUrl"
-                id="serverUrl"
-                type="url"
-                [readonly]="checking"
-                placeholder="host:port"
-                [ngModel]="serverUrl"
-                (ngModelChange)="serverUrlUpdate(serverUrlInput)"
-                (blur)="serverUrlUpdate(serverUrlInput)"
-                nxUrlValidator
-                required
-            />
-            <label
-                *ngIf="serverUrlInputValidationErrorText"
-                [innerHTML]="serverUrlInputValidationErrorText"
-                class="error-label"
-                for="serverUrl"
-            >
-            </label>
-        </div>
-        <p
-            *ngIf="!selectedSystem?.status || checking"
-            class="light-text"
-        >
-            <span
-                *ngIf="checking"
-                translate
-                >Checking...</span
-            >
-            <span
-                *ngIf="!checking && !isWebadmin"
-                translate
-            >
-                You can only merge Systems where you are the owner
-            </span>
-        </p>
-        <p
-            *ngIf="isOffline || (selectedSystem?.status && !checking)"
-            [ngClass]="{ 'error-text-margin': serverUrlInput }"
-            [innerHTML]="isOffline ? serverUrlInputValidationErrorText : selectedSystem.status"
-            class="error-label"
-        ></p>
-    </main>
-    <footer class="modal-footer float-right next-button">
-        <nx-process-button
-            [process]="selectSystemProcess"
-            [form]="checkMergeForm"
-            actionType="primary"
-            [buttonDisabled]="!systemsProcessed || !!serverUrlInputValidationErrorText"
-            [svg]="{ src: 'arrow_right' }"
-            [buttonText]="checkMergeButtonText"
-        ></nx-process-button>
-    </footer>
-</form>
+                            <span
+                                class="system-name"
+                                [ngClass]="system.help ? 'system-name-truncate' : ''"
+                                >{{ system.name }}</span
+                            >
+                            @if (system.help) {
+                                <span class="system-help">{{ system.help | translate }}</span>
+                            }
+                        </nx-select-item>
+                    }
+                </nx-select-v2>
+            }
+            @if (isWebadmin) {
+                <div
+                    class="d-flex flex-column server-url add-specificity"
+                    [ngClass]="{
+                        'mb-4': !(selectedSystem.status || serverUrlInputValidationErrorText)
+                    }"
+                >
+                    <label
+                        class="server-url-label"
+                        for="serverUrl"
+                        translate
+                        >Server URL</label
+                    >
+                    <input
+                        class="mb-2 form-control"
+                        #serverUrlInput="ngModel"
+                        #checkMergeUrlInput
+                        name="serverUrl"
+                        id="serverUrl"
+                        type="url"
+                        [readonly]="checking"
+                        placeholder="host:port"
+                        [ngModel]="serverUrl"
+                        (ngModelChange)="serverUrlUpdate(serverUrlInput)"
+                        (blur)="serverUrlUpdate(serverUrlInput)"
+                        nxUrlValidator
+                        required
+                    />
+                    @if (serverUrlInputValidationErrorText) {
+                        <p
+                            [innerHTML]="serverUrlInputValidationErrorText"
+                            class="error-label"
+                            for="serverUrl"
+                        ></p>
+                    }
+                </div>
+            }
+            @if (!selectedSystem?.status || checking) {
+                <p class="light-text">
+                    @if (checking) {
+                        <span translate>Checking...</span>
+                    } @else if (!checking && !isWebadmin) {
+                        <span translate> You can only merge Systems where you are the owner </span>
+                    }
+                </p>
+            } @else if (isOffline || (selectedSystem?.status && !checking)) {
+                <p
+                    [ngClass]="{ 'error-text-margin': serverUrlInput }"
+                    [innerHTML]="
+                        isOffline ? serverUrlInputValidationErrorText : selectedSystem.status
+                    "
+                    class="error-label"
+                ></p>
+            }
+        </main>
+        <footer class="modal-footer float-right next-button">
+            <nx-process-button
+                [process]="selectSystemProcess"
+                [form]="checkMergeForm"
+                actionType="primary"
+                [buttonDisabled]="!systemsProcessed || !!serverUrlInputValidationErrorText"
+                [svg]="{ src: 'arrow_right' }"
+                [buttonText]="checkMergeButtonText"
+            ></nx-process-button>
+        </footer>
+    </form>
+}

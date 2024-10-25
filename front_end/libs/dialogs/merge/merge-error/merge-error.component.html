@@ -1,0 +1,45 @@
+<!-- eslint-disable nx/template/no-global-style-class -->
+<!-- TODO: Fix no-global-style-class lint error for all Merge Components -->
+<div class="modal-body">
+    @if (primarySystemOffline) {
+        <p
+            [innerHTML]="
+                LANG.dialogs.merge.primarySystemOffline
+                    | translate: { primarySystem: primaryName, secondarySystem: secondaryName }
+            "
+            data-escape-global-style
+        ></p>
+    } @else if (secondarySystemOffline) {
+        <p
+            [innerHTML]="
+                LANG.dialogs.merge.secondarySystemOffline
+                    | translate: { primarySystem: primaryName, secondarySystem: secondaryName }
+            "
+            data-escape-global-style
+        ></p>
+    } @else {
+        <p
+            [innerHTML]="
+                LANG.dialogs.merge.mergeConfirmation
+                    | translate
+                        : {
+                              primarySystem: primaryName,
+                              secondarySystem: secondaryName
+                          }
+            "
+            data-escape-global-style
+        ></p>
+    }
+</div>
+<div class="modal-footer">
+    <button
+        type="button"
+        class="nx-button--primary"
+        data-dismiss="modal"
+        aria-label="Close"
+        (click)="this.finishDialog.emit(true)"
+        data-escape-global-style
+    >
+        {{ LANG.dialogs.buttons.ok }}
+    </button>
+</div>

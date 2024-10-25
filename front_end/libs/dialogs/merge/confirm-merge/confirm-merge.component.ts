@@ -5,6 +5,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { NgxTranslateCutModule } from 'ngx-translate-cut';
 
+import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import staticLang from '@language_static';
@@ -27,6 +28,7 @@ import { MergeState } from '../merge.refactor.component.types';
         AngularSvgIconModule,
         NxProcessButtonComponent,
         NxAddSvgSrcDirective,
+        NxPreLoaderComponent,
     ],
 })
 export class NxMergeConfirmMergeComponent implements OnChanges {
@@ -45,6 +47,7 @@ export class NxMergeConfirmMergeComponent implements OnChanges {
     @Input() secondarySystemOffline: boolean;
     @Input() primarySystemOffline: boolean;
     @Input() isWebadmin: boolean;
+    @Input() showPreloader: boolean;
     @Output() passwordChange = new EventEmitter<string>();
     @Output() setCurrentState = new EventEmitter<MergeState>();
 
