@@ -460,7 +460,7 @@ jenkins-build-webadmin:
       "GITLAB_JOB_URL=$CI_JOB_URL"
       "GITLAB_REFSPEC=$CI_COMMIT_SHA" 2>&1 | tee "build.log"
     - |
-      JENKINS_JOB_URL="$(grep 'Job Url:' "build.log" | \
+      JENKINS_JOB_URL="$(grep 'Job URL:' "build.log" | \
         head -1 | \
         sed 's/\x1b\[[0-9;]*m//g' | \
         awk -F ': ' '{print $2}')"
