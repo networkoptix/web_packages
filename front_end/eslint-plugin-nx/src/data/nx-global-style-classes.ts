@@ -60,7 +60,7 @@ const classes = new Set([
     "legend-label-text",
     "h2",
     "h3",
-    "h4",
+    "label",
     "disabled-input-label",
     "icon-with-fill",
     "icon-with-stroke",

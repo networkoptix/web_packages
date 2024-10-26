@@ -9,7 +9,7 @@ import { NgModelSignalDirective } from './ng-model-signal.directive';
     imports: [FormsModule],
     hostDirectives: [NgModelSignalDirective],
     template: `
-        <label>
+        <label class="label">
             NgModel:
             {{ ngModelSignal.dirty$$() ? 'Value modified by directive' : 'Value from parent' }}
 

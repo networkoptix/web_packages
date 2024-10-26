@@ -116,6 +116,7 @@
                     [ngStyle]="{ flex: layoutMod ? '0 0 100%' : '' }"
                 >
                     <label
+                        class="label"
                         style="text-transform: capitalize"
                         *ngIf="select.label !== ''"
                         >{{ select.label | translate }}</label
@@ -138,9 +139,11 @@
                         'mb-3': layout !== 'selectors'
                     }"
                 >
-                    <label style="text-transform: capitalize">{{
-                        multiselect.label | translate
-                    }}</label>
+                    <label
+                        class="label"
+                        style="text-transform: capitalize"
+                        >{{ multiselect.label | translate }}</label
+                    >
                     <nx-multi-select
                         [componentId]="multiselect.id"
                         [name]="multiselect.label"
@@ -176,6 +179,7 @@
                 <div class="col-12 p-0">
                     <div class="form-group m-0">
                         <label
+                            class="label"
                             *ngIf="layout === 'full'"
                             translate
                             >Features</label

@@ -73,6 +73,7 @@
                 }"
             >
                 <label
+                    class="label"
                     for="createEmail"
                     translate
                     >Email</label
@@ -145,6 +146,7 @@
                 }"
             >
                 <label
+                    class="label"
                     for="firstName"
                     translate
                     >First Name</label
@@ -188,6 +190,7 @@
                 [ngClass]="{ hasError: lastName.invalid && (lastName.dirty || lastName.touched) }"
             >
                 <label
+                    class="label"
                     for="lastName"
                     translate
                     >Last Name</label
@@ -234,6 +237,7 @@
                 [ngClass]="{ hasError: weakPassword }"
             >
                 <label
+                    class="label"
                     for="password"
                     translate
                     >Password</label
@@ -281,7 +285,7 @@
                 >
                 </nx-checkbox>
                 <label
-                    class="mb-0"
+                    class="label mb-0"
                     for="termsAndConditions"
                 >
                     <span

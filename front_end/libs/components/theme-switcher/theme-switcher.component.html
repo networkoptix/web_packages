@@ -22,7 +22,7 @@
                         [applyClass]="true"
                     ></svg-icon>
                 </button>
-                <div class="label">
+                <div class="theme-label">
                     <svg-icon
                         *ngIf="selectedTheme === 'dark'"
                         nx-add-svg-src
@@ -45,7 +45,7 @@
                         [applyClass]="true"
                     ></svg-icon>
                 </button>
-                <div class="label">
+                <div class="theme-label">
                     <svg-icon
                         *ngIf="selectedTheme === 'light'"
                         nx-add-svg-src
@@ -68,7 +68,7 @@
                         [applyClass]="true"
                     ></svg-icon>
                 </button>
-                <div class="label">
+                <div class="theme-label">
                     <svg-icon
                         *ngIf="selectedTheme === 'auto'"
                         nx-add-svg-src
@@ -141,7 +141,7 @@
                     [disabled]="customDisabled$$()"
                 ></nx-checkbox
                 ><label
-                    class="mb-0"
+                    class="label mb-0"
                     for="useHct"
                     translate
                 >
@@ -198,6 +198,7 @@
         <nx-section>
             <div class="theme-options">
                 <label
+                    class="label"
                     for="brandColor"
                     translate
                     >Brand Color</label
@@ -216,6 +217,7 @@
             </div>
             <div class="theme-options">
                 <label
+                    class="label"
                     for="brandBg"
                     translate
                     >Brand Background Color</label

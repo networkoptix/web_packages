@@ -55,14 +55,14 @@ code[data-escape-global-style] {
     margin-bottom: (common.$line-height-computed * 0.25);
 }
 
-label:not([data-escape-global-style]) {
-    @include typography.regular13nocolor;
-    color: var(--label-color) !important;
-    line-height: 16px;
-    margin-bottom: 8px;
+.label {
+    font-family: var(--font-family-regular);
+    font-size: var(--font-size-base);
+    color: var(--label-color);
+    line-height: 1rem;
 
     &.disabled-input-label {
-        color: var(--label-disabled-color) !important;
+        color: var(--label-disabled-color);
         opacity: .4;
         cursor: default;
     }

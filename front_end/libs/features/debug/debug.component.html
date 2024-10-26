@@ -6,7 +6,7 @@
         <h1>Debug new proxy</h1>
 
         <div class="form-group">
-            <label class="col-sm-2 control-label">Proxy URL</label>
+            <label class="label col-sm-2 control-label">Proxy URL</label>
             <div class="col-sm-4">
                 <input
                     type="text"
@@ -18,7 +18,7 @@
         </div>
 
         <div class="form-group">
-            <label class="col-sm-2 control-label">System</label>
+            <label class="label col-sm-2 control-label">System</label>
             <div class="col-sm-4">
                 <select
                     class="form-control"
@@ -40,7 +40,7 @@
         </div>
 
         <div class="form-group">
-            <label class="col-sm-2 control-label">Method</label>
+            <label class="label col-sm-2 control-label">Method</label>
             <div class="col-sm-4">
                 <input
                     type="text"
@@ -51,7 +51,7 @@
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-2 control-label">API call</label>
+            <label class="label col-sm-2 control-label">API call</label>
             <div class="col-sm-4">
                 <input
                     type="text"
@@ -62,7 +62,7 @@
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-2 control-label">POST data</label>
+            <label class="label col-sm-2 control-label">POST data</label>
             <div class="col-sm-4">
                 <textarea
                     class="form-control"
@@ -73,7 +73,7 @@
         </div>
 
         <div class="form-group">
-            <label class="col-sm-2 control-label">Request:</label>
+            <label class="label col-sm-2 control-label">Request:</label>
             <div class="col-sm-4">
                 <p class="form-control-static">{{ debugProxyUrl() }}</p>
             </div>
@@ -93,7 +93,7 @@
             *ngIf="debugProxySettings.result"
             [ngClass]="{ 'has-error': !debugProxySettings.success }"
         >
-            <label class="col-sm-2 control-label">Result:</label>
+            <label class="label col-sm-2 control-label">Result:</label>
             <div class="col-sm-10">
                 <pre>{{ debugProxySettings.result }}</pre>
             </div>
@@ -104,7 +104,7 @@
         <h1>Debug merge systems</h1>
 
         <div class="form-group">
-            <label class="col-sm-2 control-label">Master System</label>
+            <label class="label col-sm-2 control-label">Master System</label>
             <div class="col-sm-4">
                 <select
                     class="form-control"
@@ -126,7 +126,7 @@
         </div>
 
         <div class="form-group">
-            <label class="col-sm-2 control-label">Slave System</label>
+            <label class="label col-sm-2 control-label">Slave System</label>
             <div class="col-sm-4">
                 <select
                     class="form-control"
@@ -161,7 +161,7 @@
             class="form-group"
             *ngIf="mergeSettings.result"
         >
-            <label class="col-sm-2 control-label">Result:</label>
+            <label class="label col-sm-2 control-label">Result:</label>
             <div class="col-sm-10">
                 <pre>{{ mergeSettings.result }}</pre>
             </div>
@@ -179,7 +179,7 @@
 
         <div class="form-group">
             <div class="offset-sm-2 col-sm-4">
-                <label
+                <label class="label"
                     ><input
                         type="checkbox"
                         [(ngModel)]="linkSettings.native"
@@ -191,7 +191,7 @@
         </div>
 
         <div class="form-group">
-            <label class="col-sm-2 control-label">Auth key</label>
+            <label class="label col-sm-2 control-label">Auth key</label>
             <div class="col-sm-4">
                 <input
                     type="text"
@@ -211,7 +211,7 @@
         </div>
 
         <div class="form-group">
-            <label class="col-sm-2 control-label">From</label>
+            <label class="label col-sm-2 control-label">From</label>
             <div class="col-sm-4">
                 <input
                     type="text"
@@ -226,7 +226,7 @@
         </div>
 
         <div class="form-group">
-            <label class="col-sm-2 control-label">Context</label>
+            <label class="label col-sm-2 control-label">Context</label>
             <div class="col-sm-4">
                 <input
                     type="text"
@@ -238,7 +238,7 @@
         </div>
 
         <div class="form-group">
-            <label class="col-sm-2 control-label">Command</label>
+            <label class="label col-sm-2 control-label">Command</label>
             <div class="col-sm-4">
                 <input
                     type="text"
@@ -253,7 +253,7 @@
         </div>
 
         <div class="form-group">
-            <label class="col-sm-2 control-label">SystemId</label>
+            <label class="label col-sm-2 control-label">SystemId</label>
             <div class="col-sm-4">
                 <input
                     type="text"
@@ -265,7 +265,7 @@
         </div>
 
         <div class="form-group">
-            <label class="col-sm-2 control-label">System action</label>
+            <label class="label col-sm-2 control-label">System action</label>
             <div class="col-sm-4">
                 <input
                     type="text"
@@ -280,7 +280,7 @@
             class="form-group"
             [ngClass]="{ 'has-error': actionParametersError }"
         >
-            <label class="col-sm-2 control-label">Action parameters (json)</label>
+            <label class="label col-sm-2 control-label">Action parameters (json)</label>
             <div class="col-sm-4">
                 <textarea
                     class="form-control"
@@ -306,7 +306,7 @@
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-2 control-label">Formatted link:</label>
+            <label class="label col-sm-2 control-label">Formatted link:</label>
             <div class="col-sm-10">
                 <b>{{ generateLink() }}</b>
                 <pre>{{ formatJSON(linkSettings) }}</pre>
@@ -323,7 +323,7 @@
             <!--            </div>-->
             <div class="form-group">
                 <div class="offset-sm-2 col-sm-10">
-                    <label
+                    <label class="label"
                         ><input
                             type="checkbox"
                             [(ngModel)]="debugProcess.success"
@@ -372,7 +372,7 @@
         <hr />
         <h1>Debug email notifications</h1>
         <div class="form-group">
-            <label class="fs-mask col-sm-2 control-label">Email</label>
+            <label class="label fs-mask col-sm-2 control-label">Email</label>
             <div class="col-sm-10">
                 <input
                     type="email"
@@ -384,7 +384,7 @@
         </div>
 
         <div class="form-group">
-            <label class="col-sm-2 control-label">Type</label>
+            <label class="label col-sm-2 control-label">Type</label>
             <div class="col-sm-10">
                 <input
                     type="text"
@@ -395,7 +395,7 @@
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-2 control-label">Message (json)</label>
+            <label class="label col-sm-2 control-label">Message (json)</label>
             <div class="col-sm-10">
                 <textarea
                     class="form-control"
@@ -421,7 +421,7 @@
             *ngIf="result"
             [ngClass]="{ 'has-error': notificationError, 'has-success': !notificationError }"
         >
-            <label class="col-sm-2 control-label">Result:</label>
+            <label class="label col-sm-2 control-label">Result:</label>
             <div class="col-sm-12">
                 <pre
                     *ngIf="result"

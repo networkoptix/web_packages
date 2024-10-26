@@ -68,7 +68,7 @@
                                 </nx-checkbox>
                                 <label
                                     [for]="user.id"
-                                    class="d-flex flex-column"
+                                    class="label d-flex flex-column"
                                 >
                                     <span>{{ user.label }}</span>
                                     <span class="user-email">{{ user.id }}</span>
@@ -103,7 +103,11 @@
                                 ></nx-select>
                                 <h4 class="h4">Test email notification content</h4>
                                 <div class="email-content-wrapper">
-                                    <label for="systemId">systemId</label>
+                                    <label
+                                        class="label"
+                                        for="systemId"
+                                        >systemId</label
+                                    >
                                     <input
                                         [ngModel]="(selectedSystem$ | async)?.value"
                                         type="text"
@@ -112,7 +116,11 @@
                                     />
                                 </div>
                                 <div class="email-content-wrapper">
-                                    <label for="targets">targets</label>
+                                    <label
+                                        class="label"
+                                        for="targets"
+                                        >targets</label
+                                    >
                                     <textarea
                                         [ngModel]="usersSelected$ | async"
                                         id="targets"
@@ -123,6 +131,7 @@
                                 </div>
                                 <div class="email-content-wrapper">
                                     <label
+                                        class="label"
                                         for="subject"
                                         [ngClass]="{
                                             'disabled-input-label':
@@ -144,6 +153,7 @@
                                 </div>
                                 <div class="email-content-wrapper">
                                     <label
+                                        class="label"
                                         for="subject"
                                         [ngClass]="{
                                             'disabled-input-label':
@@ -166,6 +176,7 @@
                                 </div>
                                 <div class="email-content-wrapper">
                                     <label
+                                        class="label"
                                         for="subject"
                                         [ngClass]="{
                                             'disabled-input-label':
@@ -187,7 +198,11 @@
                                     ></textarea>
                                 </div>
                                 <div class="email-content-wrapper">
-                                    <label for="attachment">attachment</label>
+                                    <label
+                                        class="label"
+                                        for="attachment"
+                                        >attachment</label
+                                    >
                                     <div class="w-100">
                                         <div
                                             *ngFor="

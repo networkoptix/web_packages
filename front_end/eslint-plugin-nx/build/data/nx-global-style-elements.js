@@ -1,1 +1,1 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:true});const elements=new Set(["a","button","pre","code","label","p","b","strong"]);exports.default=elements;
+"use strict";Object.defineProperty(exports,"__esModule",{value:true});const elements=new Set(["a","button","pre","code","p","b","strong"]);exports.default=elements;

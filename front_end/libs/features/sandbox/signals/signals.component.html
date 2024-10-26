@@ -1,4 +1,4 @@
-<label>
+<label class="label">
     Bind signals with transformers source1$$
     <input
         type="number"
@@ -6,7 +6,7 @@
         (ngModelChange)="source1$$.set($event)"
     />
 </label>
-<label>
+<label class="label">
     Bind signals with transformers source2$$
     <input
         type="number"
@@ -14,7 +14,7 @@
         (ngModelChange)="source2$$.set($event)"
     />
 </label>
-<label>
+<label class="label">
     Create bound signal with transformer createBoundSource$$
     <input
         type="number"
@@ -22,7 +22,7 @@
         (ngModelChange)="createBoundSource$$.set($event)"
     />
 </label>
-<label>
+<label class="label">
     Angular model binding modelBinding$$
     <input
         type="text"
@@ -30,7 +30,7 @@
         (ngModelChange)="modelBinding$$.set({ value: $event })"
     />
 </label>
-<label>
+<label class="label">
     Create signal bound to model with transformer modelAlias$$
     <input
         type="text"
@@ -38,7 +38,7 @@
         (ngModelChange)="modelAlias$$.set($event)"
     />
 </label>
-<label>
+<label class="label">
     Bound Param Simple paramModel$$
     <input
         type="text"
@@ -46,7 +46,7 @@
         (ngModelChange)="paramModel$$.set($event)"
     />
 </label>
-<label>
+<label class="label">
     Bound Param with transform paramModel2$$
     <input
         type="text"
@@ -55,12 +55,12 @@
     />
 </label>
 
-<label>
+<label class="label">
     Bound param readonly signal paramSignal$$
     <span>{{ paramSignal$$() }}</span>
 </label>
 
-<label>
+<label class="label">
     Number of checkboxes numberOfCheckboxes$$
     <input
         type="number"
@@ -70,7 +70,7 @@
     />
 </label>
 
-<label>
+<label class="label">
     Check all checkAll$$
     <input
         type="checkbox"
@@ -80,7 +80,7 @@
 </label>
 <h2 class="h2">Multiple bindings checkBoxes$$</h2>
 @for (checkbox of checkBoxes$$(); track $index) {
-    <label>
+    <label class="label">
         Checkbox {{ $index }}
         <input
             type="checkbox"
@@ -89,7 +89,7 @@
         />
     </label>
 }
-<label>
+<label class="label">
     Pipe signal isTyping$$
     <input
         type="text"

@@ -17,14 +17,16 @@
                     [(ngModel)]="wizardService.systemAdvancedSettings[setting.key]['settingValue']"
                     [componentId]="setting.key"
                 ></nx-checkbox>
-                <label [for]="setting.key">{{
-                    wizardService.systemAdvancedSettings[setting.key]['settingLabel']
-                }}</label>
+                <label
+                    class="label"
+                    [for]="setting.key"
+                    >{{ wizardService.systemAdvancedSettings[setting.key]['settingLabel'] }}</label
+                >
             </div>
 
             <div style="margin-left: 26px; margin-top: 8px">
                 <label
-                    class="d-block text-left"
+                    class="label d-block text-left"
                     translate
                     >Security level</label
                 >

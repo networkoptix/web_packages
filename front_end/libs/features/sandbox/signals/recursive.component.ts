@@ -14,7 +14,7 @@ const boundSourceSerializer = {
     selector: 'recursive-component',
     imports: [CommonModule, FormsModule],
     template: `
-        <label>
+        <label class="label">
             Child levels: {{ children$$() }}
             <input
                 type="number"

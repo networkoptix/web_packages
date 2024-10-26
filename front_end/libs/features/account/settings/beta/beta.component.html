@@ -9,7 +9,10 @@
         <div class="section-wrapper group-wrapper">
             <header>
                 @if (node.featureConfig?.key; as key) {
-                    <label [for]="key">
+                    <label
+                        class="label"
+                        [for]="key"
+                    >
                         <h3 class="h3">
                             <span>{{ node.name }}</span>
                         </h3>

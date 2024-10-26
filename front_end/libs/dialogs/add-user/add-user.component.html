@@ -26,6 +26,7 @@
     <div class="modal-body">
         <div class="form-group">
             <label
+                class="label"
                 for="addUserDialogEmail"
                 translate
                 >Email</label
@@ -78,6 +79,7 @@
         <div class="form-group">
             <ng-container *ngIf="!useGroups; else groupsDropdown">
                 <label
+                    class="label"
                     for="permissionsSelect"
                     translate
                     >Access Level</label
@@ -101,7 +103,7 @@
             <ng-template #groupsDropdown>
                 <label
                     for="addUserDialogGroupsSelect"
-                    class="font-weight-bold"
+                    class="label"
                     translate
                     >Permission Groups</label
                 >

@@ -3,6 +3,7 @@ const classes = new Set([
     "h2",
     "h3",
     "h4",
+    "label",
     "h1",
     "h5",
     "h6",

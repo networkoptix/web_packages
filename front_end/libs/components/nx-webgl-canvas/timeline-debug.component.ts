@@ -40,7 +40,7 @@ import { TimelineDataModel } from './timeline-data-model';
                             (ngModelChange)="renderState.toggleTimelineAxisEnabled($event)"
                         ></nx-checkbox>
                         <label
-                            class="d-flex align-content-center flex-wrap mb-0"
+                            class="label d-flex align-content-center flex-wrap mb-0"
                             for="setAxis"
                         >
                             <span>{{ 'Axis X' | translate }}</span>
@@ -53,7 +53,7 @@ import { TimelineDataModel } from './timeline-data-model';
                             (ngModelChange)="renderState.toggleTimelineActionsEnabled($event)"
                         ></nx-checkbox>
                         <label
-                            class="d-flex align-content-center flex-wrap mb-0"
+                            class="label d-flex align-content-center flex-wrap mb-0"
                             for="setActions"
                         >
                             <span>{{ 'Actions' | translate }}</span>

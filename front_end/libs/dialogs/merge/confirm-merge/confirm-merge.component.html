@@ -55,6 +55,7 @@
                     }"
                 >
                     <label
+                        class="label"
                         for="cloudOwnerPassword"
                         translate
                     >
@@ -81,7 +82,7 @@
                     ) {
                         @if (cloudOwnerPassword.errors.required) {
                             <label
-                                class="error-label password-label-margin mb-0 mt-2"
+                                class="label error-label password-label-margin mb-0 mt-2"
                                 for="cloudOwnerPassword"
                                 translate
                             >
@@ -89,7 +90,7 @@
                             </label>
                         } @else if (cloudOwnerPassword.errors.wrongPassword) {
                             <label
-                                class="error-label password-label-margin mb-0 mt-2"
+                                class="label error-label password-label-margin mb-0 mt-2"
                                 for="cloudOwnerPassword"
                                 translate
                             >
@@ -97,7 +98,7 @@
                             </label>
                         } @else if (cloudOwnerPassword.errors.wrongPasswordAdmin) {
                             <label
-                                class="error-label password-label-margin mb-0 mt-2"
+                                class="label error-label password-label-margin mb-0 mt-2"
                                 for="cloudOwnerPassword"
                                 translate
                             >

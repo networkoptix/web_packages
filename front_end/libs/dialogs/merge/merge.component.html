@@ -175,7 +175,7 @@
                     }"
                 >
                     <label
-                        class="server-url-label"
+                        class="label server-url-label"
                         for="serverUrl"
                         translate
                         >Server URL</label
@@ -245,7 +245,7 @@
             ></p>
             <div class="form-group">
                 <label
-                    class="mt-2"
+                    class="label mt-2"
                     for="adminLogin"
                     translate
                     >Login</label
@@ -263,6 +263,7 @@
                     [ngClass]="{ 'mb-merge': !machine.state.show.passwordError }"
                 >
                     <label
+                        class="label"
                         for="adminPassword"
                         translate
                         >Password</label
@@ -465,6 +466,7 @@
                     [ngClass]="{ 'mb-merge': !machine.state.show.passwordError }"
                 >
                     <label
+                        class="label"
                         for="cloudOwnerPassword"
                         translate
                         >Enter password for your account to continue</label

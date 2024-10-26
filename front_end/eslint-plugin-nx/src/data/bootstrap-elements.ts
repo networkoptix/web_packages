@@ -11,7 +11,6 @@ const classes = new Set([
     "img",
     "svg",
     "th",
-    "label",
     "button",
     "input",
     "select",

@@ -178,14 +178,6 @@ nx-block .card {
     color: var(--checkbox-color) !important;
 }
 
-.control-label {
-    color: var(--dark9);
-
-    &:hover {
-        color: var(--dark1);
-    }
-}
-
 .details {
     display: flex;
     justify-content: flex-start;

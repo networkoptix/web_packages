@@ -14,7 +14,7 @@
     <div class="modal-body">
         <ng-container *ngFor="let structure of manifest.fields">
             <section *ngIf="!structure?.hidden">
-                <label>
+                <label class="label">
                     <span>{{ structure.label }}</span>
                     <span
                         *ngIf="structure.meta?.options?.required"

@@ -4,11 +4,11 @@
 >
     <div class="col-12 row mb-4">
         <div class="col-3 p-0">
-            <label class="input-label col-12"
+            <label class="label input-label col-12"
                 ><span translate>Current HSL</span>: {{ isHSLTheme ? 'Yes' : 'No' }}</label
             >
             <div class="col-12">
-                <label class="d-flex align-items-center">
+                <label class="label d-flex align-items-center">
                     <nx-checkbox
                         [(ngModel)]="isHSLTheme"
                         [checked]="isHSLTheme"
@@ -22,11 +22,11 @@
             class="col-3 p-0"
             *ngIf="isHSLTheme"
         >
-            <label class="input-label col-12">
+            <label class="label input-label col-12">
                 <span translate>Current mode</span>: {{ isLiteTheme ? 'Light' : 'Dark' }}
             </label>
             <div class="col-12">
-                <label class="d-flex align-items-center">
+                <label class="label d-flex align-items-center">
                     <nx-checkbox
                         [(ngModel)]="isLiteTheme"
                         [checked]="isLiteTheme"
@@ -63,7 +63,7 @@
             *ngIf="isHSLTheme"
         >
             <div class="col-12">
-                <label class="d-flex align-items-center">
+                <label class="label d-flex align-items-center">
                     <nx-checkbox
                         [(ngModel)]="isWidgetShown"
                         [checked]="isWidgetShown"
@@ -94,7 +94,7 @@
                     <div class="row col-12 mb-4">
                         <div class="col-5">
                             <label
-                                class="input-label col-12"
+                                class="label input-label col-12"
                                 translate
                                 >HEX Brand</label
                             >
@@ -108,7 +108,7 @@
                         </div>
                         <div class="col-2">
                             <label
-                                class="input-label col-12"
+                                class="label input-label col-12"
                                 translate
                                 >Hue</label
                             >
@@ -123,7 +123,7 @@
                         </div>
                         <div class="col-2">
                             <label
-                                class="input-label col-12"
+                                class="label input-label col-12"
                                 translate
                                 >Saturation</label
                             >
@@ -138,7 +138,7 @@
                         </div>
                         <div class="col-2">
                             <label
-                                class="input-label col-12"
+                                class="label input-label col-12"
                                 translate
                                 >Luminosity</label
                             >
@@ -152,7 +152,7 @@
                             </div>
                         </div>
                         <div class="col-1">
-                            <label class="input-label col-12">&nbsp;</label>
+                            <label class="label input-label col-12">&nbsp;</label>
                             <button
                                 class="btn btn-default"
                                 (click)="adjBrand()"
@@ -164,7 +164,7 @@
                     </div>
                     <div class="row col-12 mb-4">
                         <div class="col-5">
-                            <label class="input-label col-12">
+                            <label class="label input-label col-12">
                                 {{
                                     LANG.theme.baseColorLumLabel
                                         | translate: { luminosityStep: luminosityStep }
@@ -180,7 +180,7 @@
                         </div>
                         <div class="col-2">
                             <label
-                                class="input-label col-12"
+                                class="label input-label col-12"
                                 translate
                                 >Hue</label
                             >
@@ -195,7 +195,7 @@
                         </div>
                         <div class="col-2">
                             <label
-                                class="input-label col-12"
+                                class="label input-label col-12"
                                 translate
                                 >Saturation</label
                             >
@@ -211,7 +211,7 @@
                         <div class="col-2">
                             <label
                                 *ngIf="advanced"
-                                class="input-label col-12"
+                                class="label input-label col-12"
                                 translate
                                 >Luminosity (%)</label
                             >
@@ -228,7 +228,7 @@
                             </div>
                         </div>
                         <div class="col-1">
-                            <label class="input-label col-12">&nbsp;</label>
+                            <label class="label input-label col-12">&nbsp;</label>
                             <button
                                 class="btn btn-default"
                                 (click)="adjBaseColor()"
@@ -241,7 +241,7 @@
                     <div class="row col-12">
                         <div class="col-5">
                             <label
-                                class="input-label col-12"
+                                class="label input-label col-12"
                                 translate
                                 >HEX Background color</label
                             >
@@ -280,7 +280,7 @@
                             class=""
                             *ngFor="let i of colorLum"
                         >
-                            <label class="input-label">{{ i.label }}</label>
+                            <label class="label input-label">{{ i.label }}</label>
                             <div class="">
                                 <input
                                     name="colorLuminosity{{ i.label }}"
@@ -299,7 +299,7 @@
                                 *ngFor="let i of hexBrand"
                             >
                                 <div class="col-2 color brand-{{ i.label }}"></div>
-                                <label class="col-10 color">
+                                <label class="label col-10 color">
                                     {{
                                         LANG.theme.brandLabel
                                             | translate: { hex: i.hex, label: i.label }
@@ -314,7 +314,7 @@
                                 *ngFor="let i of hexError"
                             >
                                 <div class="col-2 color error-{{ i.label }}"></div>
-                                <label class="col-10 color">
+                                <label class="label col-10 color">
                                     {{
                                         LANG.theme.brandLabel
                                             | translate: { hex: i.hex, label: i.label }
@@ -333,7 +333,7 @@
                                 *ngFor="let i of colorNumbers"
                             >
                                 <div class="col-2 color light{{ i }}"></div>
-                                <label class="col-10 color">
+                                <label class="label col-10 color">
                                     {{
                                         LANG.theme.lightLabel
                                             | translate: { hex: hexLight[i], number: i }
@@ -352,7 +352,7 @@
                                 *ngFor="let i of colorNumbers"
                             >
                                 <div class="col-2 color dark{{ i }}"></div>
-                                <label class="col-10 color">
+                                <label class="label col-10 color">
                                     {{
                                         LANG.theme.darkLabel
                                             | translate: { hex: hexDark[i], number: i }
@@ -384,7 +384,7 @@
                         *ngFor="let i of hexGreen"
                     >
                         <div class="col-2 color green-{{ i.label }}"></div>
-                        <label class="col-10 color">
+                        <label class="label col-10 color">
                             {{ LANG.theme.greenLabel | translate: { hex: i.hex, label: i.label } }}
                         </label>
                     </div>
@@ -399,7 +399,7 @@
                         *ngFor="let i of hexYellow"
                     >
                         <div class="col-2 color yellow-{{ i.label }}"></div>
-                        <label class="col-10 color">
+                        <label class="label col-10 color">
                             {{ LANG.theme.yellowLabel | translate: { hex: i.hex, label: i.label } }}
                         </label>
                     </div>
@@ -418,7 +418,7 @@
     *ngIf="generatorLayout === 'test' && themeService.isWidgetShown$ | async"
 >
     <div class="">
-        <label class="d-flex align-items-center float-left">
+        <label class="label d-flex align-items-center float-left">
             <nx-checkbox
                 [(ngModel)]="isHSLTheme"
                 [checked]="isHSLTheme"
@@ -426,7 +426,7 @@
             ></nx-checkbox>
             <span translate>HSL</span>
         </label>
-        <label class="ml-3 d-flex align-items-center">
+        <label class="label ml-3 d-flex align-items-center">
             <nx-checkbox
                 [(ngModel)]="isLiteTheme"
                 [checked]="isLiteTheme"

@@ -39,7 +39,7 @@
         <ng-container *ngIf="!environment.isWebadmin; else webadmin">
             <label
                 for="authorizeEmail"
-                class="mb-2"
+                class="label mb-2"
                 translate
                 >Email</label
             >
@@ -136,6 +136,7 @@
         </ng-container>
         <ng-template #webadmin>
             <label
+                class="label"
                 for="authorizeLogin"
                 translate
                 >Login</label
