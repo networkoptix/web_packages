@@ -76,18 +76,6 @@ p[data-escape-global-style] {
     margin-bottom: unset;
 }
 
-select {
-    position            : relative;
-    background-image    : url("/static/images/arrow_down.png") !important;
-    background-repeat   : no-repeat;
-    background-size     : 16px 16px;
-    background-position : right 8px center;
-
-    @media only screen and (-webkit-min-device-pixel-ratio : 2), only screen and (min-device-pixel-ratio : 2) {
-        background-image : url("/static/images/arrow_down@2x.png") !important;
-    }
-}
-
 pre {
     color: var(--body-text-color);
 }

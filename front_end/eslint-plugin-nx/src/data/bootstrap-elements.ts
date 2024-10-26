@@ -12,7 +12,6 @@ const classes = new Set([
     "svg",
     "th",
     "button",
-    "input",
-    "select"
+    "input"
 ]);
 export default classes;

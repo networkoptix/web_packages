@@ -216,6 +216,14 @@ input[type=number] {
     min-width: 20ch !important;
 }
 
+select {
+    margin: 0; // Remove the margin in Firefox and Safari
+    font-family: inherit;
+
+    text-transform: none;
+    word-wrap: normal;
+}
+
 .size-input {
     width: 100% !important;
 }

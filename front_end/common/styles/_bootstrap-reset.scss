@@ -81,8 +81,7 @@ button[data-escape-global-style]:focus {
 }
 
 input[data-escape-global-style],
-button[data-escape-global-style],
-select[data-escape-global-style] {
+button[data-escape-global-style] {
   margin: unset;
   font-family: unset;
   font-size: unset;
@@ -94,17 +93,12 @@ input[data-escape-global-style] {
   overflow: unset;
 }
 
-button[data-escape-global-style],
-select[data-escape-global-style] {
+button[data-escape-global-style] {
   text-transform: unset;
 }
 
 [role=button][data-escape-global-style] {
   cursor: unset;
-}
-
-select[data-escape-global-style] {
-  word-wrap: unset;
 }
 
 button[data-escape-global-style] {

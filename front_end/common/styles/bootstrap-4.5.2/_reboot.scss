@@ -223,8 +223,7 @@ button:focus {
 }
 
 input,
-button,
-select {
+button {
   margin: 0; // Remove the margin in Firefox and Safari
   font-family: inherit;
   @include font-size(inherit);
@@ -236,8 +235,7 @@ input {
   overflow: visible; // Show the overflow in Edge
 }
 
-button,
-select {
+button {
   text-transform: none; // Remove the inheritance of text transform in Firefox
 }
 
@@ -246,13 +244,6 @@ select {
 // Details at https://github.com/twbs/bootstrap/pull/30562
 [role="button"] {
   cursor: pointer;
-}
-
-// Remove the inheritance of word-wrap in Safari.
-//
-// Details at https://github.com/twbs/bootstrap/issues/24990
-select {
-  word-wrap: normal;
 }
 
 
