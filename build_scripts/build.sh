@@ -70,7 +70,7 @@ pip install -r $PORTAL_REPOSITORY/build_scripts/requirements.txt
 
 echo -e "\nrunning nodeenv..."
 [ -e nenv ] && rm -rf nenv
-nodeenv --node=$NODE_VERSION --npm=$NPM_VERSION nenv
+nodeenv --node=$NODE_VERSION --npm=$NPM_VERSION --mirror=${ARTIFACTORY_URL}/nodejs-mirror nenv
 . ./nenv/bin/activate
 echo "Active Node.js: " && node -v
 echo "Active npm: " && npm -v
