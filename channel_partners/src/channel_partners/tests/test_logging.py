@@ -431,3 +431,19 @@ class TestBindAdditionalRequestMetadata:
             normalized_path=expected_normalized_path,
             method='GET'
         )
+
+def test_elevated_debug_log_level(caplog):
+    min_level = settings.MIN_LOGGING_LEVEL
+    caplog.set_level(min_level)
+    capturedOutput = io.StringIO()
+    sys.stdout = capturedOutput
+
+    setup_test_logging("local", min_level)
+
+    logger = structlog.get_logger()
+    logger.elevated_debug("This is an elevated debug log message")
+
+    logs = caplog.records
+    assert len(logs) > 0
+    assert any("This is an elevated debug log message" in log.message for log in logs)
+    assert any(log.levelname == "ELEVATED_DEBUG" for log in logs)

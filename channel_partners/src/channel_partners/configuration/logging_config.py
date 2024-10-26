@@ -6,6 +6,7 @@ from typing import (
 
 import structlog
 
+from channel_partners.logging.custom_logging_level import ELEVATED_DEBUG_LEVEL
 from channel_partners.logging.logging_processors import (
     convert_uuids_to_strings,
 )
@@ -13,6 +14,7 @@ from channel_partners.logging.logging_processors import (
 
 def configure_logging(environment: Literal["local", "ci", "prod"], min_level: int) -> Dict:
     logging.basicConfig(level=min_level)
+    logging.addLevelName(ELEVATED_DEBUG_LEVEL, "ELEVATED_DEBUG")
 
     loggers = {
         "version": 1,

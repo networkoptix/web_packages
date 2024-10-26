@@ -27,6 +27,10 @@ from channel_partners.configuration.logging_config import configure_logging
 from channel_partners.configuration.throttling_config import (
     configure_throttling,
 )
+from channel_partners.logging.custom_logging_level import (
+    ELEVATED_DEBUG_LEVEL,
+    CustomBoundLogger,
+)
 from channel_partners.logging.logging_processors import (
     convert_uuids_to_strings,
 )
@@ -224,8 +228,8 @@ MIN_LOGGING_LEVEL = (
     else logging.INFO
 )
 
-if MIN_LOGGING_LEVEL not in [logging.DEBUG, logging.INFO]:
-    raise ValueError("MIN_LOGGING_LEVEL must be either logging.DEBUG or logging.INFO")
+if MIN_LOGGING_LEVEL not in [logging.DEBUG, ELEVATED_DEBUG_LEVEL, logging.INFO]:
+    raise ValueError("MIN_LOGGING_LEVEL must be either logging.DEBUG, ELEVATED_DEBUG, logging.INFO")
 
 DJANGO_STRUCTLOG_STATUS_4XX_LOG_LEVEL = MIN_LOGGING_LEVEL
 DJANGO_STRUCTLOG_CELERY_ENABLED = True
@@ -260,6 +264,7 @@ structlog.configure(
         structlog.stdlib.ProcessorFormatter.wrap_for_formatter,
     ],
     logger_factory=structlog.stdlib.LoggerFactory(),
+    wrapper_class=CustomBoundLogger,
     cache_logger_on_first_use=True,
 )
 
