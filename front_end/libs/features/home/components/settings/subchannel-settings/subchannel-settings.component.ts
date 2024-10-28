@@ -4,6 +4,7 @@ import { Store } from '@ngrx/store';
 
 import { BaseApplyV3Page } from '@components/forms/apply-v3/apply-v3-page';
 import { createAsyncAction } from '@dialogs/async-action-button/create-async-action';
+import { PermissionsStore } from '@pages/home/store/permissions/permissions.store';
 import { NxChannelPartnersService } from '@services/channel-partners.service';
 import { State } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import * as cpActions from '@store/channel-partners/channel-partners.actions';
@@ -25,8 +26,10 @@ export class NxSubchannelSettingsComponent extends BaseApplyV3Page {
     private cpService = inject(NxChannelPartnersService);
 
     private store = inject(Store);
+    private permissionsStore = inject(PermissionsStore);
     private subChannel = computed(() => this.store.selectSignal(selectCurrentSubChannel)()!);
     private parentPartner = this.store.selectSignal(selectCurrentPartnerParent);
+    canChangePartnerState = this.permissionsStore.canChangePartnerState$$;
 
     inactiveParentPartner = computed<boolean>(() => {
         /* Special case: root partner is always active, but we might not

@@ -186,9 +186,16 @@ export class NxSubchannelsComponent {
             !subChannel.ownPermissions?.includes(PartnerRoles.field_access_cp_accountant) &&
             !!channelPartner;
 
-        const redirectUrl = isPartner
-            ? PartnerRedirect.toPartner(id)
-            : `${PartnerRedirect.toSubChannelPartner(id)}/settings`;
+        let redirectUrl = PartnerRedirect.toPartner(id);
+        if (!isPartner) {
+            redirectUrl = PartnerRedirect.toSubChannelPartner(id) + '/settings';
+            if (
+                !this.permissionsStore.canChangePartnerState$$() &&
+                this.permissionsStore.canViewPartnerReports$$()
+            ) {
+                redirectUrl = PartnerRedirect.toSubChannelPartner(id) + '/reports';
+            }
+        }
 
         if (isPartner) {
             this.store.dispatch(CPActions.setCurrentPartnerId({ currentPartnerId: id }));

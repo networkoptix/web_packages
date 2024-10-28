@@ -9,6 +9,7 @@ from model_bakery import baker
 
 from api.tests.utils import NxTestClient, NxAPIClient, MockCache
 from cms.controllers.structure import read_structure_json
+from cms.feature_flags.feature_flags import create_feature_flags_if_missing
 from cms.models import *
 from api.models import Account
 
@@ -83,6 +84,7 @@ def django_db_setup(django_db_setup, django_db_blocker, django_db_createdb, djan
     with django_db_blocker.unblock():
         if django_db_createdb:
             read_structure_json()
+            create_feature_flags_if_missing()
         eng = Language.objects.get_or_create(name='English', code='en_US')[0]
         Customization.objects.get_or_create(
             name='default', default_language=eng)
