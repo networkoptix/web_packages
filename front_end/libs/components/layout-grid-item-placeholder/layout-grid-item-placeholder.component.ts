@@ -116,7 +116,6 @@ const PLACEHOLDERS: Record<string, Placeholder> = {
     defaultPassword: {
         ...unauthorized,
         message: messagesLang.passwordRequired,
-        actionName: actionsLang.defaultPassword,
         hint: hintsLang.defaultPassword,
     },
     unauthorizedCamera: {
@@ -411,7 +410,7 @@ export class NxLayoutGridItemPlaceholderComponent {
         if (
             itemDetail &&
             assertResourceOfType.camera(itemDetail) &&
-            (this.adjustedStatus() === 'defaultPassword' || itemDetail.details.unauthorized)
+            itemDetail.details.unauthorized
         ) {
             return () => {
                 this.updateCameraCredentials.emit(itemDetail.details);
@@ -453,7 +452,7 @@ export class NxLayoutGridItemPlaceholderComponent {
 
         const hasAuthorize =
             isCamera &&
-            (itemDetail.details.isDefaultPassword || itemDetail.details.unauthorized) &&
+            itemDetail.details.unauthorized &&
             !!this.CONFIG.featureFlags.layoutsAuthorizeCamera &&
             this.systemsService
                 .systemsPermissionsManager$$()

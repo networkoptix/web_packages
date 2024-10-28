@@ -265,8 +265,6 @@ export class NxLayoutGridTreeNode {
         const statusForDevice =
             (assertResourceOfType.camera(node) || assertResourceOfType.server(node)) &&
             node.details.status.toLowerCase();
-        const statusForCamera =
-            assertResourceOfType.camera(node) && node.details.isDefaultPassword ? 'warning' : '';
         const statusForCrossSiteSystem = (() => {
             if (assertResourceOfType.system_cloud(node)) {
                 const { status, system2faEnabled, version } = node.details as NxSystemInfo;
@@ -281,9 +279,7 @@ export class NxLayoutGridTreeNode {
             return '';
         })();
         const status =
-            [statusIcon, statusForCamera, statusForDevice, statusForCrossSiteSystem].find(
-                status => status,
-            ) || '';
+            [statusIcon, statusForDevice, statusForCrossSiteSystem].find(status => status) || '';
 
         if (statusForCrossSiteSystem) {
             console.info('Cross site system status:', statusForCrossSiteSystem);
@@ -294,18 +290,19 @@ export class NxLayoutGridTreeNode {
             node.type +
             (node.details && status
                 ? '_' +
-                  (node.type !== 'camera' || ['warning', 'unauthorized'].includes(status)
+                  (!assertResourceOfType.camera(node) ||
+                  ['warning', 'unauthorized'].includes(status)
                       ? status.replace('mismatchedCertificate', 'incompatible')
-                      : assertResourceOfType.camera(node) &&
-                        (node.details.typeId === CameraTypeId.Virtual
-                            ? 'virtual'
-                            : node.details?.unauthorized
-                              ? 'unauthorized'
-                              : node.details?.online && node.details?.requiresTranscoding
-                                ? 'warning'
-                                : node.details.online && status !== 'offline'
-                                  ? 'online'
-                                  : 'offline'))
+                      : node.details.typeId === CameraTypeId.Virtual
+                        ? 'virtual'
+                        : node.details.unauthorized
+                          ? 'unauthorized'
+                          : node.details.online &&
+                              (node.details.requiresTranscoding || node.details.isDefaultPassword)
+                            ? 'warning'
+                            : node.details.online && status !== 'offline'
+                              ? 'online'
+                              : 'offline')
                 : '') +
             (assertResourceOfType.layout(node) && node.shared ? '_shared' : '') +
             (assertResourceOfType.layout(node) && node.crossSystem ? '_cloud' : '') +

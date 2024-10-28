@@ -1635,8 +1635,6 @@ export class NxLayoutGridComponent {
         return { x: width * scale - width, y: height * scale - height, scale };
     };
 
-    PLACEHOLDER_STATE = PlaceholderState;
-
     updatePlaceholderConfig = (
         { width, height }: Size,
         { renderConfig, id }: ParsedLayoutItem,
