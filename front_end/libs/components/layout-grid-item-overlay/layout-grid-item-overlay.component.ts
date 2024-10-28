@@ -34,7 +34,6 @@ import {
     finalize,
     firstValueFrom,
     fromEvent,
-    interval,
     map,
     merge,
     sampleTime,
@@ -315,8 +314,7 @@ export class NxLayoutGridItemOverlayComponent {
 
                 updateFrames();
 
-                return interval(sampleRateSeconds * 1000).pipe(
-                    startWith(0),
+                return timer(0, sampleRateSeconds * 1000).pipe(
                     map(() => {
                         const videoLoaded = [
                             videoElement.videoWidth,
@@ -344,7 +342,7 @@ export class NxLayoutGridItemOverlayComponent {
                               ? primary
                               : secondary;
                         const h265Regex = /hvc1|hev1|hevc/i;
-                        const isH265 = h265Regex.test(connection.mimeType ?? '');
+                        const isH265 = h265Regex.test(connection?.mimeType || '');
                         const streamDescription = hasStreamInfo && {
                             value: isPrimary ? high : low,
                             params: {
@@ -352,7 +350,7 @@ export class NxLayoutGridItemOverlayComponent {
                             },
                         };
 
-                        const connectionType = connection.connectionType;
+                        const connectionType = connection?.connectionType;
 
                         const debugConnectionInfo = connectionType
                             ? (() => {

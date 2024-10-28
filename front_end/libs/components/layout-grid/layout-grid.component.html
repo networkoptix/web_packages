@@ -1149,7 +1149,10 @@
                                                     "
                                                     [ngClass]="'overlay'"
                                                     [item]="item"
-                                                    [node]="layoutItemLookup[item.resourceId]"
+                                                    [node]="
+                                                        { item, layoutItemLookup }
+                                                            | mapWith: getItem
+                                                    "
                                                     [fullScreenTarget]="layoutItemWrapper"
                                                     [hideRemove]="
                                                         dirtyId(layout.id) === dirtyId(item.id) ||

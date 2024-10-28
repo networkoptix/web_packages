@@ -1752,10 +1752,10 @@ export class NxLayoutGridComponent {
                 layoutItemLookup?.otherSystems || [],
                 item.resourceId,
                 systemId,
-            );
+            )!;
         }
 
-        return matchedItem;
+        return matchedItem!;
     };
 
     getItemLayoutError = ({
