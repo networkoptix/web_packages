@@ -223,9 +223,9 @@ class TestSystemServiceQuantitySerializer:
         }
         ser = SystemServiceQuantitySerializer(instance=systems[0], data=data)
         assert ser.is_valid(raise_exception=False) is False
-        assert ChannelPartnerService.SERVICE_TYPES[0][1] not in ser.errors['services'][0].__str__()
+        assert ChannelPartnerService.SERVICE_TYPES[0][1] not in ser.errors['services'].__str__()
         for typ, name in ChannelPartnerService.SERVICE_TYPES[1:]:
-            assert name[1] in ser.errors['services'][0].__str__()
+            assert name[1] in ser.errors['services'].__str__()
 
         # test limits for all cp above
 
@@ -238,9 +238,9 @@ class TestSystemServiceQuantitySerializer:
         caches['default'].clear()
         ser = SystemServiceQuantitySerializer(instance=systems[0], data=data)
         assert ser.is_valid(raise_exception=False) is False
-        assert ChannelPartnerService.SERVICE_TYPES[0][1] not in ser.errors['services'][0].__str__()
+        assert ChannelPartnerService.SERVICE_TYPES[0][1] not in ser.errors['services'].__str__()
         for typ, name in ChannelPartnerService.SERVICE_TYPES[1:]:
-            assert name[1] in ser.errors['services'][0].__str__()
+            assert name[1] in ser.errors['services'].__str__()
 
         cp.monthly_additional_service_limit = 200
         cp.save()
@@ -251,9 +251,9 @@ class TestSystemServiceQuantitySerializer:
         caches['default'].clear()
         ser = SystemServiceQuantitySerializer(instance=systems[0], data=data)
         assert ser.is_valid(raise_exception=False) is False
-        assert ChannelPartnerService.SERVICE_TYPES[0][1] not in ser.errors['services'][0].__str__()
+        assert ChannelPartnerService.SERVICE_TYPES[0][1] not in ser.errors['services'].__str__()
         for typ, name in ChannelPartnerService.SERVICE_TYPES[1:]:
-            assert name[1] in ser.errors['services'][0].__str__()
+            assert name[1] in ser.errors['services'].__str__()
 
     def test_data(self, channel_partner_factory, organization_factory, system_factory,
                   cp_service_factory, service_record_factory, arf, cp_user_factory):
@@ -312,11 +312,20 @@ class TestSystemServiceQuantitySerializer:
         )
         service_add_date = timezone.now() - timedelta(days=35)
         regular_service = cp_service_factory(channel_partner=cp)
-        expired_service = cp_service_factory(
+
+        # Expired Services
+        expired_service_1 = cp_service_factory(
             channel_partner=cp,
             sub_type=ChannelPartnerService.DEMO,
             duration=1
         )
+        expired_service_2 = cp_service_factory(
+            channel_partner=cp,
+            sub_type=ChannelPartnerService.DEMO,
+            duration=1
+        )
+
+        # Not Expired Services
         not_expired_service = cp_service_factory(
             channel_partner=cp,
             sub_type=ChannelPartnerService.DEMO,
@@ -334,7 +343,13 @@ class TestSystemServiceQuantitySerializer:
             created_ts=service_add_date
         )
         service_record_factory(
-            service=expired_service,
+            service=expired_service_1,
+            cloud_system=sys,
+            quantity=1,
+            created_ts=service_add_date
+        )
+        service_record_factory(
+            service=expired_service_2,
             cloud_system=sys,
             quantity=1,
             created_ts=service_add_date
@@ -349,13 +364,15 @@ class TestSystemServiceQuantitySerializer:
             "services": {
                 f"{service.id}": {"quantity": 11}
                 for service in
-                [regular_service, expired_service, not_expired_service, not_used_service]
+                [regular_service, expired_service_1, expired_service_2, not_expired_service, not_used_service]
             }
         }
         serializer = SystemServiceQuantitySerializer(instance=sys, data=data)
         assert serializer.is_valid() is False
-        assert serializer.errors['services'][str(expired_service.id)] == 'Service has expired'
-        assert list(serializer.errors['services'].keys()) == [str(expired_service.id)]
+
+        for service in [expired_service_1, expired_service_2]:
+            assert serializer.errors['services'][str(service.id)][0] == 'Service has expired'
+        assert set(serializer.errors['services'].keys()) == {str(expired_service_1.id), str(expired_service_2.id)}
 
     def test_not_expired_services(self,
                                   channel_partner_factory,
@@ -438,7 +455,7 @@ class TestSystemServiceQuantitySerializer:
         }
         ser = SystemServiceQuantitySerializer(instance=system, data=data)
         assert ser.is_valid(raise_exception=False) is False
-        assert ser.errors['services'][str(demo_service.id)] == 'Credit service quantity cannot be increased.'
+        assert ser.errors['services'][str(demo_service.id)][0] == 'Credit service quantity cannot be increased.'
 
     def test_credit_service_decrease(self, channel_partner_factory, organization_factory, system_factory,
                   cp_service_factory, service_record_factory, arf, cp_user_factory):

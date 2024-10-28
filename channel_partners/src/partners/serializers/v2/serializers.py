@@ -24,6 +24,7 @@ from django.db import transaction
 from django.db.models import (
     Prefetch,
     Q,
+    QuerySet,
     Sum,
 )
 from django.utils import timezone
@@ -1110,7 +1111,10 @@ class SystemServiceQuantitySerializer(serializers.ModelSerializer):
 
     def update(self, instance: CloudSystemId, validated_data):
         services = validated_data.get('services')
+
         user = validated_data.get('user')
+        created_by = CloudUser.objects.get_or_create(email=user.email)[0]
+
         new_records = []
         for service, qty_delta in services.items():
             new_records.append(ChannelPartnerServiceRecord(
@@ -1120,168 +1124,127 @@ class SystemServiceQuantitySerializer(serializers.ModelSerializer):
                 in_effect=True,
                 cloud_system=instance,
                 organization=instance.organization,
-                created_by=CloudUser.objects.get_or_create(email=user.email)[0]
+                created_by=created_by
             ))
+
         ChannelPartnerServiceRecord.objects.bulk_create(new_records)
         instance.calculate_current_services()
         ServiceUsage.check_excess(cloud_system=instance)
         return instance
 
     def validate_services(self, value: dict):
-        """
-        Validate the services and their quantities for the given channel partner.
+        service_ids = list(value.keys())
+        services = ChannelPartnerService.objects.filter(id__in=list(service_ids))
 
-        Args:
-            value (dict): A dictionary containing service IDs as keys and service quantities as values.
-
-        Returns:
-            dict: A dictionary of new service records with service objects as keys and quantity deltas as values.
-
-        Raises:
-            ValidationError: If the system is in shutdown state, services or quantities are invalid,
-                             monthly limits are exceeded, or any service is disabled.
-        """
         self._check_shutdown_state()
-        self._validate_service_existence_and_quantity(value)
+
+        # Initiate errors collection
+        errors = defaultdict(list)
+
+        # Aggregate errors for each validation step
+        self._validate_service_existence_and_quantity(services, value, errors)
+
+        if errors:
+            # Fail early to avoid information leaks
+            self._raise_validation_error(errors)
 
         existing_services = self.instance.calculate_current_services()
-        services = self._get_services_from_value(value)
-        self._check_service_enabled(value)
-        self._check_expired_services(services)
-        self._check_credit_service_increased(value)
-        new_records, types_changes = self._calculate_service_changes(services, existing_services)
+        services_values = self._get_services_from_value(services, value)
+        self._check_service_enabled(services, errors)
+        self._check_expired_services(services_values, errors)
+        self._check_credit_service_increased(services, value, errors)
+        new_records, types_changes = self._calculate_service_changes(services_values, existing_services)
+        self._check_monthly_limits(types_changes, errors)
 
-        self._check_monthly_limits(types_changes)
+        # Raise validation error if there are any errors collected
+        if errors:
+            self._raise_validation_error(errors)
 
         return new_records
 
-    def _check_expired_services(self, services: Iterable[ChannelPartnerService]):
-        """
-        Check if any of the given services have expired and raise a ValidationError if true.
+    def _check_expired_services(self, services: Iterable[ChannelPartnerService], errors: dict):
+        querysets = []
 
-        Args:
-            services (Iterable[ChannelPartnerService]): An iterable of service objects.
-
-        Raises:
-            ValidationError: If any service has expired.
-        """
-        expired_services = {}
         for service in services:
             if service.is_expiring and service.duration > 0:
-                is_expired = ChannelPartnerServiceRecord.objects.filter(
-                    service=service,
-                    cloud_system_id=self.instance.id,
-                    created_ts__lt=timezone.now() - relativedelta(months=service.duration),
-                ).exists()
-                if is_expired:
-                    expired_services[str(service.id)] = 'Service has expired'
+                cutoff_date = timezone.now() - relativedelta(months=service.duration)
+                querysets.append(
+                    ChannelPartnerServiceRecord.objects.filter(
+                        service=service,
+                        cloud_system_id=self.instance.id,
+                        created_ts__lt=cutoff_date
+                    )
+                )
 
-        if expired_services:
-            raise exceptions.ValidationError(detail=expired_services)
+        if querysets:
+            expired_records = querysets[0]
+            for queryset in querysets[1:]:
+                expired_records |= queryset
+
+            for record in expired_records:
+                errors[str(record.service.id)].append('Service has expired')
 
     def _check_shutdown_state(self):
-        """Check if the system is in shutdown state and raise a ValidationError if true."""
         if self.instance.effective_state == ChannelPartnerStates.SHUTDOWN:
-            raise exceptions.ValidationError(
-                detail=f"System {self.instance.system_id} service is in shutdown state. Services quantity cannot be changed."
-            )
+            error = f"System {self.instance.system_id} is in shutdown state. Services quantity cannot be changed."
+            raise ValidationError(detail={self.instance.system_id: [error]})
 
-    def _validate_service_existence_and_quantity(self, value: dict):
-        """
-        Validate the existence of services and the validity of their quantities.
+    def _validate_service_existence_and_quantity(
+            self,
+            services: QuerySet[ChannelPartnerService],
+            services_and_quantities: dict,
+            errors: dict) -> None:
 
-        Args:
-            value (dict): A dictionary containing service IDs as keys and service quantities as values.
-
-        Raises:
-            ValidationError: If any service does not exist or the quantity is invalid.
-        """
-        errors = []
-        for service_id, service_qty in value.items():
-            error_message = self._check_service_existence(service_id)
-            if not error_message:
-                error_message += self._check_service_quantity(service_qty)
+        for service in services:
+            error_message = self._check_service_existence(service)
             if error_message:
-                errors.append(error_message.strip())
-        if errors:
-            raise exceptions.ValidationError(detail=' '.join(errors))
+                errors[str(service.id)].append(error_message)
 
-    def _check_service_enabled(self, value: dict):
-        """
-        Check if the services are enabled and raise a ValidationError if any service is disabled.
+            if not error_message:
+                service_id = str(service.id)
+                service_qty = services_and_quantities.get(service_id)
+                quantity_error = self._check_service_quantity(service_qty)
+                if quantity_error:
+                    errors[service_id].append(quantity_error)
 
-        Args:
-            value (dict): A dictionary containing service IDs as keys and service quantities as values.
-
-        Raises:
-            ValidationError: If any service is disabled, including the service IDs and error messages.
-        """
-        errors = {}
-        for service_id in value.keys():
-            service = ChannelPartnerService.objects.get(id=service_id)
+    def _check_service_enabled(self, services: QuerySet[ChannelPartnerService], errors: dict) -> None:
+        for service in services:
             if service and not service.enabled:
-                errors[service_id] = 'Service is disabled'
-        if errors:
-            raise exceptions.ValidationError(detail={'disabled': errors})
+                errors[str(service.id)].append('Service is disabled')
 
-    def _check_credit_service_increased(self, value: dict):
-        """
-        Check if the services is credit. If it is, increasing the quantity is not allowed.
+    def _check_credit_service_increased(self, services: QuerySet[ChannelPartnerService], value: dict,
+                                        errors: dict) -> None:
+        service_dict = {str(service.id): service for service in services}
 
-        Args:
-            value (dict): A dictionary containing service IDs as keys and service quantities as values.
-
-        Raises:
-            ValidationError: If any service is disabled, including the service IDs and error messages.
-        """
-        errors = {}
         for service_id, attrs in value.items():
-            service = ChannelPartnerService.objects.get(id=service_id)
+            service = service_dict.get(service_id)
             if service and not service.sub_type == ChannelPartnerService.CREDIT:
                 continue
             quantity = attrs.get('quantity', 0)
             if quantity > 0:
-                errors[service_id] = 'Credit service quantity cannot be increased.'
-        if errors:
-            raise exceptions.ValidationError(detail=errors)
+                errors[service_id].append('Credit service quantity cannot be increased.')
 
-    def _check_service_existence(self, service_id: str) -> str:
-        """Check if the given service exists and is created by the system's channel partner."""
+    def _check_service_existence(self, service: ChannelPartnerService) -> str:
         try:
-            service = ChannelPartnerService.objects.get(id=service_id)
             if service.created_by_channel_partner != self.instance.organization.channel_partner:
-                return f'Service {service_id} does not belong to the system\'s channel partner'
+                return 'Service does not belong to the system\'s channel partner'
         except ChannelPartnerService.DoesNotExist:
-            return f'Service {service_id} does not exist'
+            return 'Service does not exist'
         return ''
 
     def _check_service_quantity(self, service_qty: dict) -> str:
-        """Check if the given service quantity is valid and return an error message if it's not."""
         ser = ServiceQuantitySerializer(data=service_qty)
         if not ser.is_valid():
-            return ', Quantity is invalid:' + ' '.join(ser.errors['quantity']) + '.'
+            return 'Quantity is invalid: ' + ', '.join(ser.errors['quantity'])
         return ''
 
-    def _get_services_from_value(self, value: dict) -> dict:
-        """Get the service objects from the given value dictionary."""
+    def _get_services_from_value(self, services: QuerySet[ChannelPartnerService], values: dict) -> dict:
         return {
-            service: value[str(service.id)]
-            for service in ChannelPartnerService.objects.filter(id__in=list(value.keys()))
+            service: values[str(service.id)]
+            for service in services
         }
 
     def _calculate_service_changes(self, services: dict, existing_services: dict) -> tuple:
-        """
-        Calculate the changes in service quantities and types.
-
-        Args:
-            services (dict): A dictionary of service objects and their new quantities.
-            existing_services (dict): A dictionary of existing service objects and their current quantities.
-
-        Returns:
-            tuple: A tuple containing two dictionaries:
-                - new_records: A dictionary of service objects and their quantity deltas.
-                - types_changes: A dictionary of service types and their total quantity deltas.
-        """
         new_records = {}
         types_changes = {}
         for service, service_dict in services.items():
@@ -1293,16 +1256,7 @@ class SystemServiceQuantitySerializer(serializers.ModelSerializer):
                 types_changes[service.type] = types_changes.get(service.type, 0) + qty_delta
         return new_records, types_changes
 
-    def _check_monthly_limits(self, types_changes: dict):
-        """
-        Check if the monthly limits for service types are exceeded.
-
-        Args:
-            types_changes (dict): A dictionary of service types and their total quantity deltas.
-
-        Raises:
-            ValidationError: If the monthly limits for any service type are exceeded.
-        """
+    def _check_monthly_limits(self, types_changes: dict, errors: dict):
         channel_partner = self.instance.organization.channel_partner
         exceeded_types = []
         while channel_partner:
@@ -1319,8 +1273,13 @@ class SystemServiceQuantitySerializer(serializers.ModelSerializer):
                         break
 
         if exceeded_types:
-            types = ', '.join([dict(ChannelPartnerService.SERVICE_TYPES)[service_type] for service_type in exceeded_types])
-            raise ValidationError(f'Monthly limit exceeded for service types {types}.')
+            types = ', '.join(
+                [dict(ChannelPartnerService.SERVICE_TYPES)[service_type] for service_type in exceeded_types])
+            errors[self.instance.system_id].append(f'Monthly limit exceeded for service types {types}.')
+
+    def _raise_validation_error(self, errors: dict) -> None:
+        formatted_errors = {service_id: error_list for service_id, error_list in errors.items()}
+        raise ValidationError(detail=formatted_errors)
 
 
 

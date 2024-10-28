@@ -580,13 +580,17 @@ class TestCloudSystemViewSet:
         assert response.status_code == 400
 
         # Extract the disabled services from the response
-        disabled_services = response.data.get("services").get("disabled")
+        disabled_service_id = str(disabled_service.id)
+        errored_services = response.data.get("services")
 
         # Assert that the disabled service is in the response
-        disabled_service_id = str(disabled_service.id)
-        assert disabled_service_id  in disabled_services
+        assert disabled_service_id in errored_services
+
+        disabled_service = errored_services[disabled_service_id]
         # Assert that the error message is correct
-        assert "Service is disabled" in disabled_services[disabled_service_id]
+        assert "Service is disabled" in disabled_service[0]
+
+
 
 
     def test_service_quantity_patch(self, channel_partner_factory, organization_factory, cp_user_factory,
@@ -714,7 +718,7 @@ class TestCloudSystemViewSet:
         with transaction.atomic():
             response = view(request, id=str(system.system_id))
         assert response.status_code == 400
-        assert response.data['services'][str(service.id)] == "Service has expired"
+        assert response.data['services'][str(service.id)][0] == "Service has expired"
 
     def test_saas_report(self, channel_partner_factory, organization_factory, system_factory,
                          mock_auth_with_system, arf_basic_auth, service_record_factory, cp_service_factory):
