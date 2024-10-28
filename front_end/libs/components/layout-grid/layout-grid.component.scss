@@ -79,7 +79,12 @@ nx-webgl-canvas, .saas-placeholder {
 
     &[open] {
         flex-grow: 1;
-        max-height: calc(50% + 16px);
+        // It's probably better to use max-height but current test cases expect fixed height.
+        height: calc(50% + 16px);
+
+        & > div {
+            padding-bottom: 16px;
+        }
     }
 
     & > summary {
@@ -164,7 +169,6 @@ nx-webgl-canvas, .saas-placeholder {
 
     & > div {
         height: calc(100% - 48px);
-        padding-bottom: 16px;
         overflow-x: hidden;
     }
 }
