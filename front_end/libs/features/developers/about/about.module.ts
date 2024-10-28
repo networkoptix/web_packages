@@ -1,27 +1,11 @@
-import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
-import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { NxFooterComponent } from '@components/footer/footer.component';
-import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
-import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
-import { NxMatchHeightDirective } from '@directives/nx-match-height.directive';
 import { DevelopersGuard } from '@guards/developersGuard';
-import { PipesModule } from '@pipes/pipes.module';
 
 import { NxDevToolsComponent } from '../dev-tools/dev-tools.component';
 
 import { NxAboutComponent } from './about.component';
-import { NxCapabilitiesComponent } from './capabilities/capabilities.component';
-import { NxErrorStateComponent } from './error-state/error-state.component';
-import { NxGetStartedComponent } from './get-started/get-started.component';
-import { NxIntegrationsComponent } from './integrations/integrations.component';
-import { NxNewCapabilitiesComponent } from './new-capabilities/capabilities.component';
-import { NxSupportComponent } from './support/support.component';
-import { NxSupportedTechComponent } from './supported-tech/supported-tech.component';
 
 const appRoutes: Routes = [
     {
@@ -32,40 +16,7 @@ const appRoutes: Routes = [
 ];
 
 @NgModule({
-    imports: [
-        CommonModule,
-        FormsModule,
-        RouterModule.forChild(appRoutes),
-        TranslateModule,
-        AngularSvgIconModule,
-        NxFooterComponent,
-        PipesModule,
-        NxPreLoaderComponent,
-        NxAddSvgSrcDirective,
-        NxMatchHeightDirective,
-    ],
-    providers: [],
-    declarations: [
-        NxCapabilitiesComponent,
-        NxSupportedTechComponent,
-        NxDevToolsComponent,
-        NxGetStartedComponent,
-        NxIntegrationsComponent,
-        NxSupportComponent,
-        NxAboutComponent,
-        NxErrorStateComponent,
-        NxNewCapabilitiesComponent,
-    ],
-    bootstrap: [],
-    exports: [
-        NxCapabilitiesComponent,
-        NxSupportedTechComponent,
-        NxDevToolsComponent,
-        NxGetStartedComponent,
-        NxIntegrationsComponent,
-        NxSupportComponent,
-        NxAboutComponent,
-        NxErrorStateComponent,
-    ],
+    imports: [RouterModule.forChild(appRoutes), NxAboutComponent, NxDevToolsComponent],
+    exports: [NxDevToolsComponent, NxAboutComponent],
 })
 export class NxAboutModule {}

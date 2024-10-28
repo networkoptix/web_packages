@@ -1,12 +1,17 @@
+import { CommonModule } from '@angular/common';
 import { Component, Injector } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router, RouterModule } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { TranslateModule } from '@ngx-translate/core';
 import { BehaviorSubject, firstValueFrom, SubscriptionLike } from 'rxjs';
 import { filter, tap } from 'rxjs/operators';
 
+import { NxFooterComponent } from '@components/footer/footer.component';
+import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import type { RibbonAction } from '@components/ribbon/ribbon.types';
 import staticLang from '@language_static';
+import { PipesModule } from '@pipes/pipes.module';
 import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
 import { NxMenusService } from '@services/menus.service';
@@ -18,18 +23,44 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxPageService } from '@services/page.service';
 
+import { NxDevToolsComponent } from '../dev-tools/dev-tools.component';
+
 import {
     AboutNode,
     AboutStructure,
     AboutStructureNode,
     AboutTemplates,
 } from './about.component.types';
+import { NxCapabilitiesComponent } from './capabilities/capabilities.component';
+import { NxErrorStateComponent } from './error-state/error-state.component';
+import { NxGetStartedComponent } from './get-started/get-started.component';
+import { NxIntegrationsComponent } from './integrations/integrations.component';
+import { NxNewCapabilitiesComponent } from './new-capabilities/capabilities.component';
+import { NxSupportComponent } from './support/support.component';
+import { NxSupportedTechComponent } from './supported-tech/supported-tech.component';
 
 @UntilDestroy({ checkProperties: true, blackList: ['aboutStructure$'] })
 @Component({
     selector: 'nx-about',
     templateUrl: 'about.component.html',
     styleUrls: ['about.component.scss'],
+    imports: [
+        CommonModule,
+        RouterModule,
+        TranslateModule,
+        PipesModule,
+        NxPreLoaderComponent,
+        NxFooterComponent,
+        NxCapabilitiesComponent,
+        NxDevToolsComponent,
+        NxErrorStateComponent,
+        NxGetStartedComponent,
+        NxIntegrationsComponent,
+        NxNewCapabilitiesComponent,
+        NxSupportComponent,
+        NxSupportedTechComponent,
+    ],
+    standalone: true,
 })
 export class NxAboutComponent {
     injector: Injector;

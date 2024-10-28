@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import {
     Component,
     ElementRef,
@@ -7,22 +8,40 @@ import {
     Renderer2,
     ViewChild,
 } from '@angular/core';
-import { ActivatedRoute, ActivatedRouteSnapshot, NavigationEnd, Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import {
+    ActivatedRoute,
+    ActivatedRouteSnapshot,
+    NavigationEnd,
+    Router,
+    RouterModule,
+} from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { TranslateModule } from '@ngx-translate/core';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 import { isEqual } from 'lodash-es';
 import { BehaviorSubject, combineLatest, firstValueFrom, from, Observable, of } from 'rxjs';
 import { catchError, filter, map, startWith, switchMap, tap } from 'rxjs/operators';
 
+import { NxContentBlockComponent } from '@components/content-block/content-block.component';
+import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
 import type {
     ClickEvent,
     MenuNodeWithParent,
     RelatedLinks,
 } from '@components/developers-menu/developers-menu-types';
+import { NxDevelopersMenuComponent } from '@components/developers-menu/developers-menu.component';
+import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import type { RibbonAction } from '@components/ribbon/ribbon.types';
+import { NxSearchComponent } from '@components/search/search.component';
 import type { SearchFilter } from '@components/search/search.component.types';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
+import { NxIntersectionObserver } from '@directives/nx-intersection.directive';
 import { IntersectionStatus } from '@directives/nx-intersection.directive.types';
+import { NxProjectedLinkHandler } from '@directives/nx-projected-link-handler.directive';
 import staticLang from '@language_static';
+import { PipesModule } from '@pipes/pipes.module';
 import { MenuNode } from '@services/menus.service.types';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
@@ -35,7 +54,7 @@ import { Process } from '@services/process.service/process';
 import { NxUriService } from '@services/uri.service';
 import { icons, search } from '@static-variables';
 import { highlight, useNewCloud } from '@utils/general';
-import { NxLayoutComponent } from 'nx-components';
+import { NxLayoutComponent, NxMenuProjectionDirective } from 'nx-components';
 
 import { NxKnowledgebaseService } from './knowledge-base.service';
 
@@ -119,6 +138,24 @@ class KnowledgeNode {
     selector: 'nx-knowledge-base',
     templateUrl: 'knowledge-base.component.html',
     styleUrls: ['knowledge-base.component.scss'],
+    imports: [
+        CommonModule,
+        FormsModule,
+        RouterModule,
+        TranslateModule,
+        AngularSvgIconModule,
+        PipesModule,
+        NxAddSvgSrcDirective,
+        NxIntersectionObserver,
+        NxProjectedLinkHandler,
+        NxMenuProjectionDirective,
+        NxContentBlockComponent,
+        NxContentBlockSectionComponent,
+        NxDevelopersMenuComponent,
+        NxPreLoaderComponent,
+        NxSearchComponent,
+    ],
+    standalone: true,
 })
 export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
     @ViewChild('scriptDiv', { read: ElementRef }) private scriptDiv: ElementRef;

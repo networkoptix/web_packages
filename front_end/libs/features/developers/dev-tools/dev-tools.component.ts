@@ -1,8 +1,13 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 import { takeWhile } from 'rxjs/operators';
 
+import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
+import { NxMatchHeightDirective } from '@directives/nx-match-height.directive';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { DOC_TYPES } from '@services/nx-cloud-api/nx-cloud-api.types';
 import { nxConfig } from '@services/nx-config/config';
@@ -12,12 +17,23 @@ import { images } from '@static-variables';
 
 import type { AboutNode } from '../about/about.component.types';
 import { ErrorStateManager } from '../about/error-state/error-state-manager';
+import { NxErrorStateComponent } from '../about/error-state/error-state.component';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
     selector: 'nx-dev-tools',
     templateUrl: 'dev-tools.component.html',
     styleUrls: ['dev-tools.component.scss'],
+    imports: [
+        CommonModule,
+        RouterModule,
+        AngularSvgIconModule,
+        NxAddSvgSrcDirective,
+        NxMatchHeightDirective,
+        NxPreLoaderComponent,
+        NxErrorStateComponent,
+    ],
+    standalone: true,
 })
 export class NxDevToolsComponent implements OnInit {
     @Input() devToolsNode: Partial<AboutNode>;

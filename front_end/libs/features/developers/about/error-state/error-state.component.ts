@@ -1,6 +1,8 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { selectCurrentUser } from '@common/store/account/account.selectors';
 import staticLang from '@language_static';
@@ -12,6 +14,8 @@ import { ErrorStateStructure } from '../error-state/error-state-manager';
     selector: 'nx-error-state',
     templateUrl: 'error-state.component.html',
     styleUrls: ['error-state.component.scss'],
+    imports: [CommonModule, TranslateModule],
+    standalone: true,
 })
 export class NxErrorStateComponent {
     @Input() errors: ErrorStateStructure;

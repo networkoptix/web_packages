@@ -1,19 +1,25 @@
+import { CommonModule } from '@angular/common';
 import { Component, HostListener, Input, OnInit } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
+import { RouterModule } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import staticLang from '@language_static';
+import { PipesModule } from '@pipes/pipes.module';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 
 import type { AboutNode } from '../about.component.types';
 import { ErrorStateManager } from '../error-state/error-state-manager';
+import { NxErrorStateComponent } from '../error-state/error-state.component';
 
 @UntilDestroy()
 @Component({
     selector: 'nx-integrations',
     templateUrl: 'integrations.component.html',
     styleUrls: ['integrations.component.scss'],
+    imports: [CommonModule, RouterModule, TranslateModule, PipesModule, NxErrorStateComponent],
+    standalone: true,
 })
 export class NxIntegrationsComponent implements OnInit {
     @Input() integrationsNode: AboutNode;

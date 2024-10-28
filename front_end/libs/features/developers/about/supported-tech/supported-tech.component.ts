@@ -1,17 +1,31 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
+import { TranslateModule } from '@ngx-translate/core';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { images } from '@static-variables';
 
 import type { AboutNode } from '../about.component.types';
 import { ErrorStateManager } from '../error-state/error-state-manager';
+import { NxErrorStateComponent } from '../error-state/error-state.component';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
     selector: 'nx-supported-tech',
     templateUrl: 'supported-tech.component.html',
     styleUrls: ['supported-tech.component.scss'],
+    imports: [
+        CommonModule,
+        RouterModule,
+        AngularSvgIconModule,
+        TranslateModule,
+        NxAddSvgSrcDirective,
+        NxErrorStateComponent,
+    ],
+    standalone: true,
 })
 export class NxSupportedTechComponent {
     @Input() supportedTechNode: AboutNode;
