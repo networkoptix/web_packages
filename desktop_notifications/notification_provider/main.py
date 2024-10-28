@@ -6,7 +6,7 @@ import redis.asyncio as redis
 from quart import Quart, websocket, Response
 
 from cloud import CloudAPI
-from logging_config import setup_logging
+from logging_config import setup_logging, clear_loggers
 from protocol import ProviderProtocol
 from subscription import *
 
@@ -35,10 +35,19 @@ def collect_websocket(func):
         current_object = websocket._get_current_object()
         connected.add(current_object)
         try:
-            app.logger.info("Client connected", client=str(current_object))
+            app.logger.info(
+                "Client connected",
+                client_address=current_object.remote_addr,
+                path=current_object.path,
+                headers=dict(current_object.headers)
+            )
             return await func(queue, *args, **kwargs)
         finally:
-            app.logger.info("Client disconnected", client=str(current_object))
+            app.logger.info(
+                "Client disconnected",
+                client_address=current_object.remote_addr,
+                path=current_object.path
+            )
             connected.remove(current_object)
 
     return wrapper
@@ -93,7 +102,11 @@ async def subscribe(socket_queue):
         await asyncio.gather(producer, consumer, auth_watcher)
     finally:
         await stop_listening(provider_protocol.email, socket_queue)
-        app.logger.info("Stopped subscription", client=str(websocket._get_current_object()))
+        current_object = websocket._get_current_object()
+        app.logger.info(
+            "Stopped subscription",
+            client_address=current_object.remote_addr,
+            path=current_object.path)
 
 
 @app.route('/api/v1/health', methods=['GET'])
@@ -112,6 +125,11 @@ async def startup():
     setup_logging(app)
     app.add_background_task(setup_polling)
     app.logger.info("Application startup complete")
+
+
+@app.before_first_request
+async def setup():
+    clear_loggers()
 
 
 @app.after_serving

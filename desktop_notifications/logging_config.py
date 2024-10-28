@@ -1,12 +1,17 @@
+import sys
+
+from logging.handlers import QueueHandler, QueueListener
+
 import logging
 import logging.config
-from uuid import uuid4
-
 import structlog
+from queue import SimpleQueue as Queue
 from hypercorn.logging import AccessLogAtoms
 from quart import Quart, request, g
+from uuid import uuid4
 
 """
+
 | Attribute | Value                          | Description                                                     |
 |-----------|--------------------------------|-----------------------------------------------------------------|
 | `h`       | `127.0.0.1:62161`              | The host and port number of the client making the request       |
@@ -38,11 +43,11 @@ REQUEST_EVENTS = {'request_finished', 'request_failed'}
 def clear_loggers():
     """
     Clear all loggers except the root logger.
-    
+
     Rational: By removing the filters, handlers, and setting propagate to True, we can ensure that any of the loggers
     will not do any filtering, transforming, or formatting of the log records. This will allow the root logger to handle
     the log records and apply the configured handlers and formatters.
-    
+
     """
     root_logger = logging.getLogger()
 
@@ -111,6 +116,12 @@ def remove_LocalQueueHandler(app) -> None:
 
 def configure_logging(app: Quart):
     """Setup root logger to use structlog with JSON formatting."""
+
+    queue = Queue()
+    queue_handler = QueueHandler(queue)
+    listener = QueueListener(queue, logging.StreamHandler(sys.stdout))
+    listener.start()
+
     logging_config = {
         "version": 1,
         "disable_existing_loggers": False,
@@ -161,11 +172,13 @@ def configure_logging(app: Quart):
         "filters": {},
         "handlers": {
             "console": {
-                "class": "logging.StreamHandler",
+                "class": "logging.handlers.QueueHandler",
+                "queue": queue,
                 "formatter": "plain_console",
             },
             "console_json": {
-                "class": "logging.StreamHandler",
+                "class": "logging.handlers.QueueHandler",
+                "queue": queue,
                 "formatter": "json_formatter",
             }
         },
@@ -173,16 +186,39 @@ def configure_logging(app: Quart):
             "": {
                 "handlers": ["console"] if app.config.get("ENV") == 'development' else ["console_json"],
                 "level": "DEBUG"
-            },
+            }
         }
     }
 
     logging.config.dictConfig(logging_config)
 
 
+def configure_structlog():
+    structlog.configure(
+        processors=[
+            structlog.contextvars.merge_contextvars,
+            structlog.stdlib.filter_by_level,
+            structlog.processors.TimeStamper(fmt="iso"),
+            structlog.stdlib.add_logger_name,
+            structlog.stdlib.add_log_level,
+            structlog.stdlib.PositionalArgumentsFormatter(),
+            structlog.processors.StackInfoRenderer(),
+            structlog.processors.format_exc_info,
+            structlog.processors.UnicodeDecoder(),
+            structlog.stdlib.ProcessorFormatter.wrap_for_formatter,
+
+        ],
+        logger_factory=structlog.stdlib.LoggerFactory(),
+        cache_logger_on_first_use=True,
+    )
+
+
 def setup_logging(app: Quart) -> None:
-    configure_logging(app)
     remove_LocalQueueHandler(app)
+    configure_logging(app)
+    configure_structlog()
+
+    app._logger = structlog.get_logger("quart.app")
 
     @app.before_request
     async def before_request() -> None:
