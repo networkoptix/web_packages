@@ -29,6 +29,7 @@ import {
     selectBanner,
     selectCurrentOrganization,
     selectCurrentParentPartnerForChild,
+    selectCurrentPartnerId,
 } from '@common/store/channel-partners/channel-partners.selectors';
 import { NxAlertBlockComponent } from '@components/content-block/alert/block.component';
 import { NxHidableModule } from '@components/hidable/hidable.module';
@@ -101,6 +102,7 @@ export class NxOrganizationsComponent implements OnInit, OnDestroy {
     deviceService = inject(DeviceDetectorService);
     permissionsStore = inject(PermissionsStore);
     parentPartner$$ = this.store.selectSignal(selectCurrentParentPartnerForChild);
+    currentPartnerId$$ = this.store.selectSignal(selectCurrentPartnerId);
     groupsStore = inject(GroupsStore);
     routerState = inject(ChannelPartnersRouteState);
     currentTab$$ = channelPartnersLastPath();
@@ -188,9 +190,7 @@ export class NxOrganizationsComponent implements OnInit, OnDestroy {
                     route: 'support',
                 });
             }
-            // Use this statement when we support disconnecting from orgs.
-            // if (!this.currentPartnerId$$() || this.permissionsStore.canViewOrgSettings$$()) {
-            if (this.permissionsStore.canViewOrgSettings$$()) {
+            if (!this.currentPartnerId$$() || this.permissionsStore.canViewOrgSettings$$()) {
                 tabs.push({
                     displayName: this.LANG.channelPartners.tabNames.settings,
                     route: 'settings',

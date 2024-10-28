@@ -76,7 +76,7 @@
     ></nx-state-setting-block>
 }
 
-@if (disconnectAccountFlag && canDisconnectAccount()) {
+@if (disconnectAccountFlag && canDisconnectAccount() && !userIsPartnerUser()) {
     <nx-block>
         <header>
             <h4

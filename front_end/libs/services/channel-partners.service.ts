@@ -11,7 +11,6 @@ import {
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { NxParamStateService } from '@services/param-state/param-state.service';
 import { alphaNumericSort } from '@utils/general';
-import { memoizeAsyncShort } from '@utils/memoize';
 
 @Injectable({
     providedIn: 'root',
@@ -71,7 +70,6 @@ export class NxChannelPartnersService {
     );
 
     /* Channel Partners */
-    @memoizeAsyncShort
     getChannelPartners(): Observable<ChannelPartner[]> {
         return this.cpApi.getChannelPartners();
     }
@@ -105,7 +103,6 @@ export class NxChannelPartnersService {
 
     /* Organizations */
     getPartnerOrganizations = this.cpApi.getPartnerOrganizations;
-    @memoizeAsyncShort
     getOrganizations(includeChildOrgs = false): Observable<Organization[]> {
         return this.cpApi.getOrganizations(includeChildOrgs);
     }

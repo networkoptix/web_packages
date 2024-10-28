@@ -80,12 +80,30 @@ export class NxOrganizationSettingsComponent extends BaseApplyV3Page {
     canConfigureOrg = this.permissionsStore.canConfigureOrganization$$;
     canUpdateOrgAccess = this.permissionsStore.canUpdateOrgAccess$$;
     canChangeOrgState = this.permissionsStore.canChangeOrganizationState$$;
-
-    // Flag/permission not yet implemented
-    disconnectAccountFlag = false;
-    canDisconnectAccount = signal(false);
-
     private organization = computed(() => this.store.selectSignal(selectCurrentOrganization)()!);
+    protected userIsPartnerUser = computed(() => !!this.permissionsStore.selectedPartnerId());
+
+    // Turn flag to true when ready
+    disconnectAccountFlag = true;
+    canDisconnectAccount = computed(() => {
+        const users = this.orgUserStore.usersCacheEntityMap()[this.organization().id]?.users;
+        if (!users.length || this.organization().ownRolesIds[0] !== OrgRoleIds.OrgAdmin) {
+            return true;
+        }
+        let admins = 0;
+        for (const user of users) {
+            if (user.email === this.account().email && user.rolesIds[0] !== OrgRoleIds.OrgAdmin) {
+                return true;
+            }
+            if (user.rolesIds[0] === OrgRoleIds.OrgAdmin) {
+                admins += 1;
+                if (admins > 1) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    });
 
     private nameControl = new FormControl(this.organization().name, {
         validators: NxValidators.text(),
@@ -198,13 +216,17 @@ export class NxOrganizationSettingsComponent extends BaseApplyV3Page {
     });
 
     disconnect(): void {
-        const { title, message, footer } = this.LANG.dialogs.channelPartners.disconnectOrganization;
-        const { id } = this.organization();
+        const {
+            orgTitle: title,
+            message,
+            footer,
+        } = this.LANG.dialogs.channelPartners.disconnectEntity;
+        const { id, name } = this.organization();
         const { email } = this.account();
         this.dialogsService
             .confirm({
                 title,
-                message,
+                message: this.translateService.instant(message, { entityName: name }),
                 footer: {
                     actionLabel: footer.actionLabel,
                     cancelLabel: footer.cancelLabel,

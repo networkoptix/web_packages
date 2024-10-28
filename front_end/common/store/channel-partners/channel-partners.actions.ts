@@ -136,3 +136,8 @@ export const patchSubChannel = createAction(
     '[Channel Partners] Patch a subchannel',
     props<{ patch: ChannelPartner }>(),
 );
+
+export const removePartner = createAction(
+    '[Channel Partners] Remove a root organization',
+    props<{ id: string }>(),
+);

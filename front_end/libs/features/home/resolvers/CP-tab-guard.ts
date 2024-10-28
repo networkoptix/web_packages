@@ -30,7 +30,6 @@ export const cpTabGuard: CanActivateFn = (
                     return true;
                 }
                 break;
-            case 'settings':
             case 'information':
                 if (permissionsStore.canViewPartnerSettings$$()) {
                     return true;
@@ -46,6 +45,7 @@ export const cpTabGuard: CanActivateFn = (
                     return true;
                 }
                 break;
+            case 'settings':
             case 'support':
                 return true;
         }

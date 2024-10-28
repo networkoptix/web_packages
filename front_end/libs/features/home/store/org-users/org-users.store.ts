@@ -22,7 +22,7 @@ import {
 } from '@ngrx/signals/entities';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { Store } from '@ngrx/store';
-import { iif, NEVER, Observable, pipe, Subject, timer, zip } from 'rxjs';
+import { iif, NEVER, Observable, of, pipe, Subject, timer, zip } from 'rxjs';
 import {
     catchError,
     debounceTime,
@@ -260,9 +260,10 @@ export const OrgUsersStore = signalStore(
                     chpService
                         .getGroupUsersWithAccess(groupId)
                         .pipe(map(users => mapGroupUsers(users))),
-                    chpService
-                        .getOrganizationUsers(orgId)
-                        .pipe(map(users => mapOrgUsers(users, groupsStore.currentGroups$$()))),
+                    chpService.getOrganizationUsers(orgId).pipe(
+                        catchError(() => of([])),
+                        map(users => mapOrgUsers(users, groupsStore.currentGroups$$())),
+                    ),
                 ).subscribe(users => {
                     patchState(
                         store,

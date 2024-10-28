@@ -1,6 +1,19 @@
 @use '../settings.scss';
+@use 'theme_generator' as tg;
+
+@include tg.generate-theme-vars((
+    '--disconnect-body-color': ('dark': -16, 'light': 16)
+), ':host');
 
 :host {
     @include settings.settings-page-base();
 }
 @include settings.settings-block();
+
+.disconnect-section {
+    color: var(--disconnect-body-color);
+
+    button {
+        margin-top: 1rem;
+    }
+}

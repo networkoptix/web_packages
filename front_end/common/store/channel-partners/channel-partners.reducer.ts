@@ -231,4 +231,12 @@ export const channelPartnersReducer = createReducer(
             currentSubChannels: patchedSubChannels,
         };
     }),
+    on(ChannelPartnerActions.removePartner, (state, { id }): ChannelPartnersState => {
+        const { channelPartners, organizations } = state;
+        return {
+            ...state,
+            organizations: organizations.filter(org => org.channelPartner !== id),
+            channelPartners: channelPartners.filter(partner => partner.id !== id),
+        };
+    }),
 );

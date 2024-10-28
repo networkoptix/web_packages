@@ -45,3 +45,24 @@
         (onStateChange)="selectedState.set($event)"
     ></nx-state-setting-block>
 }
+
+@if (canDisconnectFromPartner()) {
+    <nx-block>
+        <header translate>Disconnect</header>
+        <nx-section>
+            <div class="disconnect-section">
+                <div translate>
+                    You can disconnect Partner from your account if access to Partner was granted
+                    accidentally.
+                </div>
+                <button
+                    class="nx-button--default"
+                    translate
+                    (click)="openDisconnectDialog()"
+                >
+                    Disconnect from my Account
+                </button>
+            </div>
+        </nx-section>
+    </nx-block>
+}

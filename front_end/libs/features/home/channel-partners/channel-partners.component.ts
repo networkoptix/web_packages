@@ -233,12 +233,10 @@ export class NxChannelPartnersComponent implements OnInit {
                 route: 'support',
             });
         }
-        if (this.permissionStore.canViewPartnerSettings$$()) {
-            tabs.push({
-                displayName: this.LANG.channelPartners.tabNames.settings,
-                route: 'settings',
-            });
-        }
+        tabs.push({
+            displayName: this.LANG.channelPartners.tabNames.settings,
+            route: 'settings',
+        });
         return tabs;
     });
 

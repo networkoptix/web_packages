@@ -1179,9 +1179,10 @@
                     "cancelLabel": "Cancel"
                 }
             },
-            "disconnectOrganization" : {
-                "title": "Disconnect Organization?",
-                "message": "You are about to disconnect this Organization from your account. You will not be able to access this Organization anymore. Are you sure?",
+            "disconnectEntity" : {
+                "orgTitle": "Disconnect Organization?",
+                "partnerTitle": "Disconnect Partner?",
+                "message": "You are about to disconnect { entityName } from your account. You will not be able to access { entityName } anymore. Are you sure?",
                 "footer": {
                     "actionLabel": "Disconnect",
                     "cancelLabel": "Cancel"
@@ -1452,6 +1453,9 @@
     "foldersCount": "{count, plural, =0{# folders} one{# folder} other{# folders}}",
     "alertsCount": "{count, plural, =0{# alerts} one{# alert} other{# alerts}}",
     "channelPartners": {
+        "settings": {
+            "adminWarning": "There should be at least one user in the channel partner with Administrator permission"
+        },
         "tabNames": {
             "information": "Information",
             "organizations": "Organizations",
