@@ -15,6 +15,7 @@ from django.core.cache import caches
 
 from cloud.debug import timer
 from cms.controllers import structure
+from cms.feature_flags.feature_flags import create_feature_flags_if_missing
 from cms.models import *
 
 logger = logging.getLogger(__name__)
@@ -177,3 +178,7 @@ class Command(BaseCommand):
         caches['deployment'].set(settings.DEPLOYMENT_READY, True)
         self.stdout.write(self.style.SUCCESS(
             'Set deployment status to ready'))
+
+        create_feature_flags_if_missing()
+        self.stdout.write(self.style.SUCCESS(
+            'Created feature flags'))

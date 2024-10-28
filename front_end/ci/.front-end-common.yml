@@ -14,7 +14,6 @@ include:
   before_script:
     - cp -r "$FRONTEND_NODE_MODULES" ./front_end/node_modules
     - cp -r "$ES_LINT_PLUGIN_NODE_MODULES" ./front_end/eslint-plugin-nx/node_modules
-  when: manual
   allow_failure: false
 
 .frontend-node:
