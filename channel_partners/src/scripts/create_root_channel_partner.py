@@ -37,43 +37,44 @@ def create_root_channel_partner(root_name, host_name):
         else:
             logger.info(f'Channel partner host is already up to date.')
 
-    regular_recording = ChannelPartnerService.objects.get_or_create(
-        created_by_channel_partner=root_channel_partner, name='Core',
-        type=ChannelPartnerService.LOCAL_RECORDING
-    )[0]
+    if settings.INSTANCE_NAME != 'prod' and 'stage' not in settings.INSTANCE_NAME:
+        regular_recording = ChannelPartnerService.objects.get_or_create(
+            created_by_channel_partner=root_channel_partner, name='Core',
+            type=ChannelPartnerService.LOCAL_RECORDING
+        )[0]
 
-    ChannelPartnerService.objects.get_or_create(
-        created_by_channel_partner=root_channel_partner, name='Demo Core',
-        type=ChannelPartnerService.LOCAL_RECORDING, sub_type=ChannelPartnerService.DEMO, duration=1,
-    )
-
-    ChannelPartnerService.objects.get_or_create(
-        created_by_channel_partner=root_channel_partner, name='Credit Core',
-        type=ChannelPartnerService.LOCAL_RECORDING, sub_type=ChannelPartnerService.CREDIT, duration=24,
-        conversion_service=regular_recording
-    )
-
-    for mp in [0, 2, 5, 10]:
         ChannelPartnerService.objects.get_or_create(
-            created_by_channel_partner=root_channel_partner, name=f'Cloud Storage - {mp} MP',
-            type=ChannelPartnerService.CLOUD_STORAGE, parameters={
-                'days': 30,
-                'maxResolutionMp': mp
-            }
+            created_by_channel_partner=root_channel_partner, name='Demo Core',
+            type=ChannelPartnerService.LOCAL_RECORDING, sub_type=ChannelPartnerService.DEMO, duration=1,
         )
 
-    ChannelPartnerService.objects.get_or_create(
-        created_by_channel_partner=root_channel_partner, name='Nx Analytics Plugin',
-        type=ChannelPartnerService.ANALYTICS,
-        parameters={"integrationId": "nx.analytics.plugin"}
-    )
+        ChannelPartnerService.objects.get_or_create(
+            created_by_channel_partner=root_channel_partner, name='Credit Core',
+            type=ChannelPartnerService.LOCAL_RECORDING, sub_type=ChannelPartnerService.CREDIT, duration=24,
+            conversion_service=regular_recording
+        )
 
-    ChannelPartnerService.objects.get_or_create(
-        created_by_channel_partner=root_channel_partner, name='Nx Stub Object Detection',
-        type=ChannelPartnerService.ANALYTICS,
-        parameters={"integrationId": "nx.stub.object_detection"}
-    )
-    return root_channel_partner
+        for mp in [0, 2, 5, 10]:
+            ChannelPartnerService.objects.get_or_create(
+                created_by_channel_partner=root_channel_partner, name=f'Cloud Storage - {mp} MP',
+                type=ChannelPartnerService.CLOUD_STORAGE, parameters={
+                    'days': 30,
+                    'maxResolutionMp': mp
+                }
+            )
+
+        ChannelPartnerService.objects.get_or_create(
+            created_by_channel_partner=root_channel_partner, name='Nx Analytics Plugin',
+            type=ChannelPartnerService.ANALYTICS,
+            parameters={"integrationId": "nx.analytics.plugin"}
+        )
+
+        ChannelPartnerService.objects.get_or_create(
+            created_by_channel_partner=root_channel_partner, name='Nx Stub Object Detection',
+            type=ChannelPartnerService.ANALYTICS,
+            parameters={"integrationId": "nx.stub.object_detection"}
+        )
+        return root_channel_partner
 
 
 def create_customization(root_channel_partner, customization, host_name):
