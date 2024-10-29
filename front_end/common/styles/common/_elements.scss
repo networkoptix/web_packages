@@ -30,10 +30,9 @@ a[data-escape-global-style] {
     }
 }
 
-// since we use specific fonts <b> and <strong> have no effect on "roboto-regular"
-b:not([data-escape-global-style]),
-strong:not([data-escape-global-style]) {
-    font-family: var(--font-family-bold)  !important;
+b, strong {
+    font-weight: unset;
+    font-family: var(--font-family-bold);
 }
 
 .h2 {

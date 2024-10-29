@@ -3,8 +3,6 @@ const classes = new Set([
     "p",
     "ol",
     "ul",
-    "b",
-    "strong",
     "a",
     "img",
     "svg",
