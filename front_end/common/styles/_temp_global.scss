@@ -116,3 +116,24 @@ a.nx-anchor {
         margin-bottom: 1rem;
     }
 }
+
+.nx-preformat {
+    margin-top: 0;
+    margin-bottom: 0;
+    font-family: var(--font-family-monospace);
+    overflow: auto;
+    &--bottom-margin {
+        @extend .nx-preformat;
+        margin-bottom: 1rem;
+    }
+}
+
+.nx-code {
+    padding: 0 2px;
+    border-radius: 2px;
+    font-family: var(--font-family-monospace);
+    font-size: 95%;
+    color: var(--card-header-text);
+    border: solid 1px var(--border-color);
+    background: var(--card-header-bg);
+}

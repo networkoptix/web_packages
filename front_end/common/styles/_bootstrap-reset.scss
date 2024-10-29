@@ -44,19 +44,6 @@ a[data-escape-global-style]:not([href]):not([class]):hover {
   text-decoration: unset;
 }
 
-pre[data-escape-global-style],
-code[data-escape-global-style] {
-  font-family: unset;
-  font-size: unset;
-}
-
-pre[data-escape-global-style] {
-  margin-top: unset;
-  margin-bottom: unset;
-  overflow: unset;
-  -ms-overflow-style: unset;
-}
-
 img[data-escape-global-style] {
   vertical-align: unset;
   border-style: unset;
@@ -137,26 +124,4 @@ input[data-escape-global-style][type=checkbox] {
 ::-webkit-file-upload-button {
   font: unset;
   -webkit-appearance: unset;
-}
-
-code[data-escape-global-style] {
-  font-size: unset;
-  color: unset;
-  word-wrap: unset;
-}
-
-a[data-escape-global-style] > code {
-  color: unset;
-}
-
-pre[data-escape-global-style] {
-  display: unset;
-  font-size: unset;
-  color: unset;
-}
-
-pre[data-escape-global-style] code {
-  font-size: unset;
-  color: unset;
-  word-break: unset;
 }

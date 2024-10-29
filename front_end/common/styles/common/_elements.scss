@@ -36,13 +36,6 @@ strong:not([data-escape-global-style]) {
     font-family: var(--font-family-bold)  !important;
 }
 
-code {
-    color: var(--body-text-color);
-}
-code[data-escape-global-style] {
-    color: reset;
-}
-
 .h2 {
     display: flex;
     align-items: center;
@@ -74,13 +67,6 @@ p {
 
 p[data-escape-global-style] {
     margin-bottom: unset;
-}
-
-pre {
-    color: var(--body-text-color);
-}
-pre[data-escape-global-style] {
-    color: reset;
 }
 
 table {

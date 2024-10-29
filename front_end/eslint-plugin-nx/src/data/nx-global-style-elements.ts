@@ -1,8 +1,6 @@
 const elements = new Set([
     'a',
     'button',
-    'pre',
-    'code',
     // 'svg-icon', // Moving away from using this element entirely in 2.0
     'p',
     'b',

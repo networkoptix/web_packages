@@ -6,8 +6,6 @@ const classes = new Set([
     "b",
     "strong",
     "a",
-    "pre",
-    "code",
     "img",
     "svg",
     "th",
