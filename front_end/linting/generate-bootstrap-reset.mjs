@@ -72,11 +72,14 @@ for (const rule of bootstrap.stylesheet.rules) {
         // These are all display: block by default
         continue;
     }
-    if (isEqual(selectors, ['table'])) {
+    if (isEqual(selectors, ['table']) || isEqual(selectors, ['th'])) {
         /* table {
             border-collapse: collapse;
+        }
+        th {
+            text-align: inherit;
         } */
-        // This is the preferred default
+        // Preferred defaults
         continue;
     }
     if (selectors.some(s => s.startsWith('button'))) {

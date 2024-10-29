@@ -69,26 +69,6 @@ p[data-escape-global-style] {
     margin-bottom: unset;
 }
 
-table {
-    & > thead > tr > th {
-        color : var(--brand-core);
-
-        &:first-child {
-            padding-left : 15px;
-        }
-    }
-
-    & > tbody > tr {
-        & td:first-child {
-            padding-left : 15px;
-        }
-
-        &.hoverable:hover {
-            background-color : var(--light2);
-        }
-    }
-}
-
 svg {
     pointer-events: none;
 

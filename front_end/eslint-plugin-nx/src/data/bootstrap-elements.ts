@@ -8,7 +8,6 @@ const classes = new Set([
     "a",
     "img",
     "svg",
-    "th",
     "button",
     "input"
 ]);
