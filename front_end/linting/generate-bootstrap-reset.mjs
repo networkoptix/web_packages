@@ -82,6 +82,13 @@ for (const rule of bootstrap.stylesheet.rules) {
         // Preferred defaults
         continue;
     }
+    if (isEqual(selectors, ['img'])) {
+        /* img {
+            vertical-align: middle;
+        } */
+        // Removes extra margins from inline images
+        continue;
+    }
     if (selectors.some(s => s.startsWith('button'))) {
         selectors = selectors.filter(s => !s.startsWith('[type='));
         // Redundant with button targeted

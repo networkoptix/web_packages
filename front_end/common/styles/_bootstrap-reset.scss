@@ -39,11 +39,6 @@ a[data-escape-global-style]:not([href]):not([class]):hover {
   text-decoration: unset;
 }
 
-img[data-escape-global-style] {
-  vertical-align: unset;
-  border-style: unset;
-}
-
 svg[data-escape-global-style] {
   overflow: unset;
   vertical-align: unset;

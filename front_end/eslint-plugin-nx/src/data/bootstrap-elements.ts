@@ -4,7 +4,6 @@ const classes = new Set([
     "ol",
     "ul",
     "a",
-    "img",
     "svg",
     "button",
     "input"
