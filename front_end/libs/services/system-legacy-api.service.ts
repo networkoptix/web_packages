@@ -50,6 +50,7 @@ import type {
 } from './mediaserver-apis/connections/adapters/adapter-target-types';
 import { createEventLegacyV1 } from './mediaserver-apis/endpoints/create-event';
 import { getNonceLegacyV1 } from './mediaserver-apis/endpoints/get-nonce';
+import { getServerInfoLegacy } from './mediaserver-apis/endpoints/get-server-info';
 import { getSystemSettingsLegacyV1 } from './mediaserver-apis/endpoints/get-system-settings';
 import { proxyLegacyV1 } from './mediaserver-apis/endpoints/proxy';
 import { removeStorageLegacyV1 } from './mediaserver-apis/endpoints/remove-storage';
@@ -1305,9 +1306,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
         });
     }
 
-    getServerInfo(serverId: string): void {
-        throw Error(this.notImplementedMsg);
-    }
+    getServerInfo = getServerInfoLegacy;
 
     getRemoteServerInfo(remoteEndpoint: string) {
         return of({});

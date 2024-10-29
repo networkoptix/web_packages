@@ -38,6 +38,7 @@ import { cleanId } from '@utils/general';
 import { defaultHashFunction, memoizeAsync } from '@utils/memoize';
 
 import { JsonRpcMessage } from './mediaserver-apis/connections/methods/json-rpc/types';
+import { getServerInfoRestV3 } from './mediaserver-apis/endpoints/get-server-info';
 import { generateJsonRpcPayload } from './mediaserver-apis/utils/use-json-rpc';
 import { NxAppStateService } from './nx-app-state.service';
 import { NxStorageService } from './storage.service';
@@ -569,4 +570,6 @@ export class NxSystemRestAPI3 extends NxSystemRestAPI2 {
         }
         return url;
     }
+
+    override getServerInfo = getServerInfoRestV3;
 }

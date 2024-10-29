@@ -14,6 +14,7 @@ import { cleanId } from '@utils/general';
 import { memoizeAsyncLong, memoizeAsyncMedium } from '@utils/memoize';
 import { type NxRecursiveKeyMap, type NxRecursivePick, ZERO_ID } from '@utils/nx';
 
+import type { ServerInfo } from './mediaserver-apis/endpoints/get-server-info';
 import { NxAppStateService } from './nx-app-state.service';
 import type {
     HealthReport,
@@ -27,7 +28,6 @@ import {
     ConfigureParams,
     LogLevel,
     LogLevelReply,
-    ModuleInformationReply,
     RebuildArchiveResponse,
     ServerHardareIdsResp,
     ServerTime,
@@ -108,13 +108,13 @@ interface RuntimeInfo {
 
 interface ServerTimes {
     serversRunTimeInfo: RuntimeInfo[];
-    serversInfo: ModuleInformationReply[];
+    serversInfo: ServerInfo[];
 }
 
-interface ModuleInfoRest extends ModuleInformationReply {
+type ModuleInfoRest = ServerInfo & {
     osTimeMs: number;
     timeZoneOffsetMs: number;
-}
+};
 
 export class NxSystemRestAPI2 extends NxSystemRestAPI {
     static VERSION = 5.1;

@@ -425,6 +425,8 @@ export interface CloudBindData {
     organizationId?: string;
 }
 
+export type SaasState = 'active' | 'suspended' | 'shutdown' | 'autoShutdown' | 'uninitialized';
+
 type CloudSaasStateEmpty = {
     channelPartner: {
         id: '{00000000-0000-0000-0000-000000000000}';
@@ -509,7 +511,7 @@ type CloudSaasStateFull = {
         };
     };
     signature: string;
-    state: 'active' | 'suspended' | 'shutdown' | 'autoShutdown';
+    state: Omit<SaasState, 'uninitialized'>;
 };
 
 export type CloudSaasState = CloudSaasStateEmpty | CloudSaasStateFull;

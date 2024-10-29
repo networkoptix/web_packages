@@ -8,10 +8,10 @@ import { switchMap, takeUntil } from 'rxjs/operators';
 
 import { NxCurrentRelayInterceptor } from '@interceptors/current-relay-interceptor';
 import staticLang from '@language_static';
+import type { ServerInfo } from '@services/mediaserver-apis/endpoints/get-server-info';
 import { Setting, SettingsConfig } from '@services/nx-config/base-config';
 import { nxConfig } from '@services/nx-config/config';
 import type { NormalResponse } from '@services/system-api.types';
-import type { ModuleInformationReply } from '@services/system-api.types/servers.types';
 import type { SystemConfigSettings } from '@services/system-api.types/system.types';
 import type { UserSession } from '@services/system-api.types/users.types';
 import { NxSystemRestAPI3 } from '@services/system-rest-api-v3.service';
@@ -91,6 +91,10 @@ interface SetupConfig {
     mergeDataState: string;
 }
 
+type ServerInfoWithWizardStateExtras = ServerInfo & {
+    flags?: Record<string, boolean>;
+};
+
 @UntilDestroy()
 @Injectable({
     providedIn: 'root',
@@ -151,7 +155,7 @@ export class WizardStateService {
 
     networkInfo: NetworkInfo = {};
     networkSettings: NetworkConfig;
-    serverInfo: ModuleInformationReply;
+    serverInfo: ServerInfoWithWizardStateExtras;
     peers: DiscoveredPeerSetup[] = [];
     setupConfig: SetupConfig = {
         chooseCloudSystem: false,
@@ -504,41 +508,53 @@ export class WizardStateService {
         return this.server
             .getServerInfo('this')
             .toPromise()
-            .then(({ serverFlags }) => {
+            .then(data => {
+                const serverFlags = data?.serverFlags ?? '';
                 this.hasInternet.server = serverFlags.includes('SF_HasPublicIP');
             });
     }
 
-    private getServerInfoWithFlags(): Promise<ModuleInformationReply> {
+    private getServerInfoWithFlags(): Promise<ServerInfoWithWizardStateExtras> {
         return this.server
             .getServerInfo('this')
             .toPromise()
             .then(data => {
+                if (!data) {
+                    return Promise.reject();
+                }
+                const outputData: ServerInfoWithWizardStateExtras = { ...data };
                 let wrongNetwork: boolean = false;
                 let noNetwork: boolean = false;
                 // systems set with HIGH security doesn't expose remote addresses
-                if (data?.remoteAddresses) {
-                    const ips = data.remoteAddresses.filter(address => address !== '127.0.0.1');
+                if (outputData.remoteAddresses) {
+                    const ips = outputData.remoteAddresses.filter(
+                        address => address !== '127.0.0.1',
+                    );
                     wrongNetwork = ips.every(address => address.includes('169.254'));
                     noNetwork = !ips.length;
                 }
 
-                data.flags = {
-                    noHDD: data?.ecDbReadOnly,
+                const noHdd =
+                    outputData.apiVersion === 3 || outputData.apiVersion === 4
+                        ? outputData.ecDbReadOnly
+                        : undefined;
+                outputData.flags = {
+                    ...(noHdd && { noHdd }),
                     noNetwork,
                     wrongNetwork,
-                    hasInternet: data.serverFlags.includes(this.flags.publicIpFlag),
-                    cleanSystem: data.serverFlags.includes(this.flags.newServerFlag),
-                    canSetupNetwork: data.serverFlags.includes(this.flags.ifListFlag),
-                    canSetupTime: data.serverFlags.includes(this.flags.timeCtrlFlag),
+                    hasInternet: outputData.serverFlags.includes(this.flags.publicIpFlag),
+                    cleanSystem: outputData.serverFlags.includes(this.flags.newServerFlag),
+                    canSetupNetwork: outputData.serverFlags.includes(this.flags.ifListFlag),
+                    canSetupTime: outputData.serverFlags.includes(this.flags.timeCtrlFlag),
                 };
 
-                data.flags.brokenSystem =
-                    data.flags.noHDD ||
-                    data.flags.noNetwork ||
-                    (data.flags.wrongNetwork && !data.flags.canSetupNetwork);
-                data.flags.newSystem = data.flags.cleanSystem && !data.flags.brokenSystem;
-                return data;
+                outputData.flags.brokenSystem =
+                    outputData.flags.noHDD ||
+                    outputData.flags.noNetwork ||
+                    (outputData.flags.wrongNetwork && !outputData.flags.canSetupNetwork);
+                outputData.flags.newSystem =
+                    outputData.flags.cleanSystem && !outputData.flags.brokenSystem;
+                return outputData;
             });
     }
 
@@ -809,8 +825,8 @@ export class WizardStateService {
             .subscribe(data => {
                 if (!data?.flags.cleanSystem) {
                     this.setupConfig.systemName = data.name.replace(/^Server\s/, '');
-                    if (data.cloudSystemId) {
-                        this.setupConfig.cloudSystemID = data.cloudSystemId;
+                    if (data.cloudSiteId) {
+                        this.setupConfig.cloudSystemID = data.cloudSiteId;
                         // make portal links
                         this.currentState = WIZARD_STATE.CloudSuccess;
                     } else {

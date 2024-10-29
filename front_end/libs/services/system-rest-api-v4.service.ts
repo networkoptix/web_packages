@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 
 import { NxHealthService } from '@pages/health/health.service';
 
+import { getServerInfoRestV4 } from './mediaserver-apis/endpoints/get-server-info';
 import { NxAppStateService } from './nx-app-state.service';
 import type { UnauthorizedCallback } from './system-api.types';
 import { BookmarksParams, BookmarkV4 } from './system-api.types/devices.types';
@@ -85,4 +86,6 @@ export class NxSystemRestAPI4 extends NxSystemRestAPI3 {
     }): Observable<BookmarkV4> {
         return this.patch(`/rest/v4/devices/${deviceId}/bookmarks/${bookmarkId}`, { share: null });
     }
+
+    override getServerInfo = getServerInfoRestV4;
 }
