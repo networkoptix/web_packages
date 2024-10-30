@@ -1,3 +1,5 @@
+import asyncio
+
 import pytest
 from collections import Counter
 from random import randint, choice
@@ -2342,3 +2344,17 @@ class TestBetaPermissions:
         assert waffle.flag_is_active(self.request, self.access_integration_store) is False
         active_user.groups.remove(self.access_developers_group)
         assert waffle.flag_is_active(self.request, self.access_developers) is False
+
+
+
+class TestcloudPortalCustomizationCacheAsync:
+
+    async def test_async_only_operations_in_lock_handling(self, mocker, default_customization):
+        customization_cache = caches['customization']
+        customization_cache.clear()
+        mock_add_lock = mocker.patch('cms.models.add_customization_cache_lock', return_value=False)
+        loop = asyncio.get_running_loop()
+        loop.call_later(5, lambda x: setattr(mock_add_lock, 'return_value', True), 1)
+        customization_settings = await cloud_portal_customization_cache_async(default_customization.name)
+        assert customization_settings
+

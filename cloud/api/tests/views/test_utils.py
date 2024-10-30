@@ -1,3 +1,4 @@
+import asyncio
 import json
 from uuid import uuid4
 import uuid
@@ -477,6 +478,34 @@ class TestGetSettings:
         assert response.status_code == status.HTTP_200_OK
         assert response.data
         assert response.data['integrationStoreEnabled']
+
+
+class TestGetSettingsConnectionsCloseIssue:
+
+    @pytest.fixture(autouse=True)
+    def setup(self, settings_from_cache, mocker, arf, active_user):
+        self.arf = arf
+        self.user = active_user
+
+    async def make_request(self):
+        request = self.arf.get('/api/utils/settings')
+        request.user = self.user
+        request.session = {}
+        redirect_res = await utils.get_settings(request)
+        assert redirect_res.status_code == status.HTTP_302_FOUND
+        request = self.arf.get(redirect_res.url)
+        request.user = self.user
+        request.session = {}
+        return  await utils.get_settings(request)
+
+    async def test_sync_only_operations_in_lock_handling(self, mocker, default_customization):
+        customization_cache = caches['customization']
+        customization_cache.clear()
+        mock_add_lock = mocker.patch('cms.models.add_customization_cache_lock', return_value=False)
+        loop = asyncio.get_running_loop()
+        loop.call_later(0.6, lambda x: setattr(mock_add_lock, 'return_value', True), 1)
+        response = await self.make_request()
+        assert response.status_code == status.HTTP_200_OK
 
 # class TestIPVD:
 #     def test_post(self, arf, mocker):

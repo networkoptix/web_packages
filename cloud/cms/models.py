@@ -345,15 +345,22 @@ def clear_portal_customization_cache(customization):
     customization_cache = caches['customization']
     customization_cache.scan_unlink(cloud_portal_cust_cache_generic_key(customization, '*'))
 
+async def release_customization_cache_lock(key, val):
+    customization_cache = caches['customization']
+    if (await customization_cache.aget(key)) == val:
+        await customization_cache.adelete(key)
+
+
+async def add_customization_cache_lock(key, val):
+    customization_cache = caches['customization']
+    return await customization_cache.aadd(key, val, timeout=60)
 
 async def cloud_portal_customization_cache_async(customization_name, value=None, force=False):
     from cms.controllers.special_structures import SpecialStructures
     customization_cache = caches['customization']
     cache_key = await cloud_portal_customization_cache_key_async(customization_name)
 
-    async def release_lock(key, val):
-        if (await customization_cache.aget(key)) == val:
-            await customization_cache.adelete(key)
+
 
     data = await customization_cache.aget(
         cache_key, dict())
@@ -366,12 +373,12 @@ async def cloud_portal_customization_cache_async(customization_name, value=None,
     if not data or force:
         lock_key = f'lock_{cache_key}'
         lock_val = str(uuid4())
-        locked = not await customization_cache.aadd(lock_key, lock_val, timeout=60)
+        locked = not await add_customization_cache_lock(lock_key, lock_val)
         if locked:
-            while not (await customization_cache.aadd(lock_key, lock_val, timeout=60)):
-                connections.close_all()
+            while not (await add_customization_cache_lock(lock_key, lock_val)):
+                await sync_to_async(connections.close_all)()
                 await asyncio.sleep(0.5)
-            await release_lock(lock_key, lock_val)
+            await release_customization_cache_lock(lock_key, lock_val)
             return await cloud_portal_customization_cache_async(customization_name, value, False)
         else:
             try:
@@ -491,11 +498,11 @@ async def cloud_portal_customization_cache_async(customization_name, value=None,
                 await customization_cache.aset(cache_key, data)
                 update_global_cache(customization, data['version_id'])
             except Exception as ex:
-                await release_lock(lock_key, lock_val)
+                await release_customization_cache_lock(lock_key, lock_val)
                 raise ex
 
         # release lock if only lock_value the same to avoid race condition
-        await release_lock(lock_key, lock_val)
+        await release_customization_cache_lock(lock_key, lock_val)
 
     if value:
         return data.get(value)
