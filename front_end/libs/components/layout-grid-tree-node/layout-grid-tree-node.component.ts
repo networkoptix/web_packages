@@ -95,9 +95,6 @@ export class NxLayoutGridTreeNode {
     menuItems$$ = input.required<
         MenuItemsOrMenuItemsFactory<Partial<MergedResourceNode<{ id: string }>> & BaseResourceNode>
     >({ alias: 'menuItems' });
-    treeMenuItems$$ = input.required<
-        MenuItemsOrMenuItemsFactory<Partial<MergedResourceNode<{ id: string }>> & BaseResourceNode>
-    >({ alias: 'treeMenuItems' });
     node$$ = input.required<ResourceNode>({ alias: 'node' });
     query$$ = input.required<string | RegExp | null>({ alias: 'query' });
     statusTooltip$$ = input<string>('', { alias: 'statusTooltip' });
@@ -106,6 +103,12 @@ export class NxLayoutGridTreeNode {
 
     readonly CONFIG = nxConfig;
     readonly icons = icons;
+
+    setMenuOpened = async (value: boolean): Promise<void> => {
+        if (await this.hasMenuItems$$()) {
+            this.isMenuOpened$$.set(value);
+        }
+    };
 
     hasMenuItems$$ = computed(async () => {
         const menuItemsOrFactory = this.menuItems$$();

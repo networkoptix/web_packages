@@ -37,7 +37,7 @@
         <div
             class="node-editable"
             [cdkContextMenuTriggerFor]="nodeActionMenu"
-            (cdkContextMenuOpened)="isMenuOpened$$.set(true)"
+            (cdkContextMenuOpened)="setMenuOpened(true)"
             (cdkContextMenuClosed)="isMenuOpened$$.set(false)"
         >
             @if (layoutStateService.editedLayout$$()?.id === node$$().details?.id) {
@@ -125,7 +125,7 @@
         <ng-template #nodeActionMenu>
             <nx-context-menu
                 [context]="node$$()"
-                [menuItems]="treeMenuItems$$()"
+                [menuItems]="menuItems$$()"
             />
         </ng-template>
     }

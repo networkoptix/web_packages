@@ -59,8 +59,7 @@
                             [node]="node"
                             [expanded]="treeControl.isExpanded(node) && !tourService.currentStep"
                             [isRoot]="true"
-                            [menuItems]="menuItemsByType[node.type]"
-                            [treeMenuItems]="treeMenuItems[node.type]"
+                            [menuItems]="treeMenuItems[node.type]"
                             [query]="search$$()"
                         >
                         </nx-layout-grid-tree-node>
@@ -169,7 +168,6 @@
                                                 [node]="node"
                                                 [preview]="true"
                                                 [menuItems]="[]"
-                                                [treeMenuItems]="[]"
                                                 [query]="search$$()"
                                             >
                                             </nx-layout-grid-tree-node>
@@ -186,8 +184,7 @@
                                 [expanded]="
                                     !treeControl.isExpanded(node) && !tourService.currentStep
                                 "
-                                [menuItems]="menuItemsByType[node.type]"
-                                [treeMenuItems]="treeMenuItems[node.type]"
+                                [menuItems]="treeMenuItems[node.type]"
                                 [activated]="
                                     layout?.id
                                         ? cleanIdLegacy(changingLayout || layout?.id) ===
