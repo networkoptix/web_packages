@@ -769,7 +769,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     login = (): Promise<AuthenticateResp> => {
         return lastValueFrom(
             this.authService.authenticate(
-                this.loginEmail,
+                this.loginEmail.toLowerCase(),
                 this.loginPassword,
                 this.initialData.client_id, // use for testing || 'cloud',
                 this.initialData.redirect_uri, // || 'http://localhost:9000/',
