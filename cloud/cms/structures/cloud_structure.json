@@ -253,7 +253,7 @@
             "label": "Android App sha256 fingerprints",
             "name": "%ANDROID_SHA_FINGERPRINTS%",
             "type": "array",
-            "value": [],
+            "value": [""],
             "description": "An array of sha256 strings used for domain verification",
             "advanced": true
           },
