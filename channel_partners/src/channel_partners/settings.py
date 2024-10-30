@@ -154,6 +154,9 @@ ANON_RATE_LIMIT = env.str("ANON_RATE_LIMIT", None)
 SYSTEM_RATE_LIMIT = env.str("SYSTEM_RATE_LIMIT", None)
 USER_RATE_LIMIT = env.str("USER_RATE_LIMIT", None)
 
+# Constants
+SERVICE_USAGE_CHECK_PERIOD = env.int('SERVICE_USAGE_CHECK_PERIOD', 86400)
+
 # RSA key must be required in most cases, excepting:
 #  - celery service
 #  - celery beat service

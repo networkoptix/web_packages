@@ -924,11 +924,11 @@ class SaaSReportSerializer(SignSerializerMixin, serializers.Serializer):
         checkPeriodS = serializers.SerializerMethodField()
 
         def get_tmpExpirationDate(self, obj: CloudSystemId) -> str:
-            ret_ts = obj.last_usage_report + datetime.timedelta(seconds=ServiceUsage.CHECK_PERIOD * 30)
+            ret_ts = obj.last_usage_report + datetime.timedelta(seconds=settings.SERVICE_USAGE_CHECK_PERIOD * 30)
             return ret_ts.strftime('%Y-%m-%d %H:%M:%S')
 
         def get_checkPeriodS(self, obj: CloudSystemId) -> int:
-            return ServiceUsage.CHECK_PERIOD
+            return settings.SERVICE_USAGE_CHECK_PERIOD
 
     class ChannelPartneNestedSerializer(serializers.ModelSerializer):
         supportInformation = SupportInformationSerializer(source='support_information')
@@ -976,7 +976,7 @@ class SystemUsageReportSerializer(SignSerializerMixin, serializers.Serializer):
 
     def validate_timestamp(self, value):
         timestamp_seconds = int(value.timestamp())
-        interval_seconds = ServiceUsage.CHECK_PERIOD
+        interval_seconds = settings.SERVICE_USAGE_CHECK_PERIOD
         if timestamp_seconds % interval_seconds != 0:
             raise serializers.ValidationError(f'Timestamp must be divisible by {interval_seconds} seconds')
         return value
@@ -990,9 +990,9 @@ class SystemUsageReportSerializer(SignSerializerMixin, serializers.Serializer):
     def validate(self, data):
         from_ts = data.get('from')
         to_ts = data.get('to')
-        if to_ts - from_ts != datetime.timedelta(seconds=ServiceUsage.CHECK_PERIOD):
+        if to_ts - from_ts != datetime.timedelta(seconds=settings.SERVICE_USAGE_CHECK_PERIOD):
             raise serializers.ValidationError(
-                f'Time range must cover exactly {ServiceUsage.CHECK_PERIOD} seconds')
+                f'Time range must cover exactly {settings.SERVICE_USAGE_CHECK_PERIOD} seconds')
         return data
 
     def validate_usages(self, value):

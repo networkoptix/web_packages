@@ -2481,7 +2481,7 @@ class ServiceUsage(models.Model):
     STATUS_OK = "ok"
     STATUS_OVER_USE = "overUse"
     UNALLOCATED_SERVICE = "00000000-0000-0000-0000-000000000000"
-    CHECK_PERIOD = 86400 # 1 day
+
 
     service = models.ForeignKey(ChannelPartnerService, on_delete=models.CASCADE)
     cloud_system = models.ForeignKey(CloudSystemId, on_delete=models.CASCADE, related_name='service_usages')
@@ -2496,7 +2496,7 @@ class ServiceUsage(models.Model):
             return 0
         if service_type == ChannelPartnerService.CLOUD_STORAGE:
             return service_qty
-        return service_qty * cls.CHECK_PERIOD
+        return service_qty * settings.SERVICE_USAGE_CHECK_PERIOD
 
     @classmethod
     def get_quantity_from_usage(cls, service_type: int, service_usage: int) -> int:
@@ -2504,7 +2504,7 @@ class ServiceUsage(models.Model):
             return 0
         if service_type == ChannelPartnerService.CLOUD_STORAGE:
             return service_usage
-        return ceil(service_usage / cls.CHECK_PERIOD)
+        return ceil(service_usage / settings.SERVICE_USAGE_CHECK_PERIOD)
 
     @classmethod
     def get_latest_usages(cls, cloud_system: CloudSystemId) -> QuerySet[dict]:
