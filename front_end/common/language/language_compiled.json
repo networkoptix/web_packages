@@ -2213,6 +2213,7 @@
     "{hex} - yellow {label}": "{hex} - yellow {label}",
     "{listItems} and {singleItem}": "{listItems} and {singleItem}",
     "{name} (Offline)": "{name} (Offline)",
+    "{name} (copy {number})": "{name} (copy {number})",
     "{name} (copy)": "{name} (copy)",
     "{name} ({state})": "{name} ({state})",
     "{name} Requirements": "{name} Requirements",

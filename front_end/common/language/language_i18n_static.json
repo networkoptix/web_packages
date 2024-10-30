@@ -96,6 +96,7 @@
         "newLayout": "New Layout",
         "newCrossSystemLayout": "New Cross System Layout",
         "layoutCopy": "{name} (copy)",
+        "layoutCopyN": "{name} (copy {number})",
         "layoutLocked": "Layout locked",
         "statistics": "{resourceType} \"{name}\" Statistics",
         "treeActions": {

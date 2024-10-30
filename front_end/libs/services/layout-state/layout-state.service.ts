@@ -74,7 +74,10 @@ import {
 import { hashItem } from './store/shared/utils';
 import { UnsavedLayoutsActions, UnsavedLayoutsSelectors } from './store/unsaved-layouts';
 import { selectUnsavedLayoutsIds } from './store/unsaved-layouts/unsaved-layouts.selectors';
-import { incrementUntilUnique } from './store/utils/increment-until-unique';
+import {
+    incrementUntilUnique,
+    incrementUntilUniqueCopy,
+} from './store/utils/increment-until-unique';
 
 @Injectable()
 export class LayoutStateService {
@@ -200,9 +203,7 @@ export class LayoutStateService {
         const isName = typeof nameOrItems === 'string';
 
         const name = isName
-            ? copy
-                ? this.translate.instant(staticLang.layouts.layoutCopy, { name: nameOrItems })
-                : nameOrItems
+            ? nameOrItems
             : this.translate.instant(staticLang.layouts.newCrossSystemLayout);
         items = isName ? items : nameOrItems;
         const id = uuid();
@@ -218,7 +219,9 @@ export class LayoutStateService {
                     this.store.dispatch(
                         UnsavedLayoutsActions.createNewCrossSystemLayout({
                             id,
-                            name: incrementUntilUnique(name, existingNames),
+                            name: copy
+                                ? incrementUntilUniqueCopy(name, existingNames)
+                                : incrementUntilUnique(name, existingNames),
                             items,
                         }),
                     ),
@@ -276,11 +279,10 @@ export class LayoutStateService {
                 ) {
                     layoutType = LayoutTypes.CROSS_SYSTEM;
                 }
-                const copyName = this.translate.instant(staticLang.layouts.layoutCopy, layout);
                 const existingNames = layouts
                     .filter(layout => layout.layoutType === layoutType)
                     .map(layout => layout.layout.name);
-                const name = incrementUntilUnique(copyName, existingNames);
+                const name = incrementUntilUniqueCopy(layout.name, existingNames);
                 LayoutStateService.runInInjectionContext(() => {
                     if (layoutType === LayoutTypes.CROSS_SYSTEM) {
                         this.store.dispatch(
