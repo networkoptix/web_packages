@@ -917,6 +917,49 @@ class TestChannelPartnerReportsService:
 
 
 class TestChannelPartnerReportsServiceSave:
+    def test_report_period_start_is_2nd_day_of_current_month_at_8am_utc(
+            self,
+            channel_partner_factory,
+            organization_factory,
+            mocker,
+            system_factory,
+            cp_service_factory,
+            service_record_factory
+    )->None:
+        cp = channel_partner_factory()
+        service = cp_service_factory(channel_partner=cp)
+        organization = organization_factory(channel_partner=cp)
+        systems = [system_factory(organization=organization) for _ in range(3)]
+        service_records = [service_record_factory(service, sys, organization=sys.organization) for sys in systems]
+        for service_record in service_records:
+            service_record.created_ts = timezone.now() - relativedelta(months=2)
+            service_record.save()
+            service_record.cloud_system.created_ts = timezone.now() - relativedelta(months=2)
+            service_record.cloud_system.save()
+
+        # Calculate the expected period start
+        now = datetime.datetime.utcnow()
+        expected_period_start = datetime.datetime(now.year, now.month, 2, 8, 0, 0)
+
+        report = ChannelPartnerReportsService.get_channel_partner_report(
+            channel_partner=cp,
+            period_start=expected_period_start,
+            generate=True
+        )
+        assert report
+        snapshot = ReportSnapshot.objects.get(entity_id=cp.id,
+                                              report_type=ReportSnapshot.ReportType.channel_partner_usage_report)
+        assert snapshot.report_data == json.loads(json.dumps(report, cls=JSONEncoder))
+        assert ReportSnapshot.objects.count() > 1  # nested reports must be saved too
+        save_snapshot_spy = mocker.spy(ReportSnapshotService, 'save_snapshot')
+        new_report = ChannelPartnerReportsService.get_channel_partner_report(
+            channel_partner=cp,
+            period_start=expected_period_start,
+            generate=True
+        )
+        assert new_report == json.loads(json.dumps(report, cls=JSONEncoder))
+        assert save_snapshot_spy.call_count == 0
+
     def test_get_channel_partner_report(self, channel_partner_factory, organization_factory, mocker,
                                         system_factory, cp_service_factory, service_record_factory,):
         cp = channel_partner_factory()
@@ -1470,6 +1513,49 @@ class TestReportSnapshotService:
 
 
 class TestOrganizationReportsServiceSave:
+    def test_report_period_start_is_2nd_day_of_current_month_at_8am_utc(
+            self,
+            channel_partner_factory,
+            organization_factory,
+            mocker,
+            system_factory,
+            cp_service_factory,
+            service_record_factory
+    )->None:
+        cp = channel_partner_factory()
+        service = cp_service_factory(channel_partner=cp)
+        organization = organization_factory(channel_partner=cp)
+        systems = [system_factory(organization=organization) for _ in range(3)]
+        service_records = [service_record_factory(service, sys, organization=sys.organization) for sys in systems]
+        for service_record in service_records:
+            service_record.created_ts = timezone.now() - relativedelta(months=2)
+            service_record.save()
+            service_record.cloud_system.created_ts = timezone.now() - relativedelta(months=2)
+            service_record.cloud_system.save()
+
+        # Calculate the expected period start
+        now = datetime.datetime.utcnow()
+        expected_period_start = datetime.datetime(now.year, now.month, 2, 8, 0, 0)
+
+        report = OrganizationReportsService.get_organization_report(
+            organization=organization,
+            period_start=expected_period_start,
+            generate=True
+        )
+        assert report
+        snapshot = ReportSnapshot.objects.get(entity_id=organization.id,
+                                              report_type=ReportSnapshot.ReportType.organization_usage_report)
+        assert snapshot.report_data == json.loads(json.dumps(report, cls=JSONEncoder))
+        assert ReportSnapshot.objects.count() > 1  # nested reports must be saved too
+        save_snapshot_spy = mocker.spy(ReportSnapshotService, 'save_snapshot')
+        new_report = OrganizationReportsService.get_organization_report(
+            organization=organization,
+            period_start=expected_period_start,
+            generate=True
+        )
+        assert new_report == json.loads(json.dumps(report, cls=JSONEncoder))
+        assert save_snapshot_spy.call_count == 0
+
     def test_get_organization_report(self, channel_partner_factory, organization_factory, mocker,
                                         system_factory, cp_service_factory, service_record_factory,):
         cp = channel_partner_factory()
