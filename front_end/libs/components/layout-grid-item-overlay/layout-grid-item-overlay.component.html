@@ -24,7 +24,6 @@
         #svgIcon
         let-menuItem="menuItem"
         let-size="size"
-        let-tooltipExtra="tooltipExtra"
     >
         @if (menuItem) {
             <svg-icon
@@ -38,7 +37,7 @@
                     'height.px': '{{size || 24}}'
                 }"
                 nxTooltipV2
-                [tooltipContent]="(menuItem.tooltip | translate) + (tooltipExtra || '')"
+                [tooltipContent]="menuItem.tooltip | translate"
                 [tooltipPositions]="['N', 'start']"
                 (click)="handleIconClick(menuItem.action, $event)"
             ></svg-icon>
@@ -46,16 +45,6 @@
     </ng-template>
 
     <div class="name">
-        <ng-container
-            *ngTemplateOutlet="
-                svgIcon;
-                context: {
-                    menuItem: recordingIcon$$(),
-                    size: 16,
-                    tooltipExtra: extraCameraTooltip$$()
-                }
-            "
-        />
         @if (nodeName$$() || ('Unavailable' | translate); as nodeName) {
             <div
                 class="resource-name ellipsis"
@@ -124,9 +113,22 @@
         </div>
     }
 
-    @if (layoutsItemStatus && !!statusText$$()) {
+    @if (hasStatus$$()) {
         <div class="status">
-            {{ statusText$$().toUpperCase() | translate }}
+            @if (recordingIcon$$()) {
+                <ng-container
+                    *ngTemplateOutlet="
+                        svgIcon;
+                        context: {
+                            menuItem: recordingIcon$$(),
+                            size: 16
+                        }
+                    "
+                />
+            }
+            <div class="live">
+                {{ 'LIVE' | translate }}
+            </div>
         </div>
     }
 

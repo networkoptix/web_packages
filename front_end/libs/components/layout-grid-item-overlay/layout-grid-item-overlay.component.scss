@@ -70,22 +70,18 @@ svg-icon {
     padding: 6px;
 }
 
+.status, .name {
+    @include typography.medium14nocolor;
+    color: var(--overlay-text);
+}
+
 .name {
     grid-area: name;
-    display: flex;
-    flex-direction: row;
-    color: var(--overlay-text);
-
-    svg-icon {
-        padding: 4px;
-    }
 
     .resource-name {
         color: var(--overlay-action-text);
         line-height: 24px;
         margin: 0 4px;
-        font-size: 14px;
-        font-weight: 500;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
@@ -195,11 +191,18 @@ svg-icon {
     grid-area: status;
     align-self: end;
     justify-self: right;
-    height: 26px;
-    line-height: 12px;
-    font-size: 12px;
-    font-weight: 700;
+    height: 36px;
+    padding: 10px 12px;
     color: var(--overlay-text);
+
+    svg-icon, .live {
+        display: inline-block;
+        line-height: 16px;
+        vertical-align: top;
+    }
+    svg-icon {
+        margin-right: 4px;
+    }
 }
 
 .content {

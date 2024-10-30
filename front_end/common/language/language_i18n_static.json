@@ -437,13 +437,17 @@
                     "name": "Remove from Layout",
                     "tooltip": "Remove from Layout"
                 },
-                "recordingOn": {
+                "recording": {
                     "name": "Recording",
                     "tooltip": "Recording"
                 },
-                "recordingOff": {
-                    "name": "Recording off",
-                    "tooltip": "Recording off"
+                "scheduled": {
+                    "name": "Scheduled",
+                    "tooltip": "Scheduled"
+                },
+                "archive": {
+                    "name": "Archive",
+                    "tooltip": "Archive"
                 },
                 "openNewTab": {
                     "name": "Open in New Tab",

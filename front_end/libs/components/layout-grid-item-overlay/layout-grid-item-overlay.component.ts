@@ -75,7 +75,6 @@ import { nxConfig } from '@services/nx-config/config';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { LayoutItem } from '@services/system-api.types/layouts.types';
 import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';
-import { RecordingStatus } from '@services/system.service/camera-manager/camera-manager-types';
 import { NxSystem } from '@services/system.service/system';
 import { NxSystemsService } from '@services/systems.service';
 import { icons } from '@static-variables';
@@ -211,13 +210,10 @@ export class NxLayoutGridItemOverlayComponent {
         }
         return this.item$$()?.displayInfo || false;
     });
-    statusText$$ = computed(() => {
-        const node = this.checkGetCameraNode();
-        return node ? node.details.status : '';
-    });
-    isRecording$$ = computed(() => {
-        const node = this.checkGetCameraNode();
-        return node ? node.details.recordingStatus === RecordingStatus.Recording : null;
+    hasStatus$$ = computed(() => {
+        const node = this.node$$();
+        const name = this.nodeName$$();
+        return node && name && assertResourceOfType.camera(node);
     });
     primaryStream$$ = computed(() => {
         return this.cameraStreams$$() ? this.cameraStreams$$().primary : null;
@@ -591,15 +587,20 @@ export class NxLayoutGridItemOverlayComponent {
             ...LANG.remove,
             action: ($event, item) => this.removeItem.emit(this.item$$()),
         },
-        recordingOn: {
-            id: 'recordingOn',
-            icon: icons.dirLayoutsOverlay + 'camera_rec_on.svg',
-            ...LANG.recordingOn,
+        recording: {
+            id: 'recording',
+            icon: icons.dirLayoutsOverlay + 'camera_recording.svg',
+            ...LANG.recording,
         },
-        recordingOff: {
-            id: 'recordingOff',
-            icon: icons.dirLayoutsOverlay + 'camera_rec_off.svg',
-            ...LANG.recordingOff,
+        scheduled: {
+            id: 'scheduled',
+            icon: icons.dirLayoutsOverlay + 'camera_scheduled.svg',
+            ...LANG.scheduled,
+        },
+        archive: {
+            id: 'archive',
+            icon: icons.dirLayoutsOverlay + 'camera_archive.svg',
+            ...LANG.archive,
         },
         divider: {
             name: 'divider',
@@ -638,10 +639,15 @@ export class NxLayoutGridItemOverlayComponent {
     });
 
     recordingIcon$$ = computed(() => {
-        if (this.isRecording$$() === null) {
-            return null;
+        const node = this.node$$();
+        const recordingStatus =
+            node &&
+            assertResourceOfType.camera(node) &&
+            node.details.recordingStatus?.toLowerCase();
+        if (recordingStatus) {
+            return this.MENU_ITEMS[recordingStatus];
         }
-        return this.MENU_ITEMS[this.isRecording$$() ? 'recordingOn' : 'recordingOff'];
+        return null;
     });
 
     quickActionsMenu$$ = computed(() => {
