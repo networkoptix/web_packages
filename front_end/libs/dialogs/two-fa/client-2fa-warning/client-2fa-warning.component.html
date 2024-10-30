@@ -17,8 +17,16 @@
 </div>
 
 <div class="modal-body">
-    <p translate>Earlier versions of %VMS_NAME% Client do not support two-factor authentication.</p>
-    <p [innerHTML]="LANG.dialogs.twoFactor.unsupportedSystem | translate"></p>
+    <p
+        class="paragraph"
+        translate
+    >
+        Earlier versions of %VMS_NAME% Client do not support two-factor authentication.
+    </p>
+    <p
+        class="paragraph"
+        [innerHTML]="LANG.dialogs.twoFactor.unsupportedSystem | translate"
+    ></p>
 </div>
 <div class="modal-footer">
     <button

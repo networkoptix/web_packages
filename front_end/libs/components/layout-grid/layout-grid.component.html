@@ -48,7 +48,7 @@
                                 </h4>
                             }
                             @if (helpMessage.help; as help) {
-                                <p>{{ help | translate }}</p>
+                                <p class="paragraph">{{ help | translate }}</p>
                             }
                             @if (layout.items.length) {
                                 <button
@@ -677,7 +677,10 @@
                                                 CONFIG.featureFlags.layoutsEditable ||
                                                 CONFIG.featureFlags.layoutsDemo
                                             ) {
-                                                <p translate>
+                                                <p
+                                                    class="paragraph"
+                                                    translate
+                                                >
                                                     A layout is an arrangement of items placed on
                                                     the Viewing Grid. Up to 64 items can be
                                                     contained in a layout. Each layout is displayed
@@ -704,7 +707,10 @@
                                                     Create First
                                                 </button>
                                             } @else {
-                                                <p translate>
+                                                <p
+                                                    class="paragraph"
+                                                    translate
+                                                >
                                                     You don't currently have any layouts, create
                                                     them in %VMS_NAME% client
                                                 </p>
@@ -731,12 +737,20 @@
                                                 CONFIG.featureFlags.layoutsEditable ||
                                                 CONFIG.featureFlags.layoutsDemo
                                             ) {
-                                                <p translate>
+                                                <p
+                                                    class="paragraph"
+                                                    translate
+                                                >
                                                     Drag and drop any item here to add it to the
                                                     layout or double click on item
                                                 </p>
                                             } @else {
-                                                <p translate>Add them in the %VMS_NAME% client</p>
+                                                <p
+                                                    class="paragraph"
+                                                    translate
+                                                >
+                                                    Add them in the %VMS_NAME% client
+                                                </p>
                                             }
                                         </div>
                                     }

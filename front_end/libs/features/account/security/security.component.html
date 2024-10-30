@@ -144,7 +144,7 @@
                             >
                         </h4>
                         <p
-                            class="mb-1"
+                            class="paragraph mb-1"
                             *ngIf="
                                 LANG.security.twoFa.v5Warning
                                     | translate: { count: subV5Systems.length } as v5Warning
@@ -172,7 +172,7 @@
                             <!-- (4) since earlier versions do not support 2FA -->
                         </p>
                         <p
-                            class="mb-0"
+                            class="paragraph mb-0"
                             [innerText]="
                                 LANG.security.twoFa.v5WarningExplanation
                                     | translate: { count: subV5Systems.length }

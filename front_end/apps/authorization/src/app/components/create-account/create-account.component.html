@@ -101,7 +101,7 @@
                 >
                     <p
                         *ngIf="createAccountEmail.errors.required"
-                        class="error-label mt-1 mb-0"
+                        class="paragraph error-label mt-1 mb-0"
                         data-testid="emailRequiredError"
                         translate
                     >
@@ -109,7 +109,7 @@
                     </p>
                     <p
                         *ngIf="createAccountEmail.errors.pattern"
-                        class="error-label mt-1 mb-0"
+                        class="paragraph error-label mt-1 mb-0"
                         data-testid="emailPatternError"
                         translate
                     >
@@ -117,7 +117,7 @@
                     </p>
                     <p
                         *ngIf="createAccountEmail.errors.alreadyExists"
-                        class="error-label mt-1 mb-0"
+                        class="paragraph error-label mt-1 mb-0"
                         data-testid="emailExistsError"
                         translate
                     >
@@ -125,7 +125,7 @@
                     </p>
                     <p
                         *ngIf="createAccountEmail.errors.portalError"
-                        class="error-label mt-1 mb-0"
+                        class="paragraph error-label mt-1 mb-0"
                         data-testid="emailPortalError"
                         translate
                     >
@@ -178,7 +178,7 @@
                         (firstName.dirty || firstName.touched) &&
                         firstName.errors.required
                     "
-                    class="error-label mt-1 mb-0"
+                    class="paragraph error-label mt-1 mb-0"
                     id="firstNameRequiredError"
                     translate
                 >
@@ -220,7 +220,7 @@
                         (lastName.dirty || lastName.touched) &&
                         lastName.errors.required
                     "
-                    class="error-label mt-1 mb-0"
+                    class="paragraph error-label mt-1 mb-0"
                     id="lastNameRequiredError"
                     translate
                 >
@@ -316,7 +316,7 @@
             </div>
             <p
                 *ngIf="termsConditions.touched && !termsAndConditions"
-                class="error-label mb-0"
+                class="paragraph error-label mb-0"
                 translate
             >
                 Required

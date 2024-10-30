@@ -214,7 +214,7 @@
             <span class="ml-1">{{ refreshMessage }}</span>
         </button>
         <p
-            class="btn-helper mt-2 mb-0"
+            class="paragraph btn-helper mt-2 mb-0"
             [ngClass]="{ invisible: !(timeoutUntilRefresh$ | async) }"
         >
             {{ LANG.servers.autoRefresh | translate: { time: (timeoutUntilRefresh$ | async) } }}
@@ -226,7 +226,7 @@
     >
         <div class="overlay-modal-body">
             <p
-                class="overlay-modal-title mb-3"
+                class="paragraph overlay-modal-title mb-3"
                 translate
             >
                 You can try to connect to other servers in this system:

@@ -34,7 +34,10 @@
                 class="integration-block"
                 [ngClass]="integrations.moreStart"
             >
-                <p [innerHTML]="integrations.translatedCount | translate"></p>
+                <p
+                    class="paragraph"
+                    [innerHTML]="integrations.translatedCount | translate"
+                ></p>
             </div>
         </div>
         <button

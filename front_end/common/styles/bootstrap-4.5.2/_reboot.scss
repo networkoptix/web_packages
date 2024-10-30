@@ -86,7 +86,7 @@ body {
 //
 // Similarly, the top margin on `<p>`s get reset. However, we also reset the
 // bottom margin to use `rem` units instead of `em`.
-p {
+.paragraph {
   margin-top: 0;
   margin-bottom: $paragraph-margin-bottom;
 }

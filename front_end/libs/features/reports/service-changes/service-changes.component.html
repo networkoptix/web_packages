@@ -11,7 +11,7 @@
     @if (serviceChangesStore.isLoading()) {
         <nx-pre-loader></nx-pre-loader>
     } @else if (serviceChangesStore.errorMessage()) {
-        <p>{{ serviceChangesStore.errorMessage() }}</p>
+        <p class="paragraph">{{ serviceChangesStore.errorMessage() }}</p>
     } @else if (
         formattedPartnerServiceChangeRecords$$().length ||
         formattedOrgServiceChangeRecords$$().length

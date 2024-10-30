@@ -60,14 +60,6 @@ b, strong {
     }
 }
 
-p {
-    margin-bottom: 0.5rem;
-}
-
-p[data-escape-global-style] {
-    margin-bottom: unset;
-}
-
 svg {
     pointer-events: none;
 

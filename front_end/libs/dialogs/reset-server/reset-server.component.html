@@ -29,7 +29,7 @@
         <div class="form-group">
             <div [ngClass]="{ 'mb-3': system.mediaserver.requiresPassword }">
                 <p
-                    class="mb-0"
+                    class="paragraph mb-0"
                     translate
                 >
                     All settings for this server will be reset to factory default settings, and it
@@ -37,6 +37,7 @@
                 </p>
 
                 <p
+                    class="paragraph"
                     [ngClass]="{ 'mb-3': system.mediaserver.requiresPassword }"
                     translate
                 >
@@ -59,7 +60,7 @@
                     required
                 />
                 <p
-                    class="help-block"
+                    class="paragraph help-block"
                     *ngIf="
                         !resetServerForm.controls['password']?.valid &&
                         resetServerForm.controls['password']?.touched

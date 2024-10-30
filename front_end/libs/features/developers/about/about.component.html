@@ -17,7 +17,10 @@
             <h1 class="nx-h1--vertical-margin">{{ intro.title }}</h1>
         </ng-template>
         <ng-container *ngIf="intro.asset?.shortDescription">
-            <p [innerHTML]="intro.asset.shortDescription || '' | safe: 'html'"></p>
+            <p
+                class="paragraph"
+                [innerHTML]="intro.asset.shortDescription || '' | safe: 'html'"
+            ></p>
         </ng-container>
     </div>
 </ng-template>

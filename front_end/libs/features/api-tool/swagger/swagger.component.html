@@ -19,7 +19,7 @@
                 ></h2>
                 <ng-container *ngIf="this.singleAPIRouteShowing">
                     <p
-                        class="description-path"
+                        class="paragraph description-path"
                         [innerHTML]="this.singleRoutePath | safe: 'html'"
                     ></p>
                     <div
@@ -30,7 +30,7 @@
                     </div>
                 </ng-container>
                 <p
-                    class="mt-3"
+                    class="paragraph mt-3"
                     *ngIf="this.swaggerMenuDescription.description"
                 >
                     <markdown [data]="this.swaggerMenuDescription.description"></markdown>

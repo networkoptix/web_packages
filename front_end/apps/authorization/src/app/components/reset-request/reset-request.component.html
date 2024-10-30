@@ -61,21 +61,21 @@
             <ng-container *ngIf="email.invalid && (email.dirty || email.touched)">
                 <p
                     *ngIf="email.errors.required"
-                    class="error-label mt-2 mb-0"
+                    class="paragraph error-label mt-2 mb-0"
                     translate
                 >
                     Enter email
                 </p>
                 <p
                     *ngIf="email.errors.email || email.errors.pattern"
-                    class="error-label mt-2 mb-0"
+                    class="paragraph error-label mt-2 mb-0"
                     translate
                 >
                     Invalid email
                 </p>
                 <p
                     *ngIf="email.errors.accountDoesNotExist"
-                    class="error-label mt-2 mb-0"
+                    class="paragraph error-label mt-2 mb-0"
                     data-testid="accountDoesNotExist"
                     translate
                 >
@@ -102,7 +102,10 @@
                 >
                     We've sent you an email
                 </h3>
-                <p translate>
+                <p
+                    class="paragraph"
+                    translate
+                >
                     Please follow instructions there to reset your password and return here to log
                     in again.
                 </p>

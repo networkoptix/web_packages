@@ -47,7 +47,7 @@
                             >
                                 Register Browser
                             </button>
-                            <p class="footnote">
+                            <p class="paragraph footnote">
                                 Makes an API call to add your browser token to the database
                             </p>
                         </div>
@@ -59,7 +59,7 @@
                             >
                                 Invalidate Browser
                             </button>
-                            <p class="footnote">
+                            <p class="paragraph footnote">
                                 Browser token invalidation occurs on your device, no API request is
                                 involved. The next push notification you send notifies the server
                                 that your token is invalid and removes it from the database.
@@ -79,8 +79,8 @@
 
                         <div class="mt-2">
                             <h4 class="h4">Debug Info</h4>
-                            <p>Device Token: {{ deviceToken }}</p>
-                            <p>Registered: {{ registered }}</p>
+                            <p class="paragraph">Device Token: {{ deviceToken }}</p>
+                            <p class="paragraph">Registered: {{ registered }}</p>
                         </div>
                     </ng-template>
                 </nx-section>
@@ -183,7 +183,9 @@
                                 id="deviceUserId"
                                 [(ngModel)]="newDevice.userId"
                             />
-                            <p class="footnote">Only required for baidu device registrations</p>
+                            <p class="paragraph footnote">
+                                Only required for baidu device registrations
+                            </p>
                         </div>
                         <button
                             [disabled]="!formNewDevice.valid"

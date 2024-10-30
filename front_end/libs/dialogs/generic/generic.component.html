@@ -21,11 +21,15 @@
     *ngIf="dialogData.message as message"
 >
     <p
+        class="paragraph"
         *ngIf="!dialogData.safeHTML; else safe"
         [innerHTML]="message | nxTranslate"
     ></p>
     <ng-template #safe>
-        <p [innerHTML]="message | nxTranslate | safe: 'html'"></p>
+        <p
+            class="paragraph"
+            [innerHTML]="message | nxTranslate | safe: 'html'"
+        ></p>
     </ng-template>
     @if (dialogData.warning; as warning) {
         <div

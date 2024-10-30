@@ -54,7 +54,7 @@
                                         </ng-container>
                                     </b>
                                 </h2>
-                                <p>
+                                <p class="paragraph">
                                     <a
                                         [href]="
                                             downloadData.releaseNotes ||
@@ -107,6 +107,7 @@
                                             </div>
                                         </a>
                                         <p
+                                            class="paragraph"
                                             *ngIf="CONFIG.testedOperatingSystems[activePlatform]"
                                             [innerHTML]="
                                                 CONFIG.testedOperatingSystems[activePlatform]

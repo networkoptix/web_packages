@@ -23,10 +23,20 @@
         *ngIf="isCloud !== undefined"
     >
         <ng-container *ngIf="isCloud; else local">
-            <p translate>To continue log in to %CLOUD_NAME% in the tab that popped up.</p>
+            <p
+                class="paragraph"
+                translate
+            >
+                To continue log in to %CLOUD_NAME% in the tab that popped up.
+            </p>
         </ng-container>
         <ng-template #local>
-            <p translate>Enter your account password to continue</p>
+            <p
+                class="paragraph"
+                translate
+            >
+                Enter your account password to continue
+            </p>
             <div class="form-group">
                 <label
                     class="label"

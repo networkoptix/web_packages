@@ -37,11 +37,14 @@
 @if (machine.currentState === 'thisSystemHasOutdatedServerError') {
     <form>
         <div class="modal-body">
-            <p translate>
+            <p
+                class="paragraph"
+                translate
+            >
                 Some of the servers in this system have an outdated software version and can't be
                 merged.
             </p>
-            <p>
+            <p class="paragraph">
                 <span [innerHTML]="LANG.dialogs.merge.update | translate | translateCut: 0"></span
                 ><a
                     routerLink="/download"
@@ -67,7 +70,7 @@
 @if (machine.currentState === 'failedToFindAnySystem') {
     <form>
         <div class="modal-body">
-            <p>{{ LANG.dialogs.merge.failedToFindAnySystem | translate }}</p>
+            <p class="paragraph">{{ LANG.dialogs.merge.failedToFindAnySystem | translate }}</p>
         </div>
         <div class="modal-footer">
             <button
@@ -90,6 +93,7 @@
         <div class="modal-body">
             @if (machine.currentState === 'primarySystemOffline') {
                 <p
+                    class="paragraph"
                     [innerHTML]="
                         LANG.dialogs.merge.primarySystemOffline
                             | translate
@@ -101,6 +105,7 @@
                 ></p>
             } @else {
                 <p
+                    class="paragraph"
                     [innerHTML]="
                         LANG.dialogs.merge.secondarySystemOffline
                             | translate
@@ -130,7 +135,7 @@
         name="checkMergeForm"
     >
         <div class="modal-body">
-            <p>{{ machine.state.template.bodyTitle | nxTranslate }}</p>
+            <p class="paragraph">{{ machine.state.template.bodyTitle | nxTranslate }}</p>
             @if (machine.state.show.systemDropdown) {
                 <nx-select-v2
                     [placeholder]="
@@ -161,7 +166,7 @@
                     }
                 </nx-select-v2>
             } @else if (machine.state.show.helpText) {
-                <p class="light-text">
+                <p class="paragraph light-text">
                     {{ machine.state.template.helpText | nxTranslate }}
                 </p>
             } @else if (machine.state.show.serverUrlInput) {
@@ -201,7 +206,7 @@
                                 machine.state.template.serverUrlInputValidationErrorText
                                     | nxTranslate
                             "
-                            class="error-label"
+                            class="paragraph error-label"
                             for="serverUrl"
                         ></p>
                     }
@@ -210,7 +215,7 @@
                 <p
                     [ngClass]="{ 'error-text-margin': machine.state.show.serverUrlInput }"
                     [innerHTML]="machine.state.template.checkingErrorText | nxTranslate"
-                    class="error-label"
+                    class="paragraph error-label"
                 ></p>
             }
         </div>
@@ -235,6 +240,7 @@
     >
         <div class="modal-body">
             <p
+                class="paragraph"
                 [innerHTML]="
                     LANG.dialogs.merge.adminPasswordTitle
                         | translate
@@ -296,7 +302,7 @@
                                     | nxTranslate
                                     | safe: 'html'
                             "
-                            class="error-label password-label-margin mb-0"
+                            class="paragraph error-label password-label-margin mb-0"
                             for="adminPassword"
                         ></p>
                     }
@@ -330,7 +336,10 @@
         name="serverUrlErrorsForm"
     >
         <div class="modal-body">
-            <p [innerHTML]="machine.state.template.urlErrorText | nxTranslate | safe: 'html'"></p>
+            <p
+                class="paragraph"
+                [innerHTML]="machine.state.template.urlErrorText | nxTranslate | safe: 'html'"
+            ></p>
         </div>
         <div class="modal-footer next-button">
             <button
@@ -355,7 +364,12 @@
 } @else if (machine.currentState === 'choosePrimary') {
     <form name="choosePrimaryForm">
         <div class="modal-body">
-            <p translate>Take system name and settings from</p>
+            <p
+                class="paragraph"
+                translate
+            >
+                Take system name and settings from
+            </p>
             <div>
                 <div class="radio-group">
                     <nx-radio
@@ -420,6 +434,7 @@
     >
         <div class="modal-body">
             <p
+                class="paragraph"
                 [innerHTML]="
                     LANG.dialogs.merge.mergeConfirmation
                         | translate
@@ -432,21 +447,21 @@
             @if (tooManyServers) {
                 <div>
                     <p
-                        class="error-label"
+                        class="paragraph error-label"
                         [innerHTML]="
                             LANG.dialogs.merge.warning | translate: { maxServers: maxServers }
                         "
                     ></p>
 
                     <p
-                        class="error-label"
+                        class="paragraph error-label"
                         translate
                     >
                         Systems of such size may be unstable and have troubles with updates and
                         synchronization.
                     </p>
 
-                    <p class="mb-3">
+                    <p class="paragraph mb-3">
                         {{
                             LANG.dialogs.merge.recommendSupport | translate | translateCut: 0
                         }}&nbsp;
@@ -491,7 +506,7 @@
                     @if (machine.state.show.passwordError) {
                         <p
                             [innerHTML]="machine.state.template.passwordErrorText | nxTranslate"
-                            class="error-label error-text-margin mb-0"
+                            class="paragraph error-label error-text-margin mb-0"
                             for="cloudOwnerPassword"
                         ></p>
                     }
@@ -527,24 +542,24 @@
         <div class="modal-body">
             <div class="unmergedServers">
                 <p
-                    class="message"
+                    class="paragraph message"
                     translate
                 >
                     The merge is complete. Merge was unsuccessful for the following severs:
                 </p>
                 @for (error of machine.state.unmergedServers; track error.errorId) {
                     <div class="server">
-                        <p class="server-name">
+                        <p class="paragraph server-name">
                             {{
                                 '{serverName} , error:'
                                     | translate: { serverName: error.serverName }
                             }}
                         </p>
-                        <p class="server-message">{{ error.errorMessage | translate }}</p>
+                        <p class="paragraph server-message">{{ error.errorMessage | translate }}</p>
                     </div>
                 }
                 <p
-                    class="message"
+                    class="paragraph message"
                     translate
                 >
                     Please try and fix the issues and repeat the merge.

@@ -122,14 +122,19 @@
         *ngIf="alreadyCheckedAndExists"
         class="modal-body"
     >
-        <p class="mb-2">{{ alreadyUsed | nxTranslate }}</p>
+        <p class="paragraph mb-2">{{ alreadyUsed | nxTranslate }}</p>
         <p
-            class="mb-2"
+            class="paragraph mb-2"
             translate
         >
             It's not recommended to use one recording location for different servers.
         </p>
-        <p translate>Add this storage anyway?</p>
+        <p
+            class="paragraph"
+            translate
+        >
+            Add this storage anyway?
+        </p>
     </div>
     <div class="modal-footer border-top-0">
         <nx-process-button

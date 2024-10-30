@@ -27,7 +27,7 @@
         <div class="form-group">
             <div [ngClass]="{ 'mb-3': system.mediaserver.requiresPassword }">
                 <p
-                    class="mb-0"
+                    class="paragraph mb-0"
                     translate
                 >
                     The server will be detached from this system and added to a new one. Database,
@@ -35,6 +35,7 @@
                 </p>
 
                 <p
+                    class="paragraph"
                     [ngClass]="{ 'mb-3': system.mediaserver.requiresPassword }"
                     translate
                 >
@@ -57,7 +58,7 @@
                     required
                 />
                 <p
-                    class="help-block"
+                    class="paragraph help-block"
                     *ngIf="
                         !detachServerForm.controls['password']?.valid &&
                         detachServerForm.controls['password']?.touched

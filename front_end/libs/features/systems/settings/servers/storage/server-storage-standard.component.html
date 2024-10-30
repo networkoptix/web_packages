@@ -286,10 +286,16 @@
                     else defaultMessage
                 "
             >
-                <p translate>
+                <p
+                    class="paragraph"
+                    translate
+                >
                     Archive mode and cameras to backup were set up with the desktop client.
                 </p>
-                <p translate>
+                <p
+                    class="paragraph"
+                    translate
+                >
                     You can reset backup settings to default to backup secondary streams from all
                     cameras in real time.
                 </p>
@@ -303,11 +309,17 @@
                 </button>
             </ng-container>
             <ng-template #defaultMessage>
-                <p translate>
+                <p
+                    class="paragraph"
+                    translate
+                >
                     Secondary streams from all cameras on this server are being backed up in real
                     time.
                 </p>
-                <p translate>
+                <p
+                    class="paragraph"
+                    translate
+                >
                     You can change the backup mode or select specific cameras in the desktop client.
                 </p>
             </ng-template>
@@ -335,7 +347,10 @@
     </header>
     <nx-section>
         <div class="reindex-container">
-            <p translate>
+            <p
+                class="paragraph"
+                translate
+            >
                 When a storage device is moved, renamed, or deleted, or when an archive file is
                 removed, renamed, has an incorrect timestamp, or is otherwise corrupted, this index
                 will be broken. Reindexing restores the relationship between the database and
@@ -433,13 +448,13 @@
             </ng-container>
             <ng-template #tooltipContent>
                 <p
-                    class="mt-2 text-left tooltip-text"
+                    class="paragraph mt-2 text-left tooltip-text"
                     translate
                 >
                     Reindexing will significantly increase drives load.
                 </p>
                 <p
-                    class="text-left tooltip-text"
+                    class="paragraph text-left tooltip-text"
                     translate
                 >
                     You can cancel it anytime without data loss.

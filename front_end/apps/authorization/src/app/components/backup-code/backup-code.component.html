@@ -36,7 +36,7 @@
         </div>
         <p
             *ngIf="subHeaderSuffix"
-            class="mt-2 mb-0"
+            class="paragraph mt-2 mb-0"
         >
             {{ subHeaderSuffix | translate }}
         </p>
@@ -80,21 +80,21 @@
         >
             <p
                 *ngIf="backupCode.errors.required"
-                class="error-label mb-0"
+                class="paragraph error-label mb-0"
                 translate
             >
                 Code is required
             </p>
             <p
                 *ngIf="backupCode.errors.wrongBackupCode"
-                class="error-label mb-0"
+                class="paragraph error-label mb-0"
                 translate
             >
                 Wrong Backup Code
             </p>
             <p
                 *ngIf="backupCode.errors.lockedOut"
-                class="error-label mb-0"
+                class="paragraph error-label mb-0"
                 data-testid="tooManyAttemptsBackup"
                 translate
             >
@@ -106,7 +106,7 @@
                 'mt-3': !(backupCode.invalid && (backupCode.dirty || backupCode.touched))
             }"
         >
-            <p>
+            <p class="paragraph">
                 <span translate>Need help?</span>&nbsp;<a
                     [href]="CONFIG.company.links.support"
                     target="_blank"

@@ -5,11 +5,19 @@
     >
         <main class="modal-body">
             @if (noOtherSystems) {
-                <p translate>
+                <p
+                    class="paragraph"
+                    translate
+                >
                     Enter address of any server in the system you want to merge with this one.
                 </p>
             } @else {
-                <p translate>Merge current system with</p>
+                <p
+                    class="paragraph"
+                    translate
+                >
+                    Merge current system with
+                </p>
                 <nx-select-v2
                     [placeholder]="
                         selectedSystem.help
@@ -68,14 +76,14 @@
                     @if (serverUrlInputValidationErrorText) {
                         <p
                             [innerHTML]="serverUrlInputValidationErrorText"
-                            class="error-label"
+                            class="paragraph error-label"
                             for="serverUrl"
                         ></p>
                     }
                 </div>
             }
             @if (!selectedSystem?.status || checking) {
-                <p class="light-text">
+                <p class="paragraph light-text">
                     @if (checking) {
                         <span translate>Checking...</span>
                     } @else if (!checking && !isWebadmin) {
@@ -88,7 +96,7 @@
                     [innerHTML]="
                         isOffline ? serverUrlInputValidationErrorText : selectedSystem.status
                     "
-                    class="error-label"
+                    class="paragraph error-label"
                 ></p>
             }
         </main>

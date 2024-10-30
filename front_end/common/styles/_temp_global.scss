@@ -87,6 +87,15 @@ button, a {
     color: var(--h6);
 }
 
+.nx-paragraph {
+    margin-bottom: 0;
+    margin-top: 0;
+
+    &--stacked + &--stacked {
+        margin-top: 0.5rem;
+    }
+}
+
 a.nx-anchor {
     color: var(--anchor-color);
     text-decoration: underline;

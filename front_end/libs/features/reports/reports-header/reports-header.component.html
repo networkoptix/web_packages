@@ -2,13 +2,13 @@
     {{ heading() | translate }}
 </h2>
 <div class="info">
-    <p>
+    <p class="paragraph">
         {{
             LANG.channelPartnerReports.customerName
                 | translate: { customerName: selectedEntityName() }
         }}
     </p>
-    <p>{{ 'Month: { month }' | translate: { month: longMonthFullYear() } }}</p>
+    <p class="paragraph">{{ 'Month: { month }' | translate: { month: longMonthFullYear() } }}</p>
 </div>
 @if (initExport(); as initExport) {
     <div class="export-buttons">

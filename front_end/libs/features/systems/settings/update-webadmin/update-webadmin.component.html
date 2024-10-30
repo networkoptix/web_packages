@@ -9,7 +9,7 @@
             </h4>
         </header>
         <nx-section>
-            <p>
+            <p class="paragraph">
                 <span
                     class="text-label"
                     translate
@@ -19,7 +19,7 @@
             </p>
             @if (checksumVerificationError.show) {
                 <div class="mt-4">
-                    <p>
+                    <p class="paragraph">
                         <span
                             class="text-label"
                             translate
@@ -38,7 +38,7 @@
                 </div>
             } @else if (downloadingBuildUrl && !checksumVerificationError.show) {
                 <div class="mt-4">
-                    <p>
+                    <p class="paragraph">
                         <span
                             class="text-label"
                             translate
@@ -47,7 +47,10 @@
                         <span class="download-progress">({{ downloadProgress }}%)</span>
                         {{ downloadingBuildUrl }}
                     </p>
-                    <p translate>
+                    <p
+                        class="paragraph"
+                        translate
+                    >
                         WebAdmin will be updated to this build when the download completes.
                     </p>
                 </div>

@@ -21,12 +21,18 @@
         </button>
     </div>
     <div class="modal-body">
-        <p translate>
+        <p
+            class="paragraph"
+            translate
+        >
             Current analytics data will not be automatically moved to another location and will
             become inaccessible. You can keep it and manually move later, or delete permanently.
         </p>
 
-        <p [innerHTML]="LANG.dialogs.changeStorage.support | translate"></p>
+        <p
+            class="paragraph"
+            [innerHTML]="LANG.dialogs.changeStorage.support | translate"
+        ></p>
     </div>
     <div class="modal-footer border-top-0">
         <nx-process-button

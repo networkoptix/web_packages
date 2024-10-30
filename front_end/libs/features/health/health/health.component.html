@@ -118,13 +118,13 @@
                     *ngIf="importedData.imported"
                     class="importInfo pb-2"
                 >
-                    <p>
+                    <p class="paragraph">
                         {{
                             LANG.pages.health.importedSystem
                                 | translate: { system: importedData.system }
                         }}
                     </p>
-                    <p>
+                    <p class="paragraph">
                         {{
                             LANG.pages.health.importedTime | translate: { time: importedData.time }
                         }}
@@ -134,7 +134,7 @@
             <div class="mt-3 px-2">
                 <p
                     *ngIf="importShow"
-                    class="contentZone"
+                    class="paragraph contentZone"
                     translate
                 >
                     Drop report anywhere to import

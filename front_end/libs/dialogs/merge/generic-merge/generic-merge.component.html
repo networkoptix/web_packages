@@ -4,10 +4,16 @@
 >
     <main class="modal-body">
         @if (serverUrlErrorText) {
-            <p [innerHTML]="serverUrlErrorText | translate | safe: 'html'"></p>
+            <p
+                class="paragraph"
+                [innerHTML]="serverUrlErrorText | translate | safe: 'html'"
+            ></p>
         }
         @if (failedToFindAnySystem) {
-            <p translate>
+            <p
+                class="paragraph"
+                translate
+            >
                 Make sure you have the Owner role in a cloud system you want to merge with. Or that
                 the system you want to merge with is accessible over the local network to current
                 system.
@@ -15,11 +21,14 @@
         }
         @if (thisSystemHasOutdatedServer) {
             <div>
-                <p translate>
+                <p
+                    class="paragraph"
+                    translate
+                >
                     Some of the servers in this system have an outdated software version and can't
                     be merged.
                 </p>
-                <p>
+                <p class="paragraph">
                     <span
                         [innerText]="LANG.dialogs.merge.update | translate | translateCut: 0"
                     ></span

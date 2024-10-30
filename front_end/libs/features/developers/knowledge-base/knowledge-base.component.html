@@ -72,7 +72,7 @@
                     [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
                 ></svg-icon>
             </div>
-            <p>{{ node.cardLead }}</p>
+            <p class="paragraph">{{ node.cardLead }}</p>
             <h3 class="h3">{{ node.title }}</h3>
         </header>
         <nx-section>
@@ -115,6 +115,7 @@
             class="doc-link"
         ></a>
         <p
+            class="paragraph"
             *ngIf="doc.snippet as content"
             [innerHTML]="content | safe: 'html'"
         ></p>

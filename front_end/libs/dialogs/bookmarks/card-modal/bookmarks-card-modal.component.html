@@ -57,14 +57,14 @@
         <div class="deviceName">{{ bookmark.deviceName }}</div>
         <h2 class="h2 name">{{ bookmark.name }}</h2>
         <p
-            class="description"
+            class="paragraph description"
             *ngIf="bookmark.description; else noDescription"
         >
             {{ bookmark.description }}
         </p>
         <ng-template #noDescription>
             <p
-                class="description"
+                class="paragraph description"
                 translate
             >
                 No description has been added. You may add one through %VMS_NAME%.

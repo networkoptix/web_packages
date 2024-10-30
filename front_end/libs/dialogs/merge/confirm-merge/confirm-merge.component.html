@@ -7,6 +7,7 @@
     >
         <div class="modal-body">
             <p
+                class="paragraph"
                 [innerHTML]="
                     LANG.dialogs.merge.mergeConfirmation
                         | translate
@@ -20,19 +21,19 @@
             @if (tooManyServers) {
                 <div>
                     <p
-                        class="error-label"
+                        class="paragraph error-label"
                         [innerHTML]="
                             LANG.dialogs.merge.warning | translate: { maxServers: maxServers }
                         "
                     ></p>
                     <p
-                        class="error-label"
+                        class="paragraph error-label"
                         translate
                     >
                         Systems of such size may be unstable and have troubles with updates and
                         synchronization.
                     </p>
-                    <p class="mb-3">
+                    <p class="paragraph mb-3">
                         {{ LANG.dialogs.merge.recommendSupport | translate | translateCut: 0 }}
                         <a
                             [href]="supportLink"

@@ -48,7 +48,7 @@
         </div>
         <p
             *ngIf="subHeaderSuffix"
-            class="mt-2 mb-0"
+            class="paragraph mt-2 mb-0"
         >
             {{ subHeaderSuffix | translate }}
         </p>
@@ -92,21 +92,21 @@
         >
             <p
                 *ngIf="authCode.errors.required"
-                class="error-label mb-0"
+                class="paragraph error-label mb-0"
                 translate
             >
                 Code is required
             </p>
             <p
                 *ngIf="authCode.errors.wrongAuthCode"
-                class="error-label mb-0"
+                class="paragraph error-label mb-0"
                 translate
             >
                 Invalid code
             </p>
             <p
                 *ngIf="authCode.errors.lockedOut"
-                class="error-label mb-0"
+                class="paragraph error-label mb-0"
                 data-testid="tooManyAttemptsAuth"
                 translate
             >
@@ -114,7 +114,7 @@
             </p>
         </div>
         <div class="mt-2">
-            <p>{{ suffixText | translate }}</p>
+            <p class="paragraph">{{ suffixText | translate }}</p>
         </div>
     </form>
     <footer

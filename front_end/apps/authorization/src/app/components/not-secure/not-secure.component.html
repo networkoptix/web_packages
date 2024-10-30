@@ -46,15 +46,26 @@
     [ngStyle]="{ height: 'calc(480px - ' + emailHeader.offsetHeight + 'px)' }"
 >
     <form class="text-center form">
-        <p translate>We could not verify the redirect URL.</p>
+        <p
+            class="paragraph"
+            translate
+        >
+            We could not verify the redirect URL.
+        </p>
         <br />
         <p
+            class="paragraph"
             [innerHTML]="
                 LANG.authorize.notSecureText | translate: { redirectUrl: redirectUrl | escapeHTML }
             "
         ></p>
         <br />
-        <p translate>Make sure your trust this URL.</p>
+        <p
+            class="paragraph"
+            translate
+        >
+            Make sure your trust this URL.
+        </p>
     </form>
     <footer
         [ngClass]="{

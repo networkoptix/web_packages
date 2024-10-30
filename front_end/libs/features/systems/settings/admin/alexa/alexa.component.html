@@ -20,7 +20,10 @@
                     >
                         Account not linked
                     </h4>
-                    <p translate>
+                    <p
+                        class="paragraph"
+                        translate
+                    >
                         Cloud portal account is not linked to Alexa, to use this system with Alexa
                         first install the Alexa app and link using your cloud portal account.
                     </p>
@@ -33,7 +36,10 @@
                         >
                             Alexa not enabled
                         </h4>
-                        <p translate>
+                        <p
+                            class="paragraph"
+                            translate
+                        >
                             Alexa integration is currently disabled, press "Enable Alexa" to turn on
                             integration.
                         </p>
@@ -46,7 +52,10 @@
                             >
                                 Alexa linked to another system
                             </h4>
-                            <p translate>
+                            <p
+                                class="paragraph"
+                                translate
+                            >
                                 Alexa is currently enabled but is linked to another system, press
                                 "Use this system with Alexa" to link Alexa to this system.
                             </p>
@@ -63,13 +72,16 @@
                             >
                                 Alexa linked to this system
                             </h4>
-                            <p translate>
+                            <p
+                                class="paragraph"
+                                translate
+                            >
                                 Alexa is currently currently linked to this system, to link a
                                 different open the system admin page on cloud portal for that
                                 system.
                             </p>
                             <p
-                                class="error-label"
+                                class="paragraph error-label"
                                 *ngIf="
                                     alexaSettings?.enabled &&
                                     !alexaSettings?.eventRulesSetup &&

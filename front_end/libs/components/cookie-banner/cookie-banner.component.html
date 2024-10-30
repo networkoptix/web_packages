@@ -3,7 +3,10 @@
     class="banner"
     *ngIf="cookiePolicyExists && !cookieBannerReviewed"
 >
-    <p *ngrxLet="LANG.cookieWarning | translate as cookieWarning">
+    <p
+        class="paragraph"
+        *ngrxLet="LANG.cookieWarning | translate as cookieWarning"
+    >
         <span [innerText]="cookieWarning | translateCut: 0"></span
         ><a
             [routerLink]="cookiePolicyURL"

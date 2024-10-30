@@ -72,27 +72,27 @@
             >
                 <p
                     *ngIf="email.errors.required"
-                    class="error-label"
+                    class="paragraph error-label"
                     translate
                 >
                     Enter email
                 </p>
                 <p
                     *ngIf="email.errors.email || email.errors.pattern"
-                    class="error-label"
+                    class="paragraph error-label"
                     translate
                 >
                     Invalid email
                 </p>
                 <ng-container *ngIf="email.errors.accountNotActivated">
                     <p
-                        class="mb-2 error-label"
+                        class="paragraph mb-2 error-label"
                         translate
                     >
                         Account not activated.
                     </p>
                     <p
-                        class="fake-link"
+                        class="paragraph fake-link"
                         (click)="reactivate()"
                         translate
                         data-testid="resendActivationEmail"
@@ -102,13 +102,14 @@
                 </ng-container>
                 <ng-container *ngIf="email.errors.accountDoesNotExist">
                     <p
-                        class="mb-2"
+                        class="paragraph mb-2"
                         data-testid="accountDoesNotExist"
                         translate
                     >
                         Account does not exist.
                     </p>
                     <p
+                        class="paragraph"
                         translate
                         data-testid="canCreateAccount"
                     >
@@ -118,7 +119,7 @@
                 </ng-container>
                 <p
                     *ngIf="email.errors.accountNotAccessSystem"
-                    class="error-label"
+                    class="paragraph error-label"
                     data-testid="accountNoAccess"
                     translate
                 >
@@ -126,7 +127,7 @@
                 </p>
                 <p
                     *ngIf="email.errors.lockedOut"
-                    class="error-label"
+                    class="paragraph error-label"
                     translate
                     data-testid="tooManyAttemptsEmail"
                 >
@@ -159,26 +160,29 @@
             <ng-container *ngIf="login.invalid && login.dirty && login.touched">
                 <p
                     *ngif="login.errors.required"
-                    class="error-label"
+                    class="paragraph error-label"
                     translate
                 >
                     Enter login
                 </p>
                 <ng-container *ngIf="login.errors.accountNotActivated">
                     <p
-                        class="mb-2 error-label"
+                        class="paragraph mb-2 error-label"
                         translate
                     >
                         Account not activated.
                     </p>
-                    <p translate>
+                    <p
+                        class="paragraph"
+                        translate
+                    >
                         Look for the email with the activation link in your inbox or login to
                         %CLOUD_NAME% and follow provided instructions.
                     </p>
                 </ng-container>
                 <p
                     *ngIf="login.errors.accountNotAccessSystem"
-                    class="error-label"
+                    class="paragraph error-label"
                     translate
                     data-testid="accountDoesntExistEmail"
                 >
@@ -186,7 +190,7 @@
                 </p>
                 <p
                     *ngIf="login.errors.lockedOut"
-                    class="error-label"
+                    class="paragraph error-label"
                     translate
                     data-testid="tooManyAttemptsLogin"
                 >

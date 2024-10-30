@@ -4,11 +4,14 @@
         <div class="cards-container">
             <div class="card">
                 <div class="card-interior">
-                    <p [innerHTML]="LANG.placeholderTexts.noSystems.notConnected | translate"></p>
+                    <p
+                        class="paragraph"
+                        [innerHTML]="LANG.placeholderTexts.noSystems.notConnected | translate"
+                    ></p>
                     <div class="number-row">
                         <div class="number-circle">1</div>
                         <p
-                            class="description-text"
+                            class="paragraph description-text"
                             [innerHTML]="LANG.placeholderTexts.noSystems.login | translate"
                         ></p>
                     </div>
@@ -35,7 +38,10 @@
             </div>
             <div class="card">
                 <div class="card-interior">
-                    <p [innerHTML]="LANG.placeholderTexts.noSystems.connected | translate"></p>
+                    <p
+                        class="paragraph"
+                        [innerHTML]="LANG.placeholderTexts.noSystems.connected | translate"
+                    ></p>
                     <div class="number-row">
                         <div class="number-circle">1</div>
                         <div

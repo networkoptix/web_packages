@@ -27,6 +27,7 @@ $headings-font-family: var(--font-family-medium);
 $headings-color: var(--h1);
 
 $label-margin-bottom: 0.5rem;
+$paragraph-margin-bottom: 0.5rem;
 
 @mixin with-html {
     --font-family-base    : #{$font-family-base};

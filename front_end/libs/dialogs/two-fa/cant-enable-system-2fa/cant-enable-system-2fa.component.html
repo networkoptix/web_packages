@@ -17,12 +17,18 @@
 </div>
 
 <div class="modal-body">
-    <p translate>
+    <p
+        class="paragraph"
+        translate
+    >
         You can enable mandatory two-factor authentication for cloud users only if two-factor
         authentication is enabled for your account.
     </p>
 
-    <p *ngrxLet="LANG.dialogs.twoFa.enableItInSettings | translate as enableMsg">
+    <p
+        class="paragraph"
+        *ngrxLet="LANG.dialogs.twoFa.enableItInSettings | translate as enableMsg"
+    >
         <span>{{ enableMsg | translateCut: 0 }}</span
         ><a
             routerLink="/account/security"

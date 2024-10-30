@@ -19,12 +19,20 @@
 
 <div class="modal-body">
     <div id="backupText">
-        <p translate>
+        <p
+            class="paragraph"
+            translate
+        >
             If you don't have access to your mobile authentication app, you can use these codes to
             verify your identity.
         </p>
 
-        <p translate>Previously generated codes are no longer valid.</p>
+        <p
+            class="paragraph"
+            translate
+        >
+            Previously generated codes are no longer valid.
+        </p>
     </div>
 
     <nx-backup-codes [codes]="newCodes"></nx-backup-codes>
