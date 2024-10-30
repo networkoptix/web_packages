@@ -273,6 +273,10 @@ export const OrgUsersStore = signalStore(
                         ),
                     );
                 });
+
+                if (groupId) {
+                    updateGroupCache();
+                }
             };
 
             const refreshUsers = (methodName?: string): void => {
@@ -409,22 +413,18 @@ export const OrgUsersStore = signalStore(
                         );
                     },
                     removeUser: (orgId: string, email: string, folders: string[] = []) => {
-                        let user = store.currentGroupUsersEntityMap()[email];
-                        // Handles the case when the user is not in the current group. IE not in the root of the org.
-                        // This happens when the user is being deleted from the access table.
-                        if (!user || user.accessLevel) {
-                            const cachedUser = store
-                                .usersCacheEntityMap()
-                                [orgId]?.users?.find(u => u.email === email);
-                            if (cachedUser) {
-                                user = cachedUser;
-                            }
-                        }
+                        const user = store
+                            .usersCacheEntityMap()
+                            [orgId]!.users!.find(u => u.email === email)!;
+
                         // No folders or folders === groupRoles effective means we are removing the user from the org.
                         const deleteFromOrg =
                             user!.isOrgUser ||
                             folders.length === 0 ||
-                            folders.length === user.groupRoles?.length;
+                            (folders.length === user.groupRoles?.length &&
+                                folders.every(folder =>
+                                    user!.groupRoles.find(({ groupId }) => groupId === folder),
+                                ));
                         iif(
                             () => deleteFromOrg,
                             chpService.deleteOrganizationUser(orgId, email),
@@ -436,7 +436,7 @@ export const OrgUsersStore = signalStore(
                                     : user!.groupRoles.map(group => group.groupId),
                             ),
                         ).subscribe(() => {
-                            if (deleteFromOrg || !!user.accessLevel) {
+                            if (deleteFromOrg) {
                                 patchState(store, removeEntity(email, currentGroupUsersEntity));
                             }
 
@@ -450,7 +450,18 @@ export const OrgUsersStore = signalStore(
                                     const users = store.usersCacheEntityMap()[groupId]?.users;
                                     if (users) {
                                         const userIndex = users.findIndex(u => u.email === email);
-                                        users.splice(userIndex, 1);
+                                        const user = users[userIndex];
+                                        if (user) {
+                                            user.groupRoles = user.groupRoles?.filter(
+                                                group => !folders.includes(group.groupId),
+                                            );
+                                            if (!user.groupRoles?.length) {
+                                                users.splice(userIndex, 1);
+                                            } else {
+                                                users[userIndex] = user;
+                                            }
+                                        }
+
                                         updates.push(
                                             updateEntity(
                                                 { id: groupId, changes: { users } },
@@ -506,9 +517,10 @@ export const OrgUsersStore = signalStore(
                                 );
                             }
                         }
-                        zip(requests).subscribe(() =>
-                            patchState(store, removeEntities(emails, currentGroupUsersEntity)),
-                        );
+                        zip(requests).subscribe(() => {
+                            updateGroupCache(folder);
+                            patchState(store, removeEntities(emails, currentGroupUsersEntity));
+                        });
                     },
                     setUsers: (users: OrgUser[]) => {
                         patchState(
