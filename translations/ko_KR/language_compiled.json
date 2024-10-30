@@ -1056,7 +1056,7 @@
     "Password is required": "패스워드가 필요합니다.",
     "Password is set!": "비밀번호가 설정되었습니다!",
     "Password must contain at least 8 characters": "비밀번호는 최소 8자 이상 포함되어야 합니다.",
-    "Password must not be longer than 255 characters": "비밀번호는 255자를 넘을 수 없습니다.",
+    "Password must not be longer than 255 characters": "암호는 255자를 넘을 수 없습니다.",
     "Password saved": "비밀번호 저장됨",
     "Password successfully changed": "비밀번호가 성공적으로 변경되었습니다.",
     "Password:": "비밀번호:",
