@@ -26,7 +26,7 @@ import {
     RefreshSystemResources,
     SystemResourceTypeEnums,
 } from '@store/system-resources/system-resources.types';
-import { ObservableValueType } from '@utils/general';
+import { dirtyId, ObservableValueType } from '@utils/general';
 import { memoizeAsyncPersistent } from '@utils/memoize';
 
 import { RecordingStatus } from './camera-manager/camera-manager-types';
@@ -96,7 +96,9 @@ export class NxSystemService {
                               map(camerasWithArchives =>
                                   cameras.map(({ recordingStatus, ...camera }) => ({
                                       ...camera,
-                                      recordingStatus: camerasWithArchives.includes(camera.id)
+                                      recordingStatus: camerasWithArchives.includes(
+                                          dirtyId(camera.id),
+                                      )
                                           ? RecordingStatus.Archive
                                           : recordingStatus,
                                   })),
