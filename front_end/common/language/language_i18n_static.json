@@ -1611,9 +1611,9 @@
                 "custom": "Labels must be unique"
             },
             "labelRequired": "Label is required",
-            "labelPattern": "Label can only contain letters",
+            "labelPattern": "Label can only contain letters and spaces",
             "valueRquired": "Value is required",
-            "valuePattern": "Value can only contain letters and numbers"
+            "valuePattern": "Value can only contain letters, numbers, and spaces"
         }
     },
     "channelPartnerReports": {

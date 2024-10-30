@@ -210,11 +210,11 @@ export class NxInformationComponent {
     private newEmailControl = this.newControlFnFactory(NxValidators.email);
     private newCustomLabelControl = this.newControlFnFactory(() => [
         ...NxValidators.text(),
-        Validators.pattern(/^[\p{L}]*$/u), // Letters
+        Validators.pattern(/^[\p{L} ]*$/u), // Letters and spaces
     ]);
     private newCustomValueControl = this.newControlFnFactory(() => [
         ...NxValidators.text(),
-        Validators.pattern(/^[\p{L}\d]*$/u), // Letters and numbers
+        Validators.pattern(/^[\p{L}\d ]*$/u), // Letters, numbers, and spaces
     ]);
     private newOptionalTextControl = this.newControlFnFactory(() => NxValidators.text(false));
     private addFnFactory = (
