@@ -373,7 +373,11 @@ export class NxLayoutGridTreeComponent extends WithMenuItemsByType {
 
         if (isLocalLayout && createNewLayout) {
             if (crossSystemItemsAdded) {
-                this.layoutStateService.createNewCrossSystemLayout(updatedLayout.items);
+                this.layoutStateService.createNewCrossSystemLayout(
+                    updatedLayout.name,
+                    updatedLayout.items,
+                    true,
+                );
             } else if (focusView) {
                 this.layoutStateService.createNewLayout(updatedLayout.items);
             } else {
