@@ -207,9 +207,13 @@ export class NxLayoutViewComponent {
         switchMap(async ({ tree }) => {
             const systemId = this.systemService.currentSystem$$()?.id;
             if (systemId) {
-                const res = (await firstValueFrom(
-                    this.db.getByKey('layoutCache', this.getLayoutCacheKey(systemId)),
-                )) as {
+                const key = this.getLayoutCacheKey(systemId);
+                const fromSession = sessionStorage[key];
+                const res = (
+                    fromSession
+                        ? { value: JSON.parse(fromSession) }
+                        : await firstValueFrom(this.db.getByKey('layoutCache', key))
+                ) as {
                     value?: ReturnType<LayoutStateService['paramStateHandler']['state$$']>;
                 };
                 const value = res?.value;
@@ -312,9 +316,11 @@ export class NxLayoutViewComponent {
                 state.params?.layoutId &&
                 state.params?.layoutId !== 'default'
             ) {
+                const key = this.getLayoutCacheKey(state.params?.systemId);
+                sessionStorage[key] = JSON.stringify(state);
                 this.db
                     .update('layoutCache', {
-                        key: this.getLayoutCacheKey(state.params?.systemId),
+                        key,
                         value: state,
                     })
                     .subscribe();
