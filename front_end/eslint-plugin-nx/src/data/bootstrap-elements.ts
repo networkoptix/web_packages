@@ -3,7 +3,6 @@ const classes = new Set([
     "ol",
     "ul",
     "a",
-    "svg",
     "button",
     "input"
 ]);

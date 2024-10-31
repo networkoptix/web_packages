@@ -62,8 +62,8 @@ for (const rule of bootstrap.stylesheet.rules) {
         // Preferred defaults
         continue;
     }
-    if (isEqual(selectors, ['img'])) {
-        /* img {
+    if (isEqual(selectors, ['img', 'svg'])) {
+        /* img, svg {
             vertical-align: middle;
         } */
         // Removes extra margins from inline images

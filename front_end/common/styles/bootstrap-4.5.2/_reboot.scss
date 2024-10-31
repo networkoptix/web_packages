@@ -132,11 +132,7 @@ a:not([href]):not([class]) {
 // Images and content
 //
 
-img {
-  vertical-align: middle;
-}
-
-svg {
+img, svg {
   vertical-align: middle;
 }
 

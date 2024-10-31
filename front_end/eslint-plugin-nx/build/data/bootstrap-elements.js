@@ -1,1 +1,1 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:true});const classes=new Set(["ol","ul","a","svg","button","input"]);exports.default=classes;
+"use strict";Object.defineProperty(exports,"__esModule",{value:true});const classes=new Set(["ol","ul","a","button","input"]);exports.default=classes;

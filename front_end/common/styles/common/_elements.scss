@@ -60,9 +60,7 @@ b, strong {
     }
 }
 
-svg {
-    pointer-events: none;
-
+svg-icon svg {
     .icon-with-fill {
         fill: var(--svg-std-icon-fill);
         stroke: none;
@@ -75,8 +73,6 @@ svg {
 }
 
 svg-icon[data-escape-global-style] svg {
-    pointer-events: unset;
-
     .icon-with-fill {
         fill: unset;
         stroke: unset;
