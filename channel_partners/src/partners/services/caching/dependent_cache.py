@@ -49,8 +49,7 @@ class DependentCache:
             name: str,  # <- Remove
             key_params: List[str],
             dependencies: List[CacheDependency],
-            validate_auth: bool = True,
-            protocol_version: int = 1  # Not currently used
+            validate_auth: bool = True
     ) -> None:
         # Validate the input
         self._check_for_duplicate_key_params(key_params)
@@ -60,7 +59,6 @@ class DependentCache:
         self.key_params = key_params
         self.dependencies = dependencies
         self.validate_auth_entity = validate_auth
-        self.protocol_version = protocol_version
 
     # ==================== #
     # Main Processing methods

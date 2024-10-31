@@ -15,6 +15,7 @@ from uuid import UUID
 
 import redis.exceptions
 import structlog
+from django.conf import settings
 from django.core.cache import caches
 from django.core.exceptions import ValidationError
 from django.core.validators import EmailValidator
@@ -190,6 +191,13 @@ class CacheService:
     """
 
     @staticmethod
+    def _add_cache_protocol_version(key: str) -> str:
+        """
+        Adds the protocol version to a cache key.
+        """
+        return f"{key}:{settings.VERSION}"
+
+    @staticmethod
     def timestamp() -> int:
         time_parts = cache.time()
         return int(f"{time_parts[0]}{time_parts[1]:06d}")
@@ -199,6 +207,7 @@ class CacheService:
         return cache.keys("*")
 
     def ttl(self, key: str) -> int:
+        key = CacheService._add_cache_protocol_version(key)
         return cache.ttl(key)
 
     # Validation Cache Operations
@@ -214,7 +223,8 @@ class CacheService:
         Returns:
             str: The generated cache key.
         """
-        return f"validation_source_key_{custom_field}_{value}"
+        key = f"validation_source_key_{custom_field}_{value}"
+        return CacheService._add_cache_protocol_version(key)
 
     @staticmethod
     def get_bulk_validation_source_keys(keys: List[Tuple[str, str]]) -> Dict[Tuple[str, str], Any]:
@@ -227,7 +237,10 @@ class CacheService:
         Returns:
             Dict[Tuple[str, str], Any]: A dictionary of fetched keys and their values.
         """
-        cache_keys = [CacheService._generate_cache_key(custom_field, value) for custom_field, value in keys]
+        cache_keys = [
+            CacheService._generate_cache_key(custom_field, value)
+            for custom_field, value in keys
+        ]
         cached_values = cache.get_many(cache_keys)
         result = {}
         for custom_field, value in keys:
@@ -257,24 +270,34 @@ class CacheService:
         Retrieves cache fields for a given cache key. If specific fields are provided, only those fields are retrieved.
         If no fields are provided, all fields are retrieved. If no fields are found, returns None.
         """
+        cache_key = CacheService._add_cache_protocol_version(cache_key)
         result = cache.hgetall(cache_key) if not fields else cache.hmget(cache_key, *fields)
         return None if result == {} else result
 
     @staticmethod
     def set_cache_fields(cache_key: str, fields: Dict) -> None:
+        cache_key = CacheService._add_cache_protocol_version(cache_key)
         cache.hmset(cache_key, fields)
 
     @staticmethod
     def clear_cache(cache_key: str) -> None:
+        cache_key = CacheService._add_cache_protocol_version(cache_key)
         cache.delete(cache_key)
 
     @staticmethod
     def set(timestamp: int, cache_key: str, value: Any) -> None:
+        cache_key = CacheService._add_cache_protocol_version(cache_key)
         CacheService._set_versions_in_cache_lua(timestamp, {cache_key: value})
 
     @staticmethod
     def set_many(timestamp: int, data: Dict[str, Any]) -> None:
-        CacheService._set_versions_in_cache_lua(timestamp, data)
+        versioned_data = {CacheService._add_cache_protocol_version(key): value for key, value in data.items()}
+        CacheService._set_versions_in_cache_lua(timestamp, versioned_data)
+
+    @staticmethod
+    def get(cache_key: str) -> Any:
+        cache_key = CacheService._add_cache_protocol_version(cache_key)
+        return cache.get(cache_key)
 
     # End regular cache operations
     @staticmethod
@@ -371,11 +394,13 @@ class CacheService:
 
         # Generate cache keys
         cache_keys = []
+        mapped_keys = {}  # {"new_key": "old_key"}
         for key in keys:
-            cache_keys.append(get_version_cache_key(
-                key['model'],
-                key['id'],
-                key['version_type']))
+            old_key = get_version_cache_key(key['model'], key['id'], key['version_type'])
+            new_key = CacheService._add_cache_protocol_version(old_key)
+            cache_keys.append(new_key)
+            mapped_keys[new_key] = old_key
+
         # Get items from cache
         cached_items = cache.get_many(cache_keys)
 
@@ -389,6 +414,12 @@ class CacheService:
         if missing_keys:
             missing_objects = CacheService._get_missing_from_database_set_in_cache_multiple_types(missing_keys)
             cached_items.update(missing_objects)
+            # TODO: Consider adding a check if there's still missing items and log...'
+
+        # Re-map the keys from the new keys to the old keys
+        for new_key, old_key in mapped_keys.items():
+            if new_key in cached_items:
+                cached_items[old_key] = cached_items.pop(new_key)
         return cached_items
 
     @staticmethod
@@ -405,7 +436,14 @@ class CacheService:
             validate_model(key['model'], mixin_to_check)
 
         # Generate cache keys
-        cache_keys = [get_version_cache_key(key['model'], key['id'], version_type) for key in keys]
+        cache_keys = []
+        mapped_keys = {}  # {"new_key": "old_key"}
+        for key in keys:
+            old_key = get_version_cache_key(key['model'], key['id'], version_type)
+            new_key = CacheService._add_cache_protocol_version(old_key)
+            cache_keys.append(new_key)
+            mapped_keys[new_key] = old_key
+
         # Get items from cache
         cached_items = cache.get_many(cache_keys)
 
@@ -420,6 +458,12 @@ class CacheService:
         if missing_keys:
             missing_objects = CacheService._get_missing_from_database_set_in_cache(missing_keys, version_type)
             cached_items.update(missing_objects)
+            # TODO: Consider adding a check if there's still missing items and log...'
+
+        # Re-map the keys from the new keys to the old keys
+        for new_key, old_key in mapped_keys.items():
+            if new_key in cached_items:
+                cached_items[old_key] = cached_items.pop(new_key)
 
         return cached_items
 
@@ -449,7 +493,9 @@ class CacheService:
             instance: models.Model
             for instance in instances:
                 # Generate cache key
-                cache_key = get_version_cache_key(model_class, str(instance.id), version_type)
+                cache_key = CacheService._add_cache_protocol_version(
+                    get_version_cache_key(model_class, str(instance.id), version_type)
+                )
                 # Get value
                 value = getattr(instance, version_type)
                 # If the version_type is not path, set the value directly
@@ -497,7 +543,9 @@ class CacheService:
                 for group_item in current_group:
                     group_item_type: CachedFieldChoiceEnum = group_item["version_type"]
                     # Get the cache key
-                    cache_key = get_version_cache_key(model_class, str(instance.id), group_item_type)
+                    cache_key = CacheService._add_cache_protocol_version(
+                        get_version_cache_key(model_class, str(instance.id), group_item_type)
+                    )
 
                     if group_item_type == CachedFieldChoiceEnum.PATH_VERSION:
                         missing_objects[cache_key] = CacheService._build_path_value(instance)
@@ -505,7 +553,6 @@ class CacheService:
                         missing_objects[cache_key] = getattr(instance, group_item_type)
 
             # Set the values in the cache
-            # cache.set_many(missing_objects)
             successful, unsuccessful = CacheService._set_versions_in_cache_lua(timestamp, missing_objects)
             if unsuccessful:
                 logger.error(
@@ -546,6 +593,10 @@ class CacheService:
         Dict[str, Union[int, str, List[str]]],
         Dict[str, Union[int, str, List[str]]]
     ]:
+        """
+        Sets versions in cache using a Lua script.
+        Any and all versioning operations should be done prior to calling this method.
+        """
         # Prepare the arguments for the Lua script
         args = [timestamp]
         for key, value in data.items():

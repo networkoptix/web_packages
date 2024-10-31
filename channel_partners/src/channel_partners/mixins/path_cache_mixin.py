@@ -4,7 +4,6 @@ from typing import (
 )
 
 from django.apps import apps
-from django.core.cache import caches
 from django.db import models
 
 from partners.utils.cache_keys import get_version_cache_key
@@ -29,9 +28,8 @@ class PathCacheMixin(models.Model):
         and then stored in the cache.
         """
         # This shows a warning because FieldChoiceEnum is not imported
-        cache = caches["dependent_cache"]
         cache_key: str = get_version_cache_key(self.__class__, self.id, "path")
-        path_version = cache.get(cache_key)
+        path_version = CacheService.get(cache_key)
         if path_version is None:
             timestamp = CacheService.timestamp()
             self.refresh_from_db()

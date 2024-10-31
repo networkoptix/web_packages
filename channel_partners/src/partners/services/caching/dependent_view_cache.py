@@ -57,7 +57,6 @@ KEY_PARAMS: List[str] = [
     "path"
 ]
 
-PROTOCOL_VERSION: int = 1
 
 E_TAG_CACHE_KEY: str = "**etag"
 CACHE_FLUSH_HEADER_KEY: str = "X-Flush-CPS-Cache"

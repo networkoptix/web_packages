@@ -5,7 +5,6 @@ from typing import (
 from uuid import UUID
 
 import structlog
-from django.core.cache import caches
 from django.db import (
     models,
     transaction,
@@ -27,9 +26,8 @@ class VersionMixin(models.Model):
     def get_version(self) -> int:
         from partners.services.cache_service import CacheService
 
-        cache = caches["dependent_cache"]
         cache_key = get_version_cache_key(self.__class__, self.id, "version")
-        version = cache.get(cache_key)
+        version = CacheService.get(cache_key)
         if version is None:
             timestamp = CacheService.timestamp()
             self.refresh_from_db(fields=["version"])

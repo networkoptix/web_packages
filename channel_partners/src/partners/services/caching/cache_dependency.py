@@ -3,6 +3,7 @@ from typing import (
     Dict,
     List,
     Literal,
+    Optional,
     Type,
     Union,
 )
@@ -173,7 +174,7 @@ class CacheDependency:
             self,
             instance_id: Union[str, uuid.UUID],
             path_versions: Dict[str, List[List[str]]]
-    ) -> VersionKeyAndType:
+    ) -> Optional[VersionKeyAndType]:
         """
         Returns the parent key for the cache dependency.
 
@@ -277,7 +278,7 @@ class CacheDependency:
             instance_id: Union[str, uuid.UUID],
             path_versions: Dict[str, List[List[str]]],
             versions: Dict[str, int]
-    ) -> str:
+    ) -> Optional[str]:
         """
         Process the target parent for the cache dependency.
 

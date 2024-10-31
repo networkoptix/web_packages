@@ -300,12 +300,13 @@ class TestCacheService:
     def test_lua_script_logic(self, caplog):
         # Test Setup
         caplog.set_level(logging.DEBUG)
+        cache_key = "test_key"
 
         old_timestamp = CacheService.timestamp()
 
-        CacheService.set(CacheService.timestamp(), "test_key", 1000)
-        CacheService.set(old_timestamp, "test_key", 100)
+        CacheService.set(CacheService.timestamp(), cache_key, 1000)
+        CacheService.set(old_timestamp, cache_key, 100)
 
-        actual = cache.get("test_key")
+        actual = CacheService.get(cache_key)
         assert actual == 1000
         assert "Failed to set versions in cache" in caplog.text
