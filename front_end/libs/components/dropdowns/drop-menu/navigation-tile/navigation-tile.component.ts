@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
+import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { SubscriptionLike } from 'rxjs';
 
@@ -15,7 +16,7 @@ import { icons } from '@static-variables';
     selector: 'nx-navigation-tile',
     templateUrl: 'navigation-tile.component.html',
     styleUrls: ['navigation-tile.component.scss'],
-    imports: [CommonModule, RouterModule, AngularSvgIconModule],
+    imports: [CommonModule, RouterModule, AngularSvgIconModule, TranslateModule],
     standalone: true,
 })
 export class NxNavigationTileComponent {

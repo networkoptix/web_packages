@@ -6,6 +6,7 @@
     "createAccount": "Create Account",
     "Download %VMS_NAME%": "Download %VMS_NAME%",
     "For developers": "For developers",
+    "Generic Events Generator": "Generic Events Generator",
     "How it works": "How it works",
     "How to setup?": "How to setup?",
     "Integrations (β)": "Integrations (β)",
@@ -347,32 +348,40 @@
     },
     "accessRoles": {
         "Administrator": {
-            "description": "Unrestricted access including the ability to share",
-            "label": "Administrator"
+            "description": "Members of this group have unlimited System privileges. Administrators can create and modify Power Users, merge Systems and connect or disconnect System to %CLOUD_NAME%.",
+            "label": "Administrators"
         },
         "Advanced Viewer": {
-            "description": "Can view live video, browse the archive, control PTZ etc",
-            "label": "Advanced Viewer"
+            "description": "Members of this group can, in addition to the permissions granted by the Viewers group, see and activate PTZ positions and PTZ tours, use 2-way audio, operate I/O module buttons, create and edit bookmarks, and view the Event Log.",
+            "label": "Advanced Viewers"
         },
         "Custom": {
             "description": "Use the %VMS_NAME% Client application to set up custom permissions",
             "label": "Custom"
         },
         "Live Viewer": {
-            "description": "Can only view live video",
-            "label": "Live Viewer"
+            "description": "Members of this group can view live videos, I/O modules and web pages.",
+            "label": "Live Viewers"
         },
         "Owner": {
             "description": "Unrestricted access including the ability to share and connect/disconnect System from cloud",
             "label": "Owner"
         },
+        "Power User": {
+            "description": "Members of this group can, in addition to the permissions granted by the Advanced Viewers group, control most of the System configuration, but are not allowed to change any Administrator related settings, like delete or change their own groups and permissions, and cannot create or edit other Power Users.",
+            "label": "Power Users"
+        },
+        "System Health Viewer": {
+            "description": "Members of this group can view System Health Monitoring information and server processor load in real-time (Server Monitoring).",
+            "label": "System Health Viewer"
+        },
         "Viewer": {
-            "description": "Can view live video and browse the archive",
-            "label": "Viewer"
+            "description": "Members of this group can, in addition to the permissions granted by the Live Viewers group, view and export archive and Bookmarks.",
+            "label": "Viewers"
         },
         "advancedViewer": {
             "description": "Can view live video, browse the archive, configure cameras, control PTZ etc",
-            "label": "Advanced Viewer"
+            "label": "Advanced Viewers"
         },
         "cloudAdmin": {
             "description": "Can configure System and share it",
@@ -392,7 +401,7 @@
         },
         "liveViewer": {
             "description": "Can only view live video",
-            "label": "Live Viewer"
+            "label": "Live Viewers"
         },
         "owner": {
             "description": "Unrestricted access including the ability to share and connect/disconnect System from cloud",
@@ -400,7 +409,7 @@
         },
         "viewer": {
             "description": "Can view live video and browse the archive",
-            "label": "Viewer"
+            "label": "Viewers"
         },
         "none": {
             "description": "",
@@ -1651,7 +1660,36 @@
             "actionsTriggered1m": "Rules Activations/s",
             "apiCalls1m": "API Calls/s",
             "thumbnails1m": "Thumbnails/s",
-            "activePlugins": "Active plugins list"
+            "activePlugins": "Active plugins list",
+            "_offlineEvents": "Events: Camera Offline (1h)",
+            "streamIssues1h": "Events: Stream Issues (1h)",
+            "primaryStream": "Primary stream",
+            "secondaryStream": "Secondary stream",
+            "targetFps": "Target FPS",
+            "actualFps": "Actual FPS",
+            "fpsDeltaAverage10m": "Avg FPS drop (10 min)",
+            "storage": "Storage Analytics",
+            "archiveLengthS": "Archive",
+            "recordingBitrateBps": "Recording Bitrate (5min)",
+            "ipConflicts3min": "Events: IP Conflicts (3 min)",
+            "firmware": "Firmware",
+            "targetBitrateBps": "Target Bitrate",
+            "actualBitrateBps": "Actual Bitrate",
+            "minArchiveLengthS": "Min Archive length",
+            "unauthorized": "Unauthorized",
+            "IOModule": "I/O Module",
+            "inBps1m": "IN Rate",
+            "issues24h": "Issues (24h)",
+            "otherAddresses": "Other IP addresses",
+            "outBps1m": "OUT Rate",
+            "rates": "I/O Rates",
+            "down": "Down",
+            "up": "Up",
+            "readRateBps1m": "Read Rate",
+            "writeRateBps1m": "Write Rate",
+            "totalSpaceB": "Total",
+            "mediaSpaceP": "VMS Media (%)",
+            "mediaSpaceB": "VMS Media"
         },
         "serverName": "{name} (Offline)"
     },

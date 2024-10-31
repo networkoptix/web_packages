@@ -790,5 +790,6 @@
     "see organizations": "see organizations",
     "width": "width",
     "you": "you",
-    "{n} of {m}": "{n} of {m}"
+    "{n} of {m}": "{n} of {m}",
+    "{time} min ago": "{time} min ago"
 }

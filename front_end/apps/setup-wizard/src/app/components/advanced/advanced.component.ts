@@ -1,6 +1,7 @@
 import { CommonModule, KeyValue } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
@@ -14,7 +15,14 @@ import { SECURITY_LEVEL } from '../../types/wizard-state.types';
 @Component({
     selector: 'nx-advanced-component',
     standalone: true,
-    imports: [CommonModule, FormsModule, PipesModule, NxCheckboxComponent, NxGenericDropdownModule],
+    imports: [
+        CommonModule,
+        FormsModule,
+        TranslateModule,
+        PipesModule,
+        NxCheckboxComponent,
+        NxGenericDropdownModule,
+    ],
     templateUrl: 'advanced.component.html',
     styleUrls: ['advanced.component.scss'],
 })
