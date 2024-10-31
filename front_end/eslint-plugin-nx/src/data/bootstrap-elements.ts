@@ -3,7 +3,6 @@ const classes = new Set([
     "ol",
     "ul",
     "a",
-    "button",
-    "input"
+    "button"
 ]);
 export default classes;

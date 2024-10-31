@@ -52,13 +52,26 @@ for (const rule of bootstrap.stylesheet.rules) {
     if (!selectors.length) {
         continue;
     }
-    if (isEqual(selectors, ['table']) || isEqual(selectors, ['th'])) {
+    if (
+        isEqual(selectors, ['table']) ||
+        isEqual(selectors, ['th']) ||
+        isEqual(selectors, ['input', 'button'])
+    ) {
         /* table {
             border-collapse: collapse;
         }
         th {
             text-align: inherit;
-        } */
+        }
+
+        input,
+        button {
+            margin: 0;
+            font-family: inherit;
+            font-size: inherit;
+            line-height: inherit;
+        }
+        */
         // Preferred defaults
         continue;
     }
