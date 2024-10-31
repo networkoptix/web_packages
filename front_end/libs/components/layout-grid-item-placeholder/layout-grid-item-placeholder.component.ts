@@ -79,7 +79,7 @@ const enable2fa: Placeholder = {
     isError: true,
     icon: 'lock',
     actionName: actionsLang.enable2fa,
-    hint: actionsLang.enable2fa,
+    hint: hintsLang.enable2fa,
 };
 
 const unavailable: Placeholder = {
