@@ -918,6 +918,7 @@ export const getOauthUrl = (config: OauthConfig | undefined): string => {
         restart: 'passwordRestart',
         system2faAuth: 'system2faAuth',
         transfer: 'passwordTransfer',
+        continueWorking: 'passwordContinueWorking',
     };
     const params = new URLSearchParams({
         client_type: (state && clientTypes[state]) || clientTypes.login,

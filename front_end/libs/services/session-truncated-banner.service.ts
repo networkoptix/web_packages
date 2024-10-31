@@ -91,9 +91,11 @@ export class NxSessionTruncatedBannerService {
                         if (!this.loginService.currentSystem && this.currentSystem.value) {
                             this.loginService.currentSystem = this.currentSystem.value;
                         }
-                        this.loginService.updateSession(SessionState.RenewWeb, true).then(() => {
-                            this.updateSessionBanner();
-                        });
+                        this.loginService
+                            .updateSession(SessionState.ContinueWorking, true)
+                            .then(() => {
+                                this.updateSessionBanner();
+                            });
                     },
                 },
             ],

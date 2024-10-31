@@ -1,4 +1,5 @@
 export enum SessionState {
+    ContinueWorking = 'continueWorking',
     Detach = 'detach',
     Disconnect = 'disconnect',
     Merge = 'merge',

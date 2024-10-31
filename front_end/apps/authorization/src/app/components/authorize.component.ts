@@ -240,10 +240,8 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                 }
             }
             const clientType =
-                this.initialData.client_type ||
-                this.localStorageService.retrieve('client_type') ||
-                'loginCloud';
-            this.clientType = ClientType[clientType];
+                this.initialData.client_type || this.localStorageService.retrieve('client_type');
+            this.clientType = ClientType[clientType] || ClientType.loginCloud;
 
             const viewType = this.initialData.view_type;
             this.viewType =

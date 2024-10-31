@@ -82,6 +82,11 @@ export function setupText(type?: string): TemplateText {
             subHeader,
             subHeaderSuffix: auth.passwordTransfer,
         },
+        confirmPasswordContinueWorking: {
+            header: auth.loginCloudHeader,
+            subHeader,
+            subHeaderSuffix: auth.passwordContinueWorking,
+        },
         connectSystemToCloud: connect,
         setupWizard: connect,
         renewSessionDesktop: passwordApply,

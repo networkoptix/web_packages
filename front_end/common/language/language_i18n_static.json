@@ -690,6 +690,7 @@
         "passwordRestart": "to restart server",
         "passwordDetach": "to detach server",
         "passwordTransfer": "to transfer system",
+        "passwordContinueWorking": "to continue working",
         "createAccountHeader": "Create %CLOUD_NAME% Account",
         "activateHeader": "Activate %CLOUD_NAME% Account",
         "createdText": "Account Created!",

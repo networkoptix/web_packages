@@ -34,7 +34,7 @@ export class NxOpenAuthenticationApp extends ModalBase<DT['return']> {
     constructor(dialogRef: DialogRef<DT['return']>) {
         super(dialogRef);
         // TODO: There might be something extra to do here for 2FA
-        this.authorizationUrlString = `${window.location.origin}/authorize?email=${this.accountService.email}&redirect_uri=${window.location.href}`;
+        this.authorizationUrlString = `${window.location.origin}/authorize?email=${this.accountService.email}&redirect_uri=${window.location.href}&client_type=passwordContinueWorking`;
         this.authorizationUrl = this.domSanitizer.bypassSecurityTrustResourceUrl(
             this.authorizationUrlString,
         );
