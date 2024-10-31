@@ -37,6 +37,7 @@ import {
     switchMap,
     tap,
 } from 'rxjs/operators';
+import { v5 } from 'uuid';
 
 import type { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { NxLayoutGridComponent } from '@components/layout-grid/layout-grid.component';
@@ -200,12 +201,14 @@ export class NxLayoutViewComponent {
 
     db = inject(NgxIndexedDBService);
 
+    getLayoutCacheKey = (systemId: string): string => v5(this.accountService.email, systemId);
+
     #defaultLayout$: Observable<string> = this.layoutItemLookup$.pipe(
         switchMap(async ({ tree }) => {
             const systemId = this.systemService.currentSystem$$()?.id;
             if (systemId) {
                 const res = (await firstValueFrom(
-                    this.db.getByKey('layoutCache', `last-route-${systemId}`),
+                    this.db.getByKey('layoutCache', this.getLayoutCacheKey(systemId)),
                 )) as {
                     value?: ReturnType<LayoutStateService['paramStateHandler']['state$$']>;
                 };
@@ -311,7 +314,7 @@ export class NxLayoutViewComponent {
             ) {
                 this.db
                     .update('layoutCache', {
-                        key: `last-route-${state.params?.systemId}`,
+                        key: this.getLayoutCacheKey(state.params?.systemId),
                         value: state,
                     })
                     .subscribe();
@@ -356,7 +359,7 @@ export class NxLayoutViewComponent {
         }
 
         const res = (await firstValueFrom(
-            this.db.getByKey('layoutCache', `last-route-${systemId}`),
+            this.db.getByKey('layoutCache', this.getLayoutCacheKey(systemId)),
         )) as {
             value?: ReturnType<LayoutStateService['paramStateHandler']['state$$']>;
         };
