@@ -1,5 +1,7 @@
 @use "sass-rem/rem" as sass-rem;
 
+@use "../theme_variables_common" as common;
+
 @use "./bootstrap_utils" as bootstrap;
 @use "./mixins";
 @use "./typography";
@@ -126,6 +128,9 @@ input.hide-errors {
         outline: 1px solid var(--input-focus-border-color) !important;
         outline-offset: 0;
         box-shadow: 0 0 0 2px var(--input-focus-shadow-color);
+        &.inset {
+            @include common.inset-outline;
+        }
     }
 
     &[class*="ng-invalid"]:not(.ng-untouched):not(.notYetSubmitted):not(.hide-errors) {
@@ -188,6 +193,9 @@ input.hide-errors {
             outline: 1px solid var(--input-focus-border-color) !important;
             outline-offset: 0;
             box-shadow: 0 0 0 2px var(--input-focus-shadow-color);
+            &.inset {
+                @include common.inset-outline;
+            }
         }
     }
 

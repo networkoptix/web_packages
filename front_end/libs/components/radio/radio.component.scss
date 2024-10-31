@@ -1,4 +1,10 @@
 nx-radio {
+    input[type=radio]:focus-visible:not([disabled]):not(.disabled) {
+        &+.check {
+            outline: none !important;
+        }
+    }
+
     label {
         &.disabled {
             color: var(--radio-color) !important;
@@ -87,7 +93,7 @@ nx-radio {
             }
         }
 
-        input:focus~.check {
+        input:focus-visible~.check {
             svg .circle-focus {
                 stroke: var(--brand-d1) !important;
                 stroke-width: 2;
@@ -100,43 +106,42 @@ nx-radio {
             }
         }
     }
-}
-
-.label-text {
-    font-family: var(--font-family-regular);
-    cursor: pointer;
-    user-select: none;
-    margin-left: 2px;
-    margin-top: 1px
-}
-
-.check {
-    cursor: pointer;
-    position: relative;
-    margin: -2px 0 0 0;
-    width: 24px;
-    height: 24px;
-    -webkit-tap-highlight-color: transparent;
-
-    &.checked {
-        svg {
-            .dot {
-                fill: var(--radio-check-color);
-                display: block;
-            }
-        }
+    .label-text {
+        font-family: var(--font-family-regular);
+        cursor: pointer;
+        user-select: none;
+        margin-left: 2px;
+        margin-top: 1px
     }
 
-    &.tristate {
-        svg {
-            .dot {
-                fill: var(--brand-core-t50);
-                display: block;
+    .check {
+        cursor: pointer;
+        position: relative;
+        margin: -2px 0 0 0;
+        width: 24px;
+        height: 24px;
+        -webkit-tap-highlight-color: transparent;
+
+        &.checked {
+            svg {
+                .dot {
+                    fill: var(--radio-check-color);
+                    display: block;
+                }
             }
         }
-    }
 
-    svg .dot {
-        display: none;
+        &.tristate {
+            svg {
+                .dot {
+                    fill: var(--brand-core-t50);
+                    display: block;
+                }
+            }
+        }
+
+        svg .dot {
+            display: none;
+        }
     }
 }

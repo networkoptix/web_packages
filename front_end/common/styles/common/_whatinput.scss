@@ -38,63 +38,6 @@
     }
 }
 
-[data-whatinput="keyboard"] input:not([data-escape-global-style]):focus,
-[data-whatinput="keyboard"] input:not([data-escape-global-style]):active {
-    border-color: var(--input-focus-border-color) !important;
-    outline: 1px solid var(--input-focus-border-color) !important;
-    outline-offset: 0;
-    // This interfere with autofill bg-color (-webkit-box-shadow)
-    // keep background-color and box-shadow defined in _input.scss
-    // box-shadow: 0 0 0 2px var(--input-focus-shadow-color) !important;
-
-    &.inset {
-        @include inset-outline;
-    }
-}
-
-[data-whatinput="keyboard"] input[type=checkbox]:focus:not([disabled]):not(.disabled) {
-    &+.checkmark {
-        outline: none !important;
-        @include outline;
-    }
-
-    &+.check {
-        outline: none !important;
-        @include outline;
-    }
-
-    &+.tick {
-        outline: none !important;
-    }
-}
-
-[data-whatinput="mouse"] input[type=checkbox]:focus:not([disabled]):not(.disabled) {
-    &+.tick {
-        svg .focus {
-            stroke: transparent !important;
-        }
-    }
-}
-
-[data-whatinput="keyboard"] input[type=radio]:focus:not([disabled]):not(.disabled) {
-    &+.checkmark {
-        outline: none !important;
-        @include outline;
-    }
-
-    &+.check {
-        outline: none !important;
-    }
-}
-
-[data-whatinput="mouse"] input[type=radio]:focus:not([disabled]):not(.disabled) {
-    &+.check {
-        svg .circle-focus {
-            stroke: transparent !important;
-        }
-    }
-}
-
 [data-whatintent="keyboard"] .nav-tabs .nav-item a:focus {
     @include inset-outline;
 }

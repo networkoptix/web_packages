@@ -96,7 +96,7 @@
         }
     }
 
-    input:focus~.tick {
+    input:focus-visible~.tick {
         svg .focus {
             display: block;
             stroke: var(--brand-d1) !important;
@@ -121,6 +121,12 @@
 }
 
 nx-checkbox {
+    input[type=checkbox]:focus-visible:not([disabled]):not(.disabled) {
+        &+.tick {
+            outline: none !important;
+        }
+    }
+
     &+label {
         margin-left: 2px;
     }

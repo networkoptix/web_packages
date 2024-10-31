@@ -81,28 +81,3 @@ button[data-escape-global-style]::-moz-focus-inner {
   padding: unset;
   border-style: unset;
 }
-
-input[data-escape-global-style][type=radio],
-input[data-escape-global-style][type=checkbox] {
-  box-sizing: unset;
-  padding: unset;
-}
-
-[type=number][data-escape-global-style]::-webkit-inner-spin-button,
-[type=number][data-escape-global-style]::-webkit-outer-spin-button {
-  height: unset;
-}
-
-[type=search][data-escape-global-style] {
-  outline-offset: unset;
-  -webkit-appearance: unset;
-}
-
-[type=search][data-escape-global-style]::-webkit-search-decoration {
-  -webkit-appearance: unset;
-}
-
-::-webkit-file-upload-button {
-  font: unset;
-  -webkit-appearance: unset;
-}
