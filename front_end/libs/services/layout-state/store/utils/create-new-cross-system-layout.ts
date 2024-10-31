@@ -24,7 +24,7 @@ export const createNewUnsavedCrossSystemLayout = (
         items: items || [],
         locked: false,
         logicalId: 0,
-        name: name || staticLang.layouts.helpMessages.unsaved.title,
+        name: name || staticLang.layouts.newCrossSystemLayout,
         systemId: '',
     };
 

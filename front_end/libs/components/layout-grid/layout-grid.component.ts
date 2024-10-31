@@ -2452,7 +2452,7 @@ export class NxLayoutGridComponent {
                         this.layoutStateService.createNewCrossSystemLayout(
                             layoutOrFocus && assertResourceOfType.layout(layoutOrFocus)
                                 ? this.layout.name
-                                : '',
+                                : staticLang.layouts.newCrossSystemLayout,
                             items,
                             isCopy,
                         );
