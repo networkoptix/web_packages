@@ -52,26 +52,6 @@ for (const rule of bootstrap.stylesheet.rules) {
     if (!selectors.length) {
         continue;
     }
-    if (
-        isEqual(selectors, [
-            'article',
-            'aside',
-            'figcaption',
-            'figure',
-            'footer',
-            'header',
-            'hgroup',
-            'main',
-            'nav',
-            'section',
-        ])
-    ) {
-        /* article, aside, figcaption, figure, footer, header, hgroup, main, nav, section {
-            display: block;
-        } */
-        // These are all display: block by default
-        continue;
-    }
     if (isEqual(selectors, ['table']) || isEqual(selectors, ['th'])) {
         /* table {
             border-collapse: collapse;

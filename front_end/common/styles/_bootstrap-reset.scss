@@ -35,7 +35,6 @@ a[data-escape-global-style]:not([href]):not([class]):hover {
 }
 
 svg[data-escape-global-style] {
-  overflow: unset;
   vertical-align: unset;
 }
 
@@ -54,11 +53,6 @@ button[data-escape-global-style] {
   font-family: unset;
   font-size: unset;
   line-height: unset;
-}
-
-button[data-escape-global-style],
-input[data-escape-global-style] {
-  overflow: unset;
 }
 
 button[data-escape-global-style] {
