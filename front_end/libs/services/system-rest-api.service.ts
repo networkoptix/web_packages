@@ -597,6 +597,10 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
     protected override post<T>(url: string, data?: Record<string, unknown>, opts?: WithoutRT) {
         const { params, _headers, customTimeout } = this.parseRequestOpts(opts);
 
+        if (this.requiresWeb(url)) {
+            url = `/web${url}`;
+        }
+
         url = `${this.urlBase}${url}`;
 
         if (url.includes('/rest/v1/login/sessions')) {
