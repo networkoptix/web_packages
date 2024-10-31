@@ -1,4 +1,5 @@
 import { BaseMenuItem } from '@components/context-menu/context-menu.types';
+import { getLayoutOpenWindowActionsFactory } from '@components/layout-grid-tree/menu-items/actions/get-layout-open-window-actions-factory';
 
 import { getFullScreenActionsFactory } from '../actions/get-full-screen-actions-factory';
 import { getLayoutEditActionsFactory } from '../actions/get-layout-edit-actions-factory';
@@ -6,13 +7,12 @@ import { getLayoutLockActionsFactory } from '../actions/get-layout-lock-actions-
 import { getLayoutResolutionActionsFactory } from '../actions/get-layout-resolution-actions-factory';
 import { getLayoutShareActionsFactory } from '../actions/get-layout-share-actions-factory';
 import { getLayoutUpdateActionsFactory } from '../actions/get-layout-update-actions-factory';
-import { openWindowActionsFactory } from '../actions/open-window-actions-factory';
 
 export const layoutMenuFactory = ({
     getLayoutLockActions,
     getLayoutEditActions,
     getLayoutUpdateActions,
-    openWindowActions,
+    getLayoutOpenWindowActions,
     getLayoutShareActions,
     getFullScreenActions,
     getLayoutResolutionActions,
@@ -20,7 +20,7 @@ export const layoutMenuFactory = ({
     getLayoutLockActions: ReturnType<typeof getLayoutLockActionsFactory>;
     getLayoutEditActions: ReturnType<typeof getLayoutEditActionsFactory>;
     getLayoutUpdateActions: ReturnType<typeof getLayoutUpdateActionsFactory>;
-    openWindowActions: ReturnType<typeof openWindowActionsFactory>;
+    getLayoutOpenWindowActions: ReturnType<typeof getLayoutOpenWindowActionsFactory>;
     getLayoutShareActions: ReturnType<typeof getLayoutShareActionsFactory>;
     getFullScreenActions: ReturnType<typeof getFullScreenActionsFactory>;
     getLayoutResolutionActions: ReturnType<typeof getLayoutResolutionActionsFactory>;
@@ -28,7 +28,7 @@ export const layoutMenuFactory = ({
 }) => ({
     tree: node =>
         [
-            ...openWindowActions,
+            ...getLayoutOpenWindowActions(node),
             ...getLayoutEditActions(node),
             ...getLayoutUpdateActions(node),
             ...getLayoutShareActions(node),
@@ -36,7 +36,7 @@ export const layoutMenuFactory = ({
         ].filter(Boolean),
     scene: node =>
         [
-            ...openWindowActions,
+            ...getLayoutOpenWindowActions(node),
             ...getLayoutEditActions(node).filter((menu: BaseMenuItem) => menu.id !== 'startRename'),
             ...getLayoutUpdateActions(node),
             ...getLayoutLockActions(node),

@@ -11,7 +11,9 @@ import {
     ResourceNodeMap,
     ResourceType,
 } from '@components/layout-grid/layout-grid.types';
+import { getLayoutOpenWindowActionsFactory } from '@components/layout-grid-tree/menu-items/actions/get-layout-open-window-actions-factory';
 import { webPageMenuFactory } from '@components/layout-grid-tree/menu-items/menus/web-page-menu-factory';
+import staticLang from '@language_static';
 import { LayoutStateService } from '@services/layout-state/layout-state.service';
 import { selectLayoutResolution } from '@services/layout-state/store/layouts-resolution/resolution.selectors';
 import { Layout } from '@services/system-api.types/layouts.types';
@@ -106,7 +108,17 @@ export abstract class WithMenuItemsByType {
                         return !unsavedLayoutIds?.[layoutId];
                     }),
             ),
-            openWindowActions: this.OPEN_WINDOW_ACTIONS,
+            getLayoutOpenWindowActions: getLayoutOpenWindowActionsFactory(
+                this.OPEN_WINDOW_ACTIONS,
+                layoutId =>
+                    computed(() => {
+                        const unsavedLayoutsInfo = this.layoutStateService.unsavedLayoutsInfo$$();
+                        return (
+                            unsavedLayoutsInfo?.states[layoutId] ===
+                            staticLang.layouts.unsavedStates.unsaved
+                        );
+                    }),
+            ),
             getLayoutShareActions: getLayoutShareActionsFactory(
                 layout => this.layoutStateService.shareLayout(layout),
                 () => this.system.permissionManager.currentUser$$(),

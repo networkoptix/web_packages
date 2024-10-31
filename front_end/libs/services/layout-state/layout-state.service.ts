@@ -73,7 +73,10 @@ import {
 } from './store/shared/types/layout-state.types';
 import { hashItem } from './store/shared/utils';
 import { UnsavedLayoutsActions, UnsavedLayoutsSelectors } from './store/unsaved-layouts';
-import { selectUnsavedLayoutsIds } from './store/unsaved-layouts/unsaved-layouts.selectors';
+import {
+    selectUnsavedLayoutsIds,
+    selectUnsavedLayoutsInfo,
+} from './store/unsaved-layouts/unsaved-layouts.selectors';
 import {
     incrementUntilUnique,
     incrementUntilUniqueCopy,
@@ -516,6 +519,8 @@ export class LayoutStateService {
     unsavedLayoutsIds$$ = toSignal(this.store.select(selectUnsavedLayoutsIds), {
         initialValue: {},
     });
+
+    unsavedLayoutsInfo$$ = toSignal(this.store.select(selectUnsavedLayoutsInfo));
 
     showResolutionRibbon$ = new Subject<number>();
 
