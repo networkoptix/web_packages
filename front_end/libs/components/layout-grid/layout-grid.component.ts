@@ -2395,6 +2395,7 @@ export class NxLayoutGridComponent {
 
                 const unresolvedCollisions = Object.values(collisions).some(c => !c.moveTo);
                 const notMoved =
+                    this.layout.name !== this.layoutStateService.focusViewToken &&
                     !!this.layout.items.length &&
                     [x, y, resize.x, resize.y].every(change => !change);
                 this.addingItem$$.set(false);
