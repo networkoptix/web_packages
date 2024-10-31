@@ -573,6 +573,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                                         catchError(() => Promise.resolve()),
                                     ),
                                 );
+                                window.opener?.postmessage('authenticated');
                             }
                             return res;
                         });

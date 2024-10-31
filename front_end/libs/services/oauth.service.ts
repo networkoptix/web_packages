@@ -1,24 +1,15 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, isDevMode } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
 import { environment } from '@environments/environment';
-import { useNewCloud } from '@utils/general';
+import { getOauthUrl, OauthConfig } from '@utils/general';
 import { memoizeAsyncShort } from '@utils/memoize';
 
 import { nxConfig } from './nx-config/config';
 import type { IConfig } from './nx-config/config-types';
 import { NxStorageService } from './storage.service';
-
-interface OauthConfig {
-    state?: string;
-    email?: string;
-    code?: string;
-    accessToken?: string;
-    redirectTo?: string;
-    systemName?: string;
-}
 
 @Injectable({
     providedIn: 'root',
@@ -63,72 +54,7 @@ export class OauthService {
 
     @memoizeAsyncShort
     redirectOauth(config?: OauthConfig) {
-        let { redirectTo, state, email, code, accessToken, systemName } = config ?? {};
-        redirectTo ??= window.location.href;
-        const cleanRedirect = url => {
-            const [baseUrl, query] = url.split('?');
-            const params = new URLSearchParams(query);
-            if (params.has('code')) {
-                params.delete('code');
-            }
-            if (params.has('access_token')) {
-                params.delete('access_token');
-            }
-            const paramString = params.toString();
-            return `${baseUrl}${paramString.length ? '?' + params.toString() : ''}`;
-        };
-        const clientTypes = {
-            connect: 'connect',
-            login: environment.isWebadmin ? 'loginWebadmin' : 'loginCloud',
-            disconnect: 'passwordDisconnect',
-            detach: 'passwordDetach',
-            merge: 'passwordMerge',
-            renewWeb: 'renewWeb',
-            renew2FA: 'renewWeb2FA',
-            reset: 'passwordReset',
-            restart: 'passwordRestart',
-            system2faAuth: 'system2faAuth',
-            transfer: 'passwordTransfer',
-        };
-        const params = new URLSearchParams({
-            client_type: (state && clientTypes[state]) || clientTypes.login,
-            view_type: 'web',
-            redirect_uri: cleanRedirect(redirectTo),
-            client_id: environment.isWebadmin ? 'webadmin' : 'cloud_portal',
-            response_type: 'code',
-            grant_type: 'password',
-        });
-        if (environment.isWebadmin) {
-            params.append(
-                'scope',
-                `${this.CONFIG.cloudHost.replace(/http?s:\/\//, '')} cloudSystemId=${
-                    this.CONFIG.cloudSystemId || '*'
-                }`,
-            );
-        }
-        if (systemName) {
-            params.append('system_name', systemName);
-        }
-        if (email) {
-            params.append('email', email);
-        }
-        if (code) {
-            params.append('code', code);
-        }
-
-        if (accessToken) {
-            params.append('access_token', accessToken);
-        }
-        const host = !isDevMode()
-            ? `${this.CONFIG.cloudHost ?? ''}`
-            : environment.cloudHost
-              ? `https://${environment.cloudHost}`
-              : this.CONFIG.cloudHost;
-        if (useNewCloud()) {
-            window.location.href = `${window.location.origin}?${params.toString()}`;
-        } else {
-            window.location.href = `${host}/authorize?${params.toString()}`;
-        }
+        window.location.href = getOauthUrl(config);
         return false;
     }
 

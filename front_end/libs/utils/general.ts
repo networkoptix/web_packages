@@ -4,10 +4,13 @@ third party data/types it should probably go in nx.ts instead. */
 
 import { Location } from '@angular/common';
 import { isDevMode } from '@angular/core';
+import { BroadcastChannel } from 'broadcast-channel';
 import { last, memoize, zip } from 'lodash-es';
 import { combineLatest, Observable, timer } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { NIL, v4, v5 } from 'uuid';
 
+import { environment } from '@environments/environment';
 import { nxConfig } from '@services/nx-config/config';
 import {
     CameraProjection,
@@ -855,3 +858,100 @@ export const useNewCloud = (): boolean =>
     Boolean(
         nxConfig.featureFlags.newCloudColorProvider && nxConfig.featureFlags.newCloudLayoutWrapper,
     );
+
+class ReloadWindowBroadcastChannel extends BroadcastChannel {
+    windowId = v4();
+
+    override onmessage = ({ data }: { data: { initiator: string } }): void => {
+        if (data.initiator !== this.windowId) {
+            location.reload();
+        }
+    };
+
+    reloadAllWindows = (includeCurrent = true): void => {
+        this.postMessage({ initiator: this.windowId });
+        if (includeCurrent) {
+            location.reload();
+        }
+    };
+
+    constructor() {
+        super(v5('reload-windows', NIL));
+    }
+}
+
+export const reloadWindowsChannel = new ReloadWindowBroadcastChannel();
+
+export interface OauthConfig {
+    state?: string;
+    email?: string;
+    code?: string;
+    accessToken?: string;
+    redirectTo?: string;
+    systemName?: string;
+}
+
+export const getOauthUrl = (config: OauthConfig | undefined): string => {
+    let { redirectTo, state, email, code, accessToken, systemName } = config ?? {};
+    redirectTo ??= window.location.href;
+    const cleanRedirect = (url: string): string => {
+        const [baseUrl, query] = url.split('?');
+        const params = new URLSearchParams(query);
+        if (params.has('code')) {
+            params.delete('code');
+        }
+        if (params.has('access_token')) {
+            params.delete('access_token');
+        }
+        const paramString = params.toString();
+        return `${baseUrl}${paramString.length ? '?' + params.toString() : ''}`;
+    };
+    const clientTypes = {
+        connect: 'connect',
+        login: environment.isWebadmin ? 'loginWebadmin' : 'loginCloud',
+        disconnect: 'passwordDisconnect',
+        detach: 'passwordDetach',
+        merge: 'passwordMerge',
+        renewWeb: 'renewWeb',
+        renew2FA: 'renewWeb2FA',
+        reset: 'passwordReset',
+        restart: 'passwordRestart',
+        system2faAuth: 'system2faAuth',
+        transfer: 'passwordTransfer',
+    };
+    const params = new URLSearchParams({
+        client_type: (state && clientTypes[state]) || clientTypes.login,
+        view_type: 'web',
+        redirect_uri: cleanRedirect(redirectTo),
+        client_id: environment.isWebadmin ? 'webadmin' : 'cloud_portal',
+        response_type: 'code',
+        grant_type: 'password',
+    });
+    if (environment.isWebadmin) {
+        params.append(
+            'scope',
+            `${nxConfig.cloudHost.replace(/http?s:\/\//, '')} cloudSystemId=${nxConfig.cloudSystemId || '*'}`,
+        );
+    }
+    if (systemName) {
+        params.append('system_name', systemName);
+    }
+    if (email) {
+        params.append('email', email);
+    }
+    if (code) {
+        params.append('code', code);
+    }
+
+    if (accessToken) {
+        params.append('access_token', accessToken);
+    }
+    const host = !isDevMode()
+        ? `${nxConfig.cloudHost ?? ''}`
+        : environment.cloudHost
+          ? `https://${environment.cloudHost}`
+          : nxConfig.cloudHost;
+    return useNewCloud()
+        ? `${window.location.origin}?${params.toString()}`
+        : `${host}/authorize?${params.toString()}`;
+};

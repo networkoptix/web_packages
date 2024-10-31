@@ -107,7 +107,6 @@ import { Resolution } from '@services/layout-state/store/layouts-resolution/reso
 import { createAddedItems } from '@services/layout-state/store/utils/create-added-items';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { nxConfig } from '@services/nx-config/config';
-import { OauthService } from '@services/oauth.service';
 import { NxPageService } from '@services/page.service';
 import { Layout, LayoutItem, LayoutItems } from '@services/system-api.types/layouts.types';
 import {
@@ -128,7 +127,14 @@ import { ViewportBreakpoints } from '@styles/theme-variables-common';
 import { canViewLayouts } from '@utils/can-view-layouts';
 import { ensureLayoutItemResourcePath } from '@utils/ensure-layout-item-resource-path';
 import { extractSystemAndResourceId } from '@utils/extract-system-and-resources';
-import { cleanId, cleanIdLegacy, dirtyId, useNewCloud } from '@utils/general';
+import {
+    cleanId,
+    cleanIdLegacy,
+    dirtyId,
+    getOauthUrl,
+    reloadWindowsChannel,
+    useNewCloud,
+} from '@utils/general';
 import { hasCrossSystemItems } from '@utils/has-cross-system-items';
 import { NgChanges } from '@utils/ng-changes';
 import { paramModel } from '@utils/signals';
@@ -2560,7 +2566,6 @@ export class NxLayoutGridComponent {
     private dialogs = inject(NxDialogsService);
     private accountService = inject(NxAccountService);
     private cloudApi = inject(NxCloudApiService);
-    private oauthService = inject(OauthService);
     private routerState = inject(Router);
 
     enableTwoFactorAction = {
@@ -2581,7 +2586,7 @@ export class NxLayoutGridComponent {
     authenticateTwoFactorAction = {
         action: async () => {
             const accessToken = await lastValueFrom(this.cloudApi.getAccessToken());
-            this.oauthService.redirectOauth({
+            const oauthUrl = getOauthUrl({
                 state: 'system2faAuth',
                 email: this.accountService.account.email,
                 accessToken,
@@ -2589,6 +2594,27 @@ export class NxLayoutGridComponent {
                     window.location.origin,
                     this.routerState.routerState.snapshot.url,
                 ),
+            });
+            const opened = window.open(oauthUrl, '_blank')!;
+            await new Promise<void>(resolve => {
+                window.addEventListener('message', (event: MessageEvent<'authenticated'>) => {
+                    if (event.data === 'authenticated') {
+                        opened.close();
+                        reloadWindowsChannel.reloadAllWindows();
+                    }
+                });
+
+                const checkingIfOpen = timer(2_500, 1000).subscribe(() => {
+                    if (opened.closed) {
+                        checkingIfOpen.unsubscribe();
+                        resolve();
+                    }
+                });
+
+                setTimeout(() => {
+                    checkingIfOpen.unsubscribe();
+                    resolve();
+                }, 60_000);
             });
         },
         success: () => {},

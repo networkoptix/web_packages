@@ -4,6 +4,7 @@ import { LocalStorageService } from 'ngx-webstorage';
 import { BehaviorSubject } from 'rxjs';
 
 import themeCssVars from '@common/styles/theme-css-vars.json';
+import { reloadWindowsChannel } from '@utils/general';
 import {
     CssColorVariables,
     generateCssVariableName,
@@ -190,6 +191,9 @@ export class NxConfigService {
     static OVERRIDE_KEY = 'configOverrides';
 
     static configChanged: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+
+    reloadAllWindows = (includeCurrent = false): void =>
+        reloadWindowsChannel.reloadAllWindows(includeCurrent);
 
     constructor(private session?: LocalStorageService) {
         // These properties will be injected on config *******************

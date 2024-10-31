@@ -17,6 +17,8 @@ import { Account } from '@services/account.service/account';
 import { NxSystemsService } from '@services/systems.service';
 import type { NxSystemInfo } from '@services/systems.service.types';
 import { icons } from '@static-variables';
+import { reloadWindowsChannel } from '@utils/general';
+import { paramSignal } from '@utils/signals';
 
 @UntilDestroy()
 @Component({
@@ -103,6 +105,8 @@ export class NxAccountSecurityComponent implements OnInit, OnDestroy {
         }
     }
 
+    autoClose$$ = paramSignal('autoClose', false, paramValue => paramValue.includes('true'));
+
     switch2FA(targetState: boolean): void {
         // Combine success handler; Do in releases_21.1_hotfix after 21.1 release
         if (targetState) {
@@ -112,6 +116,7 @@ export class NxAccountSecurityComponent implements OnInit, OnDestroy {
                     this.totpExistsForAccount = true;
                     this.account2faEnabledCheck = this.account2faEnabled;
                     this.accountService.get(true);
+                    reloadWindowsChannel.reloadAllWindows(false);
                 }
             });
         } else {
@@ -123,6 +128,7 @@ export class NxAccountSecurityComponent implements OnInit, OnDestroy {
                     this.accountService.get(true);
                 } else {
                     this.totpExistsForAccount = true; // revert value on cancel
+                    reloadWindowsChannel.reloadAllWindows(false);
                 }
             });
         }
