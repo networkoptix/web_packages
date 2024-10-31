@@ -349,6 +349,7 @@ export class NxLayoutGridTreeComponent extends WithMenuItemsByType {
         if (!itemsToAdd.length) {
             return;
         }
+        const isLocalLayout = !hasCrossSystemItems(this.layout.items, this.system.id);
         const updatedLayout = {
             ...this.layout,
             items: createAddedItems(this.layout.items, itemsToAdd),
@@ -364,12 +365,13 @@ export class NxLayoutGridTreeComponent extends WithMenuItemsByType {
                 this.layoutStateService.paramStateHandler.state$$().params!.systemId!,
             );
 
-        if (
+        const createNewLayout =
             (!currentUser?.isAdmin && currentUser?.id !== this.layout.parentId) ||
             this.layout.locked ||
             focusView ||
-            crossSystemItemsAdded
-        ) {
+            crossSystemItemsAdded;
+
+        if (isLocalLayout && createNewLayout) {
             if (crossSystemItemsAdded) {
                 this.layoutStateService.createNewCrossSystemLayout(updatedLayout.items);
             } else if (focusView) {
