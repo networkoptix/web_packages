@@ -15,10 +15,7 @@ export const filterOtherSites = memoize(
 
         const results = otherSites
             .map(result => {
-                const nameMatches =
-                    !['mySystems', 'sharedSystems'].includes(result.details?.id || '') &&
-                    result.name.toLowerCase().includes(query);
-
+                const nameMatches = result.name.toLowerCase().includes(query);
                 if (assertResourceParentNode(result)) {
                     const { matches, results } = filterOtherSites(
                         result.children,

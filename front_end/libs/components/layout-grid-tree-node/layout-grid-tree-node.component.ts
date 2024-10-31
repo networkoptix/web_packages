@@ -23,7 +23,6 @@ import { EditableModule } from '@components/editable/editable.module';
 import { NxMonitoringGraphComponent } from '@components/graph/graph.component';
 import {
     assertIsNoResultsNode,
-    assertOtherSystemsBaseNode,
     assertResourceBaseNode,
     assertResourceOfType,
 } from '@components/layout-grid/layout-grid.type-guards';
@@ -122,9 +121,7 @@ export class NxLayoutGridTreeNode {
 
     baseNodeType$$ = computed(() => {
         const node = this.node$$();
-        return [assertResourceBaseNode, assertOtherSystemsBaseNode, assertIsNoResultsNode].some(
-            assertion => assertion(node),
-        );
+        return [assertResourceBaseNode, assertIsNoResultsNode].some(assertion => assertion(node));
     });
 
     class$$ = computed(() => ({
