@@ -3,6 +3,7 @@
 
 .menu-level-one {
     display: flex;
+    align-items: center;
     background-color: var(--header-level-one-bg);
     padding-left: 12px;
     height: 40px;
@@ -25,8 +26,7 @@
     }
 
     nx-header-language-select {
-        position: relative;
-        right: 10px;
+        margin: 0 10px;
     }
 
     .create-account {
@@ -34,8 +34,7 @@
         @extend .header-button;
         text-decoration: inherit;
         color: inherit;
-        min-height: 24px;
-        margin: 11.5px 33px 10px auto;
+        margin: 0 16px 0 auto;
     }
 
     a{
