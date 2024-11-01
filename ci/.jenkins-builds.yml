@@ -191,9 +191,6 @@ create-vms-mr:
       "BUILD_DESCRIPTION=$CI_COMMIT_TITLE"
       "CLOUD_PORTAL_COMMIT=$CI_COMMIT_SHA"
       "GITLAB_PIPELINE_URL=$CI_PIPELINE_URL"
-      "GITLAB_JOB_ID=$CI_JOB_ID"
-      "GITLAB_JOB_PROJECT=$CI_PROJECT_PATH"
-      "GITLAB_JOB_URL=$CI_JOB_URL"
   rules:
   - if: !reference [ .enable_for_protected_branch ]
     changes: !reference [ .webadmin_changes ]

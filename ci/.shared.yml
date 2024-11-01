@@ -28,6 +28,8 @@ include:
 .webadmin_changes:
   - front_end/**/*
   - webadmin/**/*
+  - translation/**/*
+  - translations/**/*
 
 .enable_for_mr_branch: '( $CI_MERGE_REQUEST_TARGET_BRANCH_NAME =~ /^vms_/ ||
   $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop" )'
