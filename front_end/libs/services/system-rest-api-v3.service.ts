@@ -57,6 +57,7 @@ import { NxSystemRestAPI2 } from './system-rest-api-v2.service';
 import { NxUriCacheService } from './uri-cache.service';
 
 export class NxSystemRestAPI3 extends NxSystemRestAPI2 {
+    static override VERSION = 6.0;
     override readonly version: number;
 
     jsonRpcConnection$ = defer(() =>
