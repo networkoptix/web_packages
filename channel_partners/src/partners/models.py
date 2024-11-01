@@ -1006,6 +1006,25 @@ class ChannelPartner(
             queryset = queryset.filter(roles__overlap=allowed_role_uuid)
         return queryset.exists()
 
+    def is_member_or_parent(self, user: CloudUser, perm=None) -> bool:
+        """
+        Checks if the user has role with permission in channel partner or its parent.
+        Args:
+            user (CloudUser): The user whom permission is checked
+            perm (str, optional): looking permission codename, if given only
+             satisfying roles will be checked
+        Returns:
+            bool
+        """
+        queryset = ChannelPartnerToUser.objects.filter(
+            user=user,
+            channel_partner_id__in=[self.id, self.parent_channel_partner_id]
+        )
+        if perm:
+            allowed_role_uuid = self.allowed_role_uuid(perm)
+            queryset = queryset.filter(roles__overlap=allowed_role_uuid)
+        return queryset.exists()
+
     def is_member(self, user: CloudUser) -> bool:
         """
         Checks if the user has role in the channel partner.
@@ -2613,7 +2632,7 @@ class ServiceToSubChannelProperties(FieldOriginalMixin, models.Model):
                     service_properties=self, price=self.price)
 
     def can_access(self, user: CloudUser):
-        return self.channel_partner.can_access(user)
+        return self.channel_partner.is_member_or_parent(user)
 
     def can_manage(self, user: CloudUser):
         return self.service.created_by_channel_partner.can_add_or_remove_sub_chanel_partners(user)
@@ -2627,22 +2646,15 @@ class ServiceToSubChannelProperties(FieldOriginalMixin, models.Model):
         """
         # Get all service IDs in a single query
         services_ids = set(ChannelPartnerService.objects.filter(
-            created_by_channel_partner_id=channel_partner_id
+            created_by_channel_partner__channel_partners__id=channel_partner_id
+        ).exclude(
+            id__in=Subquery(cls.objects.filter(channel_partner_id=channel_partner_id).values('service_id'))
         ).values_list('pk', flat=True))
-
-        # Get existing service property IDs in a single query
-        existing_ids = set(cls.objects.filter(
-            channel_partner_id=channel_partner_id,
-            service_id__in=services_ids
-        ).values_list('service_id', flat=True))
-
-        # Calculate missing service IDs
-        missing_service_ids = services_ids - existing_ids
 
         # Bulk create with ignore_conflicts to handle potential race conditions
         cls.objects.bulk_create([
             cls(service_id=service_id, channel_partner_id=channel_partner_id)
-            for service_id in missing_service_ids
+            for service_id in services_ids
         ], ignore_conflicts=True)
 
 

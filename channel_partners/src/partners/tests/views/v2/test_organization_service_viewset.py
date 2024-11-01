@@ -1,6 +1,7 @@
 from uuid import uuid4
 
 import pytest
+from django.core.cache import caches
 from rest_framework.reverse import reverse
 from rest_framework.test import APIClient
 
@@ -18,9 +19,12 @@ class TestOrganizationServiceViewSet:
             organization_factory,
             cp_user_factory,
             cp_service_factory,
-            cloud_test_host):
+            cloud_test_host,
+            org_user_factory):
+        self.parent_channel_partner = channel_partner_factory()
+        self.parent_cp_user = cp_user_factory(channel_partner=self.parent_channel_partner)
         # Create a channel partner
-        self.channel_partner = channel_partner_factory()
+        self.channel_partner = channel_partner_factory(parent_channel_partner=self.parent_channel_partner)
 
         # Create services for the channel partner
         self.local_recording_service = cp_service_factory(
@@ -47,6 +51,8 @@ class TestOrganizationServiceViewSet:
         self.cp_user = cp_user_factory(
             channel_partner=self.channel_partner)
 
+        self.organization_user = org_user_factory(organization=self.organization)
+
         # Initialize the APIClient
         self.client = APIClient(SERVER_NAME=cloud_test_host.hostname)
 
@@ -54,9 +60,10 @@ class TestOrganizationServiceViewSet:
         self.list_path = reverse('v2:organizations-owned-service-list',
                                  kwargs={'parent_lookup_organization': self.organization.id})
         self.detail_view_name = 'v2:organizations-owned-service-detail'
-
         # Define default kwargs
         self.def_kwargs = {'parent_lookup_organization': self.organization.id}
+        self.detail_kwargs = {'service_id': self.cloud_storage_service.id, **self.def_kwargs}
+        caches['default'].clear()
 
     def test_partner_services(self):
         all_services_count = ChannelPartnerService.objects.count()
@@ -67,8 +74,9 @@ class TestOrganizationServiceViewSet:
 
         assert ServiceToOrganizationProperties.objects.count() == 0
 
-    def test_list(self):
-        self.client.force_authenticate(user=self.cp_user.user)
+    def test_list(self, mock_auth_with_user):
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {uuid4()}')
+        mock_auth_with_user(self.cp_user)
         response = self.client.get(self.list_path)
         assert response.status_code == 200
         assert len(response.data) == 3
@@ -137,3 +145,27 @@ class TestOrganizationServiceViewSet:
         last = response.data[-1]
         assert last['price'] == '19.000'
         assert last['createdTs'][:-1] not in service_props.created_ts.isoformat()
+
+    @pytest.mark.parametrize(
+        ['user_attr', 'list_code', 'retrieve_code', 'update_code', 'price_history'],
+        [
+            ('cp_user', 200, 200, 200, 200),
+            ('organization_user', 200, 200, 403, 200),
+            ('parent_cp_user', 403, 403, 403, 403),
+        ]
+    )
+    def test_permissions(self, user_attr, list_code, retrieve_code, update_code, price_history, mock_auth_with_user):
+        user = getattr(self, user_attr)
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {uuid4()}')
+        mock_auth_with_user(user)
+        list_response = self.client.get(self.list_path)
+        assert list_response.status_code == list_code
+        retrieve_path = reverse(self.detail_view_name, kwargs=self.detail_kwargs)
+        retrieve_response = self.client.get(retrieve_path)
+        assert retrieve_response.status_code == retrieve_code
+        update_response = self.client.patch(retrieve_path, data={'price': 12}, format='json')
+        assert update_response.status_code == update_code
+        price_history_path = reverse('v2:organizations-owned-service-price-history', kwargs=self.detail_kwargs)
+        price_history_response = self.client.get(price_history_path)
+        assert price_history_response.status_code == price_history
+

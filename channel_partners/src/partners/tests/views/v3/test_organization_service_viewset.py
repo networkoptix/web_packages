@@ -67,8 +67,9 @@ class TestOrganizationServiceViewSet:
 
         assert ServiceToOrganizationProperties.objects.count() == 0
 
-    def test_list(self):
-        self.client.force_authenticate(user=self.cp_user.user)
+    def test_list(self, mock_auth_with_user):
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {uuid4()}')
+        mock_auth_with_user(self.cp_user)
         response = self.client.get(self.list_path)
         assert response.status_code == 200
         assert len(response.data) == 3

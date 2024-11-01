@@ -547,15 +547,34 @@ class ChannelPartnerAvailableServiceViewSet(ParentLookUpMixin, NestedViewSetMixi
     lookup_field = 'service_id'
     filter_backends = [DjangoFilterBackend]
     filterset_class = filters.CreatedTsAndNameFilter
+    _channel_partner = None
+
+    def get_channel_partner(self):
+        if self._channel_partner:
+            return self._channel_partner
+        m2m_key, val = self.get_related_pair()
+        self._channel_partner = get_object_or_404(ChannelPartner, pk=val)
+        return self._channel_partner
 
     def get_queryset(self):
-        _, channel_partner_id = self.get_related_pair()
-        ServiceToSubChannelProperties.create_missing(channel_partner_id)
+        channel_partner = self.get_channel_partner()
+        ServiceToSubChannelProperties.create_missing(channel_partner.id)
         return super().get_queryset()
 
+    def check_permissions(self, request):
+        if self.action == 'list':
+            # If listing, we need to check the channel partner permissions
+            self.check_object_permissions(request, self.get_channel_partner())
+        else:
+            # Otherwise, we need to check common permission `IsAuthenticated`,
+            # further will be checked in object permissions.
+            super().check_permissions(request)
+
     def get_permissions(self):
-        perms = [IsAuthenticatedCloudUserOrSystem()]
-        if self.action == 'retrieve':
+        perms = [IsAuthenticated()]
+        if self.action == 'list':
+            perms.append(CanPerformChannelPartnerAction(ChannelPartner.is_member_or_parent))
+        if self.action in ['retrieve', 'price_history']:
             perms.append(CanPerformChannelPartnerAction(ServiceToSubChannelProperties.can_access))
         if self.action == 'partial_update':
             perms.append(CanPerformChannelPartnerAction(ServiceToSubChannelProperties.can_manage))
@@ -593,10 +612,18 @@ class OrganizationServiceViewSet(ParentLookUpMixin, NestedViewSetMixin, Versione
     lookup_field = 'service_id'
     filter_backends = [DjangoFilterBackend]
     filterset_class = filters.CreatedTsAndNameFilter
+    _organization = None
+
+    def get_organization(self):
+        if self._organization:
+            return self._organization
+        m2m_key, val = self.get_related_pair()
+        self._organization = get_object_or_404(Organization, pk=val)
+        return self._organization
 
     def create_missing(self):
-        _, organization_id = self.get_related_pair()
-        ServiceToOrganizationProperties.create_missing(organization_id)
+        organization = self.get_organization()
+        ServiceToOrganizationProperties.create_missing(organization.id)
 
     def list(self, request, *args, **kwargs):
         self.create_missing()
@@ -620,9 +647,20 @@ class OrganizationServiceViewSet(ParentLookUpMixin, NestedViewSetMixin, Versione
             service_properties.organizationpricechange_set.order_by('created_ts').all(), many=True)
         return Response(serializer.data)
 
+    def check_permissions(self, request):
+        if self.action == 'list':
+            # If listing, we need to check the organization permissions
+            self.check_object_permissions(request, self.get_organization())
+        else:
+            # Otherwise, we need to check common permission `IsAuthenticated`,
+            # further will be checked in object permissions.
+            super().check_permissions(request)
+
     def get_permissions(self):
-        perms = [IsAuthenticatedCloudUserOrSystem()]
-        if self.action in ['retrieve', 'list', 'price_history']:
+        perms = [IsAuthenticated()]
+        if self.action == 'list':
+            perms.append(CanPerformChannelPartnerAction(Organization.can_access))
+        if self.action in ['retrieve', 'price_history']:
             perms.append(CanPerformChannelPartnerAction(ServiceToOrganizationProperties.can_access))
         if self.action == 'partial_update':
             perms.append(CanPerformChannelPartnerAction(ServiceToOrganizationProperties.can_manage))
