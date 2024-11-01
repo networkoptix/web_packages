@@ -636,7 +636,7 @@ async def get_ipvd(request):
 @api_view(['POST'])
 @permission_classes((IsAuthenticated,))
 def ipvd_update(request):
-    if not waffle.flag_is_active(request, flag_name=FLAGS.ipvd_update):
+    if not request.user.is_staff or not waffle.flag_is_active(request, flag_name=FLAGS.ipvd_update):
         return Response({IPVD_CACHE_FORBIDDEN}, status=status.HTTP_403_FORBIDDEN)
     query_params = ForceSyncSerializer(data=request.query_params)
     query_params.is_valid(raise_exception=True)
