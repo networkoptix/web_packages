@@ -46,7 +46,7 @@
                                     ></span>
                                     <a
                                         id="cancel-transfers"
-                                        class="ml-1 btn-text"
+                                        class="anchor ml-1 btn-text"
                                         (click)="$event.preventDefault(); cancelOwnershipTransfer()"
                                         translate
                                         >(cancel)</a
@@ -85,7 +85,7 @@
                                     <a
                                         *ngIf="canTransferSystem$$()"
                                         id="change-ownership"
-                                        class="ml-1 btn-text"
+                                        class="anchor ml-1 btn-text"
                                         (click)="$event.preventDefault(); transferOwnership()"
                                         translate
                                         >(change)</a
@@ -260,6 +260,7 @@
                     </h2>
                     <span class="system-owner">
                         <a
+                            class="anchor"
                             [href]="CONFIG.cloudHost"
                             target="_blank"
                             >{{ CONFIG.cloudHost }}</a

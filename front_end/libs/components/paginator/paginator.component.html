@@ -4,13 +4,14 @@
     [queryParams]="{ page: (page$ | async) - 1 || tempDisabled }"
     queryParamsHandling="merge"
     [ngClass]="{ disabled: (page$ | async) === 1 }"
-    class="btn btn-default btn-default--paginator"
+    class="anchor btn btn-default btn-default--paginator"
     id="paginator-prev"
     translate
     >Previous</a
 >
 
 <a
+    class="anchor"
     *ngFor="let page of pages$ | async; let idx = index"
     [routerLink]="[]"
     [queryParams]="{ page: page || (page$ | async) + pagesToShow - 1 }"
@@ -37,7 +38,7 @@
     [queryParams]="{ page: (page$ | async) + 1 }"
     queryParamsHandling="merge"
     [ngClass]="{ disabled: (page$ | async) === (numPages$ | async) || tempDisabled }"
-    class="btn btn-default btn-default--paginator"
+    class="anchor btn btn-default btn-default--paginator"
     id="paginator-next"
     translate
     >Next</a

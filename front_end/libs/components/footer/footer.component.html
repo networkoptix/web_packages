@@ -15,6 +15,7 @@
                 >
                     <li *ngFor="let item of footerItems; trackBy: trackItem">
                         <a
+                            class="anchor"
                             *ngIf="item.new_window || oauth; else internalLink"
                             [href]="item.url | safe: 'url'"
                             [target]="item.new_window ? '_blank' : '_self'"
@@ -22,7 +23,11 @@
                             >{{ item.display_name | translate }}</a
                         >
                         <ng-template #internalLink>
-                            <a [routerLink]="item.url">{{ item.display_name | translate }}</a>
+                            <a
+                                class="anchor"
+                                [routerLink]="item.url"
+                                >{{ item.display_name | translate }}</a
+                            >
                         </ng-template>
                     </li>
                 </ul>
@@ -35,7 +40,7 @@
                     <a
                         [href]="companyLink"
                         target="_blank"
-                        class="pr-0 copyright"
+                        class="anchor pr-0 copyright"
                         >&copy;&nbsp;{{ companyName }}</a
                     >
                 </li>

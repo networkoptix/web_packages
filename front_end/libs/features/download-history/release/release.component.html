@@ -52,7 +52,7 @@
 <div *ngFor="let platform of release.platforms">
     <a
         href
-        class="ml-3"
+        class="anchor ml-3"
         (click)="cardExpanded[platform.name] = !cardExpanded[platform.name]; (false)"
         >{{ (LANG.downloads.groups[platform.name]?.label | translate) || platform.name }}</a
     >
@@ -60,7 +60,11 @@
     <ul *ngIf="cardExpanded[platform.name]">
         <li *ngFor="let file of platform.files">
             <ng-container>{{ file.niceName }}&nbsp;</ng-container>
-            <a [href]="linkbase + '/' + build + '/' + file.path">{{ file.fileName }}</a>
+            <a
+                class="anchor"
+                [href]="linkbase + '/' + build + '/' + file.path"
+                >{{ file.fileName }}</a
+            >
         </li>
     </ul>
 </div>

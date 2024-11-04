@@ -61,7 +61,7 @@
                 *ngIf="isServerExpanded[server.id]"
             >
                 <a
-                    class="camera"
+                    class="anchor camera"
                     *ngFor="let camera of server.cameras; trackBy: cameraId"
                     [routerLink]="[camera.id]"
                     [ngClass]="{

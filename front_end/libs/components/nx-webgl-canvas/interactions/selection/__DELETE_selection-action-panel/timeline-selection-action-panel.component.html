@@ -1,5 +1,5 @@
 <a
-    class="close"
+    class="anchor close"
     (click)="clearSelection()"
 ></a>
 
@@ -23,7 +23,7 @@
 <a
     #exportBtn
     [ngClass]="{ disabled: !exportEnabled }"
-    class="export-link"
+    class="anchor export-link"
     href="#"
     (click)="downloadFile()"
     (mouseenter)="showLegend(popLegendExportTemplate, exportBtn)"

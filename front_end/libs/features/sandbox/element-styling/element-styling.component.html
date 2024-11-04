@@ -119,9 +119,16 @@
             </td>
         </tr>
         <tr>
-            <td>☐</td>
             <td>
                 <a
+                    href=""
+                    (click)="$event.preventDefault()"
+                    >anchor</a
+                >
+            </td>
+            <td>
+                <a
+                    class="anchor"
                     (click)="$event.preventDefault()"
                     href=""
                     >anchor</a
@@ -132,7 +139,6 @@
                     class="nx-anchor"
                     (click)="$event.preventDefault()"
                     href=""
-                    data-escape-global-style
                     >anchor</a
                 >
             </td>

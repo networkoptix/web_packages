@@ -45,11 +45,15 @@
                     >
                 </ng-template>
                 <ng-template #externalLink>
-                    <a [href]="node.url">
+                    <a
+                        class="anchor"
+                        [href]="node.url"
+                    >
                         <ng-container *ngTemplateOutlet="linkContent"></ng-container>
                     </a>
                 </ng-template>
                 <a
+                    class="anchor"
                     *ngIf="node.url.startsWith('/'); externalLink"
                     [routerLink]="node.url"
                     [queryParamsHandling]="queryParamsOnInternalRoute"

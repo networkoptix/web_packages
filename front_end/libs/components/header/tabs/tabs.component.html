@@ -12,7 +12,7 @@
         *ngIf="!node.nodes?.length; else tabDropdown"
         [routerLink]="node.url"
         [queryParamsHandling]="node.queryParamsHandling"
-        class="pl-3 pr-3 d-block w-100 h-100"
+        class="anchor pl-3 pr-3 d-block w-100 h-100"
         (click)="headerService.handleNav(node, $event); $event.preventDefault()"
         [textContent]="node.display_name"
     ></a>

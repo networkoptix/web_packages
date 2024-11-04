@@ -43,7 +43,7 @@
             {{ camera.id }}
             <br />
             <a
-                class="text-muted"
+                class="anchor text-muted"
                 (click)="copyOnClick(camera.id)"
                 translate
                 >(copy)</a
@@ -57,6 +57,7 @@
         >
         <span class="grid-item-value"
             ><a
+                class="anchor"
                 [href]="cameraUrl | safe: 'url'"
                 target="_blank"
                 >{{ camera.ip }}</a
@@ -70,6 +71,7 @@
         >
         <span class="grid-item-value">
             <a
+                class="anchor"
                 translate
                 [href]="currentUrl"
                 target="_blank"
@@ -77,7 +79,7 @@
             >
             &nbsp;
             <a
-                class="text-muted"
+                class="anchor text-muted"
                 (click)="copyOnClick(currentUrl)"
                 translate
                 >(copy)</a
@@ -89,7 +91,7 @@
             <span class="grid-item-value">
                 <ng-container *ngFor="let transport of stream.transports; let last = last">
                     <a
-                        class="text-uppercase"
+                        class="anchor text-uppercase"
                         [href]="transport.url | async | safe: 'url'"
                         target="_blank"
                         >{{ transport.name }}</a

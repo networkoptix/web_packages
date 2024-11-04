@@ -4,6 +4,7 @@ const classes = new Set([
     "h3",
     "h4",
     "paragraph",
+    "anchor",
     "label",
     "h1",
     "h5",

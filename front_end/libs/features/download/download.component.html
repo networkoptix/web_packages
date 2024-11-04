@@ -19,12 +19,12 @@
             >
                 <ul class="justify-content-start nav nav-tabs nx-tab-set-tabs">
                     <li
-                        class="nav-item"
+                        class="nav-item inset"
                         *ngFor="let platform of sortedPlatforms"
                     >
                         <a
                             href=""
-                            class="nav-link"
+                            class="anchor nav-link"
                             [id]="platform.name"
                             [routerLink]="'/download/' + platform.name"
                             [routerLinkActive]="'active'"
@@ -60,6 +60,7 @@
                                 </h2>
                                 <p class="paragraph">
                                     <a
+                                        class="anchor"
                                         [href]="
                                             downloadsData.releaseNotes ||
                                             '/downloads/' + downloadsData.version
@@ -76,7 +77,7 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <a
-                                            class="media btn btn-default download-button"
+                                            class="anchor media btn btn-default download-button"
                                             *ngIf="downloadButton"
                                             [href]="downloadsData.releaseUrl + downloadButton.path"
                                         >
@@ -134,9 +135,11 @@
                                         *ngFor="let otherPackage of otherPackages; let i = index"
                                         [ngClass]="{ 'a-link': i % 3 !== 2 }"
                                     >
-                                        <a [href]="downloadsData.releaseUrl + otherPackage.path">{{
-                                            otherPackage.niceName
-                                        }}</a>
+                                        <a
+                                            class="anchor"
+                                            [href]="downloadsData.releaseUrl + otherPackage.path"
+                                            >{{ otherPackage.niceName }}</a
+                                        >
                                     </div>
                                 </div>
                             </div>
@@ -160,7 +163,7 @@
                 >
                     <a
                         *ngIf="LANG.downloads.mobile[platform.name].link !== 'disabled'"
-                        class="mobile-link"
+                        class="anchor mobile-link"
                         [ngClass]="platform.os"
                         [href]="LANG.downloads.mobile[platform.name].link | translate"
                     >
@@ -171,6 +174,7 @@
                     *ngIf="canSeeHistory"
                 >
                     <a
+                        class="anchor"
                         [routerLink]="['/downloads/history']"
                         translate
                         data-testid="historyReleaseLink"

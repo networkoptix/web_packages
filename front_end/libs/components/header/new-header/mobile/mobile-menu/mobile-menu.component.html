@@ -78,7 +78,7 @@
     #internalNodeName
     let-node="node"
 >
-    <a class="node-name">{{ node.display_name | translate }}</a>
+    <a class="anchor node-name">{{ node.display_name | translate }}</a>
 </ng-template>
 
 <ng-template
@@ -86,7 +86,7 @@
     let-node="node"
 >
     <a
-        class="node-name clickable"
+        class="anchor node-name clickable"
         [href]="node.url"
         target="_blank"
         >{{ node.display_name | translate }}</a
@@ -100,7 +100,7 @@
             class="level-two-item"
         >
             <a
-                class="subnode"
+                class="anchor subnode"
                 (click)="nodeClick(node, $event)"
                 [routerLink]="node.url"
                 [ngClass]="{
@@ -157,7 +157,7 @@
 >
     <a
         [routerLink]="subnode.url"
-        class="subnode"
+        class="anchor subnode"
         (click)="nodeClick(subnode, $event)"
         [ngClass]="{
             active:
@@ -176,7 +176,7 @@
     <a
         [href]="subnode.url"
         target="_blank"
-        class="subnode"
+        class="anchor subnode"
     >
         {{ subnode.display_name | translate }}
         <svg-icon

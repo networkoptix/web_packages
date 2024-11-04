@@ -234,6 +234,7 @@
             <ul class="overlay-modal-servers pl-0 mb-0">
                 <li *ngFor="let server of servers">
                     <a
+                        class="anchor"
                         target="_blank"
                         [href]="server.url + currentRoute | safe: 'url'"
                     >

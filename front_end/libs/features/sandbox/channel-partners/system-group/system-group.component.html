@@ -43,7 +43,11 @@
         <h2 class="h2">Groups</h2>
         <div *ngFor="let group of group.children">
             <h4 class="h4">
-                <a [routerLink]="'../' + group.id">{{ group.name }}</a>
+                <a
+                    class="anchor"
+                    [routerLink]="'../' + group.id"
+                    >{{ group.name }}</a
+                >
             </h4>
             <ul>
                 <li *ngFor="let prop of group | keyvalue">

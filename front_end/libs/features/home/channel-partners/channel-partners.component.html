@@ -15,7 +15,7 @@
     @if (!state.organizationId && parentPartner$$(); as parentChannelPartner) {
         @if (!parentChannelPartner.ownRolesIds.includes(ChannelPartnerRoleIds.REPORTS_VIEWER)) {
             <a
-                class="back-link"
+                class="anchor back-link"
                 [routerLink]="returnToParentLink$$()"
             >
                 <svg-icon

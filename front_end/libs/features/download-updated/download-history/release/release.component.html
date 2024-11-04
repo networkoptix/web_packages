@@ -5,10 +5,12 @@
     </h1>
     <h4 class="h4 m-0 ml-3 subtitle">{{ release.productDescription }}</h4>
     <a
+        class="anchor"
         [id]="release.version"
         [href]="'#' + release.version"
     ></a>
     <a
+        class="anchor"
         [id]="release.buildNumber"
         [href]="'#' + release.buildNumber"
     ></a>
@@ -59,7 +61,7 @@
 <div *ngFor="let platform of release.platforms">
     <a
         href
-        class="ml-3"
+        class="anchor ml-3"
         (click)="cardExpanded[platform.name] = !cardExpanded[platform.name]; (false)"
         >{{ (LANG.downloads.groups[platform.name]?.label | translate) || platform.name }}</a
     >
@@ -67,9 +69,11 @@
     <ul *ngIf="cardExpanded[platform.name]">
         <li *ngFor="let file of platform.files">
             <ng-container>{{ file.niceName }}&nbsp;</ng-container>
-            <a [href]="linkbase + '/' + release.buildNumber + '/' + file.path">{{
-                file.fileName
-            }}</a>
+            <a
+                class="anchor"
+                [href]="linkbase + '/' + release.buildNumber + '/' + file.path"
+                >{{ file.fileName }}</a
+            >
         </li>
     </ul>
 </div>

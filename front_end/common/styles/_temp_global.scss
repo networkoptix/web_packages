@@ -22,6 +22,11 @@ button, a {
         @include buttons.nx-button--danger();
     }
 }
+a.nx-button--primary,
+a.nx-button--default,
+a.nx-button--danger{
+    text-decoration: none;
+}
 
 @mixin _nx-header-base {
     font-weight: lighter;
@@ -96,7 +101,7 @@ button, a {
     }
 }
 
-a.nx-anchor {
+.nx-anchor {
     color: var(--anchor-color);
     text-decoration: underline;
     &:hover {

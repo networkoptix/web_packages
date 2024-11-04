@@ -55,7 +55,7 @@
             </ng-container>
             <li class="dropdown-item-container">
                 <a
-                    class="dropdown-item inset"
+                    class="anchor dropdown-item inset"
                     data-testid="logoutHeader"
                     (click)="show = false; logout()"
                 >
@@ -92,7 +92,7 @@
     let-index="index"
 >
     <a
-        class="dropdown-item inset"
+        class="anchor dropdown-item inset"
         id="dropdownItem{{ index }}"
         (click)="hide()"
         [routerLink]="dropdownItem.route"
@@ -107,7 +107,7 @@
     let-index="index"
 >
     <a
-        class="dropdown-item inset"
+        class="anchor dropdown-item inset"
         id="dropdownItem{{ index }}"
         [href]="dropdownItem.route"
     >
@@ -121,7 +121,7 @@
         [ngClass]="{ active: show || isAccountRoute }"
         (click)="show = !show"
     >
-        <a class="user-section logged-in">
+        <a class="anchor user-section logged-in">
             <span class="user-svg-wrapper">
                 <svg-icon
                     nx-add-svg-src

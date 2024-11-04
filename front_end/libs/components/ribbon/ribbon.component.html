@@ -13,7 +13,7 @@
                                 *ngIf="updateFunction"
                                 (click)="updateFunction()"
                                 target="_blank"
-                                class="action-link"
+                                class="anchor action-link"
                             >
                                 <svg-icon
                                     *ngIf="actions.length && actions[0].text === 'Refresh'"
@@ -30,7 +30,7 @@
                         *ngIf="actions.length && actions[0] && !updateFunction"
                         [href]="actions[0].value"
                         target="_blank"
-                        class="ml-2"
+                        class="anchor ml-2"
                         >{{ actions[0].text | nxTranslate }}</a
                     >
                 </div>
@@ -55,7 +55,7 @@
                                 *ngIf="updateFunction"
                                 (click)="updateFunction()"
                                 target="_blank"
-                                class="action-link"
+                                class="anchor action-link"
                             >
                                 <svg-icon
                                     *ngIf="actions.length && actions[0].text === 'Refresh'"
@@ -72,7 +72,7 @@
                         *ngIf="actions.length && actions[0] && !updateFunction"
                         [href]="actions[0].value"
                         target="_blank"
-                        class="ml-2"
+                        class="anchor ml-2"
                         >{{ actions[0].text | nxTranslate }}</a
                     >
                 </div>
@@ -117,12 +117,14 @@
                     <ng-container *ngFor="let action of actions">
                         <ng-container *ngIf="action.type === 'link'">
                             <a
+                                class="anchor"
                                 *ngIf="!action.external"
                                 [routerLink]="action.value"
                                 target="_blank"
                                 >{{ action.text | nxTranslate }}</a
                             >
                             <a
+                                class="anchor"
                                 *ngIf="action.external"
                                 [href]="action.value"
                                 target="_blank"

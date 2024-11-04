@@ -22,12 +22,12 @@
             <ul class="justify-content-start nav nav-tabs nx-tab-set-tabs">
                 <li
                     *ngFor="let type of noteTypes"
-                    class="nav-item"
+                    class="nav-item inset"
                     (click)="switchTo(type)"
                 >
                     <a
                         href
-                        class="nav-link"
+                        class="anchor nav-link"
                         [ngClass]="{ active: currentTab === type }"
                     >
                         <span

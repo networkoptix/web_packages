@@ -8,13 +8,18 @@
                     class="item"
                 >
                     <a
+                        class="anchor"
                         *ngIf="item.new_window || inAuthorization; else internalLink"
                         [href]="item.url | safe: 'url'"
                         [target]="item.new_window ? '_blank' : '_self'"
                         >{{ item.display_name | translate }}</a
                     >
                     <ng-template #internalLink>
-                        <a [routerLink]="item.url">{{ item.display_name | translate }}</a>
+                        <a
+                            class="anchor"
+                            [routerLink]="item.url"
+                            >{{ item.display_name | translate }}</a
+                        >
                     </ng-template>
                 </li>
             </ul>
@@ -68,13 +73,18 @@
             class="item"
         >
             <a
+                class="anchor"
                 *ngIf="item.new_window || inAuthorization; else internalLink"
                 [href]="item.url | safe: 'url'"
                 [target]="item.new_window ? '_blank' : '_self'"
                 >{{ item.display_name | translate }}</a
             >
             <ng-template #internalLink>
-                <a [routerLink]="item.url">{{ item.display_name | translate }}</a>
+                <a
+                    class="anchor"
+                    [routerLink]="item.url"
+                    >{{ item.display_name | translate }}</a
+                >
             </ng-template>
         </li>
     </ul>
@@ -84,7 +94,7 @@
     <a
         [href]="CONFIG.company.links.website"
         [attr.target]="'_blank'"
-        class="copyright"
+        class="anchor copyright"
         >&copy;&nbsp;<span>{{ CONFIG.company.name }}</span></a
     >
 </ng-template>

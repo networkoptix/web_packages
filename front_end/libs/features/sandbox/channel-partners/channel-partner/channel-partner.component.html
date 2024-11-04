@@ -54,7 +54,11 @@
         </button>
         <div *ngFor="let sub of subPartners$ | ngrxPush">
             <h4 class="h4">
-                <a [routerLink]="'../' + sub.id">{{ sub.name }}</a>
+                <a
+                    class="anchor"
+                    [routerLink]="'../' + sub.id"
+                    >{{ sub.name }}</a
+                >
             </h4>
             <button
                 class="btn-danger"
@@ -76,7 +80,11 @@
         </button>
         <div *ngFor="let org of organizations$ | ngrxPush">
             <h4 class="h4">
-                <a [routerLink]="org.id">{{ org.name }}</a>
+                <a
+                    class="anchor"
+                    [routerLink]="org.id"
+                    >{{ org.name }}</a
+                >
             </h4>
             <button
                 class="btn-danger"

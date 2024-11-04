@@ -1,33 +1,22 @@
 @use "../theme_variables_common" as common;
 @use "./typography";
 
-a {
-    color: var(--anchor-color);
-    text-decoration: underline;
-
-    &:hover {
-        color: var(--anchor-hover-color);
-        text-decoration: underline;
-    }
-
+.anchor {
     &.disabled {
         /* Make the disabled links grayish*/
         color: gray;
         /* And disable the pointer events */
         pointer-events: none;
     }
-}
-a[data-escape-global-style] {
-    color: unset;
-    text-decoration: unset;
-    &:hover {
-        color: unset;
-        text-decoration: unset;
+
+    &:focus-visible {
+        outline: none;
+        box-shadow : 0 0 0 2px var(--brand-l2-t40);
+        &.inset {
+            @include common.inset-outline;
+        }
     }
-    &.disabled {
-        color: unset;
-        pointer-events: unset;
-    }
+
 }
 
 b, strong {

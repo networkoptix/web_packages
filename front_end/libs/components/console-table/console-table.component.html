@@ -137,6 +137,7 @@
                             </ng-template>
                             <ng-template #externalLink>
                                 <a
+                                    class="anchor"
                                     [href]="element[field.name]"
                                     target="_blank"
                                 >
@@ -144,6 +145,7 @@
                                 </a>
                             </ng-template>
                             <a
+                                class="anchor"
                                 *ngIf="element[field.name].startsWith('/'); else externalLink"
                                 [routerLink]="base + '/' + sectionParam + '/' + element[field.name]"
                                 queryParamsHandling="merge"
@@ -285,7 +287,10 @@
                             (mousedown)="handleIgnoreActive($event, true)"
                             [class]="'type-' + field.type + ' ' + (field.meta?.styles || '')"
                         >
-                            <a (click)="handleModal(element[field.name])">
+                            <a
+                                class="anchor"
+                                (click)="handleModal(element[field.name])"
+                            >
                                 <svg-icon
                                     nx-add-svg-src
                                     [src]="icons.dirTextButtons + field.meta.icon"

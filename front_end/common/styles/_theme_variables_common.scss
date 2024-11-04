@@ -28,6 +28,10 @@ $headings-color: var(--h1);
 
 $label-margin-bottom: 0.5rem;
 $paragraph-margin-bottom: 0.5rem;
+$link-color: var(--anchor-color);
+$link-decoration: underline;
+$link-hover-color: var(--anchor-hover-color);
+$link-hover-decoration: underline;
 
 @mixin with-html {
     --font-family-base    : #{$font-family-base};
@@ -212,8 +216,6 @@ $form-group-margin-bottom:  sass-rem.rem(12px);
 
 // $table-bg-hover:              $light2;
 $table-cell-padding:          5px 16px 6px 16px;
-$link-color:                  var(--brand-d2);
-$link-hover-color:            var(--brand-core);
 
 $grid-float-breakpoint:       420px;
 $grid-float-breakpoint-max:   $grid-float-breakpoint - 1;

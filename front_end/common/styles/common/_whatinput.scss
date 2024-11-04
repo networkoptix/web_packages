@@ -1,5 +1,3 @@
-@use "theme_variables_common" as *;
-
 [data-whatintent="keyboard"] .btn.btn-primary:focus:not([disabled]):not(.disabled) {
     outline: 2px solid var(--btn-primary-focus-outline-rgb) !important;
     outline-offset: 2px;
@@ -21,22 +19,4 @@
     outline: 2px solid var(--btn-default-focus-outline-rgb) !important;
     outline-offset: 2px;
     box-shadow: var(--btn-default-focus-shadow) !important;
-}
-
-
-[data-whatintent="keyboard"] a:focus:not([disabled]):not(.btn):not(.disabled):not(.alternative):not([data-escape-global-style]) {
-    outline: none !important;
-    @include outline;
-
-    &.inset {
-        @include inset-outline;
-    }
-}
-
-[data-whatintent="keyboard"] .nav-tabs .nav-item a:focus {
-    @include inset-outline;
-}
-
-[data-whatintent="keyboard"] .tab-list .tab-item a:focus {
-    @include inset-outline;
 }

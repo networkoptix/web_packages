@@ -7,7 +7,7 @@
         (resize)="iconWidth$.next($event.width)"
     >
         <a
-            class="inset navbar-brand asset-name add-version ml-sm-0 d-block"
+            class="anchor inset navbar-brand asset-name add-version ml-sm-0 d-block"
             [routerLink]="mainUrl"
             data-testid="NxLogo"
         >
@@ -32,7 +32,7 @@
         >
             <div class="breadcrumb-button">
                 <a
-                    class="pl-3 pr-3 d-block w-100 h-100"
+                    class="anchor pl-3 pr-3 d-block w-100 h-100"
                     (click)="headerService.handleNav(breadcrumb, $event)"
                     >{{ breadcrumb.display_name }}</a
                 >
@@ -61,7 +61,7 @@
         <li *ngIf="!environment.isWebadmin">
             <span>
                 <a
-                    class="btn"
+                    class="anchor btn"
                     data-testid="createAccountBtn"
                     [href]="headerService.createUrl"
                     [ngClass]="[
@@ -83,7 +83,7 @@
             </span>
             <span>
                 <a
-                    class="btn btn-default"
+                    class="anchor btn btn-default"
                     data-testid="loginBtn"
                     [href]="headerService.authorizeUrl"
                     [ngClass]="showSmall ? 'small-button' : 'login-button'"
@@ -219,7 +219,7 @@
                         >
                             <div class="breadcrumb-button collapsed-breadcrumb">
                                 <a
-                                    class="px-2 d-block w-100 h-100"
+                                    class="anchor px-2 d-block w-100 h-100"
                                     (click)="
                                         headerService.handleNav(
                                             filteredBreadcrumbs[hiddenBreadcrumbs$.value - 1],

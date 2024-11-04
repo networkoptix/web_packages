@@ -43,6 +43,7 @@
             >
                 <ng-template #internalLink>
                     <a
+                        class="anchor"
                         [routerLink]="link.url"
                         [ngClass]="{ 'has-icon': link.new_window || link.icon }"
                         [attr.id]="link['htmlID']"
@@ -51,6 +52,7 @@
                     </a>
                 </ng-template>
                 <a
+                    class="anchor"
                     *ngIf="link.new_window || !link.url.startsWith('/'); else internalLink"
                     [href]="link.url"
                     [target]="link.new_window ? '_blank' : '_self'"

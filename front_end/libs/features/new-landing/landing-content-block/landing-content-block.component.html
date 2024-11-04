@@ -1,5 +1,6 @@
 <ng-container *ngIf="url && externalLink">
     <a
+        class="anchor"
         [href]="url"
         target="_blank"
     >
@@ -8,7 +9,10 @@
 </ng-container>
 
 <ng-container *ngIf="url && !externalLink">
-    <a [routerLink]="url">
+    <a
+        class="anchor"
+        [routerLink]="url"
+    >
         <ng-container *ngTemplateOutlet="contentBlock"></ng-container>
     </a>
 </ng-container>

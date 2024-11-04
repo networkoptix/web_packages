@@ -131,7 +131,7 @@
                 </ng-template>
                 <ng-template #enabledItem>
                     <a
-                        class="dropdown-item inset"
+                        class="anchor dropdown-item inset"
                         [id]="componentId + '-' + item.value"
                         [name]="componentId + '-' + item.value"
                         (keyup)="handleKeyup($event, item)"
@@ -153,7 +153,7 @@
                 </ng-template>
                 <ng-template #disabledItem>
                     <a
-                        class="dropdown-item inset disabled"
+                        class="anchor dropdown-item inset disabled"
                         (click)="show = false"
                     >
                         <nx-item-icon

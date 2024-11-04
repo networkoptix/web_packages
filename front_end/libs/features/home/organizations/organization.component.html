@@ -22,6 +22,7 @@
                     >
                         @if (routerState.partnerId()) {
                             <a
+                                class="anchor"
                                 [routerLink]="routerState.partnersRoot$$()"
                                 queryParamsHandling="preserve"
                             >
@@ -37,6 +38,7 @@
 
                         @if (!routerState.partnerId() && groupsStore.groupsPath$$().length) {
                             <a
+                                class="anchor"
                                 [routerLink]="routerState.rootGroupLink$$()"
                                 queryParamsHandling="preserve"
                             >
@@ -50,6 +52,7 @@
                         }
                         @for (breadcrumb of path$$(); track breadcrumb.id) {
                             <a
+                                class="anchor"
                                 [ngStyle]="{ display: 'inline' }"
                                 [routerLink]="breadcrumb.id | mapWith: routerState.getGroupLink$$()"
                                 queryParamsHandling="preserve"

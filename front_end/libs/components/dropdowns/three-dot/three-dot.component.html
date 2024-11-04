@@ -20,7 +20,7 @@
                 *ngFor="let item of items; trackBy: trackItem"
             >
                 <a
-                    class="dropdown-item inset"
+                    class="anchor dropdown-item inset"
                     [id]="item.id"
                     (click)="show = false; change(item, $event)"
                 >

@@ -112,7 +112,7 @@
             "
             (click)="navigateSearch($event)"
             [innerHTML]="doc.title"
-            class="doc-link"
+            class="anchor doc-link"
         ></a>
         <p
             class="paragraph"
@@ -285,6 +285,7 @@
                             >
                         </h4>
                         <a
+                            class="anchor"
                             *ngFor="let link of relatedLinksFiltered$ | async"
                             [routerLink]="link.url"
                             [queryParams]="{ state: link.state }"

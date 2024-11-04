@@ -13,27 +13,6 @@ ul[data-escape-global-style] ol {
   margin-bottom: unset;
 }
 
-a[data-escape-global-style] {
-  color: unset;
-  text-decoration: unset;
-  background-color: unset;
-}
-
-a[data-escape-global-style]:hover {
-  color: unset;
-  text-decoration: unset;
-}
-
-a[data-escape-global-style]:not([href]):not([class]) {
-  color: unset;
-  text-decoration: unset;
-}
-
-a[data-escape-global-style]:not([href]):not([class]):hover {
-  color: unset;
-  text-decoration: unset;
-}
-
 button[data-escape-global-style] {
   border-radius: unset;
 }

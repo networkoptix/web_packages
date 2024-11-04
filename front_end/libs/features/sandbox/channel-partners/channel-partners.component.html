@@ -19,7 +19,11 @@
 <h2 class="h2">Channel Partners</h2>
 <div *ngFor="let partner of channelParters$ | ngrxPush">
     <h4 class="h4">
-        <a [routerLink]="partner.id">{{ partner.name }}</a>
+        <a
+            class="anchor"
+            [routerLink]="partner.id"
+            >{{ partner.name }}</a
+        >
     </h4>
     <ul>
         <li *ngFor="let prop of partner | keyvalue">{{ prop.key }}: {{ prop.value | json }}</li>
@@ -37,7 +41,11 @@
 <h2 class="h2">Organizations</h2>
 <div *ngFor="let org of organizations$ | ngrxPush">
     <h4 class="h4">
-        <a [routerLink]="org.channelPartner + '/' + org.id">{{ org.name }}</a>
+        <a
+            class="anchor"
+            [routerLink]="org.channelPartner + '/' + org.id"
+            >{{ org.name }}</a
+        >
     </h4>
     <ul>
         <li *ngFor="let prop of org | keyvalue">{{ prop.key }}: {{ prop.value | json }}</li>

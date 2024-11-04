@@ -5,7 +5,10 @@
                 class="tab-container"
                 [class.selected]="currentTab$$() === tab.route"
             >
-                <a [routerLink]="tab.route | mapWith: routeState.getTabLink$$()">
+                <a
+                    class="anchor"
+                    [routerLink]="tab.route | mapWith: routeState.getTabLink$$()"
+                >
                     {{ tab.displayName | translate }}
                 </a>
             </div>

@@ -127,7 +127,7 @@
                 </ng-template>
                 <ng-template #enabledItem>
                     <a
-                        class="dropdown-item inset"
+                        class="anchor dropdown-item inset"
                         (keyup)="handleKeyup($event, item)"
                         tabindex="0"
                         [ngClass]="{
@@ -147,7 +147,7 @@
                 </ng-template>
                 <ng-template #disabledItem>
                     <a
-                        class="dropdown-item inset disabled"
+                        class="anchor dropdown-item inset disabled"
                         (click)="show = false"
                     >
                         <nx-item-icon

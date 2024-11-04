@@ -35,7 +35,10 @@
             </span>
         </div>
         <ng-container *ngSwitchCase="'logo'">
-            <a [routerLink]="mainUrl$ | async">
+            <a
+                class="anchor"
+                [routerLink]="mainUrl$ | async"
+            >
                 <img
                     [alt]="CONFIG.cloudName + ' logo'"
                     [src]="'/static/images/dark_logo.png'"

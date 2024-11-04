@@ -62,6 +62,7 @@
 >
     <ng-container [ngSwitch]="none ? 'none' : iconState">
         <a
+            class="anchor"
             *ngSwitchCase="'createAccount'"
             [href]="headerService.createUrl"
         >

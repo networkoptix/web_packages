@@ -173,6 +173,7 @@
                 </div>
                 <div *ngIf="plugin.information.companyName && plugin.information.companyWeb">
                     <a
+                        class="anchor"
                         [href]="plugin.information.companyWeb"
                         name="companyName"
                         target="_blank"
@@ -182,6 +183,7 @@
                 </div>
                 <div *ngIf="plugin.information.companyPrivacyPolicyLink">
                     <a
+                        class="anchor"
                         [href]="plugin.information.companyPrivacyPolicyLink"
                         name="companyPrivacyLink"
                         target="_blank"
@@ -192,6 +194,7 @@
                 </div>
                 <div *ngIf="plugin.information.termsOfUseLink">
                     <a
+                        class="anchor"
                         [href]="plugin.information.termsOfUseLink"
                         name="termsOfUseLink"
                         target="_blank"
@@ -228,6 +231,7 @@
                 </div>
                 <div *ngIf="plugin.support.supportWeb">
                     <a
+                        class="anchor"
                         [href]="plugin.support.supportWeb"
                         target="_blank"
                         id="info-support-url"
@@ -236,6 +240,7 @@
                 </div>
                 <div *ngIf="plugin.support.supportEmail">
                     <a
+                        class="anchor"
                         href="mailto:{{ plugin.support.supportEmail }}"
                         target="_blank"
                         id="info-support-email"
@@ -277,6 +282,7 @@
                                     <div>
                                         <ng-template #download>
                                             <a
+                                                class="anchor"
                                                 [href]="platform.url"
                                                 target="_self"
                                                 [attr.rel]="platform.noFollow ? 'nofollow' : ''"
@@ -284,6 +290,7 @@
                                             >
                                         </ng-template>
                                         <a
+                                            class="anchor"
                                             *ngIf="
                                                 platform.url.includes('.wgt') ||
                                                     platform.url.includes('.dsh');

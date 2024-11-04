@@ -50,6 +50,7 @@
 >
     <li *ngFor="let node of menu">
         <a
+            class="anchor"
             [routerLink]="base + '/' + node.url"
             routerLinkActive="active-section"
             [ngClass]="{ 'active-section': node.url === sectionParam }"

@@ -35,7 +35,7 @@
 
                 <div class="camview-link">
                     <a
-                        class="blue"
+                        class="anchor blue"
                         target="_blank"
                         href="https://www.google.com/search?q={{ activeCamera.vendor }}+{{
                             activeCamera.model
@@ -109,6 +109,7 @@
                 >
                     <div class="col-12">
                         <a
+                            class="anchor"
                             href
                             (click)="
                                 showAllEvents = true;
@@ -127,6 +128,7 @@
                 >
                     <div class="col-12">
                         <a
+                            class="anchor"
                             href
                             (click)="
                                 showAllEvents = false;
@@ -221,6 +223,7 @@
                     >
                         <div class="col-12">
                             <a
+                                class="anchor"
                                 href
                                 (click)="
                                     showAllFirmware = true;
@@ -239,6 +242,7 @@
                     >
                         <div class="col-12">
                             <a
+                                class="anchor"
                                 href
                                 (click)="
                                     showAllFirmware = false;
@@ -256,6 +260,7 @@
             <nx-section>
                 <div class="camview-link">
                     <a
+                        class="anchor"
                         href
                         translate
                         (click)="sendFeedback()"

@@ -1,6 +1,9 @@
 <div class="header">
     <div class="back">
-        <a [routerLink]="currentGroupId$$() | mapWith: routerState.getBreadcrumbLink$$()">
+        <a
+            class="anchor"
+            [routerLink]="currentGroupId$$() | mapWith: routerState.getBreadcrumbLink$$()"
+        >
             <div class="back-icon">
                 <svg-icon
                     nx-add-svg-src
