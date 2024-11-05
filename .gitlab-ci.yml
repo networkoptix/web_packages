@@ -421,6 +421,7 @@ jenkins-build-webadmin:
       - front_end/**/*
       - translations/**/*
       - webadmin/**/*
+      - ft/ci/.gitlab-ci.yml
   - if: '$CI_MERGE_REQUEST_ID && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop"'
     when: on_success
     changes:
