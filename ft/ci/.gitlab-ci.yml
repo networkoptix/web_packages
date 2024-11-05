@@ -12,7 +12,7 @@ include:
 FT / VMS 5.1:
  stage: 'ft (#ask-ft)'
  needs: [ 'cloud-deploy' ]
- script: [ 'dev-cloud-portal-gitlab-vms-5.1' ]
+ script: [ 'cloud_portal_tests config:cloud_installers_5_1_url $CLOUD_HOST $CI_PIPELINE_URL' ]
  tags: [ 'cloud_portal_tests' ]
  timeout: '180m'
  rules:
@@ -23,7 +23,7 @@ FT / VMS 5.1:
 FT / VMS 6.0:
   stage: 'ft (#ask-ft)'
   needs: [ 'cloud-deploy' ]
-  script: [ 'dev-cloud-portal-gitlab-vms-6.0' ]
+  script: [ 'cloud_portal_tests config:cloud_installers_6_0_url $CLOUD_HOST $CI_PIPELINE_URL' ]
   tags: [ 'cloud_portal_tests' ]
   timeout: '180m'
   rules:
@@ -34,7 +34,7 @@ FT / VMS 6.0:
 WebAdmin:
   stage: 'ft (#ask-ft)'
   needs: [ 'jenkins-build-webadmin' ]
-  script: [ 'dev-cloud-portal-webadmin-develop' ]
+  script: [ 'web_admin_tests $ARTIFACTORY_WEBADMIN_URL branch:master' ]
   tags: [ 'cloud_portal_tests' ]
   timeout: '180m'
   rules:
