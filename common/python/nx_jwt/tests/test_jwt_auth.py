@@ -10,15 +10,13 @@ from uuid import uuid4
 
 import jwt.exceptions
 import pytest
-# from django.conf import settings
 from jwt.utils import base64url_encode
 
 from nx_jwt.jwt_auth import (
     JWT_REGEX,
     FallbackToRegToken,
-    JTWPayload,
+    JWTPayload,
     JWKMissingKeyError,
-    get_jwk_client,
 )
 
 CLOUD_TEST_HOSTNAME = 'cloud-test.hdw.mx'
@@ -84,14 +82,14 @@ class TestDecodeJwtToken:
             token = key['jwt_tokens'][0]
             email = key['emails'][0]
             verified_token = jwk_client.decode_jwt_token(token)
-            assert isinstance(verified_token, JTWPayload)
+            assert isinstance(verified_token, JWTPayload)
             assert verified_token.sub == email
             assert verified_token.exp == int(self.timestamps[0].timestamp())
             assert verified_token.is_expired is False
             token = key['jwt_tokens'][1]
             email = key['emails'][1]
             verified_token = jwk_client.decode_jwt_token(token)
-            assert isinstance(verified_token, JTWPayload)
+            assert isinstance(verified_token, JWTPayload)
             assert verified_token.sub == email
             assert verified_token.exp == int(self.timestamps[1].timestamp())
             assert verified_token.is_expired is True
@@ -177,7 +175,7 @@ class TestDecodeJwtToken:
         sleep(1)
         mock_jwks = mock_jwks_request(self.jwks_ret_val)
         verified_token = jwk_client.decode_jwt_token(token)
-        assert isinstance(verified_token, JTWPayload)
+        assert isinstance(verified_token, JWTPayload)
         assert jwk_client.current_fallbacks == 0
         assert jwk_client.is_failure is False
         mock_jwks.assert_called_once()

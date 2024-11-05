@@ -19,7 +19,10 @@ import environ
 import structlog
 from corsheaders.defaults import default_headers
 from django.core.exceptions import ImproperlyConfigured
-from nx_jwt.jwt_auth import get_jwk_client
+from nx_jwt.jwt_auth import (
+    get_jwk_client,
+    get_sa_jwk_client,
+)
 
 from channel_partners.configuration.celery_cron_config import (
     CELERY_CRON_CONFIG,
@@ -524,8 +527,10 @@ DJANGO_CELERY_BEAT_TZ_AWARE = False
 CELERY_BEAT_SCHEDULE = CELERY_CRON_CONFIG
 
 JWK_LIFESPAN = 21600
+# CDB tokens validation
 JWK_CLIENT = get_jwk_client(DEFAULT_HOST_NAME, lifespan=JWK_LIFESPAN, init_keys=False)
-
+# Service Authorizer tokens validation
+SA_JWK_CLIENT = get_sa_jwk_client(AUTH_SRV_PROVIDERS, lifespan=JWK_LIFESPAN, init_keys=False)
 
 """
 - If i don't import the following, i'm not getting any signals. 

@@ -23,6 +23,8 @@ class ErrorCodes(StrEnum):
     role_change_conflict = 'roleChangeConflict'
     wrong_service_id = 'wrongServiceId'
     credit_service_increased = 'creditServiceIncreased'
+    invalid_token_scope = 'invalidTokenScope'
+    invalid_token = 'invalidToken'
 
 
 class Conflict(APIException):

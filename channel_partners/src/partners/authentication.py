@@ -18,13 +18,17 @@ from django.db import transaction
 from django.utils.translation import gettext_lazy as _
 from drf_spectacular.openapi import OpenApiAuthenticationExtension
 from httpx import Response
-from jwt import InvalidTokenError
+from jwt import (
+    InvalidTokenError,
+    PyJWTError,
+)
 from nx_cloud_api_client.base_auth import CdbAuthAPIClient
 from nx_cloud_api_client.client import NxCloudAPISyncClient
 from nx_jwt.jwt_auth import (
     JWT_REGEX,
     FallbackToRegToken,
     JWKMissingKeyError,
+    SAJWTPayload,
 )
 from rest_framework import (
     exceptions,
@@ -41,9 +45,13 @@ from partners.models import (
     CloudSystemId,
     CloudSystemStates,
     CloudUser,
+    NxInternalService,
     VmsRoles,
 )
-from tools.exception import APIErrorWithoutRollback
+from tools.exception import (
+    APIErrorWithoutRollback,
+    ErrorCodes,
+)
 from tools.helpers import cast_uuid
 from tools.nx_cloud_api_client_factory import NxCloudApiClientFactory
 
@@ -414,6 +422,21 @@ def get_cloud_user_from_token(token: str, cloud_host: str) -> Optional[str]:
     return authenticate_regular_token(token, cloud_host)
 
 
+def get_sa_token_payload(token: str) -> Optional[SAJWTPayload]:
+    try:
+        return settings.SA_JWK_CLIENT.decode_jwt_without_fallback(token, verify_exp=True)
+    except InvalidTokenError as ex:
+        # Token is invalid, expired, whatsoever
+        logger.debug('Unauthorized token.', exception=str(ex))
+        return None
+    except PyJWTError as ex:
+        # Token decoding failed. This can happen because
+        # of errors in JWKClient, unavailable JWKs or CDB, etc
+        logger.error('Token decoding failed.', exception=str(ex))
+        return None
+
+
+
 def authenticate_jwt_token(token: str) -> Optional[str]:
     if email := TokenCache.get_token(token):
         return email
@@ -517,6 +540,24 @@ class NxCloudOauthTokenAuthenticationExtension(OpenApiAuthenticationExtension):
             'type': 'http',
             'scheme': 'bearer',
         }
+
+
+class NxS2SAuthentication(NxCloudOauthTokenAuthentication):
+    keyword = 'Service'
+    model = NxInternalService
+    scope_service = 'channel_partners'
+
+    def authenticate_credentials(self, key, request=None):
+        model = self.get_model()
+        token_payload = get_sa_token_payload(key)
+        if not token_payload:
+            raise exceptions.AuthenticationFailed('Invalid or expired token.',
+                                                  code=ErrorCodes.invalid_token)
+        if not token_payload.is_service_allowed(self.scope_service):
+            raise exceptions.AuthenticationFailed('Invalid or expired token.',
+                                                  code=ErrorCodes.invalid_token_scope)
+        request.internal_service = model(token_payload)
+        return get_user_model()(), key
 
 
 def system_authentication_hook(result, generator, request, public):
