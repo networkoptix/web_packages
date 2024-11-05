@@ -1,3 +1,4 @@
+@use "resets";
 @use 'typography';
 
 :host {
@@ -11,6 +12,7 @@
     }
 
     .clear-btn {
+        @include resets.button;
         position: absolute;
         right: 0.25rem;
         top: 50%;

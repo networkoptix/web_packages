@@ -135,7 +135,7 @@
     [ngStyle]="{ 'width.px': pushBuffer }"
 >
     <button
-        class="push-example__button"
+        class="nx-button--default push-example__button"
         (click)="pushPull(pushed)"
     >
         <span>⬅️ Push/pull ➡️</span>
@@ -172,6 +172,7 @@
         Hover
     </div>
     <button
+        class="nx-button--default"
         nxTooltipV2
         tooltipContent="That makes Calamity of so long life:"
         tooltipTrigger="focus"
@@ -181,6 +182,7 @@
         Focus
     </button>
     <button
+        class="nx-button--default"
         nxTooltipV2
         tooltipContent="For who would bear the Whips and Scorns of time,"
         tooltipTrigger="click"
@@ -192,6 +194,7 @@
 
     <div class="button-and-square">
         <button
+            class="nx-button--default"
             nxTooltipV2
             tooltipContent="The Oppressor's wrong, the proud man's Contumely,"
             tooltipTrigger="none"
@@ -222,6 +225,7 @@
 <h2 class="h2">Timing</h2>
 <div class="delays-container">
     <button
+        class="nx-button--default"
         nxTooltipV2
         tooltipContent="The pangs of despised Love, the Law’s delay,"
         tooltipTrigger="none"
@@ -236,6 +240,7 @@
 
     <div class="speedup">
         <button
+            class="nx-button--default"
             nxTooltipV2
             tooltipContent="The insolence of Office, and the spurns"
             #slowTooltip="nxTooltipV2"
@@ -248,6 +253,7 @@
             {{ slowTransition ? (thousandCountdown | async) : 'Slow' }}
         </button>
         <button
+            class="nx-button--default"
             [disabled]="!slowTransition"
             (click)="
                 slowTooltip.opened() ? slowTooltip.close(0) : slowTooltip.open(0);
@@ -258,6 +264,7 @@
             Hurry up!
         </button>
         <button
+            class="nx-button--default"
             [disabled]="!slowTransition"
             (click)="
                 slowTooltip.opened() ? slowTooltip.open(0) : slowTooltip.close(0);
@@ -271,6 +278,7 @@
 
     <div class="autohide-example">
         <button
+            class="nx-button--default"
             style="width: 96px"
             nxTooltipV2
             tooltipContent="That patient merit of th'unworthy takes,"

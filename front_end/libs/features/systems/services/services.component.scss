@@ -1,3 +1,4 @@
+@use "resets";
 @use "typography";
 @use 'theme_generator' as tg;
 @include tg.generate-theme-vars((
@@ -57,17 +58,21 @@
         }
 
         &__toggle {
+            @include resets.button;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             position: absolute;
             right: 0;
             top: 50%;
             transform: translateY(-50%);
 
-            height: 32px !important;
+            height: 32px;
             width: 14px;
-            padding: 0 !important;
+            padding: 0;
             background: var(--control-color);
-            border-top-right-radius: 0 !important;
-            border-bottom-right-radius: 0 !important;
+            border-top-left-radius: 2px;
+            border-bottom-left-radius: 2px;
 
         }
 
@@ -119,7 +124,7 @@
 
     table {
         border-collapse: collapse;
-        
+
         &, th, td {
             border: 1px solid var(--border-color);
         }
@@ -185,7 +190,7 @@
                     text-align: start;
                 }
                 &__usage {
-                    
+
                     &-content {
                         display: flex;
                         justify-content: space-between;
@@ -208,19 +213,17 @@
                 &__used {
                     text-align: end;
                 }
-                &__edit {
+                &__edit-button {
+                    @include resets.button;
+                    background: transparent;
+                    width: 45px;
+                    height: 45px;
+                    padding: 0;
 
-                    &-button {
-                        background: transparent;
-                        width: 45px;
-                        height: 45px !important;
-                        padding: 0 !important;
+                    &:hover {
 
-                        &:hover {
-
-                            svg .icon-with-fill {
-                                fill: var(--edit-button-hover);
-                            }
+                        svg .icon-with-fill {
+                            fill: var(--edit-button-hover);
                         }
                     }
                 }

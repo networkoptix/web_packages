@@ -2,7 +2,7 @@
     <span translate>Date and Time</span>
     <button
         *ngIf="dateRange || timeRange.start !== null || timeRange.end !== null"
-        class="clear"
+        class="legacy-btn clear"
         (click)="clear()"
     >
         <svg-icon
@@ -15,6 +15,7 @@
 <div class="dtf-body">
     <div class="quick-selects">
         <button
+            class="legacy-btn"
             translate
             [ngClass]="{ selected: quickSelectMatch(lastDay) }"
             (click)="quickSelect(lastDay)"
@@ -26,6 +27,7 @@
             Last Day
         </button>
         <button
+            class="legacy-btn"
             translate
             [ngClass]="{ selected: quickSelectMatch(last7Days) }"
             (click)="quickSelect(last7Days)"
@@ -37,6 +39,7 @@
             Last 7 Days
         </button>
         <button
+            class="legacy-btn"
             translate
             [ngClass]="{ selected: quickSelectMatch(last30Days) }"
             (click)="quickSelect(last30Days)"

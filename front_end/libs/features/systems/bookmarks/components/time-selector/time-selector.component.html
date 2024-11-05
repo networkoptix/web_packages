@@ -14,7 +14,7 @@
     />
     <button
         *ngIf="value"
-        class="clear-btn"
+        class="legacy-btn clear-btn"
         (click)="value = ''; emitValue('')"
     >
         <svg-icon
@@ -26,7 +26,7 @@
 </div>
 <button
     #periodBtn
-    class="period"
+    class="legacy-btn period"
     [ngClass]="{ error: point === 'end' && error$ | async }"
     *ngIf="hour12"
     [cdkMenuTriggerFor]="periods"
@@ -40,6 +40,7 @@
         [ngStyle]="{ 'min-width.px': periodBtn.nativeElement.offsetWidth }"
     >
         <button
+            class="legacy-btn"
             cdkMenuItem
             [ngClass]="{ selected: period === AM }"
             (cdkMenuItemTriggered)="period = AM; emitValue()"
@@ -47,6 +48,7 @@
             {{ AM }}
         </button>
         <button
+            class="legacy-btn"
             cdkMenuItem
             [ngClass]="{ selected: period === PM }"
             (cdkMenuItemTriggered)="period = PM; emitValue()"

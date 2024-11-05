@@ -10,6 +10,7 @@ const classes = new Set([
     "permissions-show",
     "header-nav-show",
     "dynamic-table-show",
+    "legacy-btn",
     "btn",
     "btn-big",
     "btn-default",

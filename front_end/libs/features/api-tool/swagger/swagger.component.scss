@@ -1,7 +1,7 @@
 @use "sass-rem/rem" as sass-rem;
+@use "mixins";
 @use "typography";
 @use "theme_variables_common" as *;
-@use "buttons" as *;
 @use "bootstrap_utils" as bootstrap;
 @import "swagger-ui/dist/swagger-ui.css";
 
@@ -741,7 +741,7 @@
 
 	.btn {
 		background: initial;
-		@include button;
+		@include mixins.legacy-btn;
 		@include typography.medium14nocolor;
 		color: var(--btn-default-color);
 		background-color: var(--btn-default-bg) !important;

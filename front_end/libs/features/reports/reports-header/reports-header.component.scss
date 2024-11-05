@@ -1,4 +1,6 @@
-  p {
+ @use "resets";
+
+ p {
     margin-bottom: unset;
   }
 
@@ -17,6 +19,7 @@
     display: flex;
 
     button {
+        @include resets.button;
         font-family: inherit;
         color: var(--reports-export-button);
         background: transparent;

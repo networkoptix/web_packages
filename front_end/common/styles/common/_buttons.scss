@@ -4,48 +4,13 @@
 @use "bootstrap_utils" as bootstrap;
 @forward "theme_variables_common";
 
-
-@mixin button {
-    font-family: var(--font-family-medium);
-    //color           : $font-color-medium;
-    font-size: var(--h6-font-size)  !important;
-    height: 2rem !important;
-    border-radius: $border-radius-base  !important;
-    font-weight: inherit !important;
-    padding: 0 1rem !important;
-    border: none;
-    display: flex !important;
-    align-items: center !important;
-    transition: none !important;
-    max-width: 298px;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    line-height: 1rem !important;
-    justify-content: center;
-    text-decoration: none;
-    box-shadow: none;
-
-    &:hover,
-    &:active,
-    &.active,
-    &:focus,
-    &.focus {
-        box-shadow: none;
-    }
-
-    &:disabled {
-        opacity: 0.3;
-
-        & * {
-            pointer-events: none;
-        }
-    }
+.legacy-btn {
+    @include mixins.legacy-btn;
 }
 
 // Overwrite Boostrap section ************
-button:not([data-escape-global-style]),
 .btn {
-    @include button;
+    @include mixins.legacy-btn;
 }
 
 .btn.btn-big {

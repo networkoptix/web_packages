@@ -1,3 +1,4 @@
+@use "mixins";
 @use "typography" as typography;
 @use "native-theme/theme_palette";
 @use "theme_palette" as colors;
@@ -113,6 +114,7 @@ nx-modal-wizard {
 
         &-header, &-info-header {
             .close {
+                @include mixins.legacy-btn;
                 color: var(--dialog-header-color) !important;
                 opacity: 1 !important;
                 width: 32px !important;

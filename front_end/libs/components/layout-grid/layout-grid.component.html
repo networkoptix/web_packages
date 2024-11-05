@@ -39,7 +39,7 @@
                                     ) {
                                         <button
                                             (click)="startTour()"
-                                            class="start-tour"
+                                            class="legacy-btn start-tour"
                                             translate
                                         >
                                             Take Tour
@@ -523,7 +523,7 @@
 
                 @if (unsavedLayoutState$$() !== unsavedStates.saving) {
                     <button
-                        class="ribbon-button"
+                        class="legacy-btn ribbon-button"
                         (click)="layoutStateService.saveLayout(layout.id)"
                     >
                         <svg-icon
@@ -553,7 +553,7 @@
                 @switch (unsavedLayoutState$$()) {
                     @case (unsavedStates.diverged) {
                         <button
-                            class="ribbon-button"
+                            class="legacy-btn ribbon-button"
                             (click)="layoutStateService.discardUnsavedLayout(layout.id)"
                         >
                             <svg-icon
@@ -569,7 +569,7 @@
                     }
                     @case (unsavedStates.error) {
                         <button
-                            class="ribbon-button"
+                            class="legacy-btn ribbon-button"
                             (click)="layoutStateService.discardUnsavedLayout(layout.id)"
                             translate
                         >
@@ -579,7 +579,7 @@
                     @default {
                         @if (unsavedLayoutState$$() === unsavedStates.overwrite) {
                             <button
-                                class="ribbon-button"
+                                class="legacy-btn ribbon-button"
                                 (click)="layoutStateService.editedLayout$$.set(layout)"
                                 translate
                             >
@@ -587,7 +587,7 @@
                             </button>
                         }
                         <button
-                            class="ribbon-button"
+                            class="legacy-btn ribbon-button"
                             (click)="layoutStateService.discardUnsavedLayout(layout.id)"
                             translate
                         >
@@ -612,13 +612,13 @@
                         Set layout resolution to 'Auto' to increase performance
                     </span>
                     <button
-                        class="ribbon-button"
+                        class="legacy-btn ribbon-button"
                         (click)="setResolutionToAuto()"
                     >
                         <span translate>Set to "Auto"</span>
                     </button>
                     <button
-                        class="ribbon-button"
+                        class="legacy-btn ribbon-button"
                         (click)="layoutStateService.showResolutionRibbon$.next(0)"
                     >
                         <span translate>Close</span>

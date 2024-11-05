@@ -3,6 +3,7 @@
 @mixin button {
     outline: none;
     border: none;
+    border-radius: 0;
     color: inherit;
     padding: 0;
 

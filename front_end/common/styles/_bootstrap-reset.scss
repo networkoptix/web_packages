@@ -12,33 +12,3 @@ ol[data-escape-global-style] ul,
 ul[data-escape-global-style] ol {
   margin-bottom: unset;
 }
-
-button[data-escape-global-style] {
-  border-radius: unset;
-}
-
-button[data-escape-global-style]:focus {
-  outline: unset;
-  outline: unset;
-}
-
-button[data-escape-global-style] {
-  text-transform: unset;
-}
-
-[role=button][data-escape-global-style] {
-  cursor: unset;
-}
-
-button[data-escape-global-style] {
-  -webkit-appearance: unset;
-}
-
-button[data-escape-global-style]:not(:disabled) {
-  cursor: unset;
-}
-
-button[data-escape-global-style]::-moz-focus-inner {
-  padding: unset;
-  border-style: unset;
-}

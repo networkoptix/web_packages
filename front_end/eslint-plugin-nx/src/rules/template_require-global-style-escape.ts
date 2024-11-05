@@ -5,7 +5,6 @@
 import type { TmplAstElement } from '@angular-eslint/bundled-angular-compiler';
 
 import bootstrapElements from '../data/bootstrap-elements';
-import nxGlobalStyleElements from '../data/nx-global-style-elements';
 
 import { sourceSpanToLoc } from './template-utils';
 import { createRule } from './utils';
@@ -44,7 +43,7 @@ export = createRule({
                 const nxName = `nx-${node.name}`; // ex: <input nx-input />
                 // Assuming element enhancements add escape directive to host
                 if (
-                    (bootstrapElements.has(node.name) || nxGlobalStyleElements.has(node.name)) &&
+                    bootstrapElements.has(node.name) &&
                     !node.attributes.some(
                         a =>
                             a.name === 'data-escape-global-style' ||

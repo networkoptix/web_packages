@@ -1,7 +1,6 @@
 /* eslint-disable */
 const classes = new Set([
     "ol",
-    "ul",
-    "button"
+    "ul"
 ]);
 export default classes;

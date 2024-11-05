@@ -1,4 +1,4 @@
-@use "theme_variables_common";
+@use "theme_variables_common" as common;
 @use "typography";
 @forward "theme_variables_common";
 
@@ -174,5 +174,42 @@
     a {
         text-decoration: none;
         color: inherit;
+    }
+}
+
+@mixin legacy-btn {
+    font-family: var(--font-family-medium);
+    //color           : $font-color-medium;
+    font-size: var(--h6-font-size)  !important;
+    height: 2rem !important;
+    border-radius: common.$border-radius-base  !important;
+    font-weight: inherit !important;
+    padding: 0 1rem !important;
+    border: none;
+    display: flex !important;
+    align-items: center !important;
+    transition: none !important;
+    max-width: 298px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    line-height: 1rem !important;
+    justify-content: center;
+    text-decoration: none;
+    box-shadow: none;
+
+    &:hover,
+    &:active,
+    &.active,
+    &:focus,
+    &.focus {
+        box-shadow: none;
+    }
+
+    &:disabled {
+        opacity: 0.3;
+
+        & * {
+            pointer-events: none;
+        }
     }
 }

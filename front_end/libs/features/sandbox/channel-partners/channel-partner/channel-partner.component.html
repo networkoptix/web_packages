@@ -29,13 +29,13 @@
             [style]="{ gap: '5px' }"
         >
             <button
-                class="btn-primary"
+                class="nx-button--primary"
                 (click)="updateChannelPartner(partner)"
             >
                 Update
             </button>
             <button
-                class="btn-primary"
+                class="nx-button--primary"
                 (click)="changePartnerState(partner)"
             >
                 Change state
@@ -47,7 +47,7 @@
 
         <h2 class="h2">Sub Channel Partners</h2>
         <button
-            class="btn-primary"
+            class="nx-button--primary"
             (click)="newChannelPartner(partner.id)"
         >
             New Sub Partner
@@ -61,7 +61,7 @@
                 >
             </h4>
             <button
-                class="btn-danger"
+                class="nx-button--danger"
                 (click)="deleteChannelPartner(sub.id)"
             >
                 Delete
@@ -73,7 +73,7 @@
 
         <h2 class="h2">Organizations</h2>
         <button
-            class="btn-primary"
+            class="nx-button--primary"
             (click)="newOrganization(partner.id)"
         >
             New Organization
@@ -87,7 +87,7 @@
                 >
             </h4>
             <button
-                class="btn-danger"
+                class="nx-button--danger"
                 (click)="deleteOrganization(org.id)"
             >
                 Delete
@@ -99,7 +99,7 @@
 
         <h2 class="h2">Users</h2>
         <button
-            class="btn-primary"
+            class="nx-button--primary"
             (click)="newPartnerUser(partner.id)"
         >
             New User
@@ -111,13 +111,13 @@
                 [style]="{ gap: '5px' }"
             >
                 <button
-                    class="btn-primary"
+                    class="nx-button--primary"
                     (click)="updatePartnerUser(partner.id, user)"
                 >
                     Update
                 </button>
                 <button
-                    class="btn-danger"
+                    class="nx-button--danger"
                     (click)="deletePartnerUser(partner.id, user.email)"
                 >
                     Delete

@@ -18,7 +18,7 @@
     [src]="icons.dir + 'search.svg'"
 ></svg-icon>
 <button
-    class="clear-btn"
+    class="legacy-btn clear-btn"
     *ngIf="search"
     (click)="writeValue('')"
     (keydown.Esc)="dropdownOpen = false; matchIndexes = undefined"

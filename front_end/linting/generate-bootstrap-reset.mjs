@@ -55,7 +55,8 @@ for (const rule of bootstrap.stylesheet.rules) {
     if (
         isEqual(selectors, ['table']) ||
         isEqual(selectors, ['th']) ||
-        isEqual(selectors, ['input', 'button'])
+        isEqual(selectors, ['input', 'button']) ||
+        selectors.some(s => s.includes('button'))
     ) {
         /* table {
             border-collapse: collapse;
@@ -70,6 +71,10 @@ for (const rule of bootstrap.stylesheet.rules) {
             font-family: inherit;
             font-size: inherit;
             line-height: inherit;
+        }
+
+        button {
+            // Remaining are okay
         }
         */
         // Preferred defaults

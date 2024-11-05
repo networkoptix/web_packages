@@ -1,3 +1,4 @@
+@use "resets";
 @use 'typography' as typography;
 @use 'theme_variables_common' as vars;
 
@@ -27,6 +28,7 @@ p {
     }
 
     &-close-btn {
+        @include resets.button();
         position: absolute;
         right: $button-right;
         top: 50%;

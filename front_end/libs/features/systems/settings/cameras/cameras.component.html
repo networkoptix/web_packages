@@ -63,7 +63,7 @@
                         >
                             <button
                                 *ngIf="canSeeView$$()"
-                                class="camera-buttons"
+                                class="legacy-btn camera-buttons"
                                 [routerLink]="cameraViewPath"
                                 id="view-camera"
                             >
@@ -82,7 +82,7 @@
                             </button>
                             <button
                                 *ngIf="canSeeInfo$$()"
-                                class="camera-buttons"
+                                class="legacy-btn camera-buttons"
                                 id="detailed-info"
                                 [routerLink]="fullInfoPath"
                                 [queryParams]="{ id: camera.id }"

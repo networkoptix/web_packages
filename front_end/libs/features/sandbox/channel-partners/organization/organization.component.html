@@ -29,13 +29,13 @@
             [style]="{ gap: '5px' }"
         >
             <button
-                class="btn-primary"
+                class="nx-button--primary"
                 (click)="updateOrganization(org)"
             >
                 Update
             </button>
             <button
-                class="btn-primary"
+                class="nx-button--primary"
                 (click)="changeOrganizationState(org)"
             >
                 Change state
@@ -53,7 +53,7 @@
                 [style]="{ gap: '5px' }"
             >
                 <button
-                    class="btn-primary"
+                    class="nx-button--primary"
                     (click)="newOrgUser()"
                 >
                     New User
@@ -66,13 +66,13 @@
                     [style]="{ gap: '5px' }"
                 >
                     <button
-                        class="btn-primary"
+                        class="nx-button--primary"
                         (click)="updateOrgUser(user)"
                     >
                         Update
                     </button>
                     <button
-                        class="btn-danger"
+                        class="nx-button--danger"
                         (click)="deleteOrgUser(user.email)"
                     >
                         Delete
@@ -90,7 +90,7 @@
         <h2 class="h2">Groups</h2>
         <label class="label mr-2">New group name</label><input [(ngModel)]="newGroupName" />
         <button
-            class="btn-primary"
+            class="nx-button--primary"
             (click)="createGroup(null)"
         >
             New org group
@@ -121,7 +121,7 @@
                 [style]="{ gap: '5px' }"
             >
                 <button
-                    class="btn-primary"
+                    class="nx-button--primary"
                     (click)="createGroup(group.id)"
                 >
                     New subgroup

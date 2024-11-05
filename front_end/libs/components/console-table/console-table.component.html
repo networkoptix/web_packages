@@ -20,6 +20,7 @@
     <header class="header-with-search">
         <span>{{ selectedManifest.title }}</span>
         <button
+            class="legacy-btn"
             *ngIf="
                 !selectedManifest.disabled[OPTIONAL_FEATURES.SEARCH] && selectedData.showAdvanced$
                     | async
@@ -373,7 +374,7 @@
                         <span>{{ selectedManifest.noResultsMessage }}</span>
                         <button
                             (click)="resetSearch()"
-                            class="reset-search"
+                            class="legacy-btn reset-search"
                             translate
                         >
                             Reset Search
