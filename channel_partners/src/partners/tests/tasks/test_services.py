@@ -21,16 +21,17 @@ class TestOrganizationSystemsNegationTask:
     @pytest.fixture(autouse=True)
     def setup(self, organization_factory, system_factory, mocker, service_record_factory, cp_service_factory):
         self.organization = organization_factory()
-        self.systems = [system_factory(organization=self.organization) for _ in range(100)]
+        self.systems = [system_factory(organization=self.organization) for _ in range(10)]
         self.system_ids = [sys.id for sys in self.systems]
         self.services = [
             cp_service_factory(channel_partner=self.organization.channel_partner, service_type=typ)
             for typ in ChannelPartnerService.SERVICE_TYPE_TO_CODE_MAP.keys()
         ]
         self.service_records = []
+        self.records_count = 2
         for system in self.systems:
             for service in self.services:
-                for _ in range(3):
+                for _ in range(self.records_count):
                     self.service_records.append(service_record_factory(
                         service=service,
                         organization=self.organization,
@@ -46,9 +47,9 @@ class TestOrganizationSystemsNegationTask:
         assert ChannelPartnerServiceRecord.objects.filter(
             organization=self.organization,
             cloud_system_id__in=self.system_ids
-        ).count() == len(ChannelPartnerService.SERVICE_TYPES) * len(self.system_ids) * 3
+        ).count() == len(ChannelPartnerService.SERVICE_TYPES) * len(self.system_ids) * self.records_count
         assert (ChannelPartnerServiceRecord.objects.count() ==
-                len(ChannelPartnerService.SERVICE_TYPES) * len(self.system_ids) * 3)
+                len(ChannelPartnerService.SERVICE_TYPES) * len(self.system_ids) * self.records_count)
         assert ChannelPartnerServiceRecord.objects.all().aggregate(Sum("quantity"))["quantity__sum"] > 0
 
     def test_initial_data(self):
@@ -60,7 +61,7 @@ class TestOrganizationSystemsNegationTask:
         assert ChannelPartnerServiceRecord.objects.filter(
             organization=self.organization,
             cloud_system_id__in=self.system_ids
-        ).count() == len(ChannelPartnerService.SERVICE_TYPES) * len(self.system_ids) * 4
+        ).count() == len(ChannelPartnerService.SERVICE_TYPES) * len(self.system_ids) * (self.records_count + 1)
         assert ChannelPartnerServiceRecord.objects.all().aggregate(Sum("quantity"))["quantity__sum"] == 0
 
     def test_non_existing_organization(self):
