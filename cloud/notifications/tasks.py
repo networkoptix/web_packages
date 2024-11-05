@@ -130,10 +130,10 @@ def send_email(msg_id, queue="", attempt=1, email_type='', emails = None, sessio
 
         message.save()
 
+    failed_emails = []
     try:
         targets = emails if send_individual else (emails,)
         errors = []
-        failed_emails = []
 
         for email in targets:
             is_dict_content = isinstance(initial_email_content, dict)
@@ -177,7 +177,8 @@ def send_email(msg_id, queue="", attempt=1, email_type='', emails = None, sessio
         )
 
         if isinstance(message, SystemEmail):
-            email_content.pop('userFullName')
+            if 'userFullName' in initial_email_content:
+                initial_email_content.pop('userFullName')
             message.result = RESULT_STATES.failure
             message.save()
 
@@ -187,7 +188,7 @@ def send_email(msg_id, queue="", attempt=1, email_type='', emails = None, sessio
                 'error': str(error),
                 'user_email': failed_emails,
                 'type': template_type,
-                'message': email_content,
+                'message': initial_email_content,
                 'customization': customization,
                 'language': lang,
                 'queue': queue,
@@ -200,7 +201,8 @@ def send_email(msg_id, queue="", attempt=1, email_type='', emails = None, sessio
         if isinstance(message, Message):
             message.send_date = timezone.now()
         else:
-            email_content.pop('userFullName')
+            if 'userFullName' in initial_email_content:
+                initial_email_content.pop('userFullName')
             message.completed_date = timezone.now()
             message.result = RESULT_STATES.success
             if cache_key := message.attachments.get('cache_key'):
@@ -211,7 +213,7 @@ def send_email(msg_id, queue="", attempt=1, email_type='', emails = None, sessio
         return {
             'user_email': emails,
             'type': template_type,
-            'message': email_content,
+            'message': initial_email_content,
             'customization': customization,
             'language': lang,
             'queue': queue,
