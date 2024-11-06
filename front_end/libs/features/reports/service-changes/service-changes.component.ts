@@ -1,6 +1,7 @@
 import { Component, computed, effect, inject, input, untracked } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { Store } from '@ngrx/store';
+import { take } from 'rxjs';
 
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxPagePlaceholderNoReportsComponent } from '@components/placeholdersV2/no-reports/no-reports-page-placeholder.component';
@@ -152,4 +153,22 @@ export class NxServiceChangesComponent extends BaseMonthPageComponent {
             this.reportExportService.exportOrgChanges(entityId, startTs, reportFormat);
         }
     };
+
+    override dateInitializer(): void {
+        this.startTs$.pipe(take(1), takeUntilDestroyed(this.destroyRef)).subscribe(startTs => {
+            const now = new Date();
+            if (startTs) {
+                const [year, month] = startTs.split('-').map(part => parseInt(part));
+                this.year.set(year);
+                this.monthIndex.set(Math.max(0, month - 1));
+            } else if (now.getDate() === 1) {
+                if (now.getMonth() === 1) {
+                    this.year.set(now.getFullYear());
+                    this.monthIndex.set(0);
+                } else {
+                    this.monthIndex.set(now.getMonth());
+                }
+            }
+        });
+    }
 }

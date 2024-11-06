@@ -26,7 +26,19 @@ export abstract class BaseMonthPageComponent {
 
     startTs = paramModel('startTs');
     startTs$ = toObservable(this.startTs);
-    constructor(private destroyRef: DestroyRef) {
+
+    constructor(protected destroyRef: DestroyRef) {
+        this.dateInitializer();
+    }
+
+    dateEffect = effect(
+        () => {
+            this.startTs.set(this.requestStartString());
+        },
+        { allowSignalWrites: true },
+    );
+
+    dateInitializer(): void {
         this.startTs$.pipe(take(1), takeUntilDestroyed(this.destroyRef)).subscribe(startTs => {
             const now = new Date();
             if (startTs) {
@@ -43,11 +55,4 @@ export abstract class BaseMonthPageComponent {
             }
         });
     }
-
-    dateEffect = effect(
-        () => {
-            this.startTs.set(this.requestStartString());
-        },
-        { allowSignalWrites: true },
-    );
 }
