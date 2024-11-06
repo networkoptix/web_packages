@@ -3,13 +3,14 @@
         "project_keys": [
             "CLOUD",
             "INFRA",
-            "LIC"
+            "LIC",
+            "CPS"
         ]
     },
     "repo": {
         "path": "/tmp/workflow_robocat/cloud_portal",
         "url": "git@gitlab.nxvms.dev:dev/cloud_portal.git",
-        "need_code_owner_approval": true 
+        "need_code_owner_approval": true
     },
     "enabled_rules": [
         "commit_message",
