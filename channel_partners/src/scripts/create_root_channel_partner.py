@@ -74,7 +74,7 @@ def create_root_channel_partner(root_name, host_name):
             type=ChannelPartnerService.ANALYTICS,
             parameters={"integrationId": "nx.stub.object_detection"}
         )
-        return root_channel_partner
+    return root_channel_partner
 
 
 def create_customization(root_channel_partner, customization, host_name):
