@@ -55,22 +55,24 @@
     <ng-template #preloader>
         <ng-template #offlinePlaceholder>
             @if (system.isAvailable) {
-                <nx-page-generic-placeholder-v2 class="server-offline-placeholder">
+                <nx-page-generic-placeholder-v2 class="placeholder">
                     <svg-icon
                         [src]="icons.dirPagePlaceholder + 'Offline.svg'"
                         [svgStyle]="{ 'height.px': 200 }"
                     ></svg-icon>
-                    <h2
-                        class="h2 title"
-                        translate
-                    >
-                        Server not accessible
-                    </h2>
-                    <div
-                        class="message"
-                        translate
-                    >
-                        System is offline and hence, servers are not accessible.
+                    <div class="placeholder-body">
+                        <h2
+                            class="h2 title"
+                            translate
+                        >
+                            Server not accessible
+                        </h2>
+                        <div
+                            class="message"
+                            translate
+                        >
+                            System is offline and hence, servers are not accessible.
+                        </div>
                     </div>
                 </nx-page-generic-placeholder-v2>
             }

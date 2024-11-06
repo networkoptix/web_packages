@@ -3,11 +3,11 @@
         [src]="icons.dirPagePlaceholder + 'NoAccess.svg'"
         [svgStyle]="{ 'height.px': 200 }"
     />
-    <div class="twofa-text">
-        <h2 class="nx-h2">
+    <div class="placeholder-body">
+        <h2 class="title">
             {{ LANG.pageTitles.failedToAccess2FA | translate: { systemName: systemName() } }}
         </h2>
-        <div class="unique-message">
+        <div class="message">
             <p
                 class="nx-paragraph"
                 translate
@@ -26,7 +26,7 @@
         </div>
     </div>
     <button
-        class="nx-button--primary main-button"
+        class="nx-button--primary unique-button"
         data-escape-global-style
     >
         <a

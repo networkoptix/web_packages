@@ -110,24 +110,7 @@
 }
 
 .placeholder {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
     svg-icon {
-        margin-bottom: 1.5rem;
-        svg {
-            .brand_element_cloud {
-                fill: var(--placehoder-cloud-color);
-                opacity: var(--placehoder-cloud-opacity);
-            }
-        }
-    }
-
-    .title {
-        color: var(--placehoder-title-color) !important;
-        text-align: center;
-        justify-content: center;
-        max-width: 560px;
+        margin-bottom: 0 !important;
     }
 }

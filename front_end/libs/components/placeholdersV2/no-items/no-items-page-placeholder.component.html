@@ -5,11 +5,11 @@
         [svgStyle]="{ 'width.px': '64', 'height.px': '64' }"
         [applyClass]="true"
     ></svg-icon>
-    <div class="title">
+    <div class="dark-title">
         {{ LANG.placeholderV2Texts.noItems.title | translate }}
     </div>
     @if (canManageSystems$$()) {
-        <div class="message">
+        <div class="dark-message">
             {{ LANG.placeholderV2Texts.noItems.message | translate | translateCut: 0 }}
             <span
                 (click)="addSystem()"

@@ -127,20 +127,22 @@
                                             icons.dirPagePlaceholder + 'noBookmarksCloudIcon.svg'
                                         "
                                     ></svg-icon>
-                                    <h2
-                                        class="h2 title"
-                                        translate
-                                    >
-                                        No matching results.
-                                    </h2>
-                                    <button
-                                        (click)="clearAllFilters()"
-                                        class="clear-filters"
-                                        type="button"
-                                        translate
-                                    >
-                                        Clear Filters
-                                    </button>
+                                    <div class="placeholder-body">
+                                        <div
+                                            class="title"
+                                            translate
+                                        >
+                                            No matching results.
+                                        </div>
+                                        <button
+                                            (click)="clearAllFilters()"
+                                            class="clear-filters"
+                                            type="button"
+                                            translate
+                                        >
+                                            Clear Filters
+                                        </button>
+                                    </div>
                                 </div>
                             </nx-page-generic-placeholder-v2>
                         </div>

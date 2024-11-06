@@ -39,8 +39,8 @@ import {
 } from '@common/store/channel-partners/channel-partners.selectors';
 import { NxAlertBlockComponent } from '@components/content-block/alert/block.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
+import { NxPagePlaceholderFailedPartnerAccessComponent } from '@components/placeholdersV2/failed-partner-access/failed-partner-access-page-placeholder.component';
 import { NxPagePlaceholderGenericComponent } from '@components/placeholdersV2/generic-page-placeholder.component';
-import { NxPagePlaceholderNoAccessComponent } from '@components/placeholdersV2/no-access/no-access-page-placeholder.component';
 import { NxPagePlaceholderNothingFoundComponent } from '@components/placeholdersV2/nothing-found/nothing-found-placeholder.component';
 import { NxSearchComponent } from '@components/search/search.component';
 import { NxTabsComponent } from '@components/tabs/tabs.component';
@@ -91,7 +91,7 @@ import { ChannelPartnersRouteState } from '../store/route-state/route-state.stor
         NxTagComponent,
         PipesModule,
         NxResizeObserver,
-        NxPagePlaceholderNoAccessComponent,
+        NxPagePlaceholderFailedPartnerAccessComponent,
         NxAlertBlockComponent,
         NxIntersectionObserver,
         NxPagePlaceholderGenericComponent,

@@ -7,7 +7,6 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { NxNoSystemsComponent } from '@components/no-systems/no-systems.component';
-import { NxPagePlaceholderComponent } from '@components/placeholders/page/page-placeholder.component';
 import { NxSearchComponent } from '@components/search/search.component';
 import { NxSystemsListComponent } from '@components/systems-list/list.component';
 import { AuthGuard } from '@guards/authGuard';
@@ -35,7 +34,6 @@ const appRoutes: Routes = [
         AngularSvgIconModule,
         DragDropModule,
         NxNoSystemsComponent,
-        NxPagePlaceholderComponent,
         PipesModule,
         NxSearchComponent,
         NxSystemsListComponent,

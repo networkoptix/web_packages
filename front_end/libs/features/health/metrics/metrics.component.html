@@ -2,12 +2,9 @@
     [ngSwitch]="healthLayoutService.metricsValuesCount"
     class="h-100"
 >
-    <nx-page-placeholder
-        *ngSwitchCase="0"
-        placeholderTitle="{{ 'No ' + metricName | translate }}"
-        class="section-placeholder"
-    >
-    </nx-page-placeholder>
+    <nx-page-generic-placeholder-v2 *ngSwitchCase="0">
+        <h2 class="title">{{ 'No' + metricName | translate }}</h2>
+    </nx-page-generic-placeholder-v2>
 
     <div
         class="gridMetricContent"

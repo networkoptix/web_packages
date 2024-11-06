@@ -1,5 +1,8 @@
 <div [ngSwitch]="healthService.alertsValues ? healthService.alertsValues.length : 0">
-    <nx-page-generic-placeholder-v2>
+    <nx-page-generic-placeholder-v2
+        class="placeholder"
+        *ngSwitchCase="0"
+    >
         <svg-icon
             [src]="icons.dirPagePlaceholder + 'NoActions.svg'"
             [svgStyle]="{ 'height.px': 200 }"
@@ -11,7 +14,7 @@
             No Alerts
         </h2>
         <div
-            class="unique-message"
+            class="message"
             translate
         >
             Your system must be doing well!

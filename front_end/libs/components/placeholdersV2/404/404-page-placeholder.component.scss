@@ -1,26 +1,7 @@
 svg-icon {
   margin-bottom: 24px !important;
-
-  svg {
-    .brand_element_cloud {
-      fill: var(--placehoder-cloud-color);
-      opacity: var(--placehoder-cloud-opacity);
-    }
-
-    .svg_light2 {
-      fill: var(--placeholder-light2-color);
-    }
-  }
 }
 
 .placeholder-body {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   gap: 2.5rem;
-
-  h2 {
-    font-size: 1.5rem;
-    color: var(--h2);
-  }
 }

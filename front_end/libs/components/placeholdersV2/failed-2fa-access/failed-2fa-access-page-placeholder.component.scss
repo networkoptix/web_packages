@@ -1,42 +1,11 @@
-svg-icon {
-  svg {
-    .brand_element_cloud {
-      fill: var(--placehoder-cloud-color);
-      opacity: var(--placehoder-cloud-opacity);
-    }
-
-    .svg_light {
-      fill: var(--placeholder-light-color);
-    }
-
-    .svg_light2 {
-      fill: var(--placeholder-light2-color);
-    }
-  }
-}
-
-h2 {
-  font-size: 1.5rem;
-  color: var(--h2);
-}
-
-.twofa-text {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.placeholder-body {
   gap: 1rem;
 
-  .unique-message {
-    font-size: 0.9375rem !important;
-    color: var(--placehoder-body-color) !important;
-    line-height: 24px;
-
-      a {
-        color: var(--brand-core) !important;
-      }
-  }
+    a {
+      color: var(--brand-core) !important;
+    }
 }
 
-.main-button {
+.unique-button {
   margin: 40px auto 0 auto;
 }

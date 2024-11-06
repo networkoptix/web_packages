@@ -10,7 +10,7 @@ import { NxPagePlaceholderGenericComponent } from '../generic-page-placeholder.c
 @Component({
     selector: 'nx-page-placeholder-no-settings',
     templateUrl: 'no-settings-page-placeholder.component.html',
-    styleUrls: ['no-settings-page-placeholder.component.scss'],
+    styleUrl: 'no-settings-page-placeholder.component.scss',
     standalone: true,
     imports: [NxPagePlaceholderGenericComponent, AngularSvgIconModule, TranslateModule],
 })

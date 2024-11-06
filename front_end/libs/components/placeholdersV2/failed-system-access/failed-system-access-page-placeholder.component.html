@@ -3,9 +3,14 @@
         [src]="icons.dirPagePlaceholder + 'NoAccess.svg'"
         [svgStyle]="{ 'height.px': 200 }"
     />
-    <div class="placeholder-text">
-        <h2 translate>Failed to access system</h2>
-        <div class="unique-message">{{ LANG.errorCodes.failedToAccessSystem | translate }}</div>
+    <div class="placeholder-body">
+        <h2
+            translate
+            class="title"
+        >
+            Failed to access system
+        </h2>
+        <div class="message">{{ LANG.errorCodes.failedToAccessSystem | translate }}</div>
         <button
             class="nx-button--primary main-button"
             data-escape-global-style

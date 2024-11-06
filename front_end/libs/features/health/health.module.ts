@@ -10,7 +10,6 @@ import { NxContentBlockComponent } from '@components/content-block/content-block
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
 import { NxInfoBlockComponent } from '@components/info-block/info-block.component';
 import { NxPaginatorComponent } from '@components/paginator/paginator.component';
-import { NxPagePlaceholderComponent } from '@components/placeholders/page/page-placeholder.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxPagePlaceholder500Component } from '@components/placeholdersV2/500/500-page-placeholder.component';
 import { NxPagePlaceholderGenericComponent } from '@components/placeholdersV2/generic-page-placeholder.component';
@@ -101,7 +100,6 @@ const appRoutes: Routes = [
         NxInfoBlockComponent,
         MenuModule,
         NxImageComponent,
-        NxPagePlaceholderComponent,
         NxPagePlaceholderGenericComponent,
         NxPaginatorComponent,
         PipesModule,

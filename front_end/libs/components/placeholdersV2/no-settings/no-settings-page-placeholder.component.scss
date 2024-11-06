@@ -1,21 +1,7 @@
 svg-icon {
-    svg {
-        .brand_element_cloud {
-            fill: var(--placehoder-cloud-color);
-            opacity: var(--placehoder-cloud-opacity);
-        }
-
-        .svg_light2{
-          fill: var(--placeholder-light2-color);
-        }
-    }
+  margin-bottom: 24px !important;
 }
 
-.custom-message {
-  font-family: "robotoregular", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 0.9375rem !important;
-  font-weight: 400 !important;
-  color: var(--placehoder-body-color) !important;
-  line-height: 24px;
-  max-width: 560px;
+.title {
+  margin-bottom: 16px !important;
 }

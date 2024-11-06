@@ -145,13 +145,13 @@
                                     [svgStyle]="{ 'width.px': '64', 'height.px': '64' }"
                                 ></svg-icon>
                                 <div
-                                    class="title"
+                                    class="dark-title"
                                     translate
                                 >
                                     No Organizations
                                 </div>
                                 <div
-                                    class="message"
+                                    class="dark-message"
                                     translate
                                 >
                                     You have not yet created any organizations
@@ -185,7 +185,9 @@
                 <router-outlet></router-outlet>
             }
         } @else {
-            <nx-page-placeholder-no-access></nx-page-placeholder-no-access>
+            <div class="placeholder-container">
+                <nx-page-placeholder-no-access></nx-page-placeholder-no-access>
+            </div>
         }
     </ng-template>
 </div>

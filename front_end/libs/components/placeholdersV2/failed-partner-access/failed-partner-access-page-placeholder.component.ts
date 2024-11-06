@@ -8,10 +8,11 @@ import { NxPagePlaceholderGenericComponent } from '../generic-page-placeholder.c
 
 @Component({
     selector: 'nx-page-placeholder-no-access',
-    templateUrl: 'no-access-page-placeholder.component.html',
+    templateUrl: 'failed-partner-access-page-placeholder.component.html',
+    styleUrl: 'failed-partner-access-page-placeholder.component.scss',
     standalone: true,
     imports: [NxPagePlaceholderGenericComponent, AngularSvgIconModule, NxAddSvgSrcDirective],
 })
-export class NxPagePlaceholderNoAccessComponent {
+export class NxPagePlaceholderFailedPartnerAccessComponent {
     icons = icons;
 }

@@ -9,6 +9,7 @@ import { NxPagePlaceholderGenericComponent } from '../generic-page-placeholder.c
 @Component({
     selector: 'nx-page-placeholder-no-reports',
     templateUrl: 'no-reports-page-placeholder.component.html',
+    styleUrl: 'no-reports-page-placeholder.component.scss',
     standalone: true,
     imports: [AngularSvgIconModule, NxPagePlaceholderGenericComponent],
     hostDirectives: [NxThemeAttributeDirective],

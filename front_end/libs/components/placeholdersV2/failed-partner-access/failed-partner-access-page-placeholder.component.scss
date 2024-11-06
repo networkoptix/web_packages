@@ -1,0 +1,8 @@
+.title,
+.message {
+  &.contrast {
+    color: var(--text-contrast) !important;
+    opacity: 1 !important;
+  }
+
+}

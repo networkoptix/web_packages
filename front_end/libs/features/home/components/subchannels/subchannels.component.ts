@@ -17,6 +17,7 @@ import {
     selectCurrentSubChannelPartners,
 } from '@common/store/channel-partners/channel-partners.selectors';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
+import { NxPagePlaceholderGenericComponent } from '@components/placeholdersV2/generic-page-placeholder.component';
 import { NxPagePlaceholderNothingFoundComponent } from '@components/placeholdersV2/nothing-found/nothing-found-placeholder.component';
 import { NxSearchComponent } from '@components/search/search.component';
 import { NxTagComponent } from '@components/tag/tag.component';
@@ -64,6 +65,7 @@ import { NxCardComponent } from '../card/card.component';
         NxIntersectionObserver,
         NxPreLoaderComponent,
         NxPagePlaceholderNothingFoundComponent,
+        NxPagePlaceholderGenericComponent,
     ],
     hostDirectives: [NxThemeAttributeDirective],
 })

@@ -5,24 +5,26 @@
         [svgStyle]="{ 'width.px': '64', 'height.px': '64' }"
         [applyClass]="true"
     ></svg-icon>
-    <div
-        class="title"
-        translate
-    >
-        No Users
+    <div class="placeholder-body">
+        <div
+            class="dark-title"
+            translate
+        >
+            No Users
+        </div>
+        <div
+            class="dark-message"
+            translate
+        >
+            You have not yet added any users
+        </div>
+        <button
+            type="button"
+            class="button btn btn-default"
+            (click)="clickHandler($event)"
+            translate
+        >
+            Add User
+        </button>
     </div>
-    <div
-        class="message"
-        translate
-    >
-        You have not yet added any users
-    </div>
-    <button
-        type="button"
-        class="button btn btn-default"
-        (click)="clickHandler($event)"
-        translate
-    >
-        Add User
-    </button>
 </nx-page-generic-placeholder-v2>

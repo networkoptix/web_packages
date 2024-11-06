@@ -31,23 +31,67 @@
     svg-icon {
         display: block;
         margin-bottom: 16px;
+
+        svg {
+            .brand_element_cloud {
+              fill: var(--placehoder-cloud-color);
+            }
+        
+            .svg_light {
+              fill: var(--placeholder-light-color);
+            }
+        
+            .svg_light2 {
+              fill: var(--placeholder-light2-color);
+            }
+        
+            .svg_accent{
+              fill: var(--placeholder-accent-color);
+            }
+          }
     }
 
+    .placeholder-body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+
     .title {
-        @include typography.medium16nocolor;
-        color: var(--placehoder-v2-title-color) !important;
+        @include typography.medium24nocolor;
+        color: var(--placehoder-title-color);
         text-align: center;
         margin-bottom: 12px;
-        justify-content: center;
         max-width: 560px;
     }
 
     .message {
-        @include typography.regular14nocolor;
-        color: var(--placehoder-v2-message-color) !important;
-        max-width: 560px;
+      @include typography.regular15nocolor;
+      color: var(--placehoder-body-color);
+      max-width: 560px;
+      line-height: 24px;
+    }
+    
+    .dark-title {
+      @include typography.medium16nocolor;
+      color: var(--placehoder-v2-title-color);
+      margin-bottom: .5rem;
     }
 
+    .dark-message {
+      @include typography.regular14nocolor;
+      color: var(--placehoder-v2-message-color);
+    }
+
+    .main-button {
+      margin-top: 1.5rem;
+      a {
+        text-decoration: none;
+        color: inherit;
+      }
+    }
+    
     .button {
         display: flex;
         justify-content: center;

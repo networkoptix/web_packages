@@ -6,7 +6,6 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { CookieService } from 'ngx-cookie-service';
 
 import { NxVmsClientTextComponent } from '@components/open-vms-client/vms-client-text/vms-client-text.component';
-import { NxPagePlaceholderComponent } from '@components/placeholders/page/page-placeholder.component';
 import { NxPlayerPlaceholderComponent } from '@components/placeholders/player/player-placeholder.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxPagePlaceholderGenericComponent } from '@components/placeholdersV2/generic-page-placeholder.component';
@@ -49,7 +48,6 @@ import { VmsClientTimelineModule } from './vms-client/submodules/timeline/timeli
         ]),
         TranslateModule,
         AngularSvgIconModule,
-        NxPagePlaceholderComponent,
         NxPlayerPlaceholderComponent,
         PipesModule,
         NxPreLoaderComponent,

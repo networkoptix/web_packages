@@ -8,6 +8,7 @@ import { NxPagePlaceholderGenericComponent } from '../generic-page-placeholder.c
 @Component({
     selector: 'nx-nothing-found-placeholder',
     templateUrl: 'nothing-found-placeholder.component.html',
+    styleUrl: 'nothing-found-placeholder.component.scss',
     standalone: true,
     imports: [NxPagePlaceholderGenericComponent, AngularSvgIconModule],
 })

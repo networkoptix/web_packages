@@ -17,6 +17,7 @@ import { NxPagePlaceholderGenericComponent } from '../generic-page-placeholder.c
 @Component({
     selector: 'nx-page-placeholder-no-users',
     templateUrl: 'no-users-page-placeholder.component.html',
+    styleUrl: 'no-users-page-placeholder.component.scss',
     standalone: true,
     imports: [
         CommonModule,

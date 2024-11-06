@@ -164,89 +164,6 @@ $preloader_small_circle_distance : 8px;
     }
 }
 
-.placeholder-content {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
-    text-align: center;
-    position: relative;
-    margin: 0 auto;
-    width: 100%;
-    height: 100%;
-    font-size: 130%;
-    font-weight: 300;
-    line-height: 30px;
-    color: var(--light);
-    transform: none;
-
-    a {
-        color: var(--light12);
-        text-decoration: underline;
-
-        &:hover,
-        &:active {
-            color: var(--light1);
-        }
-    }
-}
-
-
-.placeholder-icon {
-    margin-bottom: 24px;
-
-    svg {
-        .brand_element_cloud {
-            fill: var(--placehoder-cloud-color);
-            opacity: var(--placehoder-cloud-opacity);
-        }
-
-        .svg_light {
-            fill: var(--placeholder-light-color)
-        }
-
-        .svg_light2 {
-            fill: var(--placeholder-light2-color)
-        }
-
-        .svg_light_stroke {
-            stroke: var(--placeholder-light-color)
-        }
-
-        .svg_accent {
-            fill: var(--placeholder-accent-color)
-        }
-
-        .svg_accent-stroke {
-            stroke: var(--placeholder-accent-color)
-        }
-
-        .svg_accent2 {
-            fill: var(--placeholder-accent2-color)
-        }
-
-        .brand_element {
-            fill: var(--brand-core);
-        }
-    }
-}
-
-.placeholder-title {
-    @include typography.medium24nocolor;
-    color: var(--placehoder-title-color) !important;
-    text-align: center;
-    margin-bottom: 1rem;
-    justify-content: center;
-    max-width: 560px;
-}
-
-.placeholder-message {
-    @include typography.regular15nocolor;
-    color: var(--placehoder-body-color) !important;
-    line-height: 24px;
-    max-width: 560px;
-}
-
 .placeholder-preloader {
     @include preloader($preloader_circle_color, $preloader_circle_size, $preloader_circle_distance);
 }
@@ -260,19 +177,6 @@ $preloader_small_circle_distance : 8px;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-}
-
-.bookmarks-placeholder-bg {
-    fill: var(--placeholder-bookmarks-bg-color);
-}
-
-.bookmarks-placeholder-cloud {
-    opacity: 0.1;
-
-    html[data-theme="dark"] & {
-        // Dark theme doesn't have the cloud icon, so we hide it here
-        display: none;
-    }
 }
 
 html[data-theme="dark"] .no-bookmarks .placeholder-icon {
@@ -290,37 +194,6 @@ html[data-theme="dark"] .no-bookmarks .placeholder-icon {
 
             .placeholder-icon {
                 margin: 80px 0 40px;
-            }
-        }
-    }
-}
-
-.page-placeholder {
-    position: absolute;
-    z-index: 99;
-    width: 100%;
-    /*If the system is offline this should cover everything.
-                     Must always be the highest z-index*/
-
-    &>.placeholder {
-        opacity: 1;
-    }
-
-    .placeholder>.placeholder-content {
-        top: 40%;
-    }
-
-    &.offline {
-        @media (max-width : 991px) {
-            &>.placeholder {
-                height: auto !important;
-                position: relative;
-                margin: 50px 0;
-
-                &>.placeholder-content {
-                    top: 0;
-                    transform: none;
-                }
             }
         }
     }

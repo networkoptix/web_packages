@@ -72,6 +72,16 @@
     margin-bottom: 13px;
 }
 
+.no-partners-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    button {
+        margin-top: 1rem;
+    }
+}
+
 .card {
 
     &-content {

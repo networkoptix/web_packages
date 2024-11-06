@@ -50,31 +50,8 @@ nx-block {
 }
 
 .generic-placeholder {
-  svg-icon {
-    svg {
-      .brand_element_cloud {
-        fill: var(--placehoder-cloud-color);
-        opacity: var(--placehoder-cloud-opacity);
-      }
-
-      .svg_light {
-        fill: var(--placeholder-light-color);
-      }
-
-      .svg_light2 {
-        fill: var(--placeholder-light2-color);
-      }
-    }
-  }
-
-  .message {
-    font-size: 0.9375rem !important;
-    color: var(--placehoder-body-color) !important;
-    line-height: 24px;
-  }
-
   .main-button {
-    margin-top: 40px;
+    margin: 40px auto 0 auto;
     a {
       text-decoration: none;
       color: inherit;
