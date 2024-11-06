@@ -128,11 +128,15 @@ export class LayoutStateService {
     gridSection: HTMLElement;
 
     toggleLayoutFullScreen(): void {
-        if (document.fullscreenElement === this.gridSection) {
+        if (this.isFullScreen()) {
             document.exitFullscreen();
         } else {
             this.gridSection.requestFullscreen({ navigationUI: 'hide' });
         }
+    }
+
+    isFullScreen(): boolean {
+        return document.fullscreenElement === this.gridSection;
     }
 
     createNewLayout(items?: LayoutItem[]): string;

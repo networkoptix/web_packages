@@ -1,5 +1,5 @@
 import { NestedTreeControl } from '@angular/cdk/tree';
-import { computed, Signal } from '@angular/core';
+import { computed, signal, Signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { firstValueFrom, Observable } from 'rxjs';
@@ -98,6 +98,7 @@ export abstract class WithMenuItemsByType {
                 layout => this.layoutStateService.deleteLayout(layout),
                 layout => this.layoutStateService.duplicateAsNewLayout(layout),
                 layout => this.layoutStateService.editedLayout$$.set(layout),
+                () => signal(this.layoutStateService.isFullScreen()),
             ),
             getLayoutUpdateActions: getLayoutUpdateActionsFactory(
                 layoutId => this.layoutStateService.discardUnsavedLayout(layoutId),

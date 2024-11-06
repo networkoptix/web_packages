@@ -1,3 +1,5 @@
+import { Signal } from '@angular/core';
+
 import { MenuItem } from '@components/context-menu/context-menu.types';
 import { ResourceNodeMap, ResourceType } from '@components/layout-grid/layout-grid.types';
 import staticLang from '@language_static';
@@ -9,6 +11,7 @@ export const getLayoutEditActionsFactory =
         deleteLayout: (layout: Layout) => void,
         duplicateLayout: (layout: Layout) => void,
         setEditedLayout: (layout: Layout) => void,
+        getDisabledSignal: () => Signal<boolean>,
     ) =>
     (
         node: ResourceNodeMap[ResourceType.LAYOUT],
@@ -17,6 +20,7 @@ export const getLayoutEditActionsFactory =
             return [];
         }
 
+        const disabled$$ = getDisabledSignal();
         return (
             [
                 {
@@ -28,17 +32,20 @@ export const getLayoutEditActionsFactory =
                         id: 'startRename',
                         name: staticLang.layouts.treeActions.rename.name,
                         action: () => setEditedLayout(node.details),
+                        disabled$$,
                     },
                 {
                     id: 'duplicate',
                     name: staticLang.layouts.treeActions.duplicate.name,
                     action: () => duplicateLayout(node.details),
+                    disabled$$,
                 },
                 node.owned &&
                     !node.locked && {
                         id: 'delete',
                         name: staticLang.layouts.treeActions.delete.name,
                         action: () => deleteLayout(node.details),
+                        disabled$$,
                     },
             ] as MenuItem<ResourceNodeMap[ResourceType.LAYOUT]>[]
         ).filter(Boolean);

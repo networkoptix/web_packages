@@ -1,5 +1,6 @@
 import { v4 as uuid } from 'uuid';
 
+import { MenuItem } from '@components/context-menu/context-menu.types';
 import { ResourceNodeMap, ResourceType } from '@components/layout-grid/layout-grid.types';
 import { nxConfig } from '@services/nx-config/config';
 
@@ -9,11 +10,13 @@ import { getLayoutEditActionsFactory } from './get-layout-edit-actions-factory';
 const deleteLayout = jest.fn();
 const duplicateLayout = jest.fn();
 const setEditedLayout = jest.fn();
+const getDisabledSignal = jest.fn();
 
 const getLayoutEditActions = getLayoutEditActionsFactory(
     deleteLayout,
     duplicateLayout,
     setEditedLayout,
+    getDisabledSignal,
 );
 
 describe('getLayoutEditActionsFactory', () => {
@@ -103,5 +106,21 @@ describe('getLayoutEditActionsFactory', () => {
         performItemAction(result)('duplicate', node);
 
         expect(duplicateLayout).toHaveBeenCalledWith(node.details);
+    });
+
+    it('should call getDisabledSignal and disable actions', () => {
+        nxConfig.featureFlags.layoutsEditable = true;
+        node.owned = true;
+        node.locked = false;
+        getDisabledSignal.mockReturnValue(() => true);
+
+        const result = getLayoutEditActions(node);
+
+        const disabled = ['startRename', 'duplicate', 'delete'].map(action =>
+            result
+                .find((i: MenuItem<ResourceNodeMap[ResourceType.LAYOUT]>) => i.id === action)
+                ?.disabled$$(),
+        );
+        expect(disabled).toEqual([...disabled].fill(true));
     });
 });
