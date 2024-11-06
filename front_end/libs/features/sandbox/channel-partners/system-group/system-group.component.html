@@ -23,7 +23,7 @@
 
     <ng-container *ngIf="!error">
         <h1 class="nx-h1--vertical-margin">{{ group.name }}</h1>
-        <ul>
+        <ul class="nx-ul">
             <li *ngFor="let prop of group | keyvalue">{{ prop.key }}: {{ prop.value | json }}</li>
         </ul>
 
@@ -32,7 +32,7 @@
         <ng-container *ngIf="!usersError">
             <div *ngFor="let user of users$ | ngrxPush">
                 <h4 class="h4">{{ user.email }}</h4>
-                <ul>
+                <ul class="nx-ul">
                     <li *ngFor="let prop of user | keyvalue">
                         {{ prop.key }}: {{ prop.value | json }}
                     </li>
@@ -49,7 +49,7 @@
                     >{{ group.name }}</a
                 >
             </h4>
-            <ul>
+            <ul class="nx-ul">
                 <li *ngFor="let prop of group | keyvalue">
                     {{ prop.key }}: {{ prop.value | json }}
                 </li>

@@ -151,3 +151,20 @@ a.nx-button--danger{
     border: solid 1px var(--border-color);
     background: var(--card-header-bg);
 }
+
+.nx-ul,
+.nx-ol {
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-inline-start: calc(0.875rem + (1.5rem / 2)); // Left align bullets + initial indent
+
+    &--margin-bottom {
+        @extend .nx-ul;
+        margin-bottom: 1rem;
+    }
+
+    .nx-ul,
+    .nx-ol {
+        padding-inline-start: 1.5rem
+    }
+}

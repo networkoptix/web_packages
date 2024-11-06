@@ -41,7 +41,7 @@
                 Change state
             </button>
         </div>
-        <ul>
+        <ul class="nx-ul">
             <li *ngFor="let prop of org | keyvalue">{{ prop.key }}: {{ prop.value | json }}</li>
         </ul>
 
@@ -79,7 +79,7 @@
                     </button>
                 </div>
 
-                <ul>
+                <ul class="nx-ul">
                     <li *ngFor="let prop of user | keyvalue">
                         {{ prop.key }}: {{ prop.value | json }}
                     </li>
@@ -127,7 +127,7 @@
                     New subgroup
                 </button>
             </div>
-            <ul>
+            <ul class="nx-ul">
                 <li *ngFor="let prop of group | keyvalue">
                     {{ prop.key }}: {{ prop.value | json }}
                 </li>

@@ -2,6 +2,8 @@
     ul {
         list-style-type: none;
         padding: 0;
+        margin-top: 0;
+        margin-bottom: 0;
 
         ul {
             padding-inline-start: 1.5rem;
@@ -35,7 +37,7 @@
         padding: 2px 4px 2px 0;
         border-radius: 2px;
         color: var(--groups-sidebar-color);
-        
+
         .level-name {
             width:200px;
             display: block;
@@ -61,7 +63,7 @@
             }
             .group, a {
                 color: var(--groups-sidebar-selected-color);
-            }      
+            }
 
             &:active {
                 background-color: var(--groups-sidebar-selected-active-background) !important;

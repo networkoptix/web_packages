@@ -491,27 +491,7 @@ module.exports = {
             ],
             rules: {
                 'nx/template/no-global-style-class': 'error',
-                'nx/template/require-global-style-escape': [
-                    'error',
-                    [
-                        'nx-submit-button',
-                        'nx-async-submit-button',
-                        'nx-apply-button',
-                        'nx-reset-button',
-                    ],
-                ],
             },
         },
-        // {
-        //     files: ['*.component.html'],
-        //     excludedFiles: [
-        //         'libs/features/dashboard/**',
-        //         '**/*widget*/**',
-        //         'libs/nx-components/**',
-        //     ],
-        //     rules: {
-        //         'nx/template/add-element-class': 'error',
-        //     },
-        // },
     ],
 };

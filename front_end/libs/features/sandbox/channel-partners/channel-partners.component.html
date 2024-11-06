@@ -25,7 +25,7 @@
             >{{ partner.name }}</a
         >
     </h4>
-    <ul>
+    <ul class="nx-ul">
         <li *ngFor="let prop of partner | keyvalue">{{ prop.key }}: {{ prop.value | json }}</li>
     </ul>
 </div>
@@ -33,7 +33,7 @@
 <h2 class="h2">Partner Roles</h2>
 <div *ngFor="let role of channelPartnerRoles$ | ngrxPush">
     <h4 class="h4">{{ role.name }}</h4>
-    <ul>
+    <ul class="nx-ul">
         <li *ngFor="let prop of role | keyvalue">{{ prop.key }}: {{ prop.value | json }}</li>
     </ul>
 </div>
@@ -47,7 +47,7 @@
             >{{ org.name }}</a
         >
     </h4>
-    <ul>
+    <ul class="nx-ul">
         <li *ngFor="let prop of org | keyvalue">{{ prop.key }}: {{ prop.value | json }}</li>
     </ul>
 </div>
@@ -55,7 +55,7 @@
 <h2 class="h2">Organization Roles</h2>
 <div *ngFor="let role of organizationRoles$ | ngrxPush">
     <h4 class="h4">{{ role.name }}</h4>
-    <ul>
+    <ul class="nx-ul">
         <li *ngFor="let prop of role | keyvalue">{{ prop.key }}: {{ prop.value | json }}</li>
     </ul>
 </div>

@@ -41,7 +41,7 @@
                 Change state
             </button>
         </div>
-        <ul>
+        <ul class="nx-ul">
             <li *ngFor="let prop of partner | keyvalue">{{ prop.key }}: {{ prop.value | json }}</li>
         </ul>
 
@@ -66,7 +66,7 @@
             >
                 Delete
             </button>
-            <ul>
+            <ul class="nx-ul">
                 <li *ngFor="let prop of sub | keyvalue">{{ prop.key }}: {{ prop.value | json }}</li>
             </ul>
         </div>
@@ -92,7 +92,7 @@
             >
                 Delete
             </button>
-            <ul>
+            <ul class="nx-ul">
                 <li *ngFor="let prop of org | keyvalue">{{ prop.key }}: {{ prop.value | json }}</li>
             </ul>
         </div>
@@ -123,7 +123,7 @@
                     Delete
                 </button>
             </div>
-            <ul>
+            <ul class="nx-ul">
                 <li *ngFor="let prop of user | keyvalue">
                     {{ prop.key }}: {{ prop.value | json }}
                 </li>
