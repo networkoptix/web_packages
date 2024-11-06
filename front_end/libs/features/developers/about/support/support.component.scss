@@ -1,3 +1,5 @@
+@use "resets";
+@use "components/forms/buttons/buttons";
 @use "theme_variables_common" as *;
 @use "typography";
 @use "_bootstrap_utils" as bootstrap;
@@ -104,35 +106,19 @@
                 }
 
                 a {
-                    text-decoration: none;
-
-                    &>button {
-                        @include typography.regular18nocolor;
-                        display: block !important;
+                    @include resets.anchor;
+                    &:focus-visible {
+                        @include buttons.nx-button--focus-visible('primary');
+                    }
+                    & > button {
+                        @include resets.button;
+                        @include buttons.nx-button--primary;
+                        font-size: var(--h3-font-size);
+                        display: block;
                         letter-spacing: 0.3px;
-                        padding: 22px 27px !important;
-                        height: unset !important;
-                        max-width: unset !important;
+                        padding: 22px 27px;
                         margin: 40px auto 31px;
-                        border-radius: 5px !important;
-                        color: var(--btn-primary-color) !important;
-                        background-color: var(--btn-primary-bg) !important;
-                        box-shadow: var(--btn-primary-shadow);
-
-                        &:hover:not([disabled]):not(.disabled) {
-                            background-color: var(--btn-primary-hover-bg) !important;
-                            box-shadow: var(--btn-primary-hover-shadow);
-                        }
-
-                        &:focus,
-                        &.focus {}
-
-                        &:active,
-                        &.active {
-                            color: var(--btn-primary-active-color) !important;
-                            background-color: var(--btn-primary-active-bg) !important;
-                            box-shadow: var(--btn-primary-active-shadow) !important;
-                        }
+                        border-radius: 5px;
                     }
                 }
             }

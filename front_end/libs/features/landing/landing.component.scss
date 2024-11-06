@@ -1,5 +1,4 @@
 @use 'typography';
-@import 'buttons';
 
 iframe {
   width: 100%;
@@ -26,10 +25,11 @@ iframe {
 
 .button {
   margin: 48px auto;
-}
 
-.btn {
-  @include typography.medium15dark9;
-  height: 40px;
-  padding: 0 25px;
+  & > a {
+    font-family: var(--font-family-medium);
+    font-size: var(--h4-font-size);
+    height: 40px;
+    padding: 0 25px;
+  }
 }

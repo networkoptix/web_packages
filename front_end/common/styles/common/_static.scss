@@ -1,0 +1,72 @@
+/* Styling for static/fetched content */
+
+nx-landing-display-component {
+    .promo-block:focus-visible {
+        outline: none;
+        box-shadow : 0 0 0 2px var(--brand-l2-t40);
+    }
+}
+
+nx-content-component {
+    h1 {
+        font-weight: lighter;
+        line-height: 1.2;
+        font-family: var(--font-family-medium);
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        font-size: 2rem;
+        color: var(--h1);
+    }
+
+    p {
+        margin-bottom: 0.5rem;
+    }
+}
+
+nx-about {
+    nx-new-capabilities {
+        a {
+            color: var(--anchor-color);
+            text-decoration: underline;
+            &:hover {
+                color: var(--anchor-hover-color);
+                text-decoration: underline;
+            }
+            &:focus-visible {
+                box-shadow : 0 0 0 2px var(--brand-l2-t40);
+                outline: none;
+            }
+        }
+    }
+
+    nx-get-started {
+        div[tabindex]:focus-visible {
+            outline: 2px solid var(--btn-default-focus-outline-rgb);
+            outline-offset: 2px;
+            box-shadow: var(--btn-default-focus-shadow);
+        }
+    }
+}
+
+nx-knowledge-base {
+    h1, h2, h3, h4, h5, h6 {
+        color: var(--h1);
+    }
+
+    a {
+        color: var(--anchor-color);
+        text-decoration: underline;
+        &:hover {
+            color: var(--anchor-hover-color);
+            text-decoration: underline;
+        }
+        &:focus-visible {
+            box-shadow : 0 0 0 2px var(--brand-l2-t40);
+            outline: none;
+        }
+    }
+
+    summary {
+        cursor: pointer;
+    }
+}
