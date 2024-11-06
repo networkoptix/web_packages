@@ -117,7 +117,6 @@ button:focus {
     padding: 2rem 0 3rem 0;
 
     label {
-        @include resets.label();
         display: flex;
         align-items: center;
         gap: 0.25rem;

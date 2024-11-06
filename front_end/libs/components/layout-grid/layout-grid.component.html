@@ -53,7 +53,6 @@
                             @if (layout.items.length) {
                                 <button
                                     (click)="layoutStateService.createNewLayout()"
-                                    data-escape-global-style
                                     class="nx-button--primary"
                                     translate
                                 >
@@ -116,7 +115,6 @@
                 >
                     <button
                         (click)="otherSystems.open = !otherSystems.open; $event.stopPropagation()"
-                        data-escape-global-style
                         class="other-sites-toggle arrow-flip"
                     >
                         <svg-icon
@@ -699,7 +697,6 @@
                                                     </li>
                                                 </ul>
                                                 <button
-                                                    data-escape-global-style
                                                     class="nx-button--primary"
                                                     (click)="layoutStateService.createNewLayout()"
                                                     translate

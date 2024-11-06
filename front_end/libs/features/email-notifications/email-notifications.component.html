@@ -19,7 +19,6 @@
                 </ng-template>
                 <button
                     *ngIf="!response; else sendAnother"
-                    data-escape-global-style
                     class="nx-button--primary"
                     [disabled]="!subject"
                     (click)="handleSend()"

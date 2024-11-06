@@ -18,7 +18,6 @@ import { finalize, from, share, take } from 'rxjs';
 import { NxApplyV3Service } from '@components/forms/apply-v3/apply-v3.service';
 import { NxFormObserverDirective } from '@components/forms/form-observer.directive';
 import { AsyncAction } from '@dialogs/async-action-button/create-async-action';
-import { NxEscapeGlobalStyleDirective } from '@directives/escape-global-style.directive';
 import LANG from '@language_static';
 import { nxConfig } from '@services/nx-config/config';
 import { NxToastService } from '@services/toast.service';
@@ -48,7 +47,6 @@ import { NxButtonLoadingDotsComponent } from '../button-loading-dots/button-load
     styleUrls: ['async-submit-button.component.scss'],
     standalone: true,
     imports: [CommonModule, TranslateModule, NxButtonLoadingDotsComponent],
-    hostDirectives: [NxEscapeGlobalStyleDirective],
     host: {
         '[class]': 'colorClass()',
         '[class.nx-button--form-error]': 'hasErrorState()',

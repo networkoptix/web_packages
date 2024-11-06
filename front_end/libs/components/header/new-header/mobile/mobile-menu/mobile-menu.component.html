@@ -54,7 +54,6 @@
             <a
                 routerLink="/"
                 [queryParams]="loginRedirectParams"
-                data-escape-global-style
                 class="nx-button--primary account-button login-button"
                 (click)="closeSidebar()"
                 translate
@@ -64,7 +63,6 @@
         } @else {
             <a
                 [href]="headerService.authorizeUrl"
-                data-escape-global-style
                 class="nx-button--primary account-button login-button"
                 translate
             >

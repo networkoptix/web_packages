@@ -14,7 +14,6 @@
                         @for (navSection of navSections() | keyvalue: nosort; track $index) {
                             <cdk-accordion-item #accordionItem="cdkAccordionItem">
                                 <button
-                                    data-escape-global-style
                                     class="level-1"
                                     [class.level-1--route-active]="navSection.key === activeSection"
                                     (click)="accordionItem.toggle()"
@@ -24,7 +23,6 @@
                                 @if (accordionItem.expanded) {
                                     @for (item of navSection.value; track $index) {
                                         <a
-                                            data-escape-global-style
                                             class="level-3"
                                             [routerLink]="item.link"
                                             routerLinkActive="level-3--route-active"

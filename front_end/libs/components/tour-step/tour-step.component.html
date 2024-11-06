@@ -33,7 +33,6 @@
             <ng-template #endTour>
                 <button
                     (click)="tourService.end()"
-                    data-escape-global-style
                     class="nx-button--primary"
                 >
                     {{ step?.endBtnTitle || LANG.tours.defaults.endBtnTitle | translate }}
@@ -42,7 +41,6 @@
             <button
                 *ngIf="tourService.hasNext(step); else endTour"
                 (click)="tourService.next()"
-                data-escape-global-style
                 class="nx-button--primary"
             >
                 {{ step?.nextBtnTitle || LANG.tours.defaults.nextBtnTitle | translate }}

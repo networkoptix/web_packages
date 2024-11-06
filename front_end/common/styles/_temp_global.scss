@@ -2,8 +2,6 @@
 
 /* Temporary global styling while Bootstrap is being removed/Cloud 2.0 is implemented */
 
-// Before <button class="btn btn-primary"
-// After <button class="nx-button--primary" data-escape-global-style>
 button, a {
     &.nx-button--primary {
         @include buttons.nx-button();
@@ -34,8 +32,6 @@ a.nx-button--danger{
     font-family: var(--font-family-medium);
 }
 
-// Before <h1>
-// After <h1 class="nx-h1" data-escape-global-style>
 .nx-h1 {
     @include _nx-header-base();
     margin-top: 0;

@@ -56,7 +56,7 @@ new-table-wrapper {
 }
 
 p {
-  @include resets.paragraph();
+  @include resets.mp();
 
   & + p {
     margin-top: 0.25rem;

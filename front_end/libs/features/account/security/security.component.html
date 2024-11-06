@@ -42,7 +42,6 @@
                     >
                     <button
                         *ngIf="!(account2faEnabled || totpExistsForAccount)"
-                        data-escape-global-style
                         class="nx-button--primary mt-3 enable"
                         (click)="switch2FA(true)"
                         translate

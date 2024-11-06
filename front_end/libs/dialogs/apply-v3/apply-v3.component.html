@@ -34,7 +34,6 @@
     <div class="nx-modal__footer">
         @if (currentStep() === Steps.Saving) {
             <button
-                data-escape-global-style
                 type="button"
                 class="nx-button--default"
                 disabled
@@ -43,7 +42,6 @@
             </button>
         } @else {
             <button
-                data-escape-global-style
                 type="button"
                 class="nx-button--danger"
                 (click)="leave()"
@@ -52,7 +50,6 @@
                 Discard
             </button>
             <button
-                data-escape-global-style
                 type="button"
                 class="nx-button--default"
                 (click)="stay()"

@@ -3,7 +3,6 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import type { NxFormResetFn } from '@components/forms/apply-v3/apply-v3.types';
 import { NxFormObserverDirective } from '@components/forms/form-observer.directive';
-import { NxEscapeGlobalStyleDirective } from '@directives/escape-global-style.directive';
 
 @Component({
     selector: 'button[nx-reset-button]',
@@ -11,7 +10,6 @@ import { NxEscapeGlobalStyleDirective } from '@directives/escape-global-style.di
     styleUrls: ['./reset-button.component.scss'],
     standalone: true,
     imports: [TranslateModule],
-    hostDirectives: [NxEscapeGlobalStyleDirective],
     host: {
         '[disabled]': 'formObserver.formDisabled()',
         type: 'button',

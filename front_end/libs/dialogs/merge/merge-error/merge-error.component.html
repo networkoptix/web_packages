@@ -8,7 +8,6 @@
                 LANG.dialogs.merge.primarySystemOffline
                     | translate: { primarySystem: primaryName, secondarySystem: secondaryName }
             "
-            data-escape-global-style
         ></p>
     } @else if (secondarySystemOffline) {
         <p
@@ -17,7 +16,6 @@
                 LANG.dialogs.merge.secondarySystemOffline
                     | translate: { primarySystem: primaryName, secondarySystem: secondaryName }
             "
-            data-escape-global-style
         ></p>
     } @else {
         <p
@@ -30,7 +28,6 @@
                               secondarySystem: secondaryName
                           }
             "
-            data-escape-global-style
         ></p>
     }
 </div>
@@ -41,7 +38,6 @@
         data-dismiss="modal"
         aria-label="Close"
         (click)="this.finishDialog.emit(true)"
-        data-escape-global-style
     >
         {{ LANG.dialogs.buttons.ok }}
     </button>

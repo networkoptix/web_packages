@@ -1,6 +1,5 @@
 <button
     class="arrow-btn arrow-btn--decrement"
-    data-escape-global-style
     cdkOverlayOrigin
     #origin="cdkOverlayOrigin"
     (click)="decrement()"
@@ -9,14 +8,12 @@
 </button>
 <button
     class="menu-trigger-btn"
-    data-escape-global-style
     (click)="toggleMenu()"
 >
     {{ display() }}
 </button>
 <button
     class="arrow-btn arrow-btn--increment"
-    data-escape-global-style
     (click)="increment()"
 >
     <svg-icon [src]="icons.dirTextButtons + 'arrow_expand.svg'"></svg-icon>
@@ -31,7 +28,6 @@
         @for (month of longMonths; track $index) {
             <button
                 class="month-menu-item"
-                data-escape-global-style
                 [class]="{ 'is-selected': $index === monthIndex() }"
                 (click)="monthIndex.set($index); isMenuOpen.set(false)"
             >

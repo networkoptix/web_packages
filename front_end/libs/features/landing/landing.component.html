@@ -17,7 +17,6 @@
             <p class="paragraph button d-flex justify-content-center auth-hidden">
                 @if (userEmail) {
                     <a
-                        data-escape-global-style
                         class="nx-button--primary"
                         routerLink="/login"
                         role="button"
@@ -26,7 +25,6 @@
                     >
                 } @else {
                     <a
-                        data-escape-global-style
                         class="nx-button--primary"
                         [href]="createUrl"
                         role="button"

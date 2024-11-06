@@ -9,7 +9,6 @@ import {
 } from '@angular/core';
 
 import { NxFormObserverDirective } from '@components/forms/form-observer.directive';
-import { NxEscapeGlobalStyleDirective } from '@directives/escape-global-style.directive';
 import { AriaDisabledValue, ariaDisabledValue } from '@utils/general';
 
 /** Synchronous version of `nx-async-submit-button`.
@@ -23,7 +22,6 @@ import { AriaDisabledValue, ariaDisabledValue } from '@utils/general';
     styleUrls: ['submit-button.component.scss'],
     standalone: true,
     imports: [],
-    hostDirectives: [NxEscapeGlobalStyleDirective],
     host: {
         '[class]': 'colorClass()',
         '[class.nx-button--form-error]': 'hasErrorState()',

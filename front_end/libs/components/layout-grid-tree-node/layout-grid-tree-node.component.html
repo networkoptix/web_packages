@@ -15,7 +15,6 @@
         <ng-container [ngTemplateOutlet]="simpleNodeText" />
         @for (menuItem of plainMenuItems$$(); track menuItem.id) {
             <button
-                data-escape-global-style
                 class="action-button"
                 nxTooltipV2
                 [tooltipContent]="menuItem?.tooltip | translate"
@@ -103,7 +102,6 @@
         </div>
         @if (hasMenuItems$$() | async) {
             <button
-                data-escape-global-style
                 [cdkMenuTriggerFor]="nodeActionMenu"
                 (cdkMenuOpened)="isMenuOpened$$.set(true)"
                 (cdkMenuClosed)="isMenuOpened$$.set(false)"

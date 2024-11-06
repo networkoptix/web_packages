@@ -1,4 +1,9 @@
-/* This file is deprecated, new components should use the bootstrap reset and element escapes */
+/* Resets for browser styling. Margin + padding will handle most cases */
+
+@mixin mp {
+    margin: 0;
+    padding: 0;
+}
 
 @mixin button {
     outline: none;
@@ -7,7 +12,7 @@
     color: inherit;
     padding: 0;
 
-    &:focus {
+    &:focus-visible {
         outline: none;
     }
 }
@@ -19,21 +24,4 @@
         color: unset;
         text-decoration: unset;
     }
-    &.disabled {
-        color: unset;
-        pointer-events: unset;
-    }
-}
-
-@mixin horizontal-rule {
-    margin-top: unset;
-    margin-bottom: unset;
-}
-
-@mixin paragraph {
-    margin-bottom: unset;
-}
-
-@mixin label {
-    margin-bottom: unset;
 }

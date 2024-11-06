@@ -91,10 +91,7 @@
 }
 
 @if (CONFIG.featureFlags.layoutsFrameRateDebug && debugInfo$$(); as debugInfo) {
-    <pre
-        class="debug-info"
-        data-escape-global-style
-    >
+    <pre class="debug-info">
         {{ debugInfo }}
     </pre>
 }

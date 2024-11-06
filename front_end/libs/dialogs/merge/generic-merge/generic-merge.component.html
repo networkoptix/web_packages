@@ -48,7 +48,6 @@
     <footer class="modal-footer next-button">
         @if (failedToFindAnySystem || thisSystemHasOutdatedServer) {
             <button
-                data-escape-global-style
                 class="nx-button--primary m-0"
                 (click)="close.emit()"
                 translate

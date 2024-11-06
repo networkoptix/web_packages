@@ -121,14 +121,12 @@
         <div class="auth-link">{{ authUrl() }}</div>
         <div class="buttons">
             <button
-                data-escape-global-style
                 class="nx-button--primary"
                 (click)="copyToClipboard(authUrl() || '')"
             >
                 Copy Link
             </button>
             <button
-                data-escape-global-style
                 class="nx-button--primary"
                 (click)="open()"
             >
@@ -239,7 +237,6 @@
         </form>
         <div class="buttons">
             <button
-                data-escape-global-style
                 class="nx-button--primary"
                 (click)="login()"
             >
@@ -258,7 +255,6 @@
             <div class="buttons">
                 @if (oauthBody?.code | as: string; as code) {
                     <button
-                        data-escape-global-style
                         class="nx-button--primary"
                         (click)="copyToClipboard(code || '')"
                     >
@@ -267,7 +263,6 @@
                 }
                 @if (oauthBody?.access_token | as: string; as access_token) {
                     <button
-                        data-escape-global-style
                         class="nx-button--primary"
                         (click)="copyToClipboard(access_token || '')"
                     >
@@ -276,7 +271,6 @@
                 }
                 @if (oauthBody?.refresh_token | as: string; as refresh_token) {
                     <button
-                        data-escape-global-style
                         class="nx-button--primary"
                         (click)="copyToClipboard(refresh_token || '')"
                     >

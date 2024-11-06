@@ -2,7 +2,7 @@
 @use 'theme_variables_common' as common;
 
 p {
-    @include resets.paragraph();
+    @include resets.mp();
 }
 
 :host {
