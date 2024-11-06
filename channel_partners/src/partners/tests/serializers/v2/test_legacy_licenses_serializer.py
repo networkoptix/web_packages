@@ -27,13 +27,13 @@ class TestLegacyLicensesSerializer:
         self.cp = channel_partner_factory()
         self.organization = organization_factory(channel_partner=self.cp)
         self.system = system_factory(organization=self.organization)
-        self.other_services = []
+        self.regular_services = []
         self.trial_services = []
         for i in range(10):
             service = cp_service_factory(channel_partner=self.cp)
             service.created_ts = timezone.now() - timedelta(days=3*i)
             service.save()
-            self.other_services.append(service)
+            self.regular_services.append(service)
             trial_service = cp_service_factory(channel_partner=self.cp)
             trial_service.sub_type = ChannelPartnerService.CREDIT
             trial_service.created_ts = timezone.now() - timedelta(days=2*i)
@@ -46,6 +46,7 @@ class TestLegacyLicensesSerializer:
             "4NSW-Q6ZR-6V6N-D9P4",
             "4NSW-Q6ZR-6V6N-D9P5",
             "4NSW-Q6ZR-6V6N-D9P6",
+            "4NSW-Q6ZR-6V6N-D9P7",
         ]
         self.valid_data = {
             "licenses": self.licenses,
@@ -55,7 +56,7 @@ class TestLegacyLicensesSerializer:
             "licenses": [],
         }
         service_record = service_record_factory(
-            service=self.other_services[0],
+            service=self.regular_services[0],
             cloud_system=self.system,
             quantity=1
         )
@@ -63,15 +64,16 @@ class TestLegacyLicensesSerializer:
             license_key=self.licenses[1],
             service_record_id=service_record.id
         )
-        self.url = f'{settings.LICENSE_SERVER}/nxlicensed/api/v2/internal/migrate_legacy'
+        self.url = settings.LICENSE_MIGRATION_URL
         self.request = arf.post('/')
         self.request.auth = f'Bearer {uuid.uuid4()}'
         self.context = {'request': self.request}
 
-    def lic_server_data(self, license_key, count=20):
+    def lic_server_data(self, license_key, count=20, lic_type="permanent"):
         return [{
             "key": license_key,
             "count": count,
+            "type": lic_type,
         }]
 
     def test_invalid_data(self):
@@ -82,6 +84,7 @@ class TestLegacyLicensesSerializer:
 
     def test_validation_and_save(self, httpx_mock):
         initial_services = self.system.calculate_current_services(save_results=True)
+        # valid permanent
         httpx_mock.add_response(
             status_code=200,
             url=self.url,
@@ -91,12 +94,14 @@ class TestLegacyLicensesSerializer:
             ),
             match_json={"licenses": [self.licenses[0]], "hardwareIds": self.hardware_ids}
         )
+        # already migrated
         httpx_mock.add_response(
             status_code=200,
             url=self.url,
             json=self.lic_server_data(
                 self.licenses[1],
-                20
+                20,
+                "saas"
             ),
             match_json={"licenses": [self.licenses[1]], "hardwareIds": self.hardware_ids}
         )
@@ -110,18 +115,20 @@ class TestLegacyLicensesSerializer:
             ),
             match_json={"licenses": [self.licenses[2]], "hardwareIds": self.hardware_ids}
         )
+        # valid saas
         httpx_mock.add_response(
             status_code=200,
             url=self.url,
             json=self.lic_server_data(
                 self.licenses[3],
-                20
+                20,
+                lic_type="saas"
             ),
             match_json={"licenses": [self.licenses[3]], "hardwareIds": self.hardware_ids}
         )
         # incorrect license key
         httpx_mock.add_response(
-            status_code=400,
+            status_code=200,
             url=self.url,
             json=self.lic_server_data(
                 self.licenses[3],
@@ -129,28 +136,53 @@ class TestLegacyLicensesSerializer:
             ),
             match_json={"licenses": [self.licenses[4]], "hardwareIds": self.hardware_ids}
         )
+        # invalid license type
+        httpx_mock.add_response(
+            status_code=200,
+            url=self.url,
+            json=self.lic_server_data(
+                self.licenses[5],
+                50,
+                lic_type="invalid",
+            ),
+            match_json={"licenses": [self.licenses[5]], "hardwareIds": self.hardware_ids}
+        )
         serializer = LegacyLicensesSerializer(data=self.valid_data, context=self.context)
         assert serializer.is_valid() is True
         results: MigrationResult = serializer.save(self.system)
-        assert results.migratedLicenses == [self.licenses[0], self.licenses[3]]
-        assert results.skippedLicenses == [self.licenses[1]]
-        assert results.failedLicenses == [self.licenses[2], self.licenses[4]]
+        assert set(results.migratedLicenses) == {self.licenses[0], self.licenses[3]}
+        assert set(results.skippedLicenses) == {self.licenses[1]}
+        assert set(results.failedLicenses) == {self.licenses[2], self.licenses[4], self.licenses[5]}
 
         assert MigrationRecord.objects.all().count() == 3
+
+        # check migration records
         migration_record = MigrationRecord.objects.get(license_key=self.licenses[0])
-        assert migration_record.service_record.quantity == 30
+        assert migration_record.service_record.quantity == 10
         assert migration_record.service_record.service.sub_type == ChannelPartnerService.CREDIT
         assert migration_record.service_record.record_type == ServiceRecordTypes.LICENSE_MIGRATION
+        credit_service_id = str(migration_record.service_record.service_id)
+
         migration_record = MigrationRecord.objects.get(license_key=self.licenses[3])
-        assert migration_record.service_record.quantity == 30
-        assert migration_record.service_record.service.sub_type == ChannelPartnerService.CREDIT
+        assert migration_record.service_record.quantity == 20
+        assert migration_record.service_record.service.sub_type == ChannelPartnerService.REGULAR
         assert migration_record.service_record.record_type == ServiceRecordTypes.LICENSE_MIGRATION
+        regular_service_id = str(migration_record.service_record.service_id)
+
+        # check current quantity of services
         self.system.refresh_from_db()
         assert self.system.current_services != initial_services
-        service_id = str(migration_record.service_record.service_id)
-        init_services_quantity = initial_services['services'].get(service_id, {}).get('quantity', 0)
-        current_services_quantity = self.system.current_services['services'][service_id]['quantity']
-        assert current_services_quantity == init_services_quantity + 30
+
+        # credit service
+        init_services_quantity = initial_services['services'].get(credit_service_id, {}).get('quantity', 0)
+        credit_service_quantity = self.system.current_services['services'][credit_service_id]['quantity']
+        assert credit_service_quantity == init_services_quantity + 10
+
+        # regular service
+        init_services_quantity = initial_services['services'].get(regular_service_id, {}).get('quantity', 0)
+        regular_service_quantity = self.system.current_services['services'][regular_service_id]['quantity']
+        assert regular_service_quantity == init_services_quantity + 20
+
 
     def test_license_server_connection_error(self, httpx_mock):
         httpx_mock.add_response(

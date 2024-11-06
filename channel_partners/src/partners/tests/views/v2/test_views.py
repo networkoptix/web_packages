@@ -315,18 +315,18 @@ class TestCloudSystemViewSetMenageLegacyLicenses:
         self.organization = organization_factory(channel_partner=self.cp)
         self.org_admin = org_user_factory(organization=self.organization)
         self.system = system_factory(organization=self.organization)
-        self.other_services = []
-        self.trial_services = []
+        self.regular_services = []
+        self.credit_services = []
         for i in range(10):
             service = cp_service_factory(channel_partner=self.cp)
             service.created_ts = timezone.now() - timedelta(days=3*i)
             service.save()
-            self.other_services.append(service)
+            self.regular_services.append(service)
             trial_service = cp_service_factory(channel_partner=self.cp)
             trial_service.sub_type = ChannelPartnerService.CREDIT
             trial_service.created_ts = timezone.now() - timedelta(days=2*i)
             trial_service.save()
-            self.trial_services.append(trial_service)
+            self.credit_services.append(trial_service)
         self.hardware_ids = [str(uuid4()) for _ in range(10)]
         self.licenses = [
             "4NSW-Q6ZR-6V6N-D9P2",
@@ -343,7 +343,7 @@ class TestCloudSystemViewSetMenageLegacyLicenses:
             "licenses": [],
         }
         service_record = service_record_factory(
-            service=self.other_services[0],
+            service=self.regular_services[0],
             cloud_system=self.system
         )
         MigrationRecord.objects.create(
@@ -351,7 +351,7 @@ class TestCloudSystemViewSetMenageLegacyLicenses:
             service_record_id=service_record.id
         )
         self.auth = f'Basic {uuid4()}'
-        self.url = f'{settings.LICENSE_SERVER}/nxlicensed/api/v2/internal/migrate_legacy'
+        self.url = settings.LICENSE_MIGRATION_URL
         self.client = APIClient(SERVER_NAME=cloud_test_host.hostname)
         self.path = reverse('v2:cloudsystem-migrate-legacy-licenses', kwargs={'id': self.system.system_id})
         self.lic_response_data = [{
@@ -361,13 +361,15 @@ class TestCloudSystemViewSetMenageLegacyLicenses:
         caches['local'].clear()
         caches['default'].clear()
 
-    def lic_server_data(self, license_key, count=20):
+    def lic_server_data(self, license_key, count=20, lic_type="permanent"):
         return [{
             "key": license_key,
             "count": count,
+            "type": lic_type,
         }]
 
     def test_success(self, httpx_mock, mock_cdb_basic_auth):
+        # valid
         httpx_mock.add_response(
             status_code=200,
             url=self.url,
@@ -377,6 +379,7 @@ class TestCloudSystemViewSetMenageLegacyLicenses:
             ),
             match_json={"licenses": [self.licenses[0]], "hardwareIds": self.hardware_ids}
         )
+        # skipped
         httpx_mock.add_response(
             status_code=200,
             url=self.url,
@@ -396,12 +399,14 @@ class TestCloudSystemViewSetMenageLegacyLicenses:
             ),
             match_json={"licenses": [self.licenses[2]], "hardwareIds": self.hardware_ids}
         )
+        # valid
         httpx_mock.add_response(
             status_code=200,
             url=self.url,
             json=self.lic_server_data(
                 self.licenses[3],
-                20
+                20,
+                "saas"
             ),
             match_json={"licenses": [self.licenses[3]], "hardwareIds": self.hardware_ids}
         )
@@ -421,15 +426,25 @@ class TestCloudSystemViewSetMenageLegacyLicenses:
         assert response.status_code == 200
         data = response.json()
         assert MigrationRecord.objects.filter(license_key__in=self.licenses).count() == 3
-        migration_record = MigrationRecord.objects.filter(license_key__in=self.licenses).last()
-        assert migration_record.service_record.quantity == 30
+
+        migration_record = MigrationRecord.objects.filter(license_key=self.licenses[0]).last()
+        assert migration_record.service_record.quantity == 10
         assert migration_record.service_record.cloud_system == self.system
+        assert migration_record.service_record.organization == self.organization
+        assert migration_record.service_record.service.sub_type == ChannelPartnerService.CREDIT
+
+        migration_record = MigrationRecord.objects.filter(license_key=self.licenses[3]).last()
+        assert migration_record.service_record.quantity == 20
+        assert migration_record.service_record.cloud_system == self.system
+        assert migration_record.service_record.organization == self.organization
+        assert migration_record.service_record.service.sub_type == ChannelPartnerService.REGULAR
+
         failed = [self.licenses[2], self.licenses[4]]
         skipped = [self.licenses[1]]
         success = [self.licenses[0], self.licenses[3]]
-        assert data['migratedLicenses'] == success
-        assert data['skippedLicenses'] == skipped
-        assert data['failedLicenses'] == failed
+        assert set(data['migratedLicenses']) == set(success)
+        assert set(data['skippedLicenses']) == set(skipped)
+        assert set(data['failedLicenses']) == set(failed)
 
     @pytest.mark.httpx_mock(can_send_already_matched_responses=True)
     def test_all_failed(self, httpx_mock, mock_cdb_basic_auth):
@@ -448,10 +463,10 @@ class TestCloudSystemViewSetMenageLegacyLicenses:
         skipped = self.licenses.pop(1)
         assert data['migratedLicenses'] == []
         assert data['skippedLicenses'] == [skipped]
-        assert data['failedLicenses'] == self.licenses
+        assert set(data['failedLicenses']) == set(self.licenses)
 
     def test_missing_trial_service(self, httpx_mock, mock_cdb_basic_auth):
-        for service in self.trial_services:
+        for service in self.credit_services:
             service.delete()
         httpx_mock.add_response(
             status_code=400,

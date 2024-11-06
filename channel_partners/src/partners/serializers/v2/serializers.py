@@ -11,6 +11,7 @@ from typing import (
     Dict,
     Iterable,
     List,
+    Set,
 )
 
 import httpx
@@ -2200,7 +2201,8 @@ class LegacyLicensesSerializer(serializers.Serializer):
     licenses = serializers.ListField(child=serializers.CharField(), allow_empty=False)
     hardwareIds = serializers.ListField(child=serializers.CharField(), allow_empty=False)
 
-    def get_service(self, system: CloudSystemId):
+    @staticmethod
+    def get_credit_service(system: CloudSystemId):
         service = ChannelPartnerService.objects.filter(
             created_by_channel_partner_id=system.organization.channel_partner_id,
             sub_type=ChannelPartnerService.CREDIT,
@@ -2215,23 +2217,53 @@ class LegacyLicensesSerializer(serializers.Serializer):
             raise exceptions.ValidationError({"detail": f"Cannot determine trial service for system {system.system_id}"})
         return service
 
+    def validate_licenses(self, value: List[str]) -> Set[str]:
+        res = set(value)
+        if len(res) != len(value):
+            raise exceptions.ValidationError(detail="Duplicate license keys are not allowed.")
+        return res
+
+    @staticmethod
+    def get_regular_service(system: CloudSystemId):
+        service = ChannelPartnerService.objects.filter(
+            created_by_channel_partner_id=system.organization.channel_partner_id,
+            sub_type=ChannelPartnerService.REGULAR,
+            type=ChannelPartnerService.LOCAL_RECORDING
+        ).order_by('created_ts').first()
+        if not service:
+            logger.warning(
+                "No service found.",
+                system_id=system.system_id,
+                organization_id=system.organization_id,
+                channel_partner_id=system.organization.channel_partner_id)
+            raise exceptions.ValidationError({"detail": f"Cannot determine trial service for system {system.system_id}"})
+        return service
+
+
     def save(self, system: CloudSystemId, **kwargs):
-        service = self.get_service(system)
+        credit_service = self.get_credit_service(system)
+        regular_service = self.get_regular_service(system)
         licence_client = get_license_server_client()
-        url = f'/nxlicensed/api/v2/internal/migrate_legacy'
         results = MigrationResult()
         now = timezone.now()
-        quantity = 0
-        for license_key in self.validated_data['licenses']:
-            if MigrationRecord.objects.filter(license_key=license_key).exists():
-                results.skippedLicenses.append(license_key)
-                continue
+        service_records = []
+        migration_records = []
+
+        already_migrated = (MigrationRecord.objects
+                            .filter(license_key__in=self.validated_data['licenses'])
+                            .values_list('license_key', flat=True))
+        already_migrated = set(already_migrated)
+        results.skippedLicenses.extend(already_migrated)
+
+        licenses = self.validated_data['licenses'] - set(already_migrated)
+
+        for license_key in licenses:
             data = {
                 "licenses": [license_key],
                 "hardwareIds": self.validated_data['hardwareIds']
             }
             try:
-                lic_response = licence_client.post(url=url, json=data)
+                lic_response = licence_client.post(url=settings.LICENSE_MIGRATION_URL, json=data)
             except httpx.HTTPError as ex:
                 logger.error(
                     "Request to license server failed.",
@@ -2268,24 +2300,46 @@ class LegacyLicensesSerializer(serializers.Serializer):
                 # field 'status' means some error, 'count' field is required
                 results.failedLicenses.append(license_key)
                 continue
-            quantity += lic_data['count']
+
+            # Check license type and choose service
+            if lic_data.get('type') == 'permanent':
+                service = credit_service
+            elif lic_data.get('type') == 'saas':
+                service = regular_service
+            else:
+                logger.error("License type is not provided by license server",
+                             license_key=license_key,
+                             response=lic_data)
+                results.failedLicenses.append(license_key)
+                continue
+
             results.migratedLicenses.append(license_key)
+
+            # Create service record for each license
+            service_record = ChannelPartnerServiceRecord(
+                id=uuid.uuid4(),
+                cloud_system=system,
+                organization=system.organization,
+                service=service,
+                quantity=lic_data['count'],
+                record_type=ServiceRecordTypes.LICENSE_MIGRATION,
+                in_effect=True,
+                effective_ts=now,
+            )
+            service_records.append(service_record)
+
+            # Create migration record to store license key
+            migration_records.append(MigrationRecord(
+                license_key=license_key,
+                service_record_id=service_record.id
+            ))
+
         if results.migratedLicenses:
             with transaction.atomic():
-                service_record = ChannelPartnerServiceRecord.objects.create(
-                    cloud_system=system,
-                    service=service,
-                    quantity=quantity,
-                    record_type=ServiceRecordTypes.LICENSE_MIGRATION,
-                    in_effect=True,
-                    effective_ts=now,
-                )
-                migration_records = [
-                    MigrationRecord(license_key=license_key, service_record_id=service_record.id)
-                    for license_key in results.migratedLicenses
-                ]
+                ChannelPartnerServiceRecord.objects.bulk_create(service_records, batch_size=100)
                 MigrationRecord.objects.bulk_create(migration_records, batch_size=100)
                 system.calculate_current_services(organization_id=system.organization_id, save_results=True)
+
         return results
 
 
