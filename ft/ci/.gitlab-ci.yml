@@ -1,7 +1,7 @@
 WebAdmin:
   stage: 'ft (#ask-ft)'
   needs: [ 'jenkins-build-webadmin' ]
-  script: [ 'dev-cloud-portal-webadmin-vms_6.0' ]
+  script: [ 'web_admin_tests $ARTIFACTORY_WEBADMIN_URL branch:vms_6.0_patch' ]
   tags: [ 'cloud_portal_tests' ]
   timeout: '180m'
   rules:  # mirror 'jenkins-build-webadmin' rules
@@ -11,6 +11,7 @@ WebAdmin:
       - front_end/**/*
       - translations/**/*
       - webadmin/**/*
+      - ft/ci/.gitlab-ci.yml
   - if: '$CI_MERGE_REQUEST_ID && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop"'
     when: on_success
     changes:
