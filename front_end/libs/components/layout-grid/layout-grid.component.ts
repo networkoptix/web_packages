@@ -1127,6 +1127,7 @@ export class NxLayoutGridComponent {
                               right: left + 1,
                           }
                         : {},
+                    layout,
                 ] as const;
             }
             const constrainedResize = this.getConstraint(currentlyDragging, resize);
@@ -1145,7 +1146,7 @@ export class NxLayoutGridComponent {
         }),
         map(([resized, draggingItem, layout]) => {
             const collisions =
-                layout?.items.reduce(
+                layout.items.reduce(
                     (collided, item) =>
                         this.checkCollision(item, draggingItem)
                             ? { ...collided, [item.id]: item }
@@ -2403,7 +2404,8 @@ export class NxLayoutGridComponent {
                 const notMoved =
                     this.layout.name !== this.layoutStateService.focusViewToken &&
                     !!this.layout.items.length &&
-                    [x, y, resize.x, resize.y].every(change => !change);
+                    [x, y, resize.x, resize.y].every(change => !change) &&
+                    !this.addingItem$$();
                 this.addingItem$$.set(false);
 
                 if (notMoved && !unresolvedCollisions) {
