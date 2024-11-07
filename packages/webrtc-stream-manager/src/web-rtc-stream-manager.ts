@@ -1514,14 +1514,16 @@ export class WebRTCStreamManager {
             WebRTCStreamManager.logger?.info('Data channel message', data);
 
             if(isTimeStampMessage(data)) {
+                // Datachannel still using microseconds vs milliseconds for positionMs query param
+                const timestampMs = data.timestamp / 1000;
                 if (this.isLive) {
-                    WebRTCStreamManager.logger?.info('skip updating position from timestamp since live', data.timestamp)
+                    WebRTCStreamManager.logger?.info('skip updating position from timestamp since live', timestampMs)
                 } else {
-                    WebRTCStreamManager.logger?.info('updating position from timestamp', data.timestamp)
-                    this.position$.next(new WithSkip(data.timestamp, true));
+                    WebRTCStreamManager.logger?.info('updating position from timestamp', timestampMs)
+                    this.position$.next(new WithSkip(timestampMs, true));
                 }
 
-                this.currentPositionTracker$.next(data.timestamp)
+                this.currentPositionTracker$.next(timestampMs )
                 return;
             }
 
