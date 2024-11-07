@@ -423,6 +423,41 @@ export class NxLayoutGridComponent {
 
     otherSitesMenu$$ = viewChild<NxLayoutGridTreeComponent>('otherSitesMenu');
 
+    sitePlaceholderDescription$$ = viewChild('sitePlaceholderDescription', {
+        read: ElementRef<HTMLElement>,
+    });
+
+    sitePlaceholderCheck = effect(onCleanup => {
+        const enableTwoFactorHref = '/account/security';
+        const sitePlaceholderDescription = this.sitePlaceholderDescription$$();
+        if (sitePlaceholderDescription) {
+            const enableTwoFactorLink = sitePlaceholderDescription.nativeElement.querySelector(
+                `[href="${enableTwoFactorHref}"][target="_blank"]`,
+            );
+            if (enableTwoFactorLink) {
+                let opened: Window | null;
+                const handleMessage = (event: MessageEvent<'twoFactorEnabled'>): void => {
+                    if (event.data === 'twoFactorEnabled') {
+                        opened?.close();
+                    }
+                };
+                const handleOpen = (event: MouseEvent): void => {
+                    event.preventDefault();
+                    opened = window.open(enableTwoFactorHref, '_blank');
+
+                    if (opened) {
+                        window.addEventListener('message', handleMessage);
+                    }
+                };
+                enableTwoFactorLink.addEventListener('click', handleOpen);
+                return onCleanup(() => {
+                    enableTwoFactorLink.removeEventListener('click', handleOpen);
+                    window.removeEventListener('message', handleMessage);
+                });
+            }
+        }
+    });
+
     groupsCacheStore = inject(GroupsCacheStore);
 
     webGlService = inject(NxWebGLService);
@@ -750,6 +785,16 @@ export class NxLayoutGridComponent {
 
             let layoutItemStatus: string = '';
 
+            const getTwoFactorStatus = (): string => {
+                if (systemInfo?.system2faEnabled && !this.accountService.account.sessionVerified) {
+                    return this.accountService.account.totpExistsForAccount
+                        ? 'system2faRequired'
+                        : 'account2faDisabled';
+                }
+
+                return '';
+            };
+
             if (!systemInfo || !permissionManager) {
                 layoutItemStatus = 'systemNoAccess';
             } else if (!canViewLayouts(systemInfo)) {
@@ -759,16 +804,13 @@ export class NxLayoutGridComponent {
             } else if (isSystemIncompatible) {
                 layoutItemStatus = 'systemIncompatible';
             } else if (!permissionManager.canViewDevice(resourceId)) {
-                layoutItemStatus = 'noAccess';
+                layoutItemStatus = getTwoFactorStatus() || 'noAccess';
             }
 
             if (systemInfo && !layoutItemStatus) {
-                if (systemInfo?.system2faEnabled && !this.accountService.account.sessionVerified) {
-                    if (this.accountService.account.totpExistsForAccount) {
-                        layoutItemStatus = 'system2faRequired';
-                    } else {
-                        layoutItemStatus = 'account2faDisabled';
-                    }
+                const twoFactorStatus = getTwoFactorStatus();
+                if (twoFactorStatus) {
+                    layoutItemStatus = twoFactorStatus;
                 }
             }
 
@@ -2585,6 +2627,7 @@ export class NxLayoutGridComponent {
         },
         error: () => {},
     };
+    reloadWindowsChannel = reloadWindowsChannel;
     authenticateTwoFactorAction = {
         action: async () => {
             const accessToken = await lastValueFrom(this.cloudApi.getAccessToken());
@@ -2602,7 +2645,7 @@ export class NxLayoutGridComponent {
                 window.addEventListener('message', (event: MessageEvent<'authenticated'>) => {
                     if (event.data === 'authenticated') {
                         opened.close();
-                        reloadWindowsChannel.reloadAllWindows();
+                        this.reloadWindowsChannel.reloadAllWindows();
                     }
                 });
 

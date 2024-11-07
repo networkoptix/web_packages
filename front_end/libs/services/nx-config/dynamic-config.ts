@@ -6,6 +6,7 @@ import { CustomAccountProperty } from '@services/nx-cloud-api/custom-account-pro
 import { LOGIN_STATE } from '@services/session.service.types';
 import { Role } from '@services/system-user.types';
 import { getUserEnabledBetaFeatureFlags } from '@utils/beta-features';
+import { reloadWindowsChannel } from '@utils/general';
 import { InterceptorManager } from '@utils/interceptor-manager';
 
 import { FeatureFlagType, ThemeColors } from './base-config';
@@ -363,6 +364,8 @@ export class DynamicConfig {
     }
 
     constructor(dynamicProperties: unknown) {
+        // @ts-expect-error ensures that broadcast channel is initialized
+        window.reloadWindowsChannel = reloadWindowsChannel;
         this.mapPropertiesToConfig(dynamicProperties);
     }
 

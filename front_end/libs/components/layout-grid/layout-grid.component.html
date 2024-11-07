@@ -195,6 +195,7 @@
                             </h3>
                             @if (content.description) {
                                 <h4
+                                    #sitePlaceholderDescription
                                     class="h4"
                                     [innerHtml]="content.description | translate"
                                 ></h4>
@@ -216,7 +217,12 @@
                                 as placeholderName
                             ) {
                                 <div class="site-placeholder-wrapper">
-                                    @switch (placeholderName) {
+                                    @switch (
+                                        placeholderName === 'twoFactorNotAvailable' &&
+                                        reloadWindowsChannel.requiredTwoFaVerification
+                                            ? 'twoFactorNotEnabled'
+                                            : placeholderName
+                                    ) {
                                         @case (LANG.layouts.otherSystems.systemOffline) {
                                             <ng-container
                                                 *ngTemplateOutlet="

@@ -116,7 +116,11 @@ export class NxAccountSecurityComponent implements OnInit, OnDestroy {
                     this.totpExistsForAccount = true;
                     this.account2faEnabledCheck = this.account2faEnabled;
                     this.accountService.get(true);
-                    reloadWindowsChannel.reloadAllWindows(false);
+                    if (window.opener) {
+                        (window.opener as Window).postMessage('twoFactorEnabled');
+                    } else {
+                        reloadWindowsChannel.reloadAllWindows(false, true);
+                    }
                 }
             });
         } else {

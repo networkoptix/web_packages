@@ -859,17 +859,29 @@ export const useNewCloud = (): boolean =>
         nxConfig.featureFlags.newCloudColorProvider && nxConfig.featureFlags.newCloudLayoutWrapper,
     );
 
-class ReloadWindowBroadcastChannel extends BroadcastChannel {
+class ReloadWindowBroadcastChannel extends BroadcastChannel<{
+    initiator: string;
+    waitForTwoFa?: boolean;
+}> {
     windowId = v4();
 
-    override onmessage = ({ data }: { data: { initiator: string } }): void => {
-        if (data.initiator !== this.windowId) {
-            location.reload();
+    requiredTwoFaVerification = false;
+
+    override onmessage = ({
+        initiator,
+        waitForTwoFa,
+    }: Parameters<ReloadWindowBroadcastChannel['postMessage']>[0]): void => {
+        if (initiator !== this.windowId) {
+            if (waitForTwoFa) {
+                this.requiredTwoFaVerification = true;
+            } else {
+                location.reload();
+            }
         }
     };
 
-    reloadAllWindows = (includeCurrent = true): void => {
-        this.postMessage({ initiator: this.windowId });
+    reloadAllWindows = (includeCurrent = true, waitForTwoFa = false): void => {
+        this.postMessage({ initiator: this.windowId, waitForTwoFa });
         if (includeCurrent) {
             location.reload();
         }
