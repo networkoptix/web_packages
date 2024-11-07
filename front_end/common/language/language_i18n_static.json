@@ -507,7 +507,7 @@
             "actions": {
                 "defaultPassword": "Setup",
                 "unauthorizedCamera": "Set Credentials",
-                "requires2fa": "Verify Session",
+                "requires2fa": "Enter 2FA code",
                 "enable2fa": "Setup 2FA"
             },
             "descriptions": {
