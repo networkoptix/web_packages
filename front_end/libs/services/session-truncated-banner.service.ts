@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
-import { of, timer } from 'rxjs';
+import { firstValueFrom, from, of, timer } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
@@ -52,22 +52,23 @@ export class NxSessionTruncatedBannerService {
         }
     };
 
-    private getTimeRemainingOnSession = (): number => {
+    private getTimeRemainingOnSession = async (): Promise<number> => {
         const currentSystem = this.currentSystem.value;
         if (!this.currentSystemSettings.sessionLimitForCloudEnabled || !currentSystem) {
             return Number.POSITIVE_INFINITY;
         }
 
         const mediaServer = currentSystem.mediaserver as NxSystemRestAPI;
-        const passwordEnteredTime = getPasswordEnteredTime(mediaServer.accessToken);
+        const accessToken = await firstValueFrom(mediaServer.getAccessTokenWithOptionalFetch());
+        const passwordEnteredTime = getPasswordEnteredTime(accessToken);
         const sessionExpirationTime =
             passwordEnteredTime + this.currentSystemSettings.sessionLimitLength;
         const currentTime = Date.now();
         return sessionExpirationTime - currentTime;
     };
 
-    private updateSessionBanner = (): void => {
-        const timeRemaining = this.getTimeRemainingOnSession();
+    private updateSessionBanner = async (): Promise<void> => {
+        const timeRemaining = await this.getTimeRemainingOnSession();
 
         if (timeRemaining > MS.hour) {
             return this.hideSessionBannerIfShowing();
@@ -114,7 +115,7 @@ export class NxSessionTruncatedBannerService {
                 }),
                 switchMap(system => {
                     if (!system) {
-                        return of(DEFAULT_SETTINGS);
+                        return of();
                     }
                     return system.updateOrGetSystemSettings().pipe(
                         map(settings => {
@@ -127,17 +128,26 @@ export class NxSessionTruncatedBannerService {
                                 ),
                             };
                         }),
+                        switchMap(settings => {
+                            this.currentSystemSettings = settings;
+                            if (!settings.sessionLimitForCloudEnabled) {
+                                // Setting not enabled, return so it will update the banner only once
+                                return of();
+                            }
+                            return from(this.getTimeRemainingOnSession()).pipe(
+                                switchMap(timeRemaining => {
+                                    if (!timeRemaining) {
+                                        return of();
+                                    }
+                                    // Start the interval when the session is 1 hour away from expiring
+                                    return timer(
+                                        Math.max(0, timeRemaining - MS.hour),
+                                        INTERVAL_TIME,
+                                    );
+                                }),
+                            );
+                        }),
                     );
-                }),
-                switchMap(settings => {
-                    this.currentSystemSettings = settings;
-                    if (!settings.sessionLimitForCloudEnabled) {
-                        // Setting not enabled, return so it will update the banner only once
-                        return of();
-                    }
-                    const timeRemaining = this.getTimeRemainingOnSession();
-                    // Start the interval when the session is 1 hour away from expiring
-                    return timer(Math.max(0, timeRemaining - MS.hour), INTERVAL_TIME);
                 }),
             )
             .subscribe(() => this.updateSessionBanner());

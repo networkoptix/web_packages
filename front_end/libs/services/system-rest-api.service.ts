@@ -197,6 +197,19 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         return `${this.systemId ? this.systemId + '-' : ''}${this.token}`;
     }
 
+    public getAccessTokenWithOptionalFetch(): Observable<string> {
+        const sessionStorageToken = this.sessionStorage.retrieve(this.cloudAccessTokenName);
+        if (sessionStorageToken) {
+            return of(sessionStorageToken);
+        }
+        return this.get<UserSession>(`/rest/v1/login/sessions/current`).pipe(
+            map(session => {
+                this.accessToken = session.token;
+                return session.token;
+            }),
+        );
+    }
+
     public get accessToken(): string {
         return nxConfig.featureFlags.useAuthenticationInterceptor
             ? `${InterceptorManager.USE_SYSTEM_TOKEN}|${this.systemId}|${this.urlBase}/rest/v1/login/sessions/{accessToken}?setCookie=true`
