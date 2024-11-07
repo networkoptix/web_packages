@@ -10,40 +10,46 @@
         class="col-12 p-0"
         style="min-height: 80px"
     >
-        <nx-pre-loader *ngIf="!activeBuilds"></nx-pre-loader>
+        @if (!activeBuilds) {
+            <nx-pre-loader></nx-pre-loader>
+        }
 
         <div class="nx-tab-set">
             <ul class="justify-content-start nav nav-tabs nx-tab-set-tabs">
-                <li
-                    *ngFor="let type of noteTypes"
-                    class="nav-item inset"
-                    (click)="switchTabs(type)"
-                >
-                    <a
-                        href
-                        class="anchor nav-link"
-                        [ngClass]="{ active: currentTab === type }"
+                @for (type of noteTypes; track type) {
+                    <li
+                        class="nav-item inset"
+                        (click)="switchTabs(type)"
                     >
-                        <span
-                            class="tab-heading"
-                            [textContent]="(LANG.downloads.releasesTypes[type] | translate) || type"
-                        ></span>
-                    </a>
-                </li>
+                        <a
+                            href
+                            class="anchor nav-link"
+                            [ngClass]="{ active: currentTab === type }"
+                        >
+                            <span
+                                class="tab-heading"
+                                [textContent]="
+                                    (LANG.downloads.releasesTypes[type] | translate) || type
+                                "
+                            ></span>
+                        </a>
+                    </li>
+                }
             </ul>
             <div class="nx-tab-set-content">
                 <div class="card card-default">
-                    <div
-                        class="card-body"
-                        *ngIf="activeBuilds"
-                    >
-                        <div *ngFor="let release of activeBuilds">
-                            <nx-release
-                                [linkbase]="linkbase"
-                                [release]="release"
-                            ></nx-release>
+                    @if (activeBuilds) {
+                        <div class="card-body">
+                            @for (release of activeBuilds; track release) {
+                                <div>
+                                    <nx-release
+                                        [linkbase]="linkbase"
+                                        [release]="release"
+                                    ></nx-release>
+                                </div>
+                            }
                         </div>
-                    </div>
+                    }
                 </div>
             </div>
         </div>

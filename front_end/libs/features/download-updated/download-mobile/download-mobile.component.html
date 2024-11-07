@@ -8,18 +8,18 @@
                 >
                     Choose your mobile OS:
                 </p>
-                <div
-                    class="mobile-badge"
-                    *ngFor="let platform of CONFIG.downloads.mobile"
-                >
-                    <a
-                        *ngIf="LANG.downloads.mobile[platform.name].link !== 'disabled'"
-                        class="anchor mobile-link"
-                        [ngClass]="platform.os"
-                        [href]="LANG.downloads.mobile[platform.name].link | translate"
-                    >
-                    </a>
-                </div>
+                @for (platform of CONFIG.downloads.mobile; track platform.name) {
+                    <div class="mobile-badge">
+                        @if (LANG.downloads.mobile[platform.name].link !== 'disabled') {
+                            <a
+                                class="anchor mobile-link"
+                                [ngClass]="platform.os"
+                                [href]="LANG.downloads.mobile[platform.name].link | translate"
+                            >
+                            </a>
+                        }
+                    </div>
+                }
             </div>
         </div>
     </div>
