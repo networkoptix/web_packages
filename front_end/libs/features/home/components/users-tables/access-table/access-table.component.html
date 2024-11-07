@@ -159,6 +159,38 @@
         </nx-table>
     } @else if (accessTableRecords$$()?.length > 0 && filteredRecords$$()?.length === 0) {
         <nx-nothing-found-placeholder></nx-nothing-found-placeholder>
+    } @else if (accessTableRecords$$()?.length === 0) {
+        <nx-page-generic-placeholder-v2>
+            <svg-icon
+                nx-add-svg-src
+                [src]="icons.dirPageV2Placeholder + 'no_info.svg'"
+                [svgStyle]="{ 'width.px': '64', 'height.px': '64' }"
+                [applyClass]="true"
+            ></svg-icon>
+            <div
+                class="title"
+                translate
+            >
+                No Accesses
+            </div>
+            <div
+                class="message"
+                translate
+            >
+                You have not yet added any accesses
+            </div>
+            <div class="add-btn">
+                <button
+                    type="button"
+                    class="nx-button--default"
+                    (click)="addAccess()"
+                    translate
+                    data-escape-global-style
+                >
+                    Add Access
+                </button>
+            </div>
+        </nx-page-generic-placeholder-v2>
     } @else {
         <nx-page-placeholder-no-users [clickFn]="newUserDialog"></nx-page-placeholder-no-users>
     }

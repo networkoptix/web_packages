@@ -57,7 +57,7 @@
         } @else {
             @if (isOrgUser$$()) {
                 <div translate>This user already has access to all objects in the organization</div>
-            } @else if (email !== accountEmail$$()) {
+            } @else if (email !== accountEmail$$() && hasTableRecords$$()) {
                 <button
                     class="btn btn-default"
                     translate
@@ -67,17 +67,19 @@
                 </button>
             }
         }
-        <div class="filter">
-            <nx-search
-                [(ngModel)]="searchModel"
-                (ngModelChange)="setQuery($event)"
-                layout="search"
-                instant
-            ></nx-search>
-            <!--            <button (click)="sortRecords()">-->
-            <!--                <svg-icon [src]="icons.dir + 'filter.svg'"></svg-icon>-->
-            <!--            </button>-->
-        </div>
+        @if (hasTableRecords$$()) {
+            <div class="filter">
+                <nx-search
+                    [(ngModel)]="searchModel"
+                    (ngModelChange)="setQuery($event)"
+                    layout="search"
+                    instant
+                ></nx-search>
+                <!--            <button (click)="sortRecords()">-->
+                <!--                <svg-icon [src]="icons.dir + 'filter.svg'"></svg-icon>-->
+                <!--            </button>-->
+            </div>
+        }
     </div>
     <nx-users-access-table
         (selectedCountEmitter)="updateSelectedCount($event)"

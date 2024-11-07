@@ -5,6 +5,7 @@ import { escape } from 'lodash-es';
 
 import { NxCheckAllContainerDirective } from '@components/checkbox/checkbox-check-all-container.directive';
 import { NxCheckAllDirective } from '@components/checkbox/checkbox-check-all.directive';
+import { NxPagePlaceholderGenericComponent } from '@components/placeholdersV2/generic-page-placeholder.component';
 import { NxPagePlaceholderNoUsersComponent } from '@components/placeholdersV2/no-users/no-users-page-placeholder.component';
 import { NxPagePlaceholderNothingFoundComponent } from '@components/placeholdersV2/nothing-found/nothing-found-placeholder.component';
 import { NxSelectV2Module } from '@components/select-v2/select-v2.module';
@@ -34,6 +35,7 @@ import { AbstractUserTableDirective } from '../abstract-user-table/abstract-user
         NxTooltipV2Directive,
         NxPagePlaceholderNothingFoundComponent,
         NxPagePlaceholderNoUsersComponent,
+        NxPagePlaceholderGenericComponent,
     ],
 })
 export class NxUsersAccessTableComponent extends AbstractUserTableDirective {
@@ -261,6 +263,16 @@ export class NxUsersAccessTableComponent extends AbstractUserTableDirective {
                 }
             });
     }
+
+    addAccess = (): void => {
+        const currentGroupId = this.routerState.state$$().groupId;
+        const organization = this.currentOrg$$()!;
+        this.dialogService.addOrgUserV2({
+            organization,
+            email: this.email$$(),
+            initialFolder: currentGroupId || organization.id,
+        });
+    };
 
     bulkDeleteUsers(): void {
         this.dialogService

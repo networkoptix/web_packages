@@ -36,15 +36,15 @@
             .brand_element_cloud {
               fill: var(--placehoder-cloud-color);
             }
-        
+
             .svg_light {
               fill: var(--placeholder-light-color);
             }
-        
+
             .svg_light2 {
               fill: var(--placeholder-light2-color);
             }
-        
+
             .svg_accent{
               fill: var(--placeholder-accent-color);
             }
@@ -56,7 +56,7 @@
       flex-direction: column;
       align-items: center;
     }
-    
+
 
     .title {
         @include typography.medium24nocolor;
@@ -72,7 +72,7 @@
       max-width: 560px;
       line-height: 24px;
     }
-    
+
     .dark-title {
       @include typography.medium16nocolor;
       color: var(--placehoder-v2-title-color);
@@ -91,7 +91,12 @@
         color: inherit;
       }
     }
-    
+
+    .add-btn {
+        display: flex;
+        justify-content: center;
+    }
+
     .button {
         display: flex;
         justify-content: center;

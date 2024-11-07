@@ -46,6 +46,9 @@ export class NxAccessTableContainerComponent
     selectedCount = 0;
     accountEmail$$ = this.store.selectSignal(accountSelectors.selectCurrentUserName);
     orgRecords$$ = this.orgUsersStore.usersByGroupSignalFactory();
+    hasTableRecords$$ = computed(() => {
+        return (this.orgUsersStore.usersCacheEntityMap()[''].users as UserRecord[])?.length > 1;
+    });
     isOrgUser$$ = computed(
         () => this.orgRecords$$().find(user => user.email === this.email)?.isOrgUser,
     );
