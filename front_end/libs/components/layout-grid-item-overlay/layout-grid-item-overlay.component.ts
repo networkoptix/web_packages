@@ -682,7 +682,7 @@ export class NxLayoutGridItemOverlayComponent {
             throttleByFrameRate(),
             sampleTime(250),
             switchMap(() =>
-                timer(5000).pipe(
+                timer(15_000).pipe(
                     map(() => true),
                     startWith(false),
                 ),
