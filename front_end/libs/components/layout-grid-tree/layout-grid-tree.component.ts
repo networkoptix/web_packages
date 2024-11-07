@@ -210,6 +210,7 @@ export class NxLayoutGridTreeComponent extends WithMenuItemsByType {
         ResourceType.WEB_PAGES,
         ResourceType.SYSTEM,
         ResourceType.SYSTEMS_GROUP,
+        ResourceType.SYSTEMS_ORGANIZATION,
         // Disable group drag for now.
         // In general, it should be possible to drop all cameras from a group to the layout.
         // It should also be possible to drag and drop a camera into a group
@@ -326,7 +327,7 @@ export class NxLayoutGridTreeComponent extends WithMenuItemsByType {
 
     handleDoubleClick = (node: ResourceNode, event: MouseEvent): void => {
         event.stopPropagation();
-        if (assertResourceOfType.placeholder(node)) {
+        if (assertResourceOfType.placeholder(node) || this.dragDisabled[node.type]) {
             return;
         }
         if (
