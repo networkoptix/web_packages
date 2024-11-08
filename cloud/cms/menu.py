@@ -38,7 +38,7 @@ class CustomMenu(Menu):
                 exclude=settings.ADMIN_DASHBOARD,
                 children=[] + debug_only_items
             ),
-            items.MenuItem('Help', '/static/help/cms/'),
+            items.MenuItem('Help', '/static/help/cms/index.hml'),
         ]
 
     def init_with_context(self, context):

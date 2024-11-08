@@ -37,9 +37,10 @@ function env_checker() {
 }
 
 function build_frontend(){
+
     env_checker
     echo "Running build script within venv environment"
-    bash build_scripts/build.sh
+    ARTIFACTORY_URL="https://artifactory.us.nxteam.dev/artifactory" bash build_scripts/build.sh
 }
 
 function brew_install() {
