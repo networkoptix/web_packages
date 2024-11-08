@@ -11,7 +11,6 @@ import {
     filter,
     identity,
     map,
-    merge,
     Observable,
     of,
     repeat,
@@ -76,8 +75,6 @@ export const GroupsCacheStore = signalStore(
         const channelPartnerService = inject(NxChannelPartnersService);
         const systemsService = inject(NxSystemsService);
 
-        const delay = 60_000 as const;
-
         const updater$ = new Subject<void>();
 
         // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -91,7 +88,9 @@ export const GroupsCacheStore = signalStore(
         // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
         const sharedRepeat = <T>() =>
             repeat<T>({
-                delay: () => merge(updater$, timer(delay)),
+                // Leaving here in case we want to add auto updating back
+                // delay: () => merge(updater$, timer(60_000)),
+                delay: () => updater$,
             });
 
         const getOrganizationsMemoized = memoize(() => {
