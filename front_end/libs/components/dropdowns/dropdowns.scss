@@ -41,6 +41,19 @@ header {
     &.short {
         width: 70px;
 
+        .new-header-lang {
+            // header level one uses flex and button padding (1rem) is extending viewport
+            // and vertical and horizontal scrollbars appear --[TT]
+            padding : 0 4px !important;
+        }
+
+        &:has(.new-header-lang) {
+            .dropdown-menu {
+            // counter compensation for dropdown button
+            margin-right: -4px;
+        }
+        }
+
         .multi-column {
             &.columns-2 {
                 width: 300px !important;

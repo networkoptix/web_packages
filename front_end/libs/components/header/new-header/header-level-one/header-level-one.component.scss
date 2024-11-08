@@ -26,7 +26,9 @@
     }
 
     nx-header-language-select {
-        margin: 0 10px;
+        margin: 0 0 0 10px;
+        // add right padding so tab select will not be cut off
+        padding: 0 4px 0 0;
     }
 
     .create-account {
