@@ -2,7 +2,6 @@
 
 import { WebSocketSubject } from 'rxjs/webSocket';
 import { BufferHandler, ConnectionType, SignalingMessage, StreamHandler } from './types';
-import { iceServers } from './config_check_excluded';
 
 export class MediaServerPeerConnection extends RTCPeerConnection {
     connectionId: string;
@@ -26,8 +25,13 @@ export class MediaServerPeerConnection extends RTCPeerConnection {
         if (this.iceConnectionState === 'connected') {
             this.logger?.log('peerConnection connected, closing websocket');
             this.closeWebsocket();
-            const  { local: { type: localCandidateType }, remote: { type: remoteCandidateType }} = this.sctp.transport.iceTransport.getSelectedCandidatePair();
-            this.updateConnectionType({ localCandidateType, remoteCandidateType });
+            const  {
+                local: { type: localCandidateType, address: localIp, port: localPort, protocol: localProtocol },
+                remote: { type: remoteCandidateType, address: remoteIp, port: remotePort, protocol: remoteProtocol },
+            } = this.sctp.transport.iceTransport.getSelectedCandidatePair();
+            const localAddress = `${localProtocol} ${localIp}:${localPort}`;
+            const remoteAddress = `${remoteProtocol} ${remoteIp}:${remotePort}`;
+            this.updateConnectionType({ localCandidateType, remoteCandidateType, localAddress, remoteAddress });
         } else if (this.iceConnectionState === 'disconnected') {
             this.logger?.log('peerConnection disconnected, reconnecting websocket');
             this.reconnectionHandler(false);
@@ -73,10 +77,7 @@ export class MediaServerPeerConnection extends RTCPeerConnection {
         public updateConnectionType: (connectionType: Partial<ConnectionType>) => void,
         private logger?: Console,
     ) {
-        super({
-            iceServers,
-            iceCandidatePoolSize: 10,
-        });
+        super();
 
         this.ontrack = (event: RTCTrackEvent): void => {
             this.clearTracks();

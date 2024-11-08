@@ -1,5 +1,7 @@
 // Copyright 2018-present Network Optix, Inc. Licensed under MPL 2.0: www.mozilla.org/MPL/2.0/
 
+import { WebRTCStreamManager } from "./web-rtc-stream-manager";
+
 export type PlaybackDetails = Record<string, unknown>;
 
 export type StreamHandler = (stream: MediaStream) => unknown;
@@ -148,7 +150,7 @@ export interface Stream {
     encoderIndex: AvailableStreams
 }
 
-export type WebRtcUrlFactory = (params?: Record<string, unknown>) => string;
+export type WebRtcUrlFactory = (params?: Partial<ReturnType<WebRTCStreamManager['getCurrentStreamInfo']>>) => string;
 
 export enum TargetStream {
     AUTO = 'AUTO',
@@ -191,17 +193,21 @@ export interface StreamChangeMessage {
 
 export const isTimeStampMessage = (message: unknown): message is TimeStampMessage => typeof message === 'object' && ['timestamp', 'rtpTimestamp'].every(key => key in message && typeof (message as Record<string, unknown>)[key] === 'number');
 
-const timeStampMessage = {
+const confirmationMessage = {
     timestamp: -1,
-    status: 301
-}
+    status: 200
+} as const
 
 export const isStreamChangeMessage = (message: unknown): message is StreamChangeMessage => typeof message === 'object' &&  'status' in message && message.status === 301;
+
+export const isConfirmationMessage = (message: unknown): message is typeof confirmationMessage => typeof message === 'object' &&  'status' in message && message.status === confirmationMessage.status;
 
 export type DataChannelMessage = TimeStampMessage;
 
 export interface ConnectionType {
     usingRelay: boolean,
+    localAddress: string,
+    remoteAddress: string,
     localCandidateType: RTCIceCandidateType,
     remoteCandidateType: RTCIceCandidateType,
 }
