@@ -356,19 +356,19 @@
                 "loading": "Loading...",
                 "connectionTypeMessages": {
                     "relay": {
-                        "matches": "Relay Mode: {localCandidateType}",
-                        "varies": "Relay Mode: Client({localCandidateType}) <-> Server({remoteCandidateType})"
+                        "matches": "Relay Mode: {localCandidateType} Client({localAddress}) <-> Server({remoteAddress})",
+                        "varies": "Relay Mode: Client({localCandidateType} - {localAddress}) <-> Server({remoteCandidateType} - {remoteAddress})"
                     },
                     "peer": {
-                        "matches": "P2P Mode: {localCandidateType}",
-                        "varies": "P2P Mode: Client({localCandidateType}) <-> Server({remoteCandidateType})"
+                        "matches": "P2P Mode: {localCandidateType} Client({localAddress}) <-> Server({remoteAddress})",
+                        "varies": "P2P Mode: Client({localCandidateType} - {localAddress}) <-> Server({remoteCandidateType} - {remoteAddress})"
                     }
                 },
                 "candidateTypeDescriptions": {
-                    "host": "host(Host): Actual host IP address used",
-                    "srflx": "srflx(Server Reflexive): UDP hole-punched IP address using STUN/TURN",
-                    "prflx": "prflx(Peer Reflexive): IP address from ICE negotiation",
-                    "relay": "relay(Relay): Relayed traffic using IP address from TURN server"
+                    "host": "host(Host): Host IP address, public address of peer",
+                    "srflx": "srflx(Server Reflexive): UDP hole-punched IP address using STUN, public address behind NAT",
+                    "prflx": "prflx(Peer Reflexive): UDP hole-punched IP address using STUN, public address of peer",
+                    "relay": "relay(Relay): Relayed IP address using TURN, public address of TURN server"
                 },
                 "relayed": "Relayed Connection"
             },

@@ -307,8 +307,8 @@ export class NxTooltipV2Directive implements AfterViewInit, OnDestroy {
                 if (this._opened()) {
                     return;
                 }
-                const overlayRef = this.overlayRef ?? this.initializeOverlay();
-                const component = overlayRef.attach(this.portal);
+                this.overlayRef ??= this.initializeOverlay();
+                const component = this.overlayRef.attach(this.portal);
                 component.setInput('content', this._content());
                 component.setInput('withArrow', this._withArrow());
                 component.setInput('theme', this._theme());
@@ -409,6 +409,7 @@ export class NxTooltipV2Directive implements AfterViewInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.overlayRef?.dispose();
+        this.overlayRef = undefined;
     }
 
     /* Public API */

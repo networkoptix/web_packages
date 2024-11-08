@@ -30,6 +30,7 @@
     [style.opacity]="lostConnection ? 0 : 1"
     [nxRotate]="rotation$$()"
     (resize)="videoElementSize$$.set($event)"
+    [poster]="lastFrame$$()"
 ></video>
 
 @defer (when nxVideoPlaying.playbackStarted$$() && !!webRtcStream.duration) {

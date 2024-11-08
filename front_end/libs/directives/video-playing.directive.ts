@@ -45,7 +45,9 @@ export class NxVideoPlayingDirective {
 
     public isPlaying$$ = computed(() => this.playingState$$() && !this.playbackFrozen$$());
 
-    private static canvas = document.createElement('canvas');
+    private static canvasContext: CanvasRenderingContext2D = document
+        .createElement('canvas')
+        .getContext('2d', { willReadFrequently: true })!;
 
     previousFrame: string;
 
@@ -61,12 +63,25 @@ export class NxVideoPlayingDirective {
         ),
         throttleByFrameRate(),
         map(() => {
-            NxVideoPlayingDirective.canvas.width = this.element.nativeElement.videoWidth;
-            NxVideoPlayingDirective.canvas.height = this.element.nativeElement.videoHeight;
-            const context = NxVideoPlayingDirective.canvas.getContext('2d')!;
+            NxVideoPlayingDirective.canvasContext.canvas.width =
+                this.element.nativeElement.videoWidth;
+            NxVideoPlayingDirective.canvasContext.canvas.height =
+                this.element.nativeElement.videoHeight;
+            const context = NxVideoPlayingDirective.canvasContext;
+            if ((context.canvas.width || 0) < 100) {
+                return this.previousFrame || '';
+            }
             context.drawImage(this.element.nativeElement, 0, 0);
-            URL.revokeObjectURL(this.previousFrame);
-            this.previousFrame = NxVideoPlayingDirective.canvas.toDataURL();
+            const { data } = context.getImageData(
+                0,
+                0,
+                NxVideoPlayingDirective.canvasContext.canvas.width,
+                NxVideoPlayingDirective.canvasContext.canvas.height,
+            );
+            if (data.length && data.some(value => value !== 0)) {
+                URL.revokeObjectURL(this.previousFrame);
+                this.previousFrame = NxVideoPlayingDirective.canvasContext.canvas.toDataURL();
+            }
             return this.previousFrame;
         }),
         takeUntilDestroyed(),

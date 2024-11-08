@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostBinding, Injector, Input, NgZone, Output, TemplateRef, ViewChild, computed, effect, inject, input, runInInjectionContext, signal } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostBinding, Input, NgZone, Output, TemplateRef, ViewChild, computed, effect, inject, input, signal } from '@angular/core';
 import { v4 as uuid } from 'uuid';
 
 import { NxSystemCamera } from '@services/system.service/camera-manager/camera-manager-types';
@@ -20,7 +20,6 @@ import {
     BehaviorSubject,
     mergeMap,
     distinctUntilChanged,
-    debounceTime,
 } from 'rxjs';
 import staticLang from '@language_static';
 import { LayoutItem } from '@services/system-api.types/layouts.types';
@@ -177,7 +176,7 @@ export class NxVideoPlayerComponent {
     lostConnection = false;
     streamManager = WebRTCStreamManager;
 
-    connection: WebRTCStreamManager | null;
+    connection$$ = signal<WebRTCStreamManager | null>(null);
 
     ribbon$ = new Subject<{
         message: Translatable,
@@ -198,7 +197,6 @@ export class NxVideoPlayerComponent {
     document = document;
 
     constructor(
-        private injector: Injector,
         public cdr: ChangeDetectorRef,
     ) {
         this.playerId = uuid();
@@ -206,6 +204,13 @@ export class NxVideoPlayerComponent {
             WebRTCStreamManager.RELAY_URL = this.CONFIG.trafficRelayHost;
         }
         WebRTCStreamManager.USE_RELAY_PREFIX = true;
+        effect(() => {
+            const connection = this.connection$$();
+            const availableStreams = this.availableStreams$$();
+            if (connection && availableStreams) {
+                this.ngZone.runOutsideAngular(() => connection.updateAvailableStreams(availableStreams))
+            }
+        });
     }
 
     calculateCropParams = (drawParams: DrawImagePartialTuple): DrawImagePartialTuple => {
@@ -268,43 +273,15 @@ export class NxVideoPlayerComponent {
         return newStream;
     }
 
-    isSmall$$ = computed(() => {
-        const { width, height } = this.videoElementSize$$();
-        return Math.min(width, height) < 400;
-    })
-
-    _availableStreams$$ = computed(() => {
+    availableStreams$$ = computed(() => {
         const resolution = this.resolution$$() || Resolution.AUTO;
-        const autoResStreams = this.isSmall$$() ? [AvailableStreams.SECONDARY] : [AvailableStreams.PRIMARY, AvailableStreams.SECONDARY]
 
-        const streamLookup: Record<Resolution, AvailableStreams[]> = {
-            [Resolution.AUTO]: autoResStreams,
-            [Resolution.HIGH]: [autoResStreams[0]],
-            [Resolution.LOW]: [autoResStreams[1] || autoResStreams[0]],
-            [Resolution.CUSTOM]: autoResStreams
+        if ([Resolution.AUTO, Resolution.CUSTOM].includes(resolution)) {
+            return [AvailableStreams.PRIMARY, AvailableStreams.SECONDARY]
         }
-        return streamLookup[resolution];
+
+        return resolution === Resolution.LOW ? [AvailableStreams.SECONDARY] : [AvailableStreams.PRIMARY];
     }, { equal: (a, b) => a.toSorted().join('-') === b.toSorted().join('-') });
-
-    availableStreams$$ = pipeSignal(
-        this._availableStreams$$,
-        availableStreams$ => availableStreams$.pipe(
-            distinctUntilChanged((a, b) => a.toSorted().join('-') === b.toSorted().join('-')),
-            debounceTime(500)
-        ),
-        [AvailableStreams.SECONDARY]
-    );
-
-    syncAvailableStreams(connection: WebRTCStreamManager): void {
-        try {
-            runInInjectionContext(this.injector, () => effect(() => {
-                const availableStreams = this.availableStreams$$();
-                connection.updateAvailableStreams(availableStreams)
-            }));
-        } catch {
-            // Not sure why this sometimes throws an error.;
-        }
-    }
 
     streamCleanup = async (stream?: MediaStream): Promise<void> => {
         if (this.webRtcStreamRef.nativeElement.srcObject && this.webRtcStreamRef.nativeElement.srcObject instanceof MediaStream) {
@@ -312,16 +289,6 @@ export class NxVideoPlayerComponent {
             if (currentStream !== stream) {
                 this.webRtcStreamRef.nativeElement.srcObject = null;
             }
-            if (!stream) {
-                await new Promise(resolve => setTimeout(resolve, 100));
-                if (this.connection?.mediaStream$.observed) {
-                    return;
-                }
-            }
-            currentStream.getTracks().forEach(track => {
-                track.stop();
-                currentStream.removeTrack(track);
-            });
         }
 
         URL.revokeObjectURL(this.capturedFrame$$());
@@ -340,14 +307,15 @@ export class NxVideoPlayerComponent {
         this.originalStream.nativeElement.onblur = event => event.preventDefault();
         this.webRtcStreamRef.nativeElement.volume = this.volume$$();
         this.nxVideoPlaying.latestFrame.pipe(untilDestroyed(this)).subscribe(frame => this.capturedFrame$$.update(previous => {
-            URL.revokeObjectURL(previous);
+            setTimeout(() => {
+                URL.revokeObjectURL(previous);
+                URL.revokeObjectURL(this.thumbnail$$());
+            }, 2_500)
             return frame;
         }));
-        const initialSize = { width: this.originalStream.nativeElement.offsetWidth, height: this.originalStream.nativeElement.offsetHeight };
-        this.videoElementSize$$.set(initialSize);
 
-        const availableStreams: AvailableStreams[] = this._availableStreams$$();
-        const targetStream = availableStreams.includes(AvailableStreams.PRIMARY) ? TargetStream.HIGH : TargetStream.LOW;
+        const availableStreams: AvailableStreams[] = this.availableStreams$$();
+        const targetStream = !availableStreams.includes(AvailableStreams.SECONDARY) ? TargetStream.HIGH : TargetStream.LOW;
 
         this.cdr.detach();
         this.hasChanges$.pipe(throttle(() => timer(500), { leading: false, trailing: true }), throttleByFrameRate(), untilDestroyed(this)).subscribe(() => this.cdr.detectChanges());
@@ -358,9 +326,7 @@ export class NxVideoPlayerComponent {
 
         this.ngZone.runOutsideAngular(() => startStream().pipe(
             tap(async ([stream, error, connection]) => {
-                this.connection = connection;
-                this.connection.playbackRateUpdateCallback = (rate: number) => this.playbackRate$$.set(rate);
-                this.syncAvailableStreams(connection)
+                this.connection$$.set(connection);
                 this.streamCleanup(stream);
                 if (stream) {
                     this.webRtcStreamRef.nativeElement.srcObject = await this.zoomStream(stream);
@@ -436,13 +402,15 @@ export class NxVideoPlayerComponent {
         this.debugInfo$$();
         this.shiftRotated$$();
         this.lastFrame$$();
-        this.videoElementSize$$();
         this.previewLoaded$$();
+        this.availableStreams$$();
         this.cdr.detectChanges();
     });
 
     ngOnDestroy(): void {
         this.streamCleanup();
+        URL.revokeObjectURL(this.capturedFrame$$());
+        URL.revokeObjectURL(this.thumbnail$$());
         this.dequeue$.next(Date.now());
     }
 
@@ -458,7 +426,7 @@ export class NxVideoPlayerComponent {
     playbackRate$$ = signal(1);
 
     debugInfo$$ = computed(() => {
-        const selectedResolutionString = (this.resolution$$() || Resolution.AUTO).padEnd(5);
+        const selectedResolutionString = `${this.resolution$$() || Resolution.AUTO}(${this.availableStreams$$().join(', ')})`.padEnd(12);
         const actualResolution = this.actualResolution$$();
         const actualResolutionString = actualResolution ? actualResolution.padEnd(12) : '';
         const playbackRateString = this.playbackRate$$().toFixed(2).padEnd(6);

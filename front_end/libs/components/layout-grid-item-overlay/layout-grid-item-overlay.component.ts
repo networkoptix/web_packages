@@ -364,11 +364,10 @@ export class NxLayoutGridItemOverlayComponent {
                                                   ? 'matches'
                                                   : 'varies'
                                           ],
-                                          params: {
-                                              localCandidateType: connectionType.localCandidateType,
-                                              remoteCandidateType:
-                                                  connectionType.remoteCandidateType,
-                                          },
+                                          params: connectionType as Omit<
+                                              typeof connectionType,
+                                              'usingRelay'
+                                          >,
                                       },
                                       ...[
                                           ...new Set([

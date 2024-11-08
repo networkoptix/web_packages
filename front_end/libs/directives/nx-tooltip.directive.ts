@@ -180,7 +180,7 @@ export class NxTooltipDirective implements OnInit, OnChanges, OnDestroy {
                     return;
                 }
 
-                this.overlayRef = this.overlay.create({
+                this.overlayRef ??= this.overlay.create({
                     positionStrategy: this.positionStrategy,
                     scrollStrategy: this.overlay.scrollStrategies?.reposition(),
                 });
