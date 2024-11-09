@@ -68,7 +68,7 @@ def get_agreement(request):
             agreement_review = AssetCustomizationReview.objects.filter(
                 version__asset__asset_type__type=AssetType.ASSET_TYPES.agreement,
                 state=AssetCustomizationReview.REVIEW_STATES.accepted, customization__name=customization
-            ).exclude(id__in=[r.id for r in excluded_review_ids]).order_by('id')
+            ).exclude(id__in=[r_id for r_id in excluded_review_ids]).order_by('id')
         agreement_review = agreement_review.last()
         if not agreement_review:
             return api_success("Agreement not available", status_code=status.HTTP_404_NOT_FOUND)
@@ -81,7 +81,7 @@ def get_agreement(request):
 
 
     # If agreement is not found, then return a 404
-    if agreement or agreement_dict:
+    if agreement:
         if (
             ((draft or review))
             and not request.user.is_superuser

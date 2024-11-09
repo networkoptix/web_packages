@@ -173,6 +173,21 @@ class TestAgreement:
         assert response.status_code == status.HTTP_404_NOT_FOUND
         assert response.data == NO_REVIEW_PROVIDED
 
+    def test_get_agreement_with_different_agreement_types_existing(self, uses):
+        uses(customization=True, agreement=True, tos_agreement=True)
+        review = AssetCustomizationReview.objects.filter(
+            version__asset=self.tos_agreement).last()
+
+        review = AssetCustomizationReview.objects.filter(
+            version__asset=self.tos_agreement).last()
+        response = self.get_agreement_with(self.non_superuser)
+
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data['id'] == self.agreement.id
+        assert response.data['type'] == 'contributor'
+
+
+
 
 class TestTosAgreements:
 
