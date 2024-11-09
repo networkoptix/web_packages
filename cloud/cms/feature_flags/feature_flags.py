@@ -1,4 +1,26 @@
+from waffle import get_waffle_flag_model
+from waffle.models import Switch, Sample
+
 class_builtins = object.__dict__.keys()
+
+
+def create_feature_flags_if_missing():
+    FLAG = get_waffle_flag_model()
+
+    for key in FLAGS.all_keys:
+        flag = FLAG.get(FLAGS[key])
+        if not flag.id:
+            flag.save()
+
+    for key in SWITCHES.all_keys:
+        switch = Switch.get(SWITCHES[key])
+        if not switch.id:
+            switch.save()
+
+    for key in SAMPLES.all_keys:
+        sample = Sample.get(SAMPLES[key])
+        if not sample.id:
+            sample.save()
 
 
 class _FlagType(type):
