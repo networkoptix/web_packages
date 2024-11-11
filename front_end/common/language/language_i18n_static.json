@@ -1992,7 +1992,7 @@
         "status": {
             "active": "Active",
             "suspended": "Suspended",
-            "shutdown": "Shut down"
+            "shutdown": "Shutdown"
         },
         "partnerRoles": {
             "Administrator": "Administrator",
