@@ -36,11 +36,9 @@ RUN set -ex \
 FROM builder AS pypackages
 COPY --from=requirements /app/requirements.txt /app/requirements.txt
 
-COPY stage/cloud/allowed_licenses.txt /app/allowed_licenses.txt
 RUN set -ex \
     && apt update && apt-get install -o 'Acquire::Retries=3' --no-install-suggests --no-install-recommends -y gcc \
     && pip install --no-cache-dir -r /app/requirements.txt \
-    && pip-licenses --format=json --with-urls --allow-only="$(cloud/allowed_licenses.txt | tr -d '\n')" > /app/requirements-license.json \
     && apt remove gcc -y && apt autoremove -y --purge && apt clean -y && rm -rf /root/.cache/pip && rm -rf /var/lib/apt/lists/*
 
 
@@ -58,7 +56,6 @@ COPY docker/entrypoint.sh /app/
 WORKDIR /app/app
 
 RUN set -ex \
-    && cp -rf /app/requirements-license.json /app/app/requirements-license.json \
     && CUSTOMIZATION=default ./manage.py collectstatic --noinput && rm -rf node_modules \
     && if ! ./manage.py makemigrations --dry-run --check ; then echo Missing above migrations && exit 1 ; fi \
     && if ! ./manage.py check; then echo "Please notify web team" && exit 1 ; fi

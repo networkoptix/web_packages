@@ -1,0 +1,28 @@
+[tool.poetry]
+name = "license-crawler"
+version = "0.1.0"
+description = ""
+authors = ["Kyrylo Apanovych <kapanovich@networkoptix.com>"]
+readme = "README.md"
+packages = [{include = "license_crawler"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+pytoml = "^0.1.21"
+requests = "^2.32.3"
+jk-pypiorgapi = "^0.2022.6.13"
+licensecheck = "^2024.3"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[[tool.poetry.source]]
+name = "pypi-remote"
+url = "http://artifactory.us.nxteam.dev/artifactory/api/pypi/pypi-remote/simple"
+priority = "default"
+
+[[tool.poetry.source]]
+name = "pypi-local"
+url = "http://artifactory.us.nxteam.dev/artifactory/api/pypi/pypi-local/simple"
+priority = "primary"

@@ -132,3 +132,42 @@ check-python-licenses:
   script:
     - ./cloud_helper.sh check_licenses
 
+
+
+.licences-check:
+  needs:
+    - job: docker:build-license-check-python-docker
+      optional: true
+  image:
+    name: ${LICENSE_CHECK_PYTHON_IMAGE}:${LICENSE_CHECK_PYTHON_IMAGE_TAG}
+    pull_policy: if-not-present
+  script:
+    - python license_disclosure/python/license_crawler/license_crawler/lic_checker.py ${POETRY_DIR}
+  stage: check
+  before_script:
+    - cd ${CI_PROJECT_DIR}
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" ||
+        ($CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_PROTECTED == "true")
+      changes:
+        - ci/Docker/license-check-python/*
+        - ${POETRY_DIR}/**/pyproject.toml
+        - ${POETRY_DIR}/**/poetry.lock
+        - ${POETRY_DIR}/**/poetry.toml
+        - ${POETRY_DIR}/**/dependencies-licenses.json
+
+
+cloud-portal-licenses-check:
+  extends: .licences-check
+  variables:
+      POETRY_DIR: "cloud"
+
+cp-licenses-check:
+  extends: .licences-check
+  variables:
+      POETRY_DIR: "channel_partners"
+
+desktop-notifications-licenses-check:
+  extends: .licences-check
+  variables:
+      POETRY_DIR: "desktop_notifications"

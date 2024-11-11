@@ -1,0 +1,64 @@
+[
+    {
+        "name": "aiohttp",
+        "licenses": [
+            "Apache License 2.0"
+        ],
+        "url": "https://github.com/aio-libs/aiohttp",
+        "licenseFiles": [
+            "https://github.com/aio-libs/aiohttp/blob/master/LICENSE.txt"
+        ]
+    },
+    {
+        "name": "hypercorn",
+        "licenses": [
+            "MIT License"
+        ],
+        "url": "https://github.com/pgjones/hypercorn/",
+        "licenseFiles": [
+            "https://github.com/pgjones/hypercorn/blob/master/LICENSE"
+        ]
+    },
+    {
+        "name": "marshmallow",
+        "licenses": [
+            "MIT License"
+        ],
+        "url": "https://github.com/marshmallow-code/marshmallow",
+        "licenseFiles": [
+            "https://github.com/marshmallow-code/marshmallow/blob/master/LICENSE"
+        ]
+    },
+    {
+        "name": "quart",
+        "licenses": [
+            "MIT License"
+        ],
+        "url": "https://github.com/pallets/quart/",
+        "licenseFiles": [
+            "https://github.com/pallets/quart/blob/master/LICENSE"
+        ]
+    },
+    {
+        "name": "redis",
+        "licenses": [
+            "MIT License"
+        ],
+        "url": "https://github.com/redis/redis-py",
+        "licenseFiles": [
+            "https://github.com/redis/redis-py/blob/master/LICENSE"
+        ]
+    },
+    {
+        "name": "structlog",
+        "licenses": [
+            "MIT License"
+        ],
+        "url": "https://github.com/hynek/structlog",
+        "licenseFiles": [
+            "https://github.com/hynek/structlog/blob/main/COPYRIGHT",
+            "https://github.com/hynek/structlog/blob/main/LICENSE-MIT",
+            "https://github.com/hynek/structlog/blob/main/LICENSE-APACHE"
+        ]
+    }
+]

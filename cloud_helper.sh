@@ -514,12 +514,6 @@ function export_poetry_requirements() {
     sed -i '' '3s/^/\n/' cloud/requirements.txt
 }
 
-function check_licenses() {
-    check_poetry_lock
-    ALLOWED="$(cat cloud/allowed_licenses.txt | tr -d '\n')"
-    pip-licenses --format=json --with-urls --allow-only="$ALLOWED"
-}
-
 function poetry_lock() {
     poetry -C cloud/ lock --no-update
 }
@@ -819,9 +813,6 @@ do
             echo "Extracting logs from docker containers and placing them in ./tools/docker_server_logs"
             extract_logs_from_container "$PORTS"
             break
-            ;;
-        check_licenses)
-            check_licenses
             ;;
         poetry_lock)
             poetry_lock

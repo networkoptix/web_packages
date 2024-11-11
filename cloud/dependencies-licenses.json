@@ -1,0 +1,526 @@
+[
+    {
+        "name": "Django",
+        "licenses": [
+            "BSD 3-Clause License"
+        ],
+        "url": "https://www.djangoproject.com/",
+        "licenseFiles": [
+            "https://github.com/django/django/blob/master/LICENSE"
+        ]
+    },
+    {
+        "name": "MarkupSafe",
+        "licenses": [
+            "BSD 3-Clause License"
+        ],
+        "url": "https://palletsprojects.com/p/markupsafe/",
+        "licenseFiles": [
+            "https://github.com/pallets/markupsafe/blob/master/LICENSE.txt"
+        ]
+    },
+    {
+        "name": "Pillow",
+        "licenses": [
+            "Historical Permission Notice and Disclaimer License (HPDN)"
+        ],
+        "url": "https://python-pillow.org",
+        "licenseFiles": [
+            "https://github.com/python-pillow/Pillow/blob/master/LICENSE"
+        ]
+    },
+    {
+        "name": "PyYAML",
+        "licenses": [
+            "MIT License"
+        ],
+        "url": "https://pyyaml.org/",
+        "licenseFiles": [
+            "https://github.com/yaml/pyyaml/blob/master/LICENSE"
+        ]
+    },
+    {
+        "name": "cssutils",
+        "licenses": [
+            "GNU Lesser General Public License v3.0 (LGPLv3)"
+        ],
+        "url": "https://github.com/jaraco/cssutils",
+        "licenseFiles": [
+            "https://github.com/jaraco/cssutils/blob/master/LICENSE"
+        ]
+    },
+    {
+        "name": "django-admin-tools",
+        "licenses": [
+            "MIT License"
+        ],
+        "url": "https://github.com/django-admin-tools/django-admin-tools",
+        "licenseFiles": [
+            "https://github.com/django-admin-tools/django-admin-tools/blob/master/LICENSE"
+        ]
+    },
+    {
+        "name": "django-celery-beat",
+        "licenses": [
+            "BSD License"
+        ],
+        "url": "https://github.com/celery/django-celery-beat",
+        "licenseFiles": [
+            "https://github.com/celery/django-celery-beat/blob/master/LICENSE"
+        ]
+    },
+    {
+        "name": "django-cleanup",
+        "licenses": [
+            "MIT License"
+        ],
+        "url": "https://github.com/un1t/django-cleanup",
+        "licenseFiles": [
+            "https://github.com/un1t/django-cleanup/blob/master/LICENSE"
+        ]
+    },
+    {
+        "name": "django-cors-headers",
+        "licenses": [
+            "MIT License"
+        ],
+        "url": "https://github.com/adamchainz/django-cors-headers",
+        "licenseFiles": [
+            "https://github.com/adamchainz/django-cors-headers/blob/master/LICENSE"
+        ]
+    },
+    {
+        "name": "django-model-utils",
+        "licenses": [
+            "BSD License"
+        ],
+        "url": "https://github.com/jazzband/django-model-utils",
+        "licenseFiles": [
+            "https://github.com/jazzband/django-model-utils/blob/master/LICENSE.txt"
+        ]
+    },
+    {
+        "name": "django-npm",
+        "licenses": [
+            "MIT License"
+        ],
+        "url": "https://github.com/kevin1024/django-npm",
+        "licenseFiles": [
+            "https://github.com/kevin1024/django-npm/blob/master/LICENSE"
+        ]
+    },
+    {
+        "name": "django-oauth-toolkit",
+        "licenses": [
+            "BSD 3-Clause License"
+        ],
+        "url": "https://django-oauth-toolkit.readthedocs.io/",
+        "licenseFiles": [
+            "https://github.com/jazzband/django-oauth-toolkit/blob/master/LICENSE"
+        ]
+    },
+    {
+        "name": "django-redis",
+        "licenses": [
+            "BSD 3-Clause License"
+        ],
+        "url": "https://github.com/jazzband/django-redis",
+        "licenseFiles": [
+            "https://github.com/jazzband/django-redis/blob/master/LICENSE"
+        ]
+    },
+    {
+        "name": "django-silk",
+        "licenses": [
+            "MIT License"
+        ],
+        "url": "https://github.com/jazzband/django-silk",
+        "licenseFiles": [
+            "https://github.com/jazzband/django-silk/blob/master/LICENSE"
+        ]
+    },
+    {
+        "name": "django-storages",
+        "licenses": [
+            "BSD 3-Clause License"
+        ],
+        "url": "https://github.com/jschneier/django-storages",
+        "licenseFiles": [
+            "https://github.com/jschneier/django-storages/blob/master/LICENSE"
+        ]
+    },
+    {
+        "name": "django-structlog",
+        "licenses": [
+            "MIT License"
+        ],
+        "url": "https://github.com/jrobichaud/django-structlog",
+        "licenseFiles": [
+            "https://github.com/jrobichaud/django-structlog/blob/master/LICENSE.rst"
+        ]
+    },
+    {
+        "name": "django-tinymce",
+        "licenses": [
+            "MIT License"
+        ],
+        "url": "https://github.com/jazzband/django-tinymce",
+        "licenseFiles": [
+            "https://github.com/jazzband/django-tinymce/blob/master/LICENSE.txt"
+        ]
+    },
+    {
+        "name": "django_autocomplete_light",
+        "licenses": [
+            "MIT License"
+        ],
+        "url": "http://django-autocomplete-light.rtfd.org",
+        "licenseFiles": [
+            "https://github.com/yourlabs/django-autocomplete-light/blob/master/LICENSE"
+        ]
+    },
+    {
+        "name": "django_celery_results",
+        "licenses": [
+            "BSD License"
+        ],
+        "url": "https://github.com/celery/django-celery-results",
+        "licenseFiles": [
+            "https://github.com/celery/django-celery-results/blob/master/LICENSE"
+        ]
+    },
+    {
+        "name": "django_nested_admin",
+        "licenses": [
+            "BSD License"
+        ],
+        "url": "https://github.com/theatlantic/django-nested-admin",
+        "licenseFiles": [
+            "https://github.com/theatlantic/django-nested-admin/blob/master/LICENSE"
+        ]
+    },
+    {
+        "name": "django_proxy",
+        "licenses": [
+            "BSD License"
+        ],
+        "url": "https://github.com/mjumbewu/django-proxy",
+        "licenseFiles": [
+            "https://github.com/mjumbewu/django-proxy/blob/master/README.md#license"
+        ]
+    },
+    {
+        "name": "django_push_notifications",
+        "licenses": [
+            "MIT License"
+        ],
+        "url": "https://github.com/jazzband/django-push-notifications",
+        "licenseFiles": [
+            "https://github.com/jazzband/django-push-notifications/blob/master/LICENSE"
+        ]
+    },
+    {
+        "name": "django_rest_hooks",
+        "licenses": [
+            "ISC License"
+        ],
+        "url": "http://github.com/zapier/django-rest-hooks",
+        "licenseFiles": [
+            "http://github.com/zapier/django-rest-hooks/blob/master/LICENSE.md"
+        ]
+    },
+    {
+        "name": "django_waffle",
+        "licenses": [
+            "BSD License"
+        ],
+        "url": "http://github.com/django-waffle/django-waffle",
+        "licenseFiles": [
+            "http://github.com/django-waffle/django-waffle/blob/master/LICENSE"
+        ]
+    },
+    {
+        "name": "djangorestframework",
+        "licenses": [
+            "BSD License"
+        ],
+        "url": "https://www.django-rest-framework.org/",
+        "licenseFiles": [
+            "https://github.com/encode/django-rest-framework/blob/master/LICENSE.md"
+        ]
+    },
+    {
+        "name": "drf_yasg",
+        "licenses": [
+            "BSD License"
+        ],
+        "url": "https://github.com/axnsan12/drf-yasg",
+        "licenseFiles": [
+            "https://github.com/axnsan12/drf-yasg/blob/master/LICENSE.rst"
+        ]
+    },
+    {
+        "name": "etils",
+        "licenses": [
+            "Apache License 2.0"
+        ],
+        "url": "https://github.com/google/etils",
+        "licenseFiles": [
+            "https://github.com/google/etils/blob/master/LICENSE"
+        ]
+    },
+    {
+        "name": "gunicorn",
+        "licenses": [
+            "MIT License"
+        ],
+        "url": "https://gunicorn.org",
+        "licenseFiles": [
+            "https://github.com/benoitc/gunicorn/blob/master/LICENSE"
+        ]
+    },
+    {
+        "name": "html2text",
+        "licenses": [
+            "GNU General Public License v3 (GPLv3)"
+        ],
+        "url": "https://github.com/Alir3z4/html2text/",
+        "licenseFiles": [
+            "https://github.com/Alir3z4/html2text/blob/master/COPYING"
+        ]
+    },
+    {
+        "name": "html_sanitizer",
+        "licenses": [
+            "BSD 3-Clause License"
+        ],
+        "url": "https://github.com/matthiask/html-sanitizer/",
+        "licenseFiles": [
+            "https://github.com/matthiask/html-sanitizer/blob/master/LICENSE"
+        ]
+    },
+    {
+        "name": "htmlmin",
+        "licenses": [
+            "BSD License"
+        ],
+        "url": "https://htmlmin.readthedocs.io/en/latest/",
+        "licenseFiles": [
+            "https://github.com/mankyd/htmlmin/blob/master/LICENSE"
+        ]
+    },
+    {
+        "name": "httpx",
+        "licenses": [
+            "BSD 3-Clause License"
+        ],
+        "url": "https://github.com/encode/httpx",
+        "licenseFiles": [
+            "https://github.com/encode/httpx/blob/master/LICENSE.md"
+        ]
+    },
+    {
+        "name": "importlib_metadata",
+        "licenses": [
+            "Apache License 2.0"
+        ],
+        "url": "https://github.com/python/importlib_metadata",
+        "licenseFiles": [
+            "https://github.com/python/importlib_metadata/blob/master/LICENSE"
+        ]
+    },
+    {
+        "name": "inlinestyler",
+        "licenses": [
+            "BSD License"
+        ],
+        "url": "http://github.com/dlanger/inlinestyler",
+        "licenseFiles": [
+            "http://github.com/dlanger/inlinestyler/blob/master/LICENSE"
+        ]
+    },
+    {
+        "name": "jsonfield",
+        "licenses": [
+            "MIT License"
+        ],
+        "url": "https://github.com/rpkilby/jsonfield/",
+        "licenseFiles": [
+            "https://github.com/rpkilby/jsonfield/blob/master/LICENSE"
+        ]
+    },
+    {
+        "name": "libsass",
+        "licenses": [
+            "MIT License"
+        ],
+        "url": "https://sass.github.io/libsass-python/",
+        "licenseFiles": [
+            "https://github.com/sass/libsass-python/blob/main/LICENSE"
+        ]
+    },
+    {
+        "name": "lxml",
+        "licenses": [
+            "BSD 3-Clause License"
+        ],
+        "url": "https://lxml.de/",
+        "licenseFiles": [
+            "https://github.com/lxml/lxml/blob/master/LICENSE.txt"
+        ]
+    },
+    {
+        "name": "meilisearch",
+        "licenses": [
+            "MIT License"
+        ],
+        "url": "https://github.com/meilisearch/meilisearch-python",
+        "licenseFiles": [
+            "https://github.com/meilisearch/meilisearch-python/blob/master/LICENSE"
+        ]
+    },
+    {
+        "name": "mistletoe",
+        "licenses": [
+            "MIT License"
+        ],
+        "url": "https://github.com/miyuchina/mistletoe",
+        "licenseFiles": [
+            "https://github.com/miyuchina/mistletoe/blob/master/LICENSE"
+        ]
+    },
+    {
+        "name": "mysqlclient",
+        "licenses": [
+            "GNU General Public License v2 (GPLv2)"
+        ],
+        "url": "https://github.com/PyMySQL/mysqlclient",
+        "licenseFiles": [
+            "https://github.com/PyMySQL/mysqlclient/blob/main/LICENSE"
+        ]
+    },
+    {
+        "name": "packaging",
+        "licenses": [
+            "BSD License",
+            "Apache License 2.0"
+        ],
+        "url": "https://github.com/pypa/packaging",
+        "licenseFiles": [
+            "https://github.com/pypa/packaging/blob/master/LICENSE"
+        ]
+    },
+    {
+        "name": "py",
+        "licenses": [
+            "MIT License"
+        ],
+        "url": "https://py.readthedocs.io/",
+        "licenseFiles": [
+            "https://github.com/pytest-dev/py/blob/master/LICENSE"
+        ]
+    },
+    {
+        "name": "pycurl",
+        "licenses": [
+            "GNU Lesser General Public License (LGPL)",
+            "MIT License"
+        ],
+        "url": "http://pycurl.io/",
+        "licenseFiles": [
+            "https://github.com/pycurl/pycurl/blob/master/README.rst#license",
+            "https://github.com/pycurl/pycurl/blob/master/COPYING-LGPL",
+            "https://github.com/pycurl/pycurl/blob/master/COPYING-MIT"
+        ]
+    },
+    {
+        "name": "pyjwt",
+        "licenses": [
+            "MIT License"
+        ],
+        "url": "https://github.com/jpadilla/pyjwt",
+        "licenseFiles": [
+            "https://github.com/jpadilla/pyjwt/blob/master/LICENSE"
+        ]
+    },
+    {
+        "name": "pystache",
+        "licenses": [
+            "MIT License"
+        ],
+        "url": "https://github.com/PennyDreadfulMTG/pystache",
+        "licenseFiles": [
+            "https://github.com/PennyDreadfulMTG/pystache/blob/master/LICENSE"
+        ]
+    },
+    {
+        "name": "pytz",
+        "licenses": [
+            "MIT License"
+        ],
+        "url": "http://pythonhosted.org/pytz",
+        "licenseFiles": [
+            "https://github.com/stub42/pytz/blob/master/LICENSE.txt"
+        ]
+    },
+    {
+        "name": "redis",
+        "licenses": [
+            "MIT License"
+        ],
+        "url": "https://github.com/redis/redis-py",
+        "licenseFiles": [
+            "https://github.com/redis/redis-py/blob/master/LICENSE"
+        ]
+    },
+    {
+        "name": "requests",
+        "licenses": [
+            "Apache License 2.0"
+        ],
+        "url": "https://requests.readthedocs.io",
+        "licenseFiles": [
+            "https://github.com/psf/requests/blob/master/LICENSE"
+        ]
+    },
+    {
+        "name": "ruamel.yaml",
+        "licenses": [
+            "MIT License"
+        ],
+        "url": "https://sourceforge.net/p/ruamel-yaml/",
+        "licenseFiles": [
+            "https://sourceforge.net/p/ruamel-yaml/code/ci/default/tree/LICENSE"
+        ]
+    },
+    {
+        "name": "ruamel.yaml.clib",
+        "licenses": [
+            "MIT License"
+        ],
+        "url": "https://sourceforge.net/p/ruamel-yaml-clib/code/ci/default/tree",
+        "licenseFiles": [
+            "https://sourceforge.net/p/ruamel-yaml-clib/code/ci/default/tree/LICENSE"
+        ]
+    },
+    {
+        "name": "uvicorn",
+        "licenses": [
+            "BSD 3-Clause License"
+        ],
+        "url": "https://www.uvicorn.org/",
+        "licenseFiles": [
+            "https://github.com/encode/uvicorn/blob/master/LICENSE.md"
+        ]
+    },
+    {
+        "name": "zenpy",
+        "licenses": [
+            "GNU General Public License v3 (GPLv3)"
+        ],
+        "url": "https://github.com/facetoe/zenpy",
+        "licenseFiles": [
+            "https://github.com/facetoe/zenpy/blob/master/LICENSE"
+        ]
+    }
+]

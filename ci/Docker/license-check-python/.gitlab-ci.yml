@@ -1,0 +1,27 @@
+variables:
+  LICENSE_CHECK_PYTHON_IMAGE: '${DOCKER_REGISTRY}/nx/license_check_python'
+  LICENSE_CHECK_PYTHON_IMAGE_VERSION: '1.0.1'
+  LICENSE_CHECK_PYTHON_IMAGE_TAG: '${LICENSE_CHECK_PYTHON_IMAGE_VERSION}'
+
+docker:build-license-check-python-docker:
+  extends: .docker.template
+  interruptible: true
+  variables:
+    IMAGE_VERSION: ${LICENSE_CHECK_PYTHON_IMAGE_VERSION}
+    BUILD_OPTIONS: |
+      --build-arg PIP_TRUSTED_HOST=${PIP_TRUSTED_HOST}
+      --build-arg PIP_INDEX_URL=${ARTIFACTORY_URL}/api/pypi/pypi-python3.8-alpine3.12/simple
+      --build-arg PIP_EXTRA_INDEX_URL=${PIP_INDEX_URL}
+    DOCKER_DIR: 'ci/Docker/license-check-python'
+
+  before_script:
+    - |
+      env
+      TARGET_IMAGE="${LICENSE_CHECK_PYTHON_IMAGE}"
+      TARGET_IMAGE_TAG="${LICENSE_CHECK_PYTHON_IMAGE_TAG}"
+      env
+
+  rules:
+    - changes:
+        - ci/Docker/license-check-python/**/*
+

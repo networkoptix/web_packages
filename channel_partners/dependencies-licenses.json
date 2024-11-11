@@ -1,0 +1,290 @@
+[
+    {
+        "name": "celery",
+        "licenses": [
+            "BSD 3-Clause License"
+        ],
+        "url": "https://docs.celeryq.dev/",
+        "licenseFiles": [
+            "https://github.com/celery/celery/blob/master/LICENSE"
+        ]
+    },
+    {
+        "name": "django",
+        "licenses": [
+            "BSD 3-Clause License"
+        ],
+        "url": "https://www.djangoproject.com/",
+        "licenseFiles": [
+            "https://github.com/django/django/blob/master/LICENSE"
+        ]
+    },
+    {
+        "name": "django-celery-beat",
+        "licenses": [
+            "BSD License"
+        ],
+        "url": "https://github.com/celery/django-celery-beat",
+        "licenseFiles": [
+            "https://github.com/celery/django-celery-beat/blob/master/LICENSE"
+        ]
+    },
+    {
+        "name": "django-celery-results",
+        "licenses": [
+            "BSD License"
+        ],
+        "url": "https://github.com/celery/django-celery-results",
+        "licenseFiles": [
+            "https://github.com/celery/django-celery-results/blob/master/LICENSE"
+        ]
+    },
+    {
+        "name": "django-cors-headers",
+        "licenses": [
+            "MIT License"
+        ],
+        "url": "https://github.com/adamchainz/django-cors-headers",
+        "licenseFiles": [
+            "https://github.com/adamchainz/django-cors-headers/blob/master/LICENSE"
+        ]
+    },
+    {
+        "name": "django-cte",
+        "licenses": [
+            "BSD License"
+        ],
+        "url": "https://github.com/dimagi/django-cte",
+        "licenseFiles": [
+            "https://github.com/dimagi/django-cte/blob/master/LICENSE"
+        ]
+    },
+    {
+        "name": "django-environ",
+        "licenses": [
+            "MIT License"
+        ],
+        "url": "https://django-environ.readthedocs.org",
+        "licenseFiles": [
+            "https://github.com/joke2k/django-environ/blob/master/LICENSE.txt"
+        ]
+    },
+    {
+        "name": "django-extensions",
+        "licenses": [
+            "MIT License"
+        ],
+        "url": "https://github.com/django-extensions/django-extensions",
+        "licenseFiles": [
+            "https://github.com/django-extensions/django-extensions/blob/master/LICENSE"
+        ]
+    },
+    {
+        "name": "django-filter",
+        "licenses": [
+            "MIT License"
+        ],
+        "url": "https://github.com/carltongibson/django-filter/tree/main",
+        "licenseFiles": [
+            "https://github.com/carltongibson/django-filter/blob/master/LICENSE"
+        ]
+    },
+    {
+        "name": "django-storages",
+        "licenses": [
+            "BSD 3-Clause License"
+        ],
+        "url": "https://github.com/jschneier/django-storages",
+        "licenseFiles": [
+            "https://github.com/jschneier/django-storages/blob/master/LICENSE"
+        ]
+    },
+    {
+        "name": "django-structlog",
+        "licenses": [
+            "MIT License"
+        ],
+        "url": "https://github.com/jrobichaud/django-structlog",
+        "licenseFiles": [
+            "https://github.com/jrobichaud/django-structlog/blob/master/LICENSE.rst"
+        ]
+    },
+    {
+        "name": "django-waffle",
+        "licenses": [
+            "BSD License"
+        ],
+        "url": "http://github.com/django-waffle/django-waffle",
+        "licenseFiles": [
+            "http://github.com/django-waffle/django-waffle/blob/master/LICENSE"
+        ]
+    },
+    {
+        "name": "djangorestframework",
+        "licenses": [
+            "BSD License"
+        ],
+        "url": "https://www.django-rest-framework.org/",
+        "licenseFiles": [
+            "https://github.com/encode/django-rest-framework/blob/master/LICENSE.md"
+        ]
+    },
+    {
+        "name": "drf-extensions",
+        "licenses": [
+            "BSD License"
+        ],
+        "url": "http://github.com/chibisov/drf-extensions",
+        "licenseFiles": [
+            "http://github.com/chibisov/drf-extensions/blob/master/LICENSE"
+        ]
+    },
+    {
+        "name": "drf-spectacular",
+        "licenses": [
+            "BSD License"
+        ],
+        "url": "https://github.com/tfranzel/drf-spectacular",
+        "licenseFiles": [
+            "https://github.com/tfranzel/drf-spectacular/blob/master/LICENSE"
+        ]
+    },
+    {
+        "name": "drf-standardized-errors",
+        "licenses": [
+            "MIT License"
+        ],
+        "url": "https://github.com/ghazi-git/drf-standardized-errors",
+        "licenseFiles": [
+            "https://github.com/ghazi-git/drf-standardized-errors/blob/master/LICENSE"
+        ]
+    },
+    {
+        "name": "etils",
+        "licenses": [
+            "Apache License 2.0"
+        ],
+        "url": "https://github.com/google/etils",
+        "licenseFiles": [
+            "https://github.com/google/etils/blob/master/LICENSE"
+        ]
+    },
+    {
+        "name": "gevent",
+        "licenses": [
+            "MIT License"
+        ],
+        "url": "http://www.gevent.org/",
+        "licenseFiles": [
+            "https://github.com/gevent/gevent/blob/master/LICENSE"
+        ]
+    },
+    {
+        "name": "gunicorn",
+        "licenses": [
+            "MIT License"
+        ],
+        "url": "https://gunicorn.org",
+        "licenseFiles": [
+            "https://github.com/benoitc/gunicorn/blob/master/LICENSE"
+        ]
+    },
+    {
+        "name": "httpx",
+        "licenses": [
+            "BSD 3-Clause License"
+        ],
+        "url": "https://github.com/encode/httpx",
+        "licenseFiles": [
+            "https://github.com/encode/httpx/blob/master/LICENSE.md"
+        ]
+    },
+    {
+        "name": "llutil",
+        "licenses": [
+            "Apache License 2.0"
+        ],
+        "url": null,
+        "licenseFiles": [
+            "https://github.com/laserson/llutil/blob/master/LICENSE"
+        ]
+    },
+    {
+        "name": "openpyxl",
+        "licenses": [
+            "MIT License"
+        ],
+        "url": "https://openpyxl.readthedocs.io",
+        "licenseFiles": []
+    },
+    {
+        "name": "psycopg",
+        "licenses": [
+            "GNU Lesser General Public License v3 (LGPLv3)"
+        ],
+        "url": "https://psycopg.org/",
+        "licenseFiles": [
+            "https://github.com/psycopg/psycopg/blob/master/LICENSE.txt"
+        ]
+    },
+    {
+        "name": "pyjwt",
+        "licenses": [
+            "MIT License"
+        ],
+        "url": "https://github.com/jpadilla/pyjwt",
+        "licenseFiles": [
+            "https://github.com/jpadilla/pyjwt/blob/master/LICENSE"
+        ]
+    },
+    {
+        "name": "python-dateutil",
+        "licenses": [
+            "BSD 3-Clause License"
+        ],
+        "url": "https://github.com/dateutil/dateutil",
+        "licenseFiles": [
+            "https://github.com/dateutil/dateutil/blob/master/LICENSE"
+        ]
+    },
+    {
+        "name": "pyyaml",
+        "licenses": [
+            "MIT License"
+        ],
+        "url": "https://pyyaml.org/",
+        "licenseFiles": [
+            "https://github.com/yaml/pyyaml/blob/master/LICENSE"
+        ]
+    },
+    {
+        "name": "redis",
+        "licenses": [
+            "MIT License"
+        ],
+        "url": "https://github.com/redis/redis-py",
+        "licenseFiles": [
+            "https://github.com/redis/redis-py/blob/master/LICENSE"
+        ]
+    },
+    {
+        "name": "requests",
+        "licenses": [
+            "Apache License 2.0"
+        ],
+        "url": "https://requests.readthedocs.io",
+        "licenseFiles": [
+            "https://github.com/psf/requests/blob/master/LICENSE"
+        ]
+    },
+    {
+        "name": "uvicorn",
+        "licenses": [
+            "BSD 3-Clause License"
+        ],
+        "url": "https://www.uvicorn.org/",
+        "licenseFiles": [
+            "https://github.com/encode/uvicorn/blob/master/LICENSE.md"
+        ]
+    }
+]
