@@ -1,6 +1,6 @@
 // Copyright 2018-present Network Optix, Inc. Licensed under MPL 2.0: www.mozilla.org/MPL/2.0/
 
-import { MonoTypeOperatorFunction, Observable, Subject, animationFrames, combineLatest, defer, exhaustMap, firstValueFrom, map, mergeMap, pairwise, repeat, scan, share, shareReplay, skip, switchMap, take, tap, throttle, timer, toArray, windowTime } from "rxjs";
+import { MonoTypeOperatorFunction, Observable, Subject, animationFrames, combineLatest, defer, exhaustMap, filter, firstValueFrom, map, mergeMap, pairwise, repeat, scan, share, shareReplay, skip, switchMap, take, tap, throttle, timer, toArray, windowTime } from "rxjs";
 import { IntRange } from "./types";
 
 /**
@@ -220,6 +220,7 @@ export const framesPerSecondFactory =
     }
 
 export const frameRateTracker$ = framesPerSecondFactory().pipe(
+    filter(() => document.visibilityState === 'visible'),
     scan(
         (acc, currentFps) => {
             const previousFps = [...acc.previousFps, currentFps].slice(acc.previousFps.length - 10);
