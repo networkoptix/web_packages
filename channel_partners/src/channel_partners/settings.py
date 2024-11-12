@@ -462,7 +462,7 @@ SPECTACULAR_SETTINGS = {
     'GENERIC_ADDITIONAL_PROPERTIES': 'dict',
     'SERVERS': [
         {
-            'url': f'https://{DOMAIN_NAME}/partners/api' if DOMAIN_NAME else '/partners/api'
+            'url': '/partners/api'
         }
     ],
     'SWAGGER_UI_SETTINGS': {
