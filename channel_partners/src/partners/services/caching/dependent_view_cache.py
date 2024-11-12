@@ -18,6 +18,7 @@ from typing import (
 import structlog
 from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
+from django.core.cache import caches
 from django.db.models import (
     Model,
     Q,
@@ -26,6 +27,7 @@ from django.utils.http import quote_etag
 from rest_framework.response import Response
 from rest_framework.status import HTTP_304_NOT_MODIFIED
 from rest_framework.views import APIView
+from waffle import switch_is_active
 
 from partners.models import (
     CloudSystemId,
@@ -56,7 +58,6 @@ KEY_PARAMS: List[str] = [
     "auth_*_id",
     "path"
 ]
-
 
 E_TAG_CACHE_KEY: str = "**etag"
 CACHE_FLUSH_HEADER_KEY: str = "X-Flush-CPS-Cache"
@@ -633,6 +634,28 @@ def dispatch_with_cache(
     return self.response
 
 
+def should_skip_processing_request(request: NxRequest) -> bool:
+    """
+    Check if the request should be processed or skipped based on the request headers
+    and the cache settings.
+    """
+    # Run simplest checks first.
+    if (request.method != 'get'
+            or request.headers.get(CACHE_SKIP_HEADER_KEY, "false").lower() == "true"):
+        return True
+
+    local_cache_key = 'waffle_cache_enabled'
+    local_cache = caches['waffle-local']
+    is_cache_enabled = local_cache.get(local_cache_key, None)
+
+    if is_cache_enabled is None:
+        is_cache_enabled = switch_is_active(settings.WAFFLE_SWITCH_VIEW_CACHE_KEY)
+        local_cache.set(local_cache_key, is_cache_enabled, timeout=settings.REDIS_WAFFLE_TIMEOUT)
+
+    return not is_cache_enabled
+
+
+
 # TODO: Add type hints
 def wrap_class_view(view, caches: Dict[ViewAction, DependentCache]) -> T:
     # Still on View level (class based view) -- should be hit 3 times.
@@ -640,8 +663,7 @@ def wrap_class_view(view, caches: Dict[ViewAction, DependentCache]) -> T:
 
     @wraps(view.dispatch)
     def _new_dispatch(self: APIView, request: NxRequest, *args: Any, **kwargs: Any) -> Response:
-        method = request.method.lower()
-        if method != 'get' or request.headers.get(CACHE_SKIP_HEADER_KEY, "false").lower() == "true":
+        if should_skip_processing_request(request):
             return original_dispatch(self, request, *args, **kwargs)
 
         action = self.action_map.get(request.method.lower())
@@ -649,7 +671,7 @@ def wrap_class_view(view, caches: Dict[ViewAction, DependentCache]) -> T:
 
         cache = caches.get(action)
         if cache is None:
-            logger.error("Cache not found", view_name=self.__class__.__name__, action=action)
+            logger.warning("Cache not found", view_name=self.__class__.__name__, action=action)
             return original_dispatch(self, request, *args, **kwargs)
 
         try:
@@ -678,8 +700,7 @@ def wrap_class_view(view, caches: Dict[ViewAction, DependentCache]) -> T:
 def wrap_func_view(view, caches: Dict[ViewAction, DependentCache]) -> Callable:
     @wraps(view)
     def _new_dispatch(request: NxRequest, *args: Any, **kwargs: Any) -> Response:
-        method = request.method.lower()
-        if method != 'get' or request.headers.get(CACHE_SKIP_HEADER_KEY, "false").lower() == "true":
+        if should_skip_processing_request(request):
             return view(request, *args, **kwargs)
 
         self: APIView = view.cls()

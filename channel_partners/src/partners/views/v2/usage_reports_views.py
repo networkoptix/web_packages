@@ -194,6 +194,8 @@ class UsageReportsBaseViewSet(ParentLookUpMixin, NestedViewSetMixin, GenericView
                                  description='The primary key of the channel partner')],
     extensions={'x-permission': f'{ChannelPartner.permissions.view_service_reports} for Organization'}
 )
+# Not caching export report id
+# report timestamp compare can be done for all.
 @version_range(Versions(min_version="v2"))
 class OrganizationServiceReportsViewSet(VersionedViewMixin, UsageReportsBaseViewSet):
     report_entity_model = Organization
@@ -453,6 +455,7 @@ class OrganizationServiceReportsViewSet(VersionedViewMixin, UsageReportsBaseView
                                  description='The primary key of the channel partner')],
     extensions={'x-permission': f'{ChannelPartner.permissions.view_service_reports} for ChannelPartner'}
 )
+# Not caching
 @version_range(Versions(min_version="v2"))
 class ChannelPartnerServiceReportsViewSet(VersionedViewMixin, UsageReportsBaseViewSet):
     report_entity_model = ChannelPartner

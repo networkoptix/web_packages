@@ -179,446 +179,460 @@ class TestDependentViewCacheDecorator:
         """
         NOTE: DRF Spectacular converts the `pk` to `id` in the schema generation
         """
-        generator = SchemaGenerator(patterns=urlpatterns)
-        schema = generator.get_schema(request=None, public=True)
+        with mock.patch('partners.services.caching.dependent_view_cache.should_skip_processing_request', return_value=False):
+            generator = SchemaGenerator(patterns=urlpatterns)
+            schema = generator.get_schema(request=None, public=True)
 
-        # Check if the paths are present in the schema
-        assert '/partners/test/' in schema['paths']
-        assert '/partners/test/{id}/' in schema['paths']
-        assert '/partners/test/{id}/sass_report/' in schema['paths']
-        assert '/partners/all_users/' in schema['paths']
-        assert '/partners/test/by-email/{email}/' in schema['paths']
+            # Check if the paths are present in the schema
+            assert '/partners/test/' in schema['paths']
+            assert '/partners/test/{id}/' in schema['paths']
+            assert '/partners/test/{id}/sass_report/' in schema['paths']
+            assert '/partners/all_users/' in schema['paths']
+            assert '/partners/test/by-email/{email}/' in schema['paths']
 
-        # Check if the metadata is correct for the list endpoint
-        list_metadata = schema['paths']['/partners/test/']['get']
-        assert list_metadata['summary'] == "List all users"
-        assert list_metadata['description'] == "List all users"
+            # Check if the metadata is correct for the list endpoint
+            list_metadata = schema['paths']['/partners/test/']['get']
+            assert list_metadata['summary'] == "List all users"
+            assert list_metadata['description'] == "List all users"
 
-        # Check if the metadata is correct for the retrieve endpoint
-        retrieve_metadata = schema['paths']['/partners/test/{id}/']['get']
-        assert retrieve_metadata['summary'] == "Retrieve a user"
-        assert retrieve_metadata['description'] == "Retrieve a user"
+            # Check if the metadata is correct for the retrieve endpoint
+            retrieve_metadata = schema['paths']['/partners/test/{id}/']['get']
+            assert retrieve_metadata['summary'] == "Retrieve a user"
+            assert retrieve_metadata['description'] == "Retrieve a user"
 
-        # Check if the metadata is correct for the sass_report endpoint
-        sass_report_metadata = schema['paths']['/partners/test/{id}/sass_report/']['get']
-        assert sass_report_metadata['summary'] == "Sass report"
-        assert sass_report_metadata['description'] == "Sass report"
+            # Check if the metadata is correct for the sass_report endpoint
+            sass_report_metadata = schema['paths']['/partners/test/{id}/sass_report/']['get']
+            assert sass_report_metadata['summary'] == "Sass report"
+            assert sass_report_metadata['description'] == "Sass report"
 
-        # Check if the metadata is correct for the all_users function-based view
-        all_users_metadata = schema['paths']['/partners/all_users/']['get']
-        assert all_users_metadata['summary'] == "Get all users"
-        assert all_users_metadata['description'] == "Get all users"
-        assert all_users_metadata['tags'] == ["Users"]
+            # Check if the metadata is correct for the all_users function-based view
+            all_users_metadata = schema['paths']['/partners/all_users/']['get']
+            assert all_users_metadata['summary'] == "Get all users"
+            assert all_users_metadata['description'] == "Get all users"
+            assert all_users_metadata['tags'] == ["Users"]
 
-        # Verify the response schema for the all_users endpoint
-        all_users_responses = all_users_metadata['responses']
-        assert '200' in all_users_responses
+            # Verify the response schema for the all_users endpoint
+            all_users_responses = all_users_metadata['responses']
+            assert '200' in all_users_responses
 
-        # Check if the metadata is correct for the get_by_email endpoint
-        get_by_email_metadata = schema['paths']['/partners/test/by-email/{email}/']['get']
-        assert get_by_email_metadata['summary'] == "Get user by email"
-        assert get_by_email_metadata['description'] == "Get user by email"
+            # Check if the metadata is correct for the get_by_email endpoint
+            get_by_email_metadata = schema['paths']['/partners/test/by-email/{email}/']['get']
+            assert get_by_email_metadata['summary'] == "Get user by email"
+            assert get_by_email_metadata['description'] == "Get user by email"
 
     def test_cache_key_generation(self, client, mock_auth_with_user):
-        mock_auth_with_user(self.user)
-        id: int = 1
-        headers = {
-            'X-Original-Host': self.cloud_host.hostname,
-            'Accept': 'application/json'
-        }
-        path = f"/partners/test/{id}/"
+        with mock.patch('partners.services.caching.dependent_view_cache.should_skip_processing_request', return_value=False):
+            mock_auth_with_user(self.user)
+            id: int = 1
+            headers = {
+                'X-Original-Host': self.cloud_host.hostname,
+                'Accept': 'application/json'
+            }
+            path = f"/partners/test/{id}/"
 
-        client.get(path, headers=headers)
+            client.get(path, headers=headers)
 
-        expected_cache_key = f'dependent_cache:DemoViewSet:retrieve:method:GET:host:{self.cloud_host.hostname}:auth_CloudUser_id:{self.user.id}:path:{path}'
-        cached_data = CacheService.get_cache_fields(expected_cache_key, ['content'])
-        assert cached_data is not None
-        assert 'content' in cached_data
+            expected_cache_key = f'dependent_cache:DemoViewSet:retrieve:method:GET:host:{self.cloud_host.hostname}:auth_CloudUser_id:{self.user.id}:path:{path}'
+            cached_data = CacheService.get_cache_fields(expected_cache_key, ['content'])
+            assert cached_data is not None
+            assert 'content' in cached_data
 
     def test_cache_service_retrieve_error(self, client, mock_auth_with_user):
-        mock_auth_with_user(self.user)
-        id: int = 1
-        headers = {
-            'X-Original-Host': self.cloud_host.hostname,
-            'Accept': 'application/json'
-        }
-        path = f"/partners/test/{id}/"
-        with mock.patch('rest_framework.views.APIView.check_throttles', return_value=None):
-            with mock.patch(
-                    'partners.services.cache_service.CacheService.get_cache_fields',
-                    side_effect=Exception("Cache service error")):
-                response = client.get(path, headers=headers)
+        with mock.patch('partners.services.caching.dependent_view_cache.should_skip_processing_request', return_value=False):
+            mock_auth_with_user(self.user)
+            id: int = 1
+            headers = {
+                'X-Original-Host': self.cloud_host.hostname,
+                'Accept': 'application/json'
+            }
+            path = f"/partners/test/{id}/"
+            with mock.patch('rest_framework.views.APIView.check_throttles', return_value=None):
+                with mock.patch(
+                        'partners.services.cache_service.CacheService.get_cache_fields',
+                        side_effect=Exception("Cache service error")):
+                    response = client.get(path, headers=headers)
 
-        assert response.status_code == 200
-        assert response.content == b'{"id":1,"version":0,"email":"asdsadsadas@aol.com","full_name":null}'
+            assert response.status_code == 200
+            assert response.content == b'{"id":1,"version":0,"email":"asdsadsadas@aol.com","full_name":null}'
 
-        cache_key = f'dependent_cache:DemoViewSet:retrieve:method:GET:host:{self.cloud_host.hostname}:auth_CloudUser_id:1:path:{path}'
-        cached_response = CacheService.get_cache_fields(cache_key, ['content'])
-        assert cached_response is not None
-        assert json.loads(json.dumps(cached_response['content'])) == json.loads(response.content.decode("utf-8"))
+            cache_key = f'dependent_cache:DemoViewSet:retrieve:method:GET:host:{self.cloud_host.hostname}:auth_CloudUser_id:1:path:{path}'
+            cached_response = CacheService.get_cache_fields(cache_key, ['content'])
+            assert cached_response is not None
+            assert json.loads(json.dumps(cached_response['content'])) == json.loads(response.content.decode("utf-8"))
 
     def test_cache_set_error(self, client, mock_auth_with_user):
-        mock_auth_with_user(self.user)
-        id: int = 1
-        headers = {
-            'X-Original-Host': self.cloud_host.hostname,
-            'Accept': 'application/json'
-        }
-        path = f"/partners/test/{id}/"
-        with mock.patch('rest_framework.views.APIView.check_throttles', return_value=None):
-            with mock.patch('partners.services.cache_service.CacheService.set_cache_fields',
-                            side_effect=Exception("Cache set error")):
-                response = client.get(path, headers=headers)
+        with mock.patch('partners.services.caching.dependent_view_cache.should_skip_processing_request', return_value=False):
+            mock_auth_with_user(self.user)
+            id: int = 1
+            headers = {
+                'X-Original-Host': self.cloud_host.hostname,
+                'Accept': 'application/json'
+            }
+            path = f"/partners/test/{id}/"
+            with mock.patch('rest_framework.views.APIView.check_throttles', return_value=None):
+                with mock.patch('partners.services.cache_service.CacheService.set_cache_fields',
+                                side_effect=Exception("Cache set error")):
+                    response = client.get(path, headers=headers)
 
-        assert response.status_code == 200
-        assert response.content == b'{"id":1,"version":0,"email":"asdsadsadas@aol.com","full_name":null}'
+            assert response.status_code == 200
+            assert response.content == b'{"id":1,"version":0,"email":"asdsadsadas@aol.com","full_name":null}'
 
-        cache_key = f'dependent_cache:DemoViewSet:retrieve:method:GET:host:{self.cloud_host.hostname}:auth_CloudUser_id:1:path:{path}'
-        cached_response = CacheService.get_cache_fields(cache_key, ['content'])
-        assert cached_response is None
+            cache_key = f'dependent_cache:DemoViewSet:retrieve:method:GET:host:{self.cloud_host.hostname}:auth_CloudUser_id:1:path:{path}'
+            cached_response = CacheService.get_cache_fields(cache_key, ['content'])
+            assert cached_response is None
 
     def test_cache_authenticated_get_retrieve(self, client, mock_auth_with_user, caplog):
-        mock_auth_with_user(self.user)
-        id: int = 1
-        headers = {
-            'X-Original-Host': self.cloud_host.hostname,
-            'Accept': 'application/json'
-        }
-        path = f"/partners/test/{id}/"
+        with mock.patch('partners.services.caching.dependent_view_cache.should_skip_processing_request', return_value=False):
+            mock_auth_with_user(self.user)
+            id: int = 1
+            headers = {
+                'X-Original-Host': self.cloud_host.hostname,
+                'Accept': 'application/json'
+            }
+            path = f"/partners/test/{id}/"
 
-        # First request
-        with mock.patch('rest_framework.views.APIView.check_throttles', return_value=None):
-            with CaptureQueriesContext(connection) as first_queries:
-                response = client.get(path, headers=headers)
+            # First request
+            with mock.patch('rest_framework.views.APIView.check_throttles', return_value=None):
+                with CaptureQueriesContext(connection) as first_queries:
+                    response = client.get(path, headers=headers)
 
-        assert len(pop_queries(first_queries)) > 0
+            assert len(pop_queries(first_queries)) > 0
 
-        assert response.status_code == 200
-        assert response.content == b'{"id":1,"version":0,"email":"asdsadsadas@aol.com","full_name":null}'
+            assert response.status_code == 200
+            assert response.content == b'{"id":1,"version":0,"email":"asdsadsadas@aol.com","full_name":null}'
 
-        cache_key = f'dependent_cache:DemoViewSet:retrieve:method:GET:host:{self.cloud_host.hostname}:auth_CloudUser_id:1:path:{path}'
-        cached_response = CacheService.get_cache_fields(cache_key, ['content'])
-        assert cached_response is not None
+            cache_key = f'dependent_cache:DemoViewSet:retrieve:method:GET:host:{self.cloud_host.hostname}:auth_CloudUser_id:1:path:{path}'
+            cached_response = CacheService.get_cache_fields(cache_key, ['content'])
+            assert cached_response is not None
 
-        cached_content = json.loads(json.dumps(cached_response['content']))
-        response_content = json.loads(response.content.decode("utf-8"))
-        assert cached_content == response_content
+            cached_content = json.loads(json.dumps(cached_response['content']))
+            response_content = json.loads(response.content.decode("utf-8"))
+            assert cached_content == response_content
 
-        # Second request (follow-up)
-        with mock.patch('rest_framework.views.APIView.check_throttles', return_value=None):
-            with CaptureQueriesContext(connection) as second_queries:
-                second_response = client.get(path, headers=headers)
+            # Second request (follow-up)
+            with mock.patch('rest_framework.views.APIView.check_throttles', return_value=None):
+                with CaptureQueriesContext(connection) as second_queries:
+                    second_response = client.get(path, headers=headers)
 
-        assert second_response.status_code == 200
-        assert second_response.content == response.content
+            assert second_response.status_code == 200
+            assert second_response.content == response.content
 
-        assert "Validation hash mismatch -- clearing cache" not in caplog.text
-        assert len(pop_queries(second_queries)) == 0
+            assert "Validation hash mismatch -- clearing cache" not in caplog.text
+            assert len(pop_queries(second_queries)) == 0
 
     def test_change_after_first_call(self, client, mock_auth_with_user, caplog):
-        mock_auth_with_user(self.user)
-        id: int = 1
-        headers = {
-            'X-Original-Host': self.cloud_host.hostname,
-            'Accept': 'application/json'
-        }
-        path = f"/partners/test/{id}/"
+        with mock.patch('partners.services.caching.dependent_view_cache.should_skip_processing_request', return_value=False):
+            mock_auth_with_user(self.user)
+            id: int = 1
+            headers = {
+                'X-Original-Host': self.cloud_host.hostname,
+                'Accept': 'application/json'
+            }
+            path = f"/partners/test/{id}/"
 
-        # First request
-        with mock.patch('rest_framework.views.APIView.check_throttles', return_value=None):
-            with CaptureQueriesContext(connection) as first_queries:
-                response = client.get(path, headers=headers)
+            # First request
+            with mock.patch('rest_framework.views.APIView.check_throttles', return_value=None):
+                with CaptureQueriesContext(connection) as first_queries:
+                    response = client.get(path, headers=headers)
 
-        assert len(pop_queries(first_queries)) > 0
+            assert len(pop_queries(first_queries)) > 0
 
-        assert response.status_code == 200
-        assert response.content == b'{"id":1,"version":0,"email":"asdsadsadas@aol.com","full_name":null}'
+            assert response.status_code == 200
+            assert response.content == b'{"id":1,"version":0,"email":"asdsadsadas@aol.com","full_name":null}'
 
-        cache_key = f'dependent_cache:DemoViewSet:retrieve:method:GET:host:{self.cloud_host.hostname}:auth_CloudUser_id:1:path:{path}'
-        cached_response = CacheService.get_cache_fields(cache_key, ['content'])
-        assert cached_response is not None
-        assert json.loads(json.dumps(cached_response['content'])) == json.loads(response.content.decode("utf-8"))
+            cache_key = f'dependent_cache:DemoViewSet:retrieve:method:GET:host:{self.cloud_host.hostname}:auth_CloudUser_id:1:path:{path}'
+            cached_response = CacheService.get_cache_fields(cache_key, ['content'])
+            assert cached_response is not None
+            assert json.loads(json.dumps(cached_response['content'])) == json.loads(response.content.decode("utf-8"))
 
-        # Update the user
-        self.user.email = "updated_user_email@example.com"
-        self.user.save()
+            # Update the user
+            self.user.email = "updated_user_email@example.com"
+            self.user.save()
 
-        # Second request (follow-up)
-        with mock.patch('rest_framework.views.APIView.check_throttles', return_value=None):
-            with CaptureQueriesContext(connection) as second_queries:
-                second_response = client.get(path, headers=headers)
+            # Second request (follow-up)
+            with mock.patch('rest_framework.views.APIView.check_throttles', return_value=None):
+                with CaptureQueriesContext(connection) as second_queries:
+                    second_response = client.get(path, headers=headers)
 
-        assert second_response.status_code == 200
-        assert second_response.content == b'{"id":1,"version":1,"email":"updated_user_email@example.com","full_name":null}'
+            assert second_response.status_code == 200
+            assert second_response.content == b'{"id":1,"version":1,"email":"updated_user_email@example.com","full_name":null}'
 
-        assert "Validation hash mismatch -- clearing cache" in caplog.text
-        assert len(pop_queries(second_queries)) == 1
+            assert "Validation hash mismatch -- clearing cache" in caplog.text
+            assert len(pop_queries(second_queries)) == 1
 
     def test_get_list(self, client, mock_auth_with_user, caplog):
-        mock_auth_with_user(self.user)
-        headers = {
-            'X-Original-Host': self.cloud_host.hostname,
-            'Accept': 'application/json'
-        }
-        path = "/partners/test/"
+        with mock.patch('partners.services.caching.dependent_view_cache.should_skip_processing_request', return_value=False):
+            mock_auth_with_user(self.user)
+            headers = {
+                'X-Original-Host': self.cloud_host.hostname,
+                'Accept': 'application/json'
+            }
+            path = "/partners/test/"
 
-        # First request
-        with mock.patch('rest_framework.views.APIView.check_throttles', return_value=None):
-            with CaptureQueriesContext(connection) as first_queries:
-                response = client.get(path, headers=headers)
+            # First request
+            with mock.patch('rest_framework.views.APIView.check_throttles', return_value=None):
+                with CaptureQueriesContext(connection) as first_queries:
+                    response = client.get(path, headers=headers)
 
-        assert len(pop_queries(first_queries)) > 0
+            assert len(pop_queries(first_queries)) > 0
 
-        assert response.status_code == 200
-        assert response.content == (b'{"count":2,"next":null,"previous":null,"results":[{"id":1,"version":0,"email'
-                                    b'":"asdsadsadas@aol.com","full_name":null},{"id":2,"version":1,"email":"defau'
-                                    b'lt_cp_admin@networkoptix.com","full_name":null}]}')
+            assert response.status_code == 200
+            assert response.content == (b'{"count":2,"next":null,"previous":null,"results":[{"id":1,"version":0,"email'
+                                        b'":"asdsadsadas@aol.com","full_name":null},{"id":2,"version":1,"email":"defau'
+                                        b'lt_cp_admin@networkoptix.com","full_name":null}]}')
 
-        cache_key = f'dependent_cache:DemoViewSet:list:method:GET:host:{self.cloud_host.hostname}:auth_CloudUser_id:1:path:{path}'
-        cached_response = CacheService.get_cache_fields(cache_key, ['content'])
-        assert cached_response is not None
-        assert cached_response is not {}
+            cache_key = f'dependent_cache:DemoViewSet:list:method:GET:host:{self.cloud_host.hostname}:auth_CloudUser_id:1:path:{path}'
+            cached_response = CacheService.get_cache_fields(cache_key, ['content'])
+            assert cached_response is not None
+            assert cached_response is not {}
 
-        assert json.loads(json.dumps(cached_response['content'])) == json.loads(response.content.decode("utf-8"))
+            assert json.loads(json.dumps(cached_response['content'])) == json.loads(response.content.decode("utf-8"))
 
-        # Second request (follow-up)
-        with mock.patch('rest_framework.views.APIView.check_throttles', return_value=None):
-            with CaptureQueriesContext(connection) as second_queries:
-                second_response = client.get(path, headers=headers)
+            # Second request (follow-up)
+            with mock.patch('rest_framework.views.APIView.check_throttles', return_value=None):
+                with CaptureQueriesContext(connection) as second_queries:
+                    second_response = client.get(path, headers=headers)
 
-        assert second_response.status_code == 200
-        assert second_response.content == response.content
+            assert second_response.status_code == 200
+            assert second_response.content == response.content
 
-        assert "Validation hash mismatch -- clearing cache" not in caplog.text
-        assert len(pop_queries(second_queries)) == 0
+            assert "Validation hash mismatch -- clearing cache" not in caplog.text
+            assert len(pop_queries(second_queries)) == 0
 
     def test_get_sass_report(self, client, mock_auth_with_user, caplog):
-        mock_auth_with_user(self.user)
-        id: int = 1
-        headers = {
-            'X-Original-Host': self.cloud_host.hostname,
-            'Accept': 'application/json'
-        }
-        path = f"/partners/test/{id}/sass_report/"
+        with mock.patch('partners.services.caching.dependent_view_cache.should_skip_processing_request', return_value=False):
+            mock_auth_with_user(self.user)
+            id: int = 1
+            headers = {
+                'X-Original-Host': self.cloud_host.hostname,
+                'Accept': 'application/json'
+            }
+            path = f"/partners/test/{id}/sass_report/"
 
-        # First request
-        with mock.patch('rest_framework.views.APIView.check_throttles', return_value=None):
-            with CaptureQueriesContext(connection) as first_queries:
-                response = client.get(path, headers=headers)
+            # First request
+            with mock.patch('rest_framework.views.APIView.check_throttles', return_value=None):
+                with CaptureQueriesContext(connection) as first_queries:
+                    response = client.get(path, headers=headers)
 
-        assert len(pop_queries(first_queries)) > 0
+            assert len(pop_queries(first_queries)) > 0
 
-        assert response.status_code == 200
-        assert response.json() == {"message": "This is the sass_report action"}
+            assert response.status_code == 200
+            assert response.json() == {"message": "This is the sass_report action"}
 
-        cache_key = f'dependent_cache:DemoViewSet:sass_report:method:GET:host:{self.cloud_host.hostname}:auth_CloudUser_id:1:path:{path}'
-        cached_response = CacheService.get_cache_fields(cache_key, ['content'])
-        assert cached_response is not None
-        assert json.loads(json.dumps(cached_response['content'])) == json.loads(response.content.decode("utf-8"))
+            cache_key = f'dependent_cache:DemoViewSet:sass_report:method:GET:host:{self.cloud_host.hostname}:auth_CloudUser_id:1:path:{path}'
+            cached_response = CacheService.get_cache_fields(cache_key, ['content'])
+            assert cached_response is not None
+            assert json.loads(json.dumps(cached_response['content'])) == json.loads(response.content.decode("utf-8"))
 
-        # Second request (follow-up)
-        with mock.patch('rest_framework.views.APIView.check_throttles', return_value=None):
-            with CaptureQueriesContext(connection) as second_queries:
-                second_response = client.get(path, headers=headers)
+            # Second request (follow-up)
+            with mock.patch('rest_framework.views.APIView.check_throttles', return_value=None):
+                with CaptureQueriesContext(connection) as second_queries:
+                    second_response = client.get(path, headers=headers)
 
-        assert second_response.status_code == 200
-        assert second_response.json() == response.json()
+            assert second_response.status_code == 200
+            assert second_response.json() == response.json()
 
-        assert "Validation hash mismatch -- clearing cache" not in caplog.text
-        assert len(pop_queries(second_queries)) == 0
+            assert "Validation hash mismatch -- clearing cache" not in caplog.text
+            assert len(pop_queries(second_queries)) == 0
 
     def test_get_by_email(self, client, mock_auth_with_user, caplog):
-        mock_auth_with_user(self.user)
-        email = self.user.email
-        headers = {
-            'X-Original-Host': self.cloud_host.hostname,
-            'Accept': 'application/json'
-        }
-        path = f"/partners/test/by-email/{email}/"
+        with mock.patch('partners.services.caching.dependent_view_cache.should_skip_processing_request', return_value=False):
+            mock_auth_with_user(self.user)
+            email = self.user.email
+            headers = {
+                'X-Original-Host': self.cloud_host.hostname,
+                'Accept': 'application/json'
+            }
+            path = f"/partners/test/by-email/{email}/"
 
-        # First request
-        with mock.patch('rest_framework.views.APIView.check_throttles', return_value=None):
-            with CaptureQueriesContext(connection) as first_queries:
-                response = client.get(path, headers=headers)
+            # First request
+            with mock.patch('rest_framework.views.APIView.check_throttles', return_value=None):
+                with CaptureQueriesContext(connection) as first_queries:
+                    response = client.get(path, headers=headers)
 
-        assert len(pop_queries(first_queries)) > 0
+            assert len(pop_queries(first_queries)) > 0
 
-        assert response.status_code == 200
-        assert response.json() == {"message": "This is the get_by_email action"}
+            assert response.status_code == 200
+            assert response.json() == {"message": "This is the get_by_email action"}
 
-        cache_key = f'dependent_cache:DemoViewSet:get_by_email:method:GET:host:{self.cloud_host.hostname}:auth_CloudUser_id:{self.user.id}:path:{path}'
-        cached_response = CacheService.get_cache_fields(cache_key, ['content'])
-        assert cached_response is not None
-        assert json.loads(json.dumps(cached_response['content'])) == json.loads(response.content.decode("utf-8"))
+            cache_key = f'dependent_cache:DemoViewSet:get_by_email:method:GET:host:{self.cloud_host.hostname}:auth_CloudUser_id:{self.user.id}:path:{path}'
+            cached_response = CacheService.get_cache_fields(cache_key, ['content'])
+            assert cached_response is not None
+            assert json.loads(json.dumps(cached_response['content'])) == json.loads(response.content.decode("utf-8"))
 
-        # Second request (follow-up)
-        with mock.patch('rest_framework.views.APIView.check_throttles', return_value=None):
-            with CaptureQueriesContext(connection) as second_queries:
-                second_response = client.get(path, headers=headers)
+            # Second request (follow-up)
+            with mock.patch('rest_framework.views.APIView.check_throttles', return_value=None):
+                with CaptureQueriesContext(connection) as second_queries:
+                    second_response = client.get(path, headers=headers)
 
-        assert second_response.status_code == 200
-        assert second_response.json() == response.json()
+            assert second_response.status_code == 200
+            assert second_response.json() == response.json()
 
-        assert "Validation hash mismatch -- clearing cache" not in caplog.text
-        assert len(pop_queries(second_queries)) == 0
+            assert "Validation hash mismatch -- clearing cache" not in caplog.text
+            assert len(pop_queries(second_queries)) == 0
 
     def test_get_sass_report_2nd_request_has_etag(self, client, mock_auth_with_user, caplog):
-        mock_auth_with_user(self.user)
-        id: int = 1
-        headers = {
-            'X-Original-Host': self.cloud_host.hostname,
-            'Accept': 'application/json'
-        }
-        path = f"/partners/test/{id}/sass_report/"
+        with mock.patch('partners.services.caching.dependent_view_cache.should_skip_processing_request', return_value=False):
+            mock_auth_with_user(self.user)
+            id: int = 1
+            headers = {
+                'X-Original-Host': self.cloud_host.hostname,
+                'Accept': 'application/json'
+            }
+            path = f"/partners/test/{id}/sass_report/"
 
-        # First request
-        with mock.patch('rest_framework.views.APIView.check_throttles', return_value=None):
-            with CaptureQueriesContext(connection) as first_queries:
-                response = client.get(path, headers=headers)
+            # First request
+            with mock.patch('rest_framework.views.APIView.check_throttles', return_value=None):
+                with CaptureQueriesContext(connection) as first_queries:
+                    response = client.get(path, headers=headers)
 
-        assert len(pop_queries(first_queries)) > 0
+            assert len(pop_queries(first_queries)) > 0
 
-        assert response.status_code == 200
-        assert response.json() == {"message": "This is the sass_report action"}
+            assert response.status_code == 200
+            assert response.json() == {"message": "This is the sass_report action"}
 
-        cache_key = f'dependent_cache:DemoViewSet:sass_report:method:GET:host:{self.cloud_host.hostname}:auth_CloudUser_id:1:path:{path}'
-        cached_response = CacheService.get_cache_fields(cache_key, ['content'])
-        assert cached_response is not None
-        assert json.loads(json.dumps(cached_response['content'])) == json.loads(response.content.decode("utf-8"))
+            cache_key = f'dependent_cache:DemoViewSet:sass_report:method:GET:host:{self.cloud_host.hostname}:auth_CloudUser_id:1:path:{path}'
+            cached_response = CacheService.get_cache_fields(cache_key, ['content'])
+            assert cached_response is not None
+            assert json.loads(json.dumps(cached_response['content'])) == json.loads(response.content.decode("utf-8"))
 
-        # Second request (follow-up)
-        with mock.patch('rest_framework.views.APIView.check_throttles', return_value=None):
-            with CaptureQueriesContext(connection) as second_queries:
-                headers["ETag"] = response['ETag']
-                second_response = client.get(path, headers=headers)
+            # Second request (follow-up)
+            with mock.patch('rest_framework.views.APIView.check_throttles', return_value=None):
+                with CaptureQueriesContext(connection) as second_queries:
+                    headers["ETag"] = response['ETag']
+                    second_response = client.get(path, headers=headers)
 
-        assert second_response.status_code == 304
-        assert second_response.content == b''
+            assert second_response.status_code == 304
+            assert second_response.content == b''
 
-        assert "Validation hash mismatch -- clearing cache" not in caplog.text
-        assert len(pop_queries(second_queries)) == 0
+            assert "Validation hash mismatch -- clearing cache" not in caplog.text
+            assert len(pop_queries(second_queries)) == 0
 
     def test_get_all_users_function_based_view(self, client, mock_auth_with_user, caplog):
-        path = "/partners/all_users/"
-        mock_auth_with_user(self.user)
-        headers = {
-            'X-Original-Host': self.cloud_host.hostname,
-            'Accept': 'application/json'
-        }
+        with mock.patch('partners.services.caching.dependent_view_cache.should_skip_processing_request', return_value=False):
+            path = "/partners/all_users/"
+            mock_auth_with_user(self.user)
+            headers = {
+                'X-Original-Host': self.cloud_host.hostname,
+                'Accept': 'application/json'
+            }
 
-        # First request
-        with CaptureQueriesContext(connection) as first_queries:
-            response = client.get(path, headers=headers)
-
-        assert len(pop_queries(first_queries)) > 0
-
-        assert response.status_code == 200
-        assert response.content == (b'[{"id":1,"version":0,"email":"asdsadsadas@aol.com","full_name":null},{"id":2'
-                                    b',"version":1,"email":"default_cp_admin@networkoptix.com","full_name":null}]')
-
-        # Second request (follow-up)
-        with mock.patch('rest_framework.views.APIView.check_throttles', return_value=None):
-            with CaptureQueriesContext(connection) as second_queries:
-                second_response = client.get(path, headers=headers)
-
-        assert second_response.status_code == 200
-        assert second_response.content == response.content
-
-        assert "Validation hash mismatch -- clearing cache" not in caplog.text
-        assert len(pop_queries(second_queries)) == 0
-
-    def test_get_list_with_query_param(self, client, mock_auth_with_user, caplog):
-        path = "/partners/test/?email=asdsadsadas@aol.com"
-        mock_auth_with_user(self.user)
-        headers = {
-            'X-Original-Host': self.cloud_host.hostname,
-            'Accept': 'application/json'
-        }
-
-        # First request
-        with mock.patch('rest_framework.views.APIView.check_throttles', return_value=None):
+            # First request
             with CaptureQueriesContext(connection) as first_queries:
                 response = client.get(path, headers=headers)
 
-        assert len(pop_queries(first_queries)) > 0
+            assert len(pop_queries(first_queries)) > 0
 
-        assert response.status_code == 200
-        assert response.content == (b'{"count":2,"next":null,"previous":null,"results":[{"id":1,"version":0,"email'
-                                    b'":"asdsadsadas@aol.com","full_name":null},{"id":2,"version":1,"email":"defau'
-                                    b'lt_cp_admin@networkoptix.com","full_name":null}]}')
+            assert response.status_code == 200
+            assert response.content == (b'[{"id":1,"version":0,"email":"asdsadsadas@aol.com","full_name":null},{"id":2'
+                                        b',"version":1,"email":"default_cp_admin@networkoptix.com","full_name":null}]')
 
-        cache_key = f'dependent_cache:DemoViewSet:list:method:GET:host:{self.cloud_host.hostname}:auth_CloudUser_id:1:path:{path}'
-        cached_response = CacheService.get_cache_fields(cache_key, ['content'])
-        assert cached_response is not None
-        assert json.loads(json.dumps(cached_response['content'])) == json.loads(response.content.decode("utf-8"))
+            # Second request (follow-up)
+            with mock.patch('rest_framework.views.APIView.check_throttles', return_value=None):
+                with CaptureQueriesContext(connection) as second_queries:
+                    second_response = client.get(path, headers=headers)
 
-        # Second request (follow-up)
-        with mock.patch('rest_framework.views.APIView.check_throttles', return_value=None):
-            with CaptureQueriesContext(connection) as second_queries:
-                second_response = client.get(path, headers=headers)
+            assert second_response.status_code == 200
+            assert second_response.content == response.content
 
-        assert second_response.status_code == 200
-        assert second_response.content == response.content
+            assert "Validation hash mismatch -- clearing cache" not in caplog.text
+            assert len(pop_queries(second_queries)) == 0
 
-        assert "Validation hash mismatch -- clearing cache" not in caplog.text
-        assert len(pop_queries(second_queries)) == 0
+    def test_get_list_with_query_param(self, client, mock_auth_with_user, caplog):
+        with mock.patch('partners.services.caching.dependent_view_cache.should_skip_processing_request', return_value=False):
+            path = "/partners/test/?email=asdsadsadas@aol.com"
+            mock_auth_with_user(self.user)
+            headers = {
+                'X-Original-Host': self.cloud_host.hostname,
+                'Accept': 'application/json'
+            }
+
+            # First request
+            with mock.patch('rest_framework.views.APIView.check_throttles', return_value=None):
+                with CaptureQueriesContext(connection) as first_queries:
+                    response = client.get(path, headers=headers)
+
+            assert len(pop_queries(first_queries)) > 0
+
+            assert response.status_code == 200
+            assert response.content == (b'{"count":2,"next":null,"previous":null,"results":[{"id":1,"version":0,"email'
+                                        b'":"asdsadsadas@aol.com","full_name":null},{"id":2,"version":1,"email":"defau'
+                                        b'lt_cp_admin@networkoptix.com","full_name":null}]}')
+
+            cache_key = f'dependent_cache:DemoViewSet:list:method:GET:host:{self.cloud_host.hostname}:auth_CloudUser_id:1:path:{path}'
+            cached_response = CacheService.get_cache_fields(cache_key, ['content'])
+            assert cached_response is not None
+            assert json.loads(json.dumps(cached_response['content'])) == json.loads(response.content.decode("utf-8"))
+
+            # Second request (follow-up)
+            with mock.patch('rest_framework.views.APIView.check_throttles', return_value=None):
+                with CaptureQueriesContext(connection) as second_queries:
+                    second_response = client.get(path, headers=headers)
+
+            assert second_response.status_code == 200
+            assert second_response.content == response.content
+
+            assert "Validation hash mismatch -- clearing cache" not in caplog.text
+            assert len(pop_queries(second_queries)) == 0
 
     def test_caching_different_http_methods(self, client, mock_auth_with_user, caplog):
-        mock_auth_with_user(self.user)
-        headers = {
-            'X-Original-Host': self.cloud_host.hostname,
-            'Accept': 'application/json'
-        }
+        with mock.patch('partners.services.caching.dependent_view_cache.should_skip_processing_request', return_value=False):
+            mock_auth_with_user(self.user)
+            headers = {
+                'X-Original-Host': self.cloud_host.hostname,
+                'Accept': 'application/json'
+            }
 
-        # Test GET (should be cached)
-        with mock.patch('rest_framework.views.APIView.check_throttles', return_value=None):
-            get_response = client.get("/partners/test/1/", headers=headers)
-        assert get_response.status_code == 200
+            # Test GET (should be cached)
+            with mock.patch('rest_framework.views.APIView.check_throttles', return_value=None):
+                get_response = client.get("/partners/test/1/", headers=headers)
+            assert get_response.status_code == 200
 
-        # Test POST (should not be cached)
-        with mock.patch('rest_framework.views.APIView.check_throttles', return_value=None):
-            post_response = client.post("/partners/test/1/", headers=headers, data={})
+            # Test POST (should not be cached)
+            with mock.patch('rest_framework.views.APIView.check_throttles', return_value=None):
+                post_response = client.post("/partners/test/1/", headers=headers, data={})
 
-        assert post_response.status_code in [405, 403]  # Method not allowed or forbidden
+            assert post_response.status_code in [405, 403]  # Method not allowed or forbidden
 
-        # Verify that GET is still cached
-        with mock.patch('rest_framework.views.APIView.check_throttles', return_value=None):
-            with CaptureQueriesContext(connection) as queries:
-                second_get_response = client.get("/partners/test/1/", headers=headers)
+            # Verify that GET is still cached
+            with mock.patch('rest_framework.views.APIView.check_throttles', return_value=None):
+                with CaptureQueriesContext(connection) as queries:
+                    second_get_response = client.get("/partners/test/1/", headers=headers)
 
-        assert second_get_response.status_code == 200
-        assert second_get_response.content == get_response.content
+            assert second_get_response.status_code == 200
+            assert second_get_response.content == get_response.content
 
-        assert "Validation hash mismatch -- clearing cache" not in caplog.text
-        assert len(pop_queries(queries)) == 0
+            assert "Validation hash mismatch -- clearing cache" not in caplog.text
+            assert len(pop_queries(queries)) == 0
 
     def test_flush_cache_header(self, client, mock_auth_with_user, caplog):
-        mock_auth_with_user(self.user)
-        id: int = 1
-        headers = {
-            'X-Original-Host': self.cloud_host.hostname,
-            'Accept': 'application/json'
-        }
-        path = f"/partners/test/{id}/"
+        with mock.patch('partners.services.caching.dependent_view_cache.should_skip_processing_request', return_value=False):
+            mock_auth_with_user(self.user)
+            id: int = 1
+            headers = {
+                'X-Original-Host': self.cloud_host.hostname,
+                'Accept': 'application/json'
+            }
+            path = f"/partners/test/{id}/"
 
-        # First request to cache the response
-        with mock.patch('rest_framework.views.APIView.check_throttles', return_value=None):
-            response = client.get(path, headers=headers)
+            # First request to cache the response
+            with mock.patch('rest_framework.views.APIView.check_throttles', return_value=None):
+                response = client.get(path, headers=headers)
 
-        assert response.status_code == 200
-        assert response.content == b'{"id":1,"version":0,"email":"asdsadsadas@aol.com","full_name":null}'
+            assert response.status_code == 200
+            assert response.content == b'{"id":1,"version":0,"email":"asdsadsadas@aol.com","full_name":null}'
 
-        cache_key = f'dependent_cache:DemoViewSet:retrieve:method:GET:host:{self.cloud_host.hostname}:auth_CloudUser_id:1:path:{path}'
-        cached_response = CacheService.get_cache_fields(cache_key, ['content'])
-        assert cached_response is not None
+            cache_key = f'dependent_cache:DemoViewSet:retrieve:method:GET:host:{self.cloud_host.hostname}:auth_CloudUser_id:1:path:{path}'
+            cached_response = CacheService.get_cache_fields(cache_key, ['content'])
+            assert cached_response is not None
 
-        # Second request with X-Flush-CPS-Cache header to flush the cache
-        headers['X-Flush-CPS-Cache'] = 'true'
-        with mock.patch('rest_framework.views.APIView.check_throttles', return_value=None):
-            with CaptureQueriesContext(connection) as queries:
-                flush_response = client.get(path, headers=headers)
+            # Second request with X-Flush-CPS-Cache header to flush the cache
+            headers['X-Flush-CPS-Cache'] = 'true'
+            with mock.patch('rest_framework.views.APIView.check_throttles', return_value=None):
+                with CaptureQueriesContext(connection) as queries:
+                    flush_response = client.get(path, headers=headers)
 
-        assert flush_response.status_code == 200
-        assert flush_response.content == response.content
-        assert "Flushing cache for the current request." in caplog.text
-        assert len(pop_queries(queries)) > 0  # Ensure a new response was generated
+            assert flush_response.status_code == 200
+            assert flush_response.content == response.content
+            assert "Flushing cache for the current request." in caplog.text
+            assert len(pop_queries(queries)) > 0  # Ensure a new response was generated

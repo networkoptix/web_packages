@@ -1,0 +1,555 @@
+[
+    {
+        "name": "test_organizations_list_with_cp_user",
+        "path": "/v2/organizations/",
+        "auth": "cp_user",
+        "assert_cache_hit": {
+            "initial": [
+                false,
+                true
+            ],
+            "cp": [
+                false,
+                true
+            ],
+            "sub_cp": [
+                true,
+                true
+            ],
+            "organization": [
+                true,
+                true
+            ],
+            "other_org": [
+                true,
+                true
+            ],
+            "group": [
+                true,
+                true
+            ],
+            "other_group": [
+                true,
+                true
+            ],
+            "cp_user": [
+                false,
+                true
+            ],
+            "sub_cp_user": [
+                true,
+                true
+            ],
+            "org_admin": [
+                true,
+                true
+            ],
+            "other_org_admin": [
+                true,
+                true
+            ],
+            "group_admin": [
+                true,
+                true
+            ],
+            "other_group_admin": [
+                true,
+                true
+            ],
+            "org_system": [
+                true,
+                true
+            ],
+            "group_system": [
+                true,
+                true
+            ],
+            "enabled_service": [
+                true,
+                true
+            ],
+            "disabled_service": [
+                true,
+                true
+            ],
+            "external_id": [
+                true,
+                true
+            ]
+        }
+    },
+    {
+        "name": "test_organizations_detail_with_cp_user",
+        "path": "/v2/organizations/{organization.id}/",
+        "auth": "cp_user",
+        "assert_cache_hit": {
+            "initial": [
+                false,
+                true
+            ],
+            "cp": [
+                false,
+                true
+            ],
+            "sub_cp": [
+                true,
+                true
+            ],
+            "organization": [
+                false,
+                true
+            ],
+            "other_org": [
+                true,
+                true
+            ],
+            "group": [
+                false,
+                true
+            ],
+            "other_group": [
+                false,
+                true
+            ],
+            "cp_user": [
+                false,
+                true
+            ],
+            "sub_cp_user": [
+                true,
+                true
+            ],
+            "org_admin": [
+                false,
+                true
+            ],
+            "other_org_admin": [
+                true,
+                true
+            ],
+            "group_admin": [
+                false,
+                true
+            ],
+            "other_group_admin": [
+                false,
+                true
+            ],
+            "org_system": [
+                false,
+                true
+            ],
+            "group_system": [
+                false,
+                true
+            ],
+            "enabled_service": [
+                true,
+                true
+            ],
+            "disabled_service": [
+                true,
+                true
+            ],
+            "external_id": [
+                true,
+                true
+            ]
+        }
+    },
+    {
+        "name": "test_organizations_service_changes_history_with_cp_user",
+        "path": "/v2/organizations/{organization.id}/service_changes_history/",
+        "auth": "cp_user",
+        "assert_cache_hit": {
+            "initial": [
+                false,
+                true
+            ],
+            "cp": [
+                false,
+                true
+            ],
+            "sub_cp": [
+                true,
+                true
+            ],
+            "organization": [
+                false,
+                true
+            ],
+            "other_org": [
+                true,
+                true
+            ],
+            "group": [
+                true,
+                true
+            ],
+            "other_group": [
+                true,
+                true
+            ],
+            "cp_user": [
+                false,
+                true
+            ],
+            "sub_cp_user": [
+                true,
+                true
+            ],
+            "org_admin": [
+                false,
+                true
+            ],
+            "other_org_admin": [
+                true,
+                true
+            ],
+            "group_admin": [
+                false,
+                true
+            ],
+            "other_group_admin": [
+                false,
+                true
+            ],
+            "org_system": [
+                true,
+                true
+            ],
+            "group_system": [
+                true,
+                true
+            ],
+            "enabled_service": [
+                true,
+                true
+            ],
+            "disabled_service": [
+                true,
+                true
+            ],
+            "external_id": [
+                true,
+                true
+            ]
+        }
+    },
+    {
+        "name": "test_organizations_service_changes_summary_with_cp_user",
+        "path": "/v2/organizations/{organization.id}/service_changes_summary/",
+        "auth": "cp_user",
+        "assert_cache_hit": {
+            "initial": [
+                false,
+                true
+            ],
+            "cp": [
+                false,
+                true
+            ],
+            "sub_cp": [
+                true,
+                true
+            ],
+            "organization": [
+                false,
+                true
+            ],
+            "other_org": [
+                true,
+                true
+            ],
+            "group": [
+                true,
+                true
+            ],
+            "other_group": [
+                true,
+                true
+            ],
+            "cp_user": [
+                false,
+                true
+            ],
+            "sub_cp_user": [
+                true,
+                true
+            ],
+            "org_admin": [
+                false,
+                true
+            ],
+            "other_org_admin": [
+                true,
+                true
+            ],
+            "group_admin": [
+                false,
+                true
+            ],
+            "other_group_admin": [
+                false,
+                true
+            ],
+            "org_system": [
+                true,
+                true
+            ],
+            "group_system": [
+                true,
+                true
+            ],
+            "enabled_service": [
+                true,
+                true
+            ],
+            "disabled_service": [
+                true,
+                true
+            ],
+            "external_id": [
+                true,
+                true
+            ]
+        }
+    },
+    {
+        "name": "test_organizations_groups_structure_with_group_admin_user",
+        "path": "/v2/organizations/{organization.id}/groups_structure/",
+        "auth": "group_admin",
+        "assert_cache_hit": {
+            "initial": [
+                false,
+                true
+            ],
+            "cp": [
+                true,
+                true
+            ],
+            "sub_cp": [
+                true,
+                true
+            ],
+            "organization": [
+                false,
+                true
+            ],
+            "other_org": [
+                true,
+                true
+            ],
+            "group": [
+                false,
+                true
+            ],
+            "other_group": [
+                false,
+                true
+            ],
+            "cp_user": [
+                true,
+                true
+            ],
+            "sub_cp_user": [
+                true,
+                true
+            ],
+            "org_admin": [
+                false,
+                true
+            ],
+            "other_org_admin": [
+                true,
+                true
+            ],
+            "group_admin": [
+                false,
+                true
+            ],
+            "other_group_admin": [
+                false,
+                true
+            ],
+            "org_system": [
+                false,
+                true
+            ],
+            "group_system": [
+                false,
+                true
+            ],
+            "enabled_service": [
+                true,
+                true
+            ],
+            "disabled_service": [
+                true,
+                true
+            ],
+            "external_id": [
+                true,
+                true
+            ]
+        }
+    },
+    {
+        "name": "test_organizations_aggregate_with_cp_user",
+        "path": "/v2/organizations/{organization.id}/aggregate/",
+        "auth": "cp_user",
+        "assert_cache_hit": {
+            "initial": [
+                false,
+                true
+            ],
+            "cp": [
+                false,
+                true
+            ],
+            "sub_cp": [
+                true,
+                true
+            ],
+            "organization": [
+                false,
+                true
+            ],
+            "other_org": [
+                true,
+                true
+            ],
+            "group": [
+                false,
+                true
+            ],
+            "other_group": [
+                false,
+                true
+            ],
+            "cp_user": [
+                false,
+                true
+            ],
+            "sub_cp_user": [
+                true,
+                true
+            ],
+            "org_admin": [
+                false,
+                true
+            ],
+            "other_org_admin": [
+                true,
+                true
+            ],
+            "group_admin": [
+                false,
+                true
+            ],
+            "other_group_admin": [
+                false,
+                true
+            ],
+            "org_system": [
+                false,
+                true
+            ],
+            "group_system": [
+                false,
+                true
+            ],
+            "enabled_service": [
+                true,
+                true
+            ],
+            "disabled_service": [
+                true,
+                true
+            ],
+            "external_id": [
+                true,
+                true
+            ]
+        }
+    },
+    {
+        "name": "test_external_ids_with_cp_user",
+        "path": "/v2/organizations/{cp.id}/external_ids/",
+        "auth": "cp_user",
+        "assert_cache_hit": {
+            "initial": [
+                false,
+                true
+            ],
+            "cp": [
+                false,
+                true
+            ],
+            "sub_cp": [
+                false,
+                true
+            ],
+            "organization": [
+                false,
+                true
+            ],
+            "other_org": [
+                false,
+                true
+            ],
+            "group": [
+                false,
+                true
+            ],
+            "other_group": [
+                false,
+                true
+            ],
+            "cp_user": [
+                false,
+                true
+            ],
+            "sub_cp_user": [
+                true,
+                true
+            ],
+            "org_admin": [
+                true,
+                true
+            ],
+            "other_org_admin": [
+                true,
+                true
+            ],
+            "group_admin": [
+                true,
+                true
+            ],
+            "other_group_admin": [
+                true,
+                true
+            ],
+            "org_system": [
+                false,
+                true
+            ],
+            "group_system": [
+                false,
+                true
+            ],
+            "enabled_service": [
+                false,
+                true
+            ],
+            "disabled_service": [
+                false,
+                true
+            ],
+            "external_id": [
+                true,
+                true
+            ]
+        }
+    }
+]

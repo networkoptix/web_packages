@@ -1826,28 +1826,34 @@ class TestChannelPartnerViewSet:
 class TestOrganizationViewSet:
 
     def test_aggregate(self, organization_factory, system_factory, arf, default_cp_admin, mock_auth_with_user,
-                       service_record_factory, cp_service_factory):
-        org = organization_factory()
+                       service_record_factory, cp_service_factory, django_capture_on_commit_callbacks):
+
+        with django_capture_on_commit_callbacks(execute=True):
+            org = organization_factory()
         view = OrganizationViewSet.as_view(actions={'get': 'aggregate'}, detail=True)
-        mock_auth_with_user(default_cp_admin)
+        with django_capture_on_commit_callbacks(execute=True):
+            mock_auth_with_user(default_cp_admin)
         response = view(arf.get('/'), pk=org.id)
         assert response.status_code == 200
         assert response.data['systems'] == 0
         assert response.data['serviceUsageQuantity'] == 0
-        sys_cnt = random.randint(30, 60)
-        systems = [system_factory(organization=org) for _ in range(sys_cnt)]
+
+        with django_capture_on_commit_callbacks(execute=True):
+            sys_cnt = random.randint(30, 60)
+            systems = [system_factory(organization=org) for _ in range(sys_cnt)]
 
         response = view(arf.get('/'), pk=org.id)
 
         assert response.data['systems'] == sys_cnt
         assert response.data['serviceUsageQuantity'] == 0
 
-        usage = 0
-        for sys in systems:
-            qty = random.randint(0, 10)
-            service_record_factory(service=cp_service_factory(channel_partner=sys.organization.channel_partner),
-                                   cloud_system=sys, quantity=qty)
-            usage += qty
+        with django_capture_on_commit_callbacks(execute=True):
+            usage = 0
+            for sys in systems:
+                qty = random.randint(0, 10)
+                service_record_factory(service=cp_service_factory(channel_partner=sys.organization.channel_partner),
+                                       cloud_system=sys, quantity=qty)
+                usage += qty
 
         response = view(arf.get('/'), pk=org.id)
 

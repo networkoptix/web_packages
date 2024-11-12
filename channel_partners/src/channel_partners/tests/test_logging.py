@@ -2,6 +2,7 @@ import io
 import sys
 from datetime import datetime
 from typing import Literal
+from unittest import mock
 from unittest.mock import (
     MagicMock,
     patch,
@@ -27,7 +28,6 @@ from rest_framework.mixins import (
 )
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import GenericViewSet
-from waffle.models import Switch
 
 from channel_partners.configuration.logging_config import configure_logging
 from channel_partners.logging.logging_signals import (
@@ -186,17 +186,15 @@ def test_logging_level_updated_when_switch_active(root_logger):
     client = Client()
     # setup_test_logging("local", settings.MIN_LOGGING_LEVEL)
 
-    switch = Switch.objects.get(name="logging_debug_active")
-    switch.active = True
-    switch.save()
+    with mock.patch('partners.services.caching.dependent_view_cache.should_skip_processing_request', return_value=False):
 
-    response = client.get('/DOES-NOT-EXIST')
+        response = client.get('/DOES-NOT-EXIST')
 
-    actual = next(
-        filter for filter in logging.getLogger("").filters if isinstance(filter, DebugLevelFilter)
-    ).level
+        actual = next(
+            filter for filter in logging.getLogger("").filters if isinstance(filter, DebugLevelFilter)
+        ).level
 
-    expected = logging.DEBUG
+        expected = logging.DEBUG
 
 
 def test_function_that_fails_logs_exception(caplog):
@@ -275,58 +273,60 @@ class TestStructuredLogging:
 
 @pytest.mark.django_db
 class TestRequestFinishedLogs:
+
     @override_settings(ENV_NAME='local')
     @pytest.mark.django_db
     def test_request_finished_logs_404(self, caplog):
-        min_level = settings.MIN_LOGGING_LEVEL
-        caplog.set_level(min_level)
-        capturedOutput = io.StringIO()
-        sys.stdout = capturedOutput
+        with mock.patch('partners.services.caching.dependent_view_cache.should_skip_processing_request', return_value=False):
+            min_level = settings.MIN_LOGGING_LEVEL
+            caplog.set_level(min_level)
+            capturedOutput = io.StringIO()
+            sys.stdout = capturedOutput
 
-        setup_test_logging("local", min_level)
+            setup_test_logging("local", min_level)
 
-        client = Client()
-        response = client.get('/')
+            client = Client()
+            response = client.get('/')
 
-        # Check the status code of the response
-        assert response.status_code == 404
-        logs = caplog.records
+            # Check the status code of the response
+            assert response.status_code == 404
+            logs = caplog.records
 
-        # Ensure at least one log record exists
-        assert len(logs) > 0
+            # Ensure at least one log record exists
+            assert len(logs) > 0
 
-        # Find the 'request_finished' log entry
-        request_finished_log = next((log for log in logs if "request_finished" in log.message), None)
-        assert request_finished_log is not None
+            # Find the 'request_finished' log entry
+            request_finished_log = next((log for log in logs if "request_finished" in log.message), None)
+            assert request_finished_log is not None
 
-        # Assuming log.msg contains the dictionary directly
-        log_data = request_finished_log.msg
+            # Assuming log.msg contains the dictionary directly
+            log_data = request_finished_log.msg
 
-        # Assert each key-value pair
-        assert log_data.get('code') == 404
-        assert log_data.get('request') == 'GET /'
-        assert log_data.get('event') == 'request_finished'
-        assert log_data.get('cloud_host') is not None
-        assert log_data.get('path') == '/'
-        assert log_data.get('user_id') is None
-        assert log_data.get('method') == 'GET'
-        assert log_data.get('ip') is not None
-        assert log_data.get('db_queries') == 0
-        assert log_data.get('request_duration_ms') > 0
-        assert log_data.get('cps_cache') is None
-        assert log_data.get('x_amzn_trace_id') is None
-        assert log_data.get('x_forwarded_for') is None
-        assert log_data.get('request_id') is not None
-        assert log_data.get('normalized_path') == '/'
-        assert log_data.get('logger') == 'django_structlog.middlewares.request'
-        assert log_data.get('level') in ['debug', 'info']
+            # Assert each key-value pair
+            assert log_data.get('code') == 404
+            assert log_data.get('request') == 'GET /'
+            assert log_data.get('event') == 'request_finished'
+            assert log_data.get('cloud_host') is not None
+            assert log_data.get('path') == '/'
+            assert log_data.get('user_id') is None
+            assert log_data.get('method') == 'GET'
+            assert log_data.get('ip') is not None
+            assert log_data.get('db_queries') == 0
+            assert log_data.get('request_duration_ms') > 0
+            assert log_data.get('cps_cache') is None
+            assert log_data.get('x_amzn_trace_id') is None
+            assert log_data.get('x_forwarded_for') is None
+            assert log_data.get('request_id') is not None
+            assert log_data.get('normalized_path') == '/'
+            assert log_data.get('logger') == 'django_structlog.middlewares.request'
+            assert log_data.get('level') in ['debug', 'info']
 
-        timestamp = log_data.get('timestamp')
-        try:
-            parsed_timestamp = datetime.fromisoformat(timestamp.rstrip("Z"))
-            assert True  # Parsing succeeded
-        except ValueError:
-            assert False, f"Timestamp {timestamp} is not parsable."
+            timestamp = log_data.get('timestamp')
+            try:
+                parsed_timestamp = datetime.fromisoformat(timestamp.rstrip("Z"))
+                assert True  # Parsing succeeded
+            except ValueError:
+                assert False, f"Timestamp {timestamp} is not parsable."
 
     @pytest.mark.parametrize("url, headers, expected_status, expected_key, expected_value", [
         ("/partners/#/", None, 200, 'db_queries', 3),
@@ -346,27 +346,28 @@ class TestRequestFinishedLogs:
             expected_value,
             django_capture_on_commit_callbacks
     ) -> None:
-        # Test Setup
-        min_level = settings.MIN_LOGGING_LEVEL
-        caplog.set_level(min_level)
-        capturedOutput = io.StringIO()
-        sys.stdout = capturedOutput
+        with mock.patch('partners.services.caching.dependent_view_cache.should_skip_processing_request', return_value=False):
+            # Test Setup
+            min_level = settings.MIN_LOGGING_LEVEL
+            caplog.set_level(min_level)
+            capturedOutput = io.StringIO()
+            sys.stdout = capturedOutput
 
-        setup_test_logging("local", min_level)
+            setup_test_logging("local", min_level)
 
-        # Capture database queries
-        with CaptureQueriesContext(connection) as queries:
-            client = Client()
-            response = client.get(url, headers=headers)
+            # Capture database queries
+            with CaptureQueriesContext(connection) as queries:
+                client = Client()
+                response = client.get(url, headers=headers)
 
-        logs = caplog.records
-        assert response.status_code == expected_status
+            logs = caplog.records
+            assert response.status_code == expected_status
 
-        request_finished_log = next((log for log in logs if "request_finished" in log.message), None)
-        assert request_finished_log is not None
+            request_finished_log = next((log for log in logs if "request_finished" in log.message), None)
+            assert request_finished_log is not None
 
-        log_data = request_finished_log.msg
-        assert log_data.get(expected_key) == expected_value
+            log_data = request_finished_log.msg
+            assert log_data.get(expected_key) == expected_value
 
     @override_settings(ENV_NAME='local')
     def test_request_to_view_with_db_queries(
@@ -376,34 +377,34 @@ class TestRequestFinishedLogs:
             channel_partner_factory,
             cp_user_factory
     ) -> None:
+        with mock.patch('partners.services.caching.dependent_view_cache.should_skip_processing_request', return_value=False):
+            # Test setup
+            min_level = settings.MIN_LOGGING_LEVEL
+            caplog.set_level(min_level)
+            capturedOutput = io.StringIO()
+            sys.stdout = capturedOutput
 
-        # Test setup
-        min_level = settings.MIN_LOGGING_LEVEL
-        caplog.set_level(min_level)
-        capturedOutput = io.StringIO()
-        sys.stdout = capturedOutput
+            setup_test_logging("local", min_level)
 
-        setup_test_logging("local", min_level)
+            # Capture database queries
+            with django_capture_on_commit_callbacks(execute=True) as callbacks:
+                cp = channel_partner_factory()
+                cp_admin = cp_user_factory(channel_partner=cp)
 
-        # Capture database queries
-        with django_capture_on_commit_callbacks(execute=True) as callbacks:
-            cp = channel_partner_factory()
-            cp_admin = cp_user_factory(channel_partner=cp)
+            with CaptureQueriesContext(connection) as queries:
+                client = Client()
+                response = client.get("/partners/api/v2/organization_roles")
 
-        with CaptureQueriesContext(connection) as queries:
-            client = Client()
-            response = client.get("/partners/api/v2/organization_roles")
+            logs = caplog.records
 
-        logs = caplog.records
+            # Check the status code of the response
+            assert response.status_code == 200
 
-        # Check the status code of the response
-        assert response.status_code == 200
+            request_finished_log = next((log for log in logs if "request_finished" in log.message), None)
+            assert request_finished_log is not None
 
-        request_finished_log = next((log for log in logs if "request_finished" in log.message), None)
-        assert request_finished_log is not None
-
-        log_data = request_finished_log.msg
-        assert log_data.get('db_queries') == 5
+            log_data = request_finished_log.msg
+            assert log_data.get('db_queries') == 5
 
 
 @pytest.mark.django_db

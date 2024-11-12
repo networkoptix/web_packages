@@ -46,7 +46,6 @@ from channel_partners.tools.config import (
 
 env = environ.Env()
 
-
 class EnvironmentEnum(StrEnum):
     ci = 'ci'
     local = 'local'
@@ -180,6 +179,7 @@ AVAILABLE_VERSIONS = [
     'v3',
 ]
 
+WAFFLE_SWITCH_VIEW_CACHE_KEY = 'dependent_view_cache_enabled'
 
 # SECURITY WARNING: keep the secret key used in production secret!
 if IS_PRIVATE_CLOUD:

@@ -4,6 +4,7 @@ from unittest import mock
 import pytest
 from dateutil.relativedelta import relativedelta
 from rest_framework.test import APIClient
+from waffle import get_waffle_switch_model
 
 from partners.models import (
     ChannelPartnerExternalId,
@@ -45,6 +46,13 @@ class BaseTest:
         self.assert_cache_miss = cache_miss_asserter_context
         self.capture_on_commit = django_capture_on_commit_callbacks
 
+        with django_capture_on_commit_callbacks(execute=True):
+            from django.conf import settings
+            switch_name = settings.WAFFLE_SWITCH_VIEW_CACHE_KEY
+            switch_model = get_waffle_switch_model()
+            switch, created = switch_model.objects.get_or_create(name=switch_name)
+            switch.active = True
+            switch.save()
         with django_capture_on_commit_callbacks(execute=True):
             # Set up date
             self.requested_date = get_today() - relativedelta(days=1)
@@ -201,7 +209,7 @@ class BaseTest:
 
         update_cache(items_to_update)
 
-    def _make_request_get_response(
+    def _make_request_get_response_cache_enabled(
             self,
             user: CloudUser,
             endpoint: str,
@@ -223,11 +231,13 @@ class BaseTest:
 
         # Make request
         with mock.patch('rest_framework.views.APIView.check_throttles', return_value=None):
-            response = client.get(endpoint, query_params, headers=headers)
+            with mock.patch('partners.services.caching.dependent_view_cache.should_skip_processing_request', return_value=False):
+                response = client.get(endpoint, query_params, headers=headers)
         return response
 
     def _asserts(self, response, cache_was_hit=True, status_code=200):
         assert response.status_code == status_code
+        # assert response.headers._store.get("'x-cps-cache-status'", None) != None
 
         if cache_was_hit:
             assert response.headers["X-CPS-Cache-Status"] == "hit"

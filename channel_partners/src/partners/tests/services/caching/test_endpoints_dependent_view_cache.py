@@ -1,7 +1,3 @@
-"""
-NOTES:
-    - Will only be testing GET requests
-"""
 import uuid
 from urllib.parse import (
     parse_qs,
@@ -15,6 +11,9 @@ from partners.tests.services.caching.conftest import BaseTest
 
 
 """
+NOTES:
+- Will only be testing GET requests
+
 # Inputs
 -------------
 Keys:
@@ -97,41 +96,74 @@ test_cases = [
 
 logger = structlog.getLogger()
 
-test_cases_channel_partner_available_service_viewset = []
-test_cases_channel_partner_external_id_viewset = []
-test_cases_channel_partner_nested_viewset = []
-test_cases_channel_partner_owned_service_viewset = []
-test_cases_channel_partner_service_external_id_viewset = []
-test_cases_channel_partner_service_report_viewset = []
-test_cases_channel_partner_user_viewset = []
-test_cases_channel_partner_viewset = []
-test_cases_channel_structure_viewset = []
-test_cases_organization_viewset = []
-test_cases_organization_nested_viewset = []
-test_cases_organization_service_viewset = []
-test_cases_organization_user_viewset = []
-test_cases_organization_service_record_viewset = []
-test_cases_internal_endpoints = []
 
-test_cases = []
+def print_link(file=None, line=None):
+    """
+    Utility function to log a clickable link to the source code in IntelliJ IDEA.
+    This enables clicking the link in the console on test failure to navigate
+    directly to the failing line in the JSON test case file.
+    """
+    # Replace backslashes with forward slashes for URL compatibility
+    file = file.replace("\\", "/")
+    # Format the logging string to be recognized by IntelliJ IDEA
+    string = f'Source code: {file}:{line}'
+    # Log the clickable link
+    logger.error(string)
+    return string
 
-test_cases.extend([
-    *test_cases_organization_viewset,
-    *test_cases_organization_nested_viewset,
-    *test_cases_organization_service_viewset,
-    *test_cases_organization_user_viewset,
-    *test_cases_organization_service_record_viewset,
-    *test_cases_internal_endpoints,
-    *test_cases_channel_partner_available_service_viewset,
-    *test_cases_channel_partner_external_id_viewset,
-    *test_cases_channel_partner_nested_viewset,
-    *test_cases_channel_partner_owned_service_viewset,
-    *test_cases_channel_partner_service_external_id_viewset,
-    *test_cases_channel_partner_user_viewset,
-    *test_cases_channel_partner_service_report_viewset,
-    *test_cases_channel_partner_viewset,
-    *test_cases_channel_structure_viewset,
-])
+
+def get_test_cases():
+    """
+    Retrieve and combine test cases from JSON files located in the 'resources' directory.
+
+    This function searches for JSON files in the 'v2' and 'v3' subdirectories of the 'resources' directory.
+    It reads the test cases from these files, adds metadata such as the file link and line number, and combines
+    them into a single list.
+
+    Returns:
+        list: A list of combined test cases with added metadata.
+    """
+    import json
+    import os
+
+    def find_line_number(file_path, test_case_name):
+        """
+        Find the line number of a test case in a JSON file.
+
+        Args:
+            file_path (str): The path to the JSON file.
+            test_case_name (str): The name of the test case to find.
+
+        Returns:
+            int: The line number of the test case, or None if not found.
+        """
+        with open(file_path, "r") as file:
+            for i, line in enumerate(file, 1):
+                if f'"name": "{test_case_name}"' in line:
+                    return i
+        return None
+
+    resource_path = os.path.join(os.path.dirname(__file__), "resources")
+    combined_test_cases = []
+
+    for version in ["v2", "v3"]:
+        version_path = os.path.join(resource_path, version)
+        for file_name in os.listdir(version_path):
+            if file_name.endswith(".json"):
+                file_path = os.path.join(version_path, file_name)
+                with open(file_path, "r") as file:
+                    test_cases = json.load(file)
+                    # Add extra metadata to the test cases
+                    for test_case in test_cases:
+                        test_case["file_link"] = f"{version}/{file_name}"
+                        test_case["line_number"] = find_line_number(file_path, test_case["name"])
+                    combined_test_cases.extend(test_cases)
+
+    return combined_test_cases
+
+
+# Get the test cases
+test_cases = get_test_cases()
 
 
 class TestEndpointsUsingParameterizedTests(BaseTest):
@@ -202,16 +234,20 @@ class TestEndpointsUsingParameterizedTests(BaseTest):
             user = getattr(self, auth_segment)
         return user
 
-    def _make_request_with_assertions(self, user, path, assertions, path_params=None) -> None:
+    def _make_request_with_assertions(self, user, path, assertions, path_params=None, filepath=None, line_number=None) -> None:
         assert len(assertions) == 2
-        for assertion in assertions:
-            with self.capture_on_commit(execute=True):
-                response = self._make_request_get_response(user, path, path_params=path_params)
-            if assertion is not None:
-                self._asserts(response, cache_was_hit=assertion)
-                logger.debug("----- Assertion Successful -----")
-            else:
-                logger.debug("------- Warm-up Request --------")
+        try:
+            for assertion in assertions:
+                with self.capture_on_commit(execute=True):
+                    response = self._make_request_get_response_cache_enabled(user, path, path_params=path_params)
+                if assertion is not None:
+                    self._asserts(response, cache_was_hit=assertion)
+                    logger.debug("----- Assertion Successful -----")
+                else:
+                    logger.debug("------- Warm-up Request --------")
+        except AssertionError as e:
+            print_link(file=filepath, line=line_number)
+            raise e
 
     @pytest.mark.parametrize("test_case", test_cases, ids=[tc["name"] for tc in test_cases])
     def test_endpoint(self, test_case):
@@ -221,13 +257,16 @@ class TestEndpointsUsingParameterizedTests(BaseTest):
         path = self.replace_path_and_query_params(original_path, attributes)
         cache_hit_asserts = test_case["assert_cache_hit"]
 
+        filepath = test_case["file_link"]
+        line_number = test_case["line_number"]
+
         # TODO: Refactor this to be more dynamic and to use a mapping of the model names and fields ot change
         # Assertions that assert_cache_hit are utilized for
         if "initial" in cache_hit_asserts:
             logger.debug("======= Initial =======")
             self.update_cache()
             assertions = cache_hit_asserts["initial"]
-            self._make_request_with_assertions(user, path, assertions)
+            self._make_request_with_assertions(user, path, assertions, filepath=filepath, line_number=line_number)
 
         if "cp" in cache_hit_asserts:
             logger.debug("======= CP =======")
@@ -236,7 +275,7 @@ class TestEndpointsUsingParameterizedTests(BaseTest):
                 self.cp.save()
             self.update_cache()
             assertions = cache_hit_asserts["cp"]
-            self._make_request_with_assertions(user, path, assertions)
+            self._make_request_with_assertions(user, path, assertions, filepath=filepath, line_number=line_number)
 
         if "sub_cp" in cache_hit_asserts:
             logger.debug("======= Sub CP =======")
@@ -245,7 +284,7 @@ class TestEndpointsUsingParameterizedTests(BaseTest):
                 self.sub_cp.save()
             self.update_cache()
             assertions = cache_hit_asserts["sub_cp"]
-            self._make_request_with_assertions(user, path, assertions)
+            self._make_request_with_assertions(user, path, assertions, filepath=filepath, line_number=line_number)
 
         if "organization" in cache_hit_asserts:
             logger.debug("======= Organization =======")
@@ -254,7 +293,7 @@ class TestEndpointsUsingParameterizedTests(BaseTest):
                 self.organization.save()
             self.update_cache()
             assertions = cache_hit_asserts["organization"]
-            self._make_request_with_assertions(user, path, assertions)
+            self._make_request_with_assertions(user, path, assertions, filepath=filepath, line_number=line_number)
 
         if "other_org" in cache_hit_asserts:
             logger.debug("======= Other Organization =======")
@@ -263,7 +302,7 @@ class TestEndpointsUsingParameterizedTests(BaseTest):
                 self.other_org.save()
             self.update_cache()
             assertions = cache_hit_asserts["other_org"]
-            self._make_request_with_assertions(user, path, assertions)
+            self._make_request_with_assertions(user, path, assertions, filepath=filepath, line_number=line_number)
 
         if "group" in cache_hit_asserts:
             logger.debug("======= Group =======")
@@ -272,7 +311,7 @@ class TestEndpointsUsingParameterizedTests(BaseTest):
                 self.group.save()
             self.update_cache()
             assertions = cache_hit_asserts["group"]
-            self._make_request_with_assertions(user, path, assertions)
+            self._make_request_with_assertions(user, path, assertions, filepath=filepath, line_number=line_number)
 
         if "other_group" in cache_hit_asserts:
             logger.debug("======= Other Group =======")
@@ -281,7 +320,7 @@ class TestEndpointsUsingParameterizedTests(BaseTest):
                 self.other_group.save()
             self.update_cache()
             assertions = cache_hit_asserts["other_group"]
-            self._make_request_with_assertions(user, path, assertions)
+            self._make_request_with_assertions(user, path, assertions, filepath=filepath, line_number=line_number)
 
         if "cp_user" in cache_hit_asserts:
             logger.debug("======= CP User =======")
@@ -290,7 +329,7 @@ class TestEndpointsUsingParameterizedTests(BaseTest):
                 self.cp_user.save()
             self.update_cache()
             assertions = cache_hit_asserts["cp_user"]
-            self._make_request_with_assertions(user, path, assertions)
+            self._make_request_with_assertions(user, path, assertions, filepath=filepath, line_number=line_number)
 
         if "sub_cp_user" in cache_hit_asserts:
             logger.debug("======= Sub CP User =======")
@@ -299,7 +338,7 @@ class TestEndpointsUsingParameterizedTests(BaseTest):
                 self.sub_cp_user.save()
             self.update_cache()
             assertions = cache_hit_asserts["sub_cp_user"]
-            self._make_request_with_assertions(user, path, assertions)
+            self._make_request_with_assertions(user, path, assertions, filepath=filepath, line_number=line_number)
 
         if "org_admin" in cache_hit_asserts:
             logger.debug("======= Org Admin =======")
@@ -308,7 +347,7 @@ class TestEndpointsUsingParameterizedTests(BaseTest):
                 self.org_admin.save()
             self.update_cache()
             assertions = cache_hit_asserts["org_admin"]
-            self._make_request_with_assertions(user, path, assertions)
+            self._make_request_with_assertions(user, path, assertions, filepath=filepath, line_number=line_number)
 
         if "other_org_admin" in cache_hit_asserts:
             logger.debug("======= Other Org Admin =======")
@@ -317,7 +356,7 @@ class TestEndpointsUsingParameterizedTests(BaseTest):
                 self.other_org_admin.save()
             self.update_cache()
             assertions = cache_hit_asserts["other_org_admin"]
-            self._make_request_with_assertions(user, path, assertions)
+            self._make_request_with_assertions(user, path, assertions, filepath=filepath, line_number=line_number)
 
         if "group_admin" in cache_hit_asserts:
             logger.debug("======= Group Admin =======")
@@ -326,7 +365,7 @@ class TestEndpointsUsingParameterizedTests(BaseTest):
                 self.group_admin.save()
             self.update_cache()
             assertions = cache_hit_asserts["group_admin"]
-            self._make_request_with_assertions(user, path, assertions)
+            self._make_request_with_assertions(user, path, assertions, filepath=filepath, line_number=line_number)
 
         if "other_group_admin" in cache_hit_asserts:
             logger.debug("======= Other Group Admin =======")
@@ -335,7 +374,7 @@ class TestEndpointsUsingParameterizedTests(BaseTest):
                 self.other_group_admin.save()
             self.update_cache()
             assertions = cache_hit_asserts["other_group_admin"]
-            self._make_request_with_assertions(user, path, assertions)
+            self._make_request_with_assertions(user, path, assertions, filepath=filepath, line_number=line_number)
 
         if "org_system" in cache_hit_asserts:
             logger.debug("======= Org System =======")
@@ -344,7 +383,7 @@ class TestEndpointsUsingParameterizedTests(BaseTest):
                 self.org_system.save()
             self.update_cache()
             assertions = cache_hit_asserts["org_system"]
-            self._make_request_with_assertions(user, path, assertions)
+            self._make_request_with_assertions(user, path, assertions, filepath=filepath, line_number=line_number)
 
         if "group_system" in cache_hit_asserts:
             logger.debug("======= Group System =======")
@@ -353,7 +392,7 @@ class TestEndpointsUsingParameterizedTests(BaseTest):
                 self.group_system.save()
             self.update_cache()
             assertions = cache_hit_asserts["group_system"]
-            self._make_request_with_assertions(user, path, assertions)
+            self._make_request_with_assertions(user, path, assertions, filepath=filepath, line_number=line_number)
 
         if "enabled_service" in cache_hit_asserts:
             logger.debug("======= Enabled Service =======")
@@ -362,7 +401,7 @@ class TestEndpointsUsingParameterizedTests(BaseTest):
                 self.enabled_service.save()
             self.update_cache()
             assertions = cache_hit_asserts["enabled_service"]
-            self._make_request_with_assertions(user, path, assertions)
+            self._make_request_with_assertions(user, path, assertions, filepath=filepath, line_number=line_number)
 
         if "disabled_service" in cache_hit_asserts:
             logger.debug("======= Disabled Service =======")
@@ -371,7 +410,7 @@ class TestEndpointsUsingParameterizedTests(BaseTest):
                 self.disabled_service.save()
             self.update_cache()
             assertions = cache_hit_asserts["disabled_service"]
-            self._make_request_with_assertions(user, path, assertions)
+            self._make_request_with_assertions(user, path, assertions, filepath=filepath, line_number=line_number)
 
         if "cp_expiring_service" in cache_hit_asserts:
             logger.debug("======= CP Expiring Service =======")
@@ -380,7 +419,7 @@ class TestEndpointsUsingParameterizedTests(BaseTest):
                 self.cp_expiring_service.save()
             self.update_cache()
             assertions = cache_hit_asserts["cp_expiring_service"]
-            self._make_request_with_assertions(user, path, assertions)
+            self._make_request_with_assertions(user, path, assertions, filepath=filepath, line_number=line_number)
 
         if "cp_expiring_service_record" in cache_hit_asserts:
             logger.debug("======= CP Expiring Service Record =======")
@@ -389,7 +428,7 @@ class TestEndpointsUsingParameterizedTests(BaseTest):
                 self.cp_expiring_service_record.save()
             self.update_cache()
             assertions = cache_hit_asserts["cp_expiring_service_record"]
-            self._make_request_with_assertions(user, path, assertions)
+            self._make_request_with_assertions(user, path, assertions, filepath=filepath, line_number=line_number)
 
         if "expiring_service" in cache_hit_asserts:
             logger.debug("======= Expiring Service =======")
@@ -398,7 +437,7 @@ class TestEndpointsUsingParameterizedTests(BaseTest):
                 self.expiring_service.save()
             self.update_cache()
             assertions = cache_hit_asserts["expiring_service"]
-            self._make_request_with_assertions(user, path, assertions)
+            self._make_request_with_assertions(user, path, assertions, filepath=filepath, line_number=line_number)
 
         if "expiring_service_record" in cache_hit_asserts:
             logger.debug("======= Expiring Service Record =======")
@@ -407,7 +446,7 @@ class TestEndpointsUsingParameterizedTests(BaseTest):
                 self.expiring_service_record.save()
             self.update_cache()
             assertions = cache_hit_asserts["expiring_service_record"]
-            self._make_request_with_assertions(user, path, assertions)
+            self._make_request_with_assertions(user, path, assertions, filepath=filepath, line_number=line_number)
 
         if "external_id" in cache_hit_asserts:
             logger.debug("======= External ID =======")
@@ -416,4 +455,4 @@ class TestEndpointsUsingParameterizedTests(BaseTest):
                 self.external_id.save()
             self.update_cache()
             assertions = cache_hit_asserts["external_id"]
-            self._make_request_with_assertions(user, path, assertions)
+            self._make_request_with_assertions(user, path, assertions, filepath=filepath, line_number=line_number)

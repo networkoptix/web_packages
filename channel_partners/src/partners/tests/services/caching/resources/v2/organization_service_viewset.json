@@ -1,0 +1,239 @@
+[
+    {
+        "name": "test_organizations_services_list_with_org_admin_user",
+        "path": "/v2/organizations/{organization.id}/services/",
+        "auth": "org_admin",
+        "assert_cache_hit": {
+            "initial": [
+                false,
+                true
+            ],
+            "cp": [
+                true,
+                true
+            ],
+            "sub_cp": [
+                true,
+                true
+            ],
+            "organization": [
+                false,
+                true
+            ],
+            "other_org": [
+                true,
+                true
+            ],
+            "group": [
+                false,
+                true
+            ],
+            "other_group": [
+                false,
+                true
+            ],
+            "cp_user": [
+                true,
+                true
+            ],
+            "sub_cp_user": [
+                true,
+                true
+            ],
+            "org_admin": [
+                false,
+                true
+            ],
+            "other_org_admin": [
+                true,
+                true
+            ],
+            "group_admin": [
+                false,
+                true
+            ],
+            "other_group_admin": [
+                false,
+                true
+            ],
+            "org_system": [
+                false,
+                true
+            ],
+            "group_system": [
+                false,
+                true
+            ],
+            "enabled_service": [
+                true,
+                true
+            ],
+            "disabled_service": [
+                true,
+                true
+            ],
+            "external_id": [
+                true,
+                true
+            ]
+        }
+    },
+    {
+        "name": "test_organizations_services_detail_with_org_admin_user",
+        "path": "/v2/organizations/{organization.id}/services/{enabled_service.id}/",
+        "auth": "org_admin",
+        "assert_cache_hit": {
+            "initial": [
+                false,
+                true
+            ],
+            "cp": [
+                true,
+                true
+            ],
+            "sub_cp": [
+                true,
+                true
+            ],
+            "organization": [
+                false,
+                true
+            ],
+            "other_org": [
+                true,
+                true
+            ],
+            "group": [
+                false,
+                true
+            ],
+            "other_group": [
+                false,
+                true
+            ],
+            "cp_user": [
+                true,
+                true
+            ],
+            "sub_cp_user": [
+                true,
+                true
+            ],
+            "org_admin": [
+                false,
+                true
+            ],
+            "other_org_admin": [
+                true,
+                true
+            ],
+            "group_admin": [
+                false,
+                true
+            ],
+            "other_group_admin": [
+                false,
+                true
+            ],
+            "org_system": [
+                false,
+                true
+            ],
+            "group_system": [
+                false,
+                true
+            ],
+            "enabled_service": [
+                true,
+                true
+            ],
+            "disabled_service": [
+                true,
+                true
+            ],
+            "external_id": [
+                true,
+                true
+            ]
+        }
+    },
+    {
+        "name": "test_organizations_services_detail_price_history_with_org_admin_user",
+        "path": "/v2/organizations/{organization.id}/services/{enabled_service.id}/price_history/",
+        "auth": "org_admin",
+        "assert_cache_hit": {
+            "initial": [
+                false,
+                true
+            ],
+            "cp": [
+                true,
+                true
+            ],
+            "sub_cp": [
+                true,
+                true
+            ],
+            "organization": [
+                false,
+                true
+            ],
+            "other_org": [
+                true,
+                true
+            ],
+            "group": [
+                false,
+                true
+            ],
+            "other_group": [
+                false,
+                true
+            ],
+            "cp_user": [
+                true,
+                true
+            ],
+            "sub_cp_user": [
+                true,
+                true
+            ],
+            "org_admin": [
+                false,
+                true
+            ],
+            "other_org_admin": [
+                true,
+                true
+            ],
+            "group_admin": [
+                false,
+                true
+            ],
+            "other_group_admin": [
+                false,
+                true
+            ],
+            "org_system": [
+                false,
+                true
+            ],
+            "group_system": [
+                false,
+                true
+            ],
+            "enabled_service": [
+                true,
+                true
+            ],
+            "disabled_service": [
+                true,
+                true
+            ],
+            "external_id": [
+                true,
+                true
+            ]
+        }
+    }
+]

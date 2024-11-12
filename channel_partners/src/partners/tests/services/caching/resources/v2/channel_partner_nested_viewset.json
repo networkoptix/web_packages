@@ -1,0 +1,81 @@
+[
+    {
+        "name": "test_channel_partner_nested_with_sub_cp_user",
+        "path": "/v2/channel_partners/{sub_cp.id}/sub_channel_partners/",
+        "auth": "sub_cp_user",
+        "assert_cache_hit": {
+            "initial": [
+                false,
+                true
+            ],
+            "cp": [
+                true,
+                true
+            ],
+            "sub_cp": [
+                false,
+                true
+            ],
+            "organization": [
+                false,
+                true
+            ],
+            "other_org": [
+                false,
+                true
+            ],
+            "group": [
+                false,
+                true
+            ],
+            "other_group": [
+                false,
+                true
+            ],
+            "cp_user": [
+                true,
+                true
+            ],
+            "sub_cp_user": [
+                false,
+                true
+            ],
+            "org_admin": [
+                true,
+                true
+            ],
+            "other_org_admin": [
+                true,
+                true
+            ],
+            "group_admin": [
+                true,
+                true
+            ],
+            "other_group_admin": [
+                true,
+                true
+            ],
+            "org_system": [
+                false,
+                true
+            ],
+            "group_system": [
+                false,
+                true
+            ],
+            "enabled_service": [
+                false,
+                true
+            ],
+            "disabled_service": [
+                false,
+                true
+            ],
+            "external_id": [
+                true,
+                true
+            ]
+        }
+    }
+]

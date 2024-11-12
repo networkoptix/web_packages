@@ -149,6 +149,15 @@ from partners.serializers.v2.serializers import (
     SystemUserSerializer,
     UserListSerializer,
 )
+from partners.services.caching.cache_dependency import CacheDependency
+from partners.services.caching.cache_enums import (
+    CachedDependencyFieldTypeEnum,
+    TargetTypeEnum,
+)
+from partners.services.caching.dependent_view_cache import (
+    Dependencies,
+    DependentViewCache,
+)
 from partners.services.channel_partner_group_structure_service import (
     ChannelPartnerGroupStructureService,
 )
@@ -249,6 +258,53 @@ class ParentLookUpMixin:
                           description='Delete a user of a Channel Partner by id',
                           extensions={'x-permission': f'{ChannelPartner.permissions.manage_users} for Channel Partner'})
 )
+@DependentViewCache({
+    "list": Dependencies([
+        CacheDependency(
+            model=ChannelPartner,
+            field=CachedDependencyFieldTypeEnum.DESCENDANT_VERSION,
+            source="path.parent_lookup_channel_partner"),
+        CacheDependency(
+            model=ChannelPartner,
+            field=CachedDependencyFieldTypeEnum.VERSION,
+            source="path.parent_lookup_channel_partner"),
+        CacheDependency(
+            model=ChannelPartner,
+            field=CachedDependencyFieldTypeEnum.VERSION,
+            source="path.parent_lookup_channel_partner",
+            target=TargetTypeEnum.PARENT)
+    ], validate_user=True),
+    "retrieve": Dependencies([
+        CacheDependency(
+            model=ChannelPartner,
+            field=CachedDependencyFieldTypeEnum.DESCENDANT_VERSION,
+            source="path.parent_lookup_channel_partner"),
+        CacheDependency(
+            model=ChannelPartner,
+            field=CachedDependencyFieldTypeEnum.VERSION,
+            source="path.parent_lookup_channel_partner"),
+        CacheDependency(
+            model=ChannelPartner,
+            field=CachedDependencyFieldTypeEnum.VERSION,
+            source="path.parent_lookup_channel_partner",
+            target=TargetTypeEnum.PARENT)
+    ], validate_user=True),
+    "self": Dependencies([
+        CacheDependency(
+            model=ChannelPartner,
+            field=CachedDependencyFieldTypeEnum.VERSION,
+            source="path.parent_lookup_channel_partner"),
+        CacheDependency(
+            model=ChannelPartner,
+            field=CachedDependencyFieldTypeEnum.DESCENDANT_VERSION,
+            source="path.parent_lookup_channel_partner"),
+        CacheDependency(
+            model=ChannelPartner,
+            field=CachedDependencyFieldTypeEnum.VERSION,
+            source="path.parent_lookup_channel_partner",
+            target=TargetTypeEnum.PARENT)
+    ], validate_user=True),
+})
 @version_range(Versions(min_version="v2"))
 class ChannelPartnerUserViewSet(ParentLookUpMixin, NestedViewSetMixin, VersionedViewMixin, ModelViewSet):
     authentication_classes = (NxCloudOauthTokenAuthentication,)
@@ -361,6 +417,18 @@ class ChannelPartnerUserViewSet(ParentLookUpMixin, NestedViewSetMixin, Versioned
     description='Returns list of sub Channel Partners of a Channel Partner by id',
     parameters=[OpenApiParameter('parent_lookup_parent_channel_partner', location='path', type=OpenApiTypes.UUID)]
 )
+@DependentViewCache({
+    "list": Dependencies([
+        CacheDependency(
+            model=ChannelPartner,
+            field=CachedDependencyFieldTypeEnum.DESCENDANT_VERSION,
+            source="path.parent_lookup_parent_channel_partner"),
+        CacheDependency(
+            model=ChannelPartner,
+            field=CachedDependencyFieldTypeEnum.VERSION,
+            source="path.parent_lookup_parent_channel_partner")
+    ], validate_user=True),
+})
 @version_range(Versions(min_version="v2"))
 class ChannelPartnerNestedViewSet(NestedViewSetMixin, mixins.ListModelMixin, ParentLookUpMixin, VersionedViewMixin, GenericViewSet):
     http_method_names = ['get']
@@ -470,6 +538,29 @@ class ChannelPartnerServiceExternalIdViewSet(ExternalIdBase, VersionedViewMixin,
     partial_update=extend_schema(summary='Update an external id partially'),
     update=extend_schema(summary='Update an external id fully')
 )
+
+@DependentViewCache({
+    "list": Dependencies([
+        CacheDependency(
+            model=ChannelPartner,
+            field=CachedDependencyFieldTypeEnum.DESCENDANT_VERSION,
+            source="path.channel_partner_id"),
+        CacheDependency(
+            model=ChannelPartner,
+            field=CachedDependencyFieldTypeEnum.VERSION,
+            source="path.channel_partner_id")
+    ], validate_user=True),
+    "retrieve": Dependencies([
+        CacheDependency(
+            model=ChannelPartner,
+            field=CachedDependencyFieldTypeEnum.DESCENDANT_VERSION,
+            source="path.channel_partner_id"),
+        CacheDependency(
+            model=ChannelPartner,
+            field=CachedDependencyFieldTypeEnum.VERSION,
+            source="path.channel_partner_id")
+    ], validate_user=True),
+})
 @version_range(Versions(min_version="v2"))
 class OrganizationrExternalIdViewSet(ExternalIdBase, VersionedViewMixin, ModelViewSet):
     serializer_class = OrganizationExternalIdSerializer
@@ -502,6 +593,28 @@ class CloudSystemExternalIdViewSet(ExternalIdBase, VersionedViewMixin, ModelView
     summary='Services that belong to channel partner queried',
     parameters=[OpenApiParameter('parent_lookup_created_by_channel_partner', location='path', type=OpenApiTypes.UUID)]
 )
+@DependentViewCache({
+    "list": Dependencies([
+        CacheDependency(
+            model=ChannelPartner,
+            field=CachedDependencyFieldTypeEnum.DESCENDANT_VERSION,
+            source="path.parent_lookup_created_by_channel_partner"),
+        CacheDependency(
+            model=ChannelPartner,
+            field=CachedDependencyFieldTypeEnum.VERSION,
+            source="path.parent_lookup_created_by_channel_partner")
+    ], validate_user=True),
+    "retrieve": Dependencies([
+        CacheDependency(
+            model=ChannelPartner,
+            field=CachedDependencyFieldTypeEnum.DESCENDANT_VERSION,
+            source="path.parent_lookup_created_by_channel_partner"),
+        CacheDependency(
+            model=ChannelPartner,
+            field=CachedDependencyFieldTypeEnum.VERSION,
+            source="path.parent_lookup_created_by_channel_partner")
+    ], validate_user=True),
+})
 @version_range(Versions(min_version="v2"))
 class ChannelPartnerOwnedServiceViewSet(ParentLookUpMixin, NestedViewSetMixin, VersionedViewMixin, ModelViewSet):
     http_method_names = ['get']
@@ -534,6 +647,20 @@ class ChannelPartnerOwnedServiceViewSet(ParentLookUpMixin, NestedViewSetMixin, V
     summary='These are services that are available to inherit/extend from the parent Channel Partner including properties that are specific for each channel partner.',
     parameters=[OpenApiParameter('parent_lookup_channel_partner', location='path', type=OpenApiTypes.UUID)]
 )
+@DependentViewCache({
+    "list": Dependencies([
+        CacheDependency(
+            model=ChannelPartner,
+            field=CachedDependencyFieldTypeEnum.DESCENDANT_VERSION,
+            source="path.parent_lookup_channel_partner"),
+        CacheDependency(
+            model=ChannelPartner,
+            field=CachedDependencyFieldTypeEnum.VERSION,
+            source="path.parent_lookup_channel_partner")
+    ], validate_user=True),
+    # "retrieve": Dependencies([], validate_user=True),  # TODO: Add dependencies | We don't have the Mixins on ChannelPartnerService, but do have receivers
+    # "price_history": Dependencies([], validate_user=True)  # TODO: Add dependencies | We don't have the Mixins on ChannelPartnerService,  but do have receivers
+})
 @version_range(Versions(min_version="v2"))
 class ChannelPartnerAvailableServiceViewSet(ParentLookUpMixin, NestedViewSetMixin, VersionedViewMixin, ModelViewSet):
     http_method_names = ['get', 'patch']
@@ -600,6 +727,38 @@ class ChannelPartnerAvailableServiceViewSet(ParentLookUpMixin, NestedViewSetMixi
         type=OpenApiTypes.UUID)
     ]
 )
+@DependentViewCache({
+    "list": Dependencies([
+        CacheDependency(
+            model=Organization,
+            field=CachedDependencyFieldTypeEnum.DESCENDANT_VERSION,
+            source="path.parent_lookup_organization"),
+        CacheDependency(
+            model=Organization,
+            field=CachedDependencyFieldTypeEnum.VERSION,
+            source="path.parent_lookup_organization")
+    ], validate_user=True),
+    "retrieve": Dependencies([ # TODO: We don't have the Mixins on ChannelPartnerService, but do have receivers
+        CacheDependency(
+            model=Organization,
+            field=CachedDependencyFieldTypeEnum.DESCENDANT_VERSION,
+            source="path.parent_lookup_organization"),
+        CacheDependency(
+            model=Organization,
+            field=CachedDependencyFieldTypeEnum.VERSION,
+            source="path.parent_lookup_organization")
+    ], validate_user=True),
+    "price_history": Dependencies([ # TODO: We don't have the Mixins on ChannelPartnerService, but do have receivers
+        CacheDependency(
+            model=Organization,
+            field=CachedDependencyFieldTypeEnum.DESCENDANT_VERSION,
+            source="path.parent_lookup_organization"),
+        CacheDependency(
+            model=Organization,
+            field=CachedDependencyFieldTypeEnum.VERSION,
+            source="path.parent_lookup_organization")
+    ], validate_user=True)
+})
 @version_range(Versions(min_version="v2"))
 class OrganizationServiceViewSet(ParentLookUpMixin, NestedViewSetMixin, VersionedViewMixin, ModelViewSet):
     http_method_names = ['get', 'patch']
@@ -668,6 +827,18 @@ class OrganizationServiceViewSet(ParentLookUpMixin, NestedViewSetMixin, Versione
 
 
 @extend_schema(tags=["Channel Partners"])
+@DependentViewCache({
+    "channel_structure": Dependencies([
+        CacheDependency(
+            model=ChannelPartner,
+            field=CachedDependencyFieldTypeEnum.VERSION,
+            source="path.pk"),
+        CacheDependency(
+            model=ChannelPartner,
+            field=CachedDependencyFieldTypeEnum.DESCENDANT_VERSION,
+            source="path.pk")
+    ], validate_user=True),
+})
 @version_range(Versions(min_version="v2"))
 class ChannelStructureViewSet(VersionedViewMixin, GenericViewSet):
     http_method_names = ['get']
@@ -703,6 +874,55 @@ class ChannelStructureViewSet(VersionedViewMixin, GenericViewSet):
     service_changes_summary=extend_schema(summary='Get summary of service changes in a single period'),
     service_changes_history=extend_schema(summary='Get individual records of service changes in a single period')
 )
+@DependentViewCache({
+    "list": Dependencies([], validate_user=True),
+    "retrieve": Dependencies([
+        CacheDependency(
+            model=ChannelPartner,
+            field=CachedDependencyFieldTypeEnum.VERSION,
+            source="path.pk")
+    ], validate_user=True),
+    "channel_structure": Dependencies([
+        CacheDependency(
+            model=ChannelPartner,
+            field=CachedDependencyFieldTypeEnum.VERSION,
+            source="path.pk"),
+        CacheDependency(
+            model=ChannelPartner,
+            field=CachedDependencyFieldTypeEnum.DESCENDANT_VERSION,
+            source="path.pk")
+    ], validate_user=True),
+    "service_changes_history": Dependencies([
+        CacheDependency(
+            model=ChannelPartner,
+            field=CachedDependencyFieldTypeEnum.VERSION,
+            source="path.pk"),
+        CacheDependency(
+            model=ChannelPartner,
+            field=CachedDependencyFieldTypeEnum.DESCENDANT_VERSION,
+            source="path.pk")
+    ], validate_user=True),
+    "service_changes_summary": Dependencies([
+        CacheDependency(
+            model=ChannelPartner,
+            field=CachedDependencyFieldTypeEnum.VERSION,
+            source="path.pk"),
+        CacheDependency(
+            model=ChannelPartner,
+            field=CachedDependencyFieldTypeEnum.DESCENDANT_VERSION,
+            source="path.pk")
+    ], validate_user=True),
+    "aggregate": Dependencies([
+        CacheDependency(
+            model=ChannelPartner,
+            field=CachedDependencyFieldTypeEnum.VERSION,
+            source="path.pk"),
+        CacheDependency(
+            model=ChannelPartner,
+            field=CachedDependencyFieldTypeEnum.DESCENDANT_VERSION,
+            source="path.pk")
+    ], validate_user=True),
+})
 @version_range(Versions(min_version="v2"))
 class ChannelPartnerViewSet(ParentLookUpMixin, NestedViewSetMixin, VersionedViewMixin, ModelViewSet):
     http_method_names = ['get', 'post', 'patch']
@@ -855,6 +1075,18 @@ class ChannelPartnerViewSet(ParentLookUpMixin, NestedViewSetMixin, VersionedView
     summary='Get a list of organizations belonging to a Channel Partner',
     parameters=[OpenApiParameter('parent_lookup_channel_partner', location='path', type=OpenApiTypes.UUID)]
 )
+@DependentViewCache({
+    "list": Dependencies([
+        CacheDependency(
+            model=ChannelPartner,
+            field=CachedDependencyFieldTypeEnum.DESCENDANT_VERSION,
+            source="path.parent_lookup_channel_partner"),
+        CacheDependency(
+            model=ChannelPartner,
+            field=CachedDependencyFieldTypeEnum.VERSION,
+            source="path.parent_lookup_channel_partner"),
+    ], validate_user=True),
+})
 @version_range(Versions(min_version="v2"))
 class OrganizationNesetedViewSet(NestedViewSetMixin,
                                  mixins.ListModelMixin,
@@ -892,6 +1124,51 @@ class OrganizationNesetedViewSet(NestedViewSetMixin,
     partial_update=extend_schema(summary='Update properties of an Organization', extensions={'x-permission': f'{Organization.permissions.configure_organization} for Organization'}),
     service_changes_history=extend_schema()
 )
+@DependentViewCache({
+    "list": Dependencies([], validate_user=True),
+    "retrieve": Dependencies([
+        CacheDependency(
+            model=Organization,
+            field=CachedDependencyFieldTypeEnum.DESCENDANT_VERSION,
+            source="path.pk"),
+        CacheDependency(
+            model=Organization,
+            field=CachedDependencyFieldTypeEnum.VERSION,
+            source="path.pk"),
+    ], validate_user=True),
+    "service_changes_history": Dependencies([
+        CacheDependency(
+            model=Organization,
+            field=CachedDependencyFieldTypeEnum.VERSION,
+            source="path.pk")
+    ], validate_user=True),
+    "service_changes_summary": Dependencies([
+        CacheDependency(
+            model=Organization,
+            field=CachedDependencyFieldTypeEnum.VERSION,
+            source="path.pk")
+    ], validate_user=True),
+    "aggregate": Dependencies([
+        CacheDependency(
+            model=Organization,
+            field=CachedDependencyFieldTypeEnum.DESCENDANT_VERSION,
+            source="path.pk"),
+        CacheDependency(
+            model=Organization,
+            field=CachedDependencyFieldTypeEnum.VERSION,
+            source="path.pk"),
+    ], validate_user=True),
+    "groups_structure": Dependencies([
+        CacheDependency(
+            model=Organization,
+            field=CachedDependencyFieldTypeEnum.DESCENDANT_VERSION,
+            source="path.pk"),
+        CacheDependency(
+            model=Organization,
+            field=CachedDependencyFieldTypeEnum.VERSION,
+            source="path.pk")
+    ], validate_user=True),
+})
 @version_range(Versions(min_version="v2"))
 class OrganizationViewSet(ParentLookUpMixin, NestedViewSetMixin, VersionedViewMixin, ModelViewSet):
     http_method_names = ['get', 'post', 'patch']
@@ -1058,6 +1335,54 @@ class OrganizationViewSet(ParentLookUpMixin, NestedViewSetMixin, VersionedViewMi
     create=extend_schema(summary='Add/update user of an organization', extensions={'x-permission': f'{Organization.permissions.manage_users} for Organization'}),
     destroy=extend_schema(summary='Remove a user from an organization', extensions={'x-permission': f'{Organization.permissions.manage_users} for Organization'})
 )
+@DependentViewCache({
+    "list": Dependencies([
+        CacheDependency(
+            model=Organization,
+            field=CachedDependencyFieldTypeEnum.VERSION,
+            source="path.parent_lookup_organization"
+        ),
+        CacheDependency(
+            model=Organization,
+            field=CachedDependencyFieldTypeEnum.DESCENDANT_VERSION,
+            source="path.parent_lookup_organization"
+        )
+    ], validate_user=True),
+    "retrieve": Dependencies([
+        CacheDependency(
+            model=Organization,
+            field=CachedDependencyFieldTypeEnum.VERSION,
+            source="path.parent_lookup_organization"
+        ),
+        CacheDependency(
+            model=Organization,
+            field=CachedDependencyFieldTypeEnum.DESCENDANT_VERSION,
+            source="path.parent_lookup_organization"
+        )
+    ], validate_user=True),
+    "self": Dependencies([
+        CacheDependency(
+            model=Organization,
+            field=CachedDependencyFieldTypeEnum.VERSION,
+            source="path.parent_lookup_organization"),
+        CacheDependency(
+            model=Organization,
+            field=CachedDependencyFieldTypeEnum.DESCENDANT_VERSION,
+            source="path.parent_lookup_organization"
+        )
+    ], validate_user=True),
+    "paginated_list": Dependencies([
+        CacheDependency(
+            model=Organization,
+            field=CachedDependencyFieldTypeEnum.VERSION,
+            source="path.parent_lookup_organization"),
+        CacheDependency(
+            model=Organization,
+            field=CachedDependencyFieldTypeEnum.DESCENDANT_VERSION,
+            source="path.parent_lookup_organization"
+        )
+    ], validate_user=True)
+})
 @version_range(Versions(min_version="v2"))
 class OrganizationUserViewSet(ParentLookUpMixin, NestedViewSetMixin, VersionedViewMixin, ModelViewSet):
     authentication_classes = (NxCloudOauthTokenAuthentication,)
@@ -1224,6 +1549,28 @@ class OrganizationUserViewSet(ParentLookUpMixin, NestedViewSetMixin, VersionedVi
         OpenApiParameter('parent_lookup_organization', location='path', type=OpenApiTypes.UUID)
     ]
 )
+@DependentViewCache({
+    "list": Dependencies([
+        CacheDependency(
+            model=Organization,
+            field=CachedDependencyFieldTypeEnum.VERSION,
+            source="path.parent_lookup_organization"),
+        CacheDependency(
+            model=Organization,
+            field=CachedDependencyFieldTypeEnum.DESCENDANT_VERSION,
+            source="path.parent_lookup_organization")
+    ], validate_user=True),
+    "user_systems": Dependencies([
+        CacheDependency(
+            model=Organization,
+            field=CachedDependencyFieldTypeEnum.VERSION,
+            source="path.parent_lookup_organization"),
+        CacheDependency(
+            model=Organization,
+            field=CachedDependencyFieldTypeEnum.DESCENDANT_VERSION,
+            source="path.parent_lookup_organization")
+    ], validate_user=True)
+})
 @version_range(Versions(min_version="v2"))
 class CloudSystemNestedViewSet(
     ParentLookUpMixin,
@@ -1299,6 +1646,20 @@ class CloudSystemNestedViewSet(
     destroy=extend_schema(summary='Delete a group', extensions={'x-permission': f'{Organization.permissions.manage_systems} for Organization'}),
 )
 @extend_schema(tags=['Groups'])
+@DependentViewCache({
+    "retrieve": Dependencies([
+        CacheDependency(
+            model=SystemGroup,
+            field=CachedDependencyFieldTypeEnum.VERSION,
+            source="path.pk"
+        ),
+        CacheDependency(
+            model=SystemGroup,
+            field=CachedDependencyFieldTypeEnum.DESCENDANT_VERSION,
+            source="path.pk"
+        )
+    ], validate_user=True),
+})
 @version_range(Versions(min_version="v2"))
 class SystemGroupViewSet(NestedViewSetMixin,
                          mixins.CreateModelMixin,
@@ -1346,6 +1707,30 @@ class SystemGroupViewSet(NestedViewSetMixin,
     create=extend_schema(summary='Add/update user of a group', extensions={'x-permission': f'{Organization.permissions.manage_users} for Organization'}),
     destroy=extend_schema(summary='Remove a user from a group', extensions={'x-permission': f'{Organization.permissions.manage_users} for Organization'})
 )
+@DependentViewCache({
+    "list": Dependencies([
+        CacheDependency(
+            model=SystemGroup,
+            field=CachedDependencyFieldTypeEnum.VERSION,
+            source="path.parent_lookup_system_group"
+        )
+    ], validate_user=True),
+    "retrieve": Dependencies([
+        CacheDependency(
+            model=SystemGroup,
+            field=CachedDependencyFieldTypeEnum.VERSION,
+            source="path.parent_lookup_system_group"
+        )
+    ], validate_user=True),
+    "can_access": Dependencies([
+        CacheDependency(
+            model=SystemGroup,
+            field=CachedDependencyFieldTypeEnum.VERSION,
+            source="path.parent_lookup_system_group"
+        )
+    ], validate_user=True),
+    "paginated_list": Dependencies([], validate_user=True),  # TODO: Add dependencies
+})
 @version_range(Versions(min_version="v2"))
 class SystemGroupUserViewSet(ParentLookUpMixin,
                              NestedViewSetMixin,
@@ -1442,6 +1827,37 @@ class SystemGroupUserViewSet(ParentLookUpMixin,
     bind_existing=extend_schema(summary='Bind an existing cloud system to an Organization', extensions={'x-permission': f'{Organization.permissions.manage_systems} for Organization'}),
 )
 @extend_schema(tags=['Systems'])
+@DependentViewCache({
+    "list": Dependencies([], validate_user=True),  # TODO: Check if this is correct
+    "retrieve": Dependencies([
+        CacheDependency(
+            model=CloudSystemId,
+            field=CachedDependencyFieldTypeEnum.VERSION,
+            source="path.id"
+        )
+    ], validate_user=True),  # TODO: Check if this is correct
+    "saas_report": Dependencies([
+        CacheDependency(
+            model=CloudSystemId,
+            field=CachedDependencyFieldTypeEnum.VERSION,
+            source="path.id"
+        )
+    ], validate_user=True),  # TODO: Check if this is correct
+    "service_quantity": Dependencies([
+        CacheDependency(
+            model=CloudSystemId,
+            field=CachedDependencyFieldTypeEnum.VERSION,
+            source="path.id"
+        )
+    ], validate_user=True),  # TODO: Check if this is correct
+    "services": Dependencies([
+        CacheDependency(
+            model=CloudSystemId,
+            field=CachedDependencyFieldTypeEnum.VERSION,
+            source="path.id"
+        )
+    ], validate_user=True),  # TODO: Check if this is correct
+})
 @version_range(
     Versions(min_version="v2"),
     actions={'list': Versions(min_version="v2", deprecated_in="v2", max_version="v2")}
@@ -1741,6 +2157,9 @@ class ServiceRecordsViewSet(ParentLookUpMixin, NestedViewSetMixin, VersionedView
 @authentication_classes([NxTokenAuthentication])
 @permission_classes([IsAuthenticated, IsInternalToken])
 def partner_events(request):
+    """
+    NOTE: Explicitly not using DependentViewCache.
+    """
     serializer = ChannelPartnerEventParamSerializer(data=request.query_params)
     serializer.is_valid(raise_exception=True)
     data = serializer.validated_data
@@ -1764,6 +2183,9 @@ def partner_events(request):
     summary='All services for a particular cloud instance',
     tags=['Internal'],
 )
+@DependentViewCache({
+    "all_services": Dependencies([], validate_user=True), # TODO: Add dependencies | Check if this is correct
+})
 @version_range(Versions(min_version="v2"))
 @api_view(['GET'])
 @authentication_classes([NxTokenAuthentication])
@@ -1814,6 +2236,14 @@ def get_authorized_system(request, system_id, roles: Iterable | VmsRoles.AnyRole
     summary='Get Systems By User Email',
     tags=['Internal'],
 )
+@DependentViewCache({
+    "user_systems": Dependencies([
+        CacheDependency(
+            model=CloudUser,
+            field=CachedDependencyFieldTypeEnum.VERSION,
+            source="path.email")
+    ], validate_user=True),
+})
 @version_range(Versions(min_version="v2"))
 @api_view(['GET'])
 @authentication_classes([NxCloudOauthTokenAuthentication])
@@ -1831,6 +2261,18 @@ def user_systems(request, email):
     summary='Get a specific user for a system',
     tags=['Internal'],
 )
+@DependentViewCache({
+    "system_user": Dependencies([
+        CacheDependency(
+            model=CloudSystemId,
+            field=CachedDependencyFieldTypeEnum.VERSION,
+            source="path.system_id"),
+        CacheDependency(
+            model=CloudUser,
+            field=CachedDependencyFieldTypeEnum.VERSION,
+            source="path.email")
+    ], validate_user=True),
+})
 @version_range(Versions(min_version="v2"))
 @api_view(['GET'])
 @authentication_classes([NxCloudSystemBasicAuthenticationInternal, NxCloudOauthTokenAuthentication])
@@ -1856,6 +2298,20 @@ def system_user(request, system_id, email):
     summary='Get users for a system',
     tags=['Internal'],
 )
+@DependentViewCache({
+    "system_users": Dependencies([
+        CacheDependency(
+            model=CloudSystemId,
+            field=CachedDependencyFieldTypeEnum.VERSION,
+            source="path.system_id"),
+        CacheDependency( # TODO: I don't know if this is needed
+            model=CloudSystemId,
+            field=CachedDependencyFieldTypeEnum.VERSION,
+            source="path.system_id",
+            target=TargetTypeEnum.ANCESTOR
+        )
+    ], validate_user=True),
+})
 @version_range(Versions(min_version="v2"))
 @api_view(['GET'])
 @authentication_classes([NxCloudSystemBasicAuthenticationInternal, NxCloudOauthTokenAuthentication])
