@@ -123,6 +123,7 @@
         "broadcast-channel": "^5.1.0",
         "color-convert": "^2.0.1",
         "comlink": "^4.4.1",
+        "compare-versions": "^6.1.1",
         "container-query-polyfill": "^1.0.2",
         "culori": "^4.0.1",
         "d3": "7.9.0",

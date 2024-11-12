@@ -5,11 +5,11 @@ import { canViewLayouts } from './can-view-layouts';
 /**
  * Check if view tab should be replaced with layouts
  */
-export function replaceViewTab(versionOrWithVersion: number | { version: number }): boolean {
+export function replaceViewTab(buildOrWithBuild: Parameters<typeof canViewLayouts>[0]): boolean {
     const { layoutsTimeline, layoutsTimelineSaas, layoutsReplaceViewTab } = nxConfig.featureFlags;
-    return (
-        canViewLayouts(versionOrWithVersion, 6) &&
-        layoutsReplaceViewTab &&
-        (layoutsTimeline || layoutsTimelineSaas)
+    return Boolean(
+        canViewLayouts(buildOrWithBuild) &&
+            layoutsReplaceViewTab &&
+            (layoutsTimeline || layoutsTimelineSaas),
     );
 }

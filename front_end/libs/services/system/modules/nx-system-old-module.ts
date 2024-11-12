@@ -215,6 +215,8 @@ export class NxSystemOldModule extends NxSystemModuleBase {
     private router: Router;
     public override injector: Injector;
 
+    public build: string;
+
     constructor(
         currentUserEmail: string,
         public systemId?: string,
@@ -222,9 +224,10 @@ export class NxSystemOldModule extends NxSystemModuleBase {
         userId?: string,
         version?: number,
         public skipSettingSystem = false,
-        public build?: string,
+        build?: string,
     ) {
         super();
+        this.build = build || '0';
         const injector = NxSystemBase.INJECTOR;
         this.cloudApi = injector.get(NxCloudApiService);
         this.systemApiService = injector.get(NxSystemAPIService);

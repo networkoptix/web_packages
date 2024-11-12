@@ -491,10 +491,10 @@ export class NxLayoutGridTreeComponent extends WithMenuItemsByType {
 
     pickStatusTooltip = (node: ResourceNode): string => {
         if (node && node.type === ResourceType.SYSTEM && assertResourceOfType.system_cloud(node)) {
-            const { version, system2faEnabled } = node.details as NxSystemInfo;
+            const { build, system2faEnabled } = node.details as NxSystemInfo;
             const sessionVerified = this.accountService.account.sessionVerified;
 
-            if (!canViewLayouts(version)) {
+            if (!canViewLayouts(build)) {
                 return staticLang.layouts.otherSystems.tooltips.updateSite;
             }
 

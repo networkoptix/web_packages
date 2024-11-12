@@ -267,8 +267,8 @@ export class NxLayoutGridTreeNode {
             node.details.status.toLowerCase();
         const statusForCrossSiteSystem = (() => {
             if (assertResourceOfType.system_cloud(node)) {
-                const { status, system2faEnabled, version } = node.details as NxSystemInfo;
-                if (status === 'incompatible' || !canViewLayouts(version)) {
+                const { status, system2faEnabled, build } = node.details as NxSystemInfo;
+                if (status === 'incompatible' || !canViewLayouts(build)) {
                     return 'incompatible';
                 }
                 const requires2fa = system2faEnabled && !account?.sessionVerified;
