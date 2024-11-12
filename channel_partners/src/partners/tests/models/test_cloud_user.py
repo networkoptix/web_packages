@@ -1,6 +1,13 @@
-import pytest
+from uuid import uuid4
 
-from partners.models import OrganizationRoles
+import pytest
+from django.db.models import Value
+
+from partners.models import (
+    ChannelPartnerToUser,
+    CloudUser,
+    OrganizationRoles,
+)
 
 
 class TestCloudUserAllSystems:
@@ -113,7 +120,7 @@ class TestCloudUserSystemsMembership:
         other_group_sys = system_factory(organization=other_org, system_group=other_group)
         all_sys_ids = {self.org_sys.system_id, self.group_0_sys.system_id, self.group_0_1_sys.system_id,
                        other_sys.system_id, other_group_sys.system_id}
-        
+
         systems = self.cp_admin.user.systems_memberships()
 
         assert systems.count() == 5
@@ -201,3 +208,49 @@ class TestCloudUserSystemsMembership:
 
         with django_assert_num_queries(expected_queries):
             self.org_admin.user.systems_memberships()
+
+
+class TestCloudUserEmail:
+
+    @pytest.fixture(autouse=True)
+    def setup(self, cp_user_factory, cloud_user_factory):
+        self.email_lower = f'some-{uuid4()}@networkoptix.com'
+        self.email_upper = self.email_lower.upper()
+        self.user_lower = CloudUser.objects.create(email=self.email_upper)
+
+
+    def test_created(self):
+        assert self.user_lower.email == self.email_lower
+
+    def test_save(self):
+        email = f'1-{self.email_upper}'
+        user = CloudUser(email=email)
+        user.save()
+        assert user.email == email.lower()
+
+    def test_to_python(self):
+        self.user_lower.email = Value(self.email_upper)
+        self.user_lower.save()
+
+        user_lower = CloudUser.objects.filter(email=self.email_lower).first()
+        assert user_lower is None
+
+        user_upper = CloudUser.objects.first()
+        assert user_upper.email == self.email_upper
+
+        user_upper = CloudUser.objects.get(email=Value(self.email_upper))
+        assert user_upper.email == self.email_upper
+
+    def test_lookup(self):
+        user_lower = CloudUser.objects.get(email=self.email_upper)
+        assert user_lower == self.user_lower
+        assert user_lower.email == self.email_lower
+
+    def test_lookup_related(self, cp_user_factory):
+        relation = cp_user_factory(email=self.email_lower)
+        assert relation.user.email == self.email_lower
+
+        lookup = ChannelPartnerToUser.objects.get(user__email=self.email_upper)
+
+        assert lookup.user == self.user_lower
+        assert lookup.user.email == self.email_lower

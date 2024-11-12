@@ -255,7 +255,6 @@ class TestOrganizationUserViewSet:
         admin = org_user_factory(organization=org)
         other_user = org_user_factory(organization=other_org)
         view = OrganizationUserViewSet.as_view({'post': 'bulk_delete'})
-        # test all admins
         data = emails
         request = v3arf.post('/', data=data, format='json')
         mock_auth_with_user(admin)
@@ -263,6 +262,24 @@ class TestOrganizationUserViewSet:
 
         assert response.status_code == 200
         assert 'emails' in response.data
+
+    def test_bulk_delete_case_insensitive(self, channel_partner_factory, organization_factory, org_user_factory,
+                                          mock_auth_with_user, v3arf):
+        cp = channel_partner_factory()
+        org = organization_factory(channel_partner=cp)
+        users = [org_user_factory(organization=org, role=OrganizationRoles.SYSTEM_HEALTH_VIEWER) for _ in range(3)]
+        emails = [u.user.email for u in users]
+        admin = org_user_factory(organization=org)
+        view = OrganizationUserViewSet.as_view({'post': 'bulk_delete'})
+        # test all admins
+        data = [email.upper() for email in emails]
+        request = v3arf.post('/', data=data, format='json')
+        mock_auth_with_user(admin)
+        response = view(request, parent_lookup_organization=org.id)
+
+        assert response.status_code == 200
+        assert 'emails' in response.data
+        assert OrganizationToUser.objects.filter(user__email__in=emails).count() == 0
 
     def test_remove_groups(self, channel_partner_factory, organization_factory, org_user_factory,
                            sys_group_user_factory, v3arf, mock_auth_with_user, cloud_user_factory):
@@ -567,6 +584,16 @@ class TestOrganizationUserViewSetRetrieve:
         assert response.data['created']
         assert response.data['title'] == ''
 
+    def test_case_insensitive_email(self, mock_auth_with_user):
+        mock_auth_with_user(self.org_admin)
+        with transaction.atomic():
+            response = self.view(self.request,
+                                 parent_lookup_organization=self.organization.id,
+                                 email=self.org_viewer.user.email.upper())
+        assert response.status_code == 200
+        assert response.data['email'] == self.org_viewer.user.email.lower()
+
+
 
 class TestOrganizationUserViewSetCreateUpdate:
 
@@ -863,6 +890,14 @@ class TestOrganizationUserViewSetDestroy:
             response = self.view(self.request,
                                  parent_lookup_organization=self.organization.id,
                                  email=self.group_admin.user.email)
+        assert response.status_code == 204
+
+    def test_case_insensitive_email(self, mock_auth_with_user):
+        mock_auth_with_user(self.org_admin)
+        with transaction.atomic():
+            response = self.view(self.request,
+                                 parent_lookup_organization=self.organization.id,
+                                 email=self.org_viewer.user.email.upper())
         assert response.status_code == 204
 
 

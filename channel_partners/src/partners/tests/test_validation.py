@@ -83,12 +83,12 @@ def test_success_at_first_then_incrementally_add_until_failure(
 
     # Roles
     cp_admin_role = ChannelPartnerRoles.ADMINISTRATOR
-    context = create_context(cp=nx_cp, created_by=user, cloud_host=cloud_host)
+    request = arf.post('/')
+    request.cloud_host = cloud_host
+    context = create_context(cp=nx_cp, created_by=user, cloud_host=cloud_host, request=request)
     mock_notification = mock_new_partner_user_role_notification
 
     view = ChannelPartnerUserViewSet.as_view(actions={'post': 'create'})
-    request = arf.post('/')
-    request.cloud_host = cloud_host
 
     data = {
         'email': user.email,

@@ -2278,7 +2278,8 @@ def user_systems(request, email):
 @authentication_classes([NxCloudSystemBasicAuthenticationInternal, NxCloudOauthTokenAuthentication])
 @permission_classes([IsAuthenticated])
 def system_user(request, system_id, email):
-    if request.user and request.user.email.lower() == email.lower():
+    email = email.lower()
+    if request.user and request.user.email.lower() == email:
         system = get_authorized_system(request, system_id, roles=VmsRoles.ANY_ROLE)
     else:
         system = get_authorized_system(request, system_id, roles={VmsRoles.ADMINISTRATOR, VmsRoles.POWER_USER})

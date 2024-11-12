@@ -157,25 +157,20 @@ def context_vars():
 
 
 @pytest.fixture()
-def cloud_user_factory(db, random_email):
-    original_save = CloudUser.save
-
-    def _save_no_task(self, *args, **kwargs):
-        super(CloudUser, self).save(*args, **kwargs)
-
-    # Replace the CloudUser's save method with the new one
-    CloudUser.save = _save_no_task
+def cloud_user_factory(db):
 
     def user(email=None):
         if not email:
             email = f'{uuid.uuid4()}@networkoptix.com'
-        cloud_user = CloudUser.objects.get_or_create(email=email)[0]
+        cloud_user = CloudUser.objects.filter(email=email).first()
+        if not cloud_user:
+            cloud_user = CloudUser(email=email)
+            super(CloudUser, cloud_user).save()
         return cloud_user
 
-    yield user
+    return user
 
-    # Restore the original save
-    CloudUser.save = original_save
+
 
 
 @pytest.fixture()

@@ -215,6 +215,19 @@ class TestSystemGroupUserViewSet:
         assert response.status_code == 200
         assert "emails" in response.data
 
+    def test_bulk_delete_case_insensitivity(self, channel_partner_factory, organization_factory, org_user_factory,
+                                             mock_auth_with_user, arf):
+        with auto_execute_on_commit_callbacks():
+            emails = [u.user.email for u in self.users]
+            view = SystemGroupUserViewSet.as_view({'post': 'bulk_delete'})
+            # test all admins
+            data = [email.upper() for email in emails]
+            request = arf.post('/', data=data, format='json')
+            mock_auth_with_user(self.org_user)
+            response = view(request, parent_lookup_system_group=self.group.id)
+        assert response.status_code == 200
+        assert OrganizationToUser.objects.filter(user__email__in=emails).exists() is False
+
     def test_can_access(self, system_group_factory, sys_group_user_factory, arf, mock_auth_with_user):
         with auto_execute_on_commit_callbacks():
             caches['default'].clear()
@@ -403,3 +416,14 @@ class TestSystemGroupUserViewSetRetrieve:
                                      email=self.group_users[0].user.email)
 
         assert response.status_code == 403
+
+    def test_case_insensitivity(self, mock_auth_with_user):
+        mock_auth_with_user(self.org_admin)
+        with transaction.atomic():
+            with auto_execute_on_commit_callbacks():
+                response = self.view(self.request,
+                                     parent_lookup_system_group=self.group.id,
+                                     email=self.group_users[0].user.email.upper())
+
+        assert response.status_code == 200
+        assert response.data['email'] == self.group_users[0].user.email

@@ -219,3 +219,13 @@ class TestUserSystems:
         url = reverse("v2:user_systems", kwargs=url_args)
         response = self.client.get(url)
         assert response.status_code == 401
+
+    def test_email_case_insensitivity(self):
+        url_args = {
+            "email": self.cp_user_admin.user.email.upper()
+        }
+        url = reverse("v2:user_systems", kwargs=url_args)
+        self.client.force_authenticate(self.cp_user_admin.user)
+        response = self.client.get(url)
+        assert response.status_code == 200
+        assert len(response.data) == 3

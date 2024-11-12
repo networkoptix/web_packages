@@ -210,3 +210,15 @@ class TestSystemUser:
         path = reverse('v2:system_user', kwargs=url_args)
         response = self.client.get(path)
         assert response.status_code == 403
+
+    def test_emaIl_case_insensitivity(self, cloud_user_factory):
+        user = cloud_user_factory()
+        self.client.force_authenticate(user=self.cp_admin.user)
+        url_args = {
+            'system_id': str(self.group_sys.system_id),
+            'email': user.email.upper()
+        }
+        path = reverse('v2:system_user', kwargs=url_args)
+        response = self.client.get(path)
+        assert response.status_code == 200
+        assert response.data['email'] == user.email.lower()

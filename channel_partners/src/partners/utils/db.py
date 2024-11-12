@@ -2,6 +2,7 @@ from typing import List
 from uuid import UUID
 
 from django.db.models import (
+    EmailField,
     Func,
     Value,
 )
@@ -64,3 +65,13 @@ class ReplaceAncestors(Func):
 class ToArray(Func):
     function = "ARRAY"
     template = "%(function)s[%(expressions)s]"
+
+
+class LowerCaseEmailField(EmailField):
+
+    def to_python(self, value):
+        # Ensure the value is lowercase
+        value = super().to_python(value)
+        if value is not None:
+            value = value.lower()
+        return value

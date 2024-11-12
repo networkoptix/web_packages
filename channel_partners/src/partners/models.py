@@ -72,6 +72,7 @@ from partners.utils.cache_keys import (
 )
 from partners.utils.context_vars import get_context_vars
 from partners.utils.db import (
+    LowerCaseEmailField,
     MonthInterval,
     RemoveArrayElement,
     ReplaceAncestors,
@@ -198,7 +199,7 @@ class ExternalIdTargetManager(models.Manager):
 
 
 class CloudUser(VersionMixin, models.Model):
-    email = models.EmailField(unique=True, max_length=255)
+    email = LowerCaseEmailField(unique=True, max_length=255)
     full_name = models.CharField(max_length=255, null=True, blank=True, default=None)
 
     is_system_user = False
@@ -208,7 +209,8 @@ class CloudUser(VersionMixin, models.Model):
 
     def save(self, *args, **kwargs):
         is_new: bool = self._state.adding
-
+        if isinstance(self.email, str):
+            self.email = self.email.lower()
         # Call the original save method to ensure the user is saved
         super().save(*args, **kwargs)
 
@@ -219,6 +221,8 @@ class CloudUser(VersionMixin, models.Model):
             request_id = context_vars.get("request_id", None)
 
             update_cloud_user_full_name.delay(email=self.email, request_id=request_id, original_host=cloud_host)
+
+
 
     @property
     def is_authenticated(self):

@@ -2,7 +2,10 @@ import json
 from uuid import uuid4
 
 import pytest
-from django.db.models import Prefetch
+from django.db.models import (
+    Prefetch,
+    Value,
+)
 
 from partners.models import (
     CloudUser,
@@ -275,3 +278,32 @@ class TestOrganizationUserSerializer:
         serializer.is_valid()
         serializer.save()
         mock_mark_organization_user.assert_not_called()
+
+    def test_user_email_case_insensitive_existing_user(self, org_user_factory, arf, mock_mark_organization_user):
+        mock_mark_organization_user.reset_mock()
+        request = arf.post('/')
+        request.user = org_user_factory(organization=self.org).user
+        data = {
+            'email': self.user.email.upper(),
+            'roleId': OrganizationRoles.ORGANIZATION_ADMINISTRATOR
+        }
+        serializer = OrganizationUserSerializer(data=data, context={'organization': self.org, 'request': request})
+        serializer.is_valid()
+        serializer.save()
+        assert CloudUser.objects.filter(email=self.user.email.lower()).count() == 1
+        assert CloudUser.objects.filter(email=Value(self.user.email.upper())).count() == 0
+
+    def test_user_email_case_insensitive_new_user(self, org_user_factory, arf, mock_mark_organization_user):
+        mock_mark_organization_user.reset_mock()
+        request = arf.post('/')
+        request.user = org_user_factory(organization=self.org).user
+        email = f'{uuid4()}@networkoptix.com'
+        data = {
+            'email': email.upper(),
+            'roleId': OrganizationRoles.ORGANIZATION_ADMINISTRATOR
+        }
+        serializer = OrganizationUserSerializer(data=data, context={'organization': self.org, 'request': request})
+        serializer.is_valid()
+        serializer.save()
+        assert CloudUser.objects.filter(email=email.lower()).count() == 1
+        assert CloudUser.objects.filter(email=Value(email.upper())).count() == 0

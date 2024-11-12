@@ -182,3 +182,33 @@ class TestCreateChannelPartnerSerializer:
         serializer = CreateChannelPartnerSerializer(data=data, context=self.context)
         assert serializer.is_valid() is False
         assert serializer.errors['firstAdminEmail'][0] == 'Ensure this field has no more than 255 characters.'
+
+    def test_first_admin_email_case_insensitivity_existing_user(
+            self,
+            context_vars,
+            cloud_user_factory):
+
+        exiting_user = cloud_user_factory()
+        data = {
+            **self.valid,
+            'firstAdminEmail': exiting_user.email.upper()
+        }
+        serializer = CreateChannelPartnerSerializer(data=data, context=self.context)
+        assert serializer.is_valid()
+        instance: ChannelPartner = serializer.save()
+        assert instance.id
+        cloud_user = instance.users.first()
+        assert cloud_user.email == exiting_user.email.lower()
+
+    def test_first_admin_email_case_insensitivity_new_user(self, random_email):
+        email = random_email
+        data = {
+            **self.valid,
+            'firstAdminEmail': email.upper()
+        }
+        serializer = CreateChannelPartnerSerializer(data=data, context=self.context)
+        assert serializer.is_valid()
+        instance: ChannelPartner = serializer.save()
+        assert instance.id
+        cloud_user = instance.users.first()
+        assert cloud_user.email == email.lower()

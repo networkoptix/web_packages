@@ -289,6 +289,23 @@ class TestChannelPartnerUserViewSet:
         assert 'emails' in response.data
         assert set(response.data['emails']) == set(emails)
 
+    def test_bulk_delete_case_insensitivity(
+            self, channel_partner_factory, cp_user_factory, mock_auth_with_user, arf, random_email):
+
+        users = [cp_user_factory(channel_partner=self.cp, role=ChannelPartnerRoles.REPORTS_VIEWER) for _ in range(3)]
+        emails = [u.user.email for u in users]
+        view = ChannelPartnerUserViewSet.as_view({'post': 'bulk_delete'})
+        # test all admins
+        data = [email.upper() for email in emails] + [random_email]
+        request = arf.post('/', data=data, format='json')
+        mock_auth_with_user(self.cp_user)
+        response = view(request, parent_lookup_channel_partner=self.cp.id)
+
+        assert response.status_code == 200
+        assert 'emails' in response.data
+        assert set(response.data['emails']) == set(emails)
+        assert ChannelPartnerToUser.objects.filter(user__email__in=emails).count() == 0
+
     def test_list_permissions(self, mock_auth_with_user, arf):
         view = ChannelPartnerUserViewSet.as_view(actions={'get': 'list'})
         request = arf.get('/')
@@ -360,6 +377,17 @@ class TestChannelPartnerUserViewSet:
         assert response.data['rolesIds'] == [str(ChannelPartnerRoles.MANAGER)]
         assert response.data['created']
         assert response.data['lastModified']
+
+    def test_retrieve_case_insensitive(self, mock_auth_with_user, arf, cp_user_factory):
+        view = ChannelPartnerUserViewSet.as_view(actions={'get': 'retrieve'})
+        manager = cp_user_factory(channel_partner=self.cp, role=ChannelPartnerRoles.MANAGER)
+        request = arf.get('/')
+        mock_auth_with_user(self.cp_user)
+        with transaction.atomic():
+            response = view(request, parent_lookup_channel_partner=self.cp.id, email=manager.user.email.upper())
+        assert response.status_code == 200
+        assert response.data['email'] == manager.user.email
+        assert response.data['rolesIds'] == [str(ChannelPartnerRoles.MANAGER)]
 
     def test_paginated_list(self, mock_auth_with_user, arf, cp_user_factory):
         init_users = self.cp.users.count()

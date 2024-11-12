@@ -1,7 +1,7 @@
 import uuid
-from dataclasses import dataclass
 
 import pytest
+from django.db.models import Value
 from rest_framework.exceptions import ValidationError
 
 from partners.models import (
@@ -27,33 +27,21 @@ def create_relation(email: str, title: str, roleId: uuid.UUID, attributes: dict,
     return serializer.save()
 
 
-def create_context(cp: ChannelPartner, created_by: CloudUser, cloud_host: CloudHost):
-    @dataclass
-    class Request:
-        pass
-
-    @dataclass
-    class Context:
-        channel_partner: ChannelPartner
-        request: Request
-
-        def __getattr__(self, name):
-            return getattr(self.__dict__, name)
-
-    context = Context(
-        channel_partner=cp,
-        request=Request()
-    )
-
-    setattr(context.request, 'user', created_by)  # Set the user attribute dynamically
-    setattr(context.request, 'cloud_host', cloud_host)
+def create_context(cp: ChannelPartner, created_by: CloudUser, cloud_host: CloudHost, request: object):
+    request.user = created_by
+    request.cloud_host = cloud_host
+    context = {
+        "channel_partner": cp,
+        "request": request,
+    }
     return context
 
 
 class TestChannelPartnerUserSerializer:
     @pytest.fixture(autouse=True)
     def setUp(self, cloud_host_factory, channel_partner_factory, arf,
-              cloud_test_host, mock_new_partner_user_role_notification):
+              cloud_test_host, mock_new_partner_user_role_notification,
+              cp_user_factory):
         # Cloud User
         self.user: CloudUser = CloudUser.objects.create(email="nx_user@example.com")
 
@@ -65,14 +53,19 @@ class TestChannelPartnerUserSerializer:
             name='nx',
             cloud_host=self.cloud_host,
             parent_channel_partner=None)
+        self.nx_cp_admin = cp_user_factory(channel_partner=self.nx_cp)
+
 
         # Roles
         self.cp_admin_role: uuid.UUID = ChannelPartnerRoles.ADMINISTRATOR
-        self.context = create_context(cp=self.nx_cp, created_by=self.user, cloud_host=self.cloud_host)
         self.mock_notification = mock_new_partner_user_role_notification
 
         self.request = arf.post('/')
         self.request.cloud_host = self.cloud_host
+        self.context = create_context(cp=self.nx_cp,
+                                      created_by=self.nx_cp_admin,
+                                      cloud_host=self.cloud_host,
+                                      request=self.request)
 
     def test_validate_new_user_email(self):
         data = {
@@ -291,7 +284,7 @@ class TestChannelPartnerUserSerializer:
             "request": self.request,
         }
         other_user = cp_user_factory(channel_partner=cp)
-        assert mock_mark_organization_user.call_count == 2
+        assert mock_mark_organization_user.call_count == 3
 
         data = {
             'email': other_user.user.email,
@@ -302,7 +295,7 @@ class TestChannelPartnerUserSerializer:
         assert serializer.is_valid() is True
         serializer.save()
         self.mock_notification.assert_not_called()
-        assert mock_mark_organization_user.call_count == 2
+        assert mock_mark_organization_user.call_count == 3
 
     def test_changing_only_admin_role_2_users(self, channel_partner_factory,
                                         cp_user_factory, arf, mock_post_notification):
@@ -339,5 +332,42 @@ class TestChannelPartnerUserSerializer:
         assert serializer.is_valid() is True
         serializer.save()
         self.mock_notification.assert_called_once()
-        assert mock_mark_organization_user.call_count == 1
+        assert mock_mark_organization_user.call_count == 2
+
+    def test_user_email_case_insensitive_existing_user(
+            self,
+            cp_user_factory,
+            channel_partner_factory,
+            mock_mark_organization_user):
+
+        mock_mark_organization_user.reset_mock()
+        data = {
+            'email': self.user.email.upper(),
+            'roleId': ChannelPartnerRoles.ADMINISTRATOR
+        }
+        serializer = ChannelPartnerUserSerializer(data=data, context=self.context)
+        serializer.is_valid()
+        serializer.save()
+        assert CloudUser.objects.filter(email=self.user.email.lower()).count() == 1
+        assert CloudUser.objects.filter(email=Value(self.user.email.upper())).count() == 0
+        mock_mark_organization_user.asser_called_once_with(self.user.email.lower())
+
+    def test_user_email_case_insensitive_new_user(
+            self,
+            cp_user_factory,
+            channel_partner_factory,
+            mock_mark_organization_user):
+        email = f'some-{uuid.uuid4()}@example.com'
+        mock_mark_organization_user.reset_mock()
+        data = {
+            'email': email.upper(),
+            'roleId': ChannelPartnerRoles.ADMINISTRATOR
+        }
+        serializer = ChannelPartnerUserSerializer(data=data, context=self.context)
+        serializer.is_valid()
+        serializer.save()
+        assert CloudUser.objects.filter(email=email.lower()).count() == 1
+        assert CloudUser.objects.filter(email=Value(email.upper())).count() == 0
+        mock_mark_organization_user.asser_called_once_with(email.lower())
+
 

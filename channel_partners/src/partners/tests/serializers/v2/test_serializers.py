@@ -19,6 +19,7 @@ from partners.models import (
     ChannelPartnerService,
     ChannelPartnerStates,
     ChannelPartnerToUser,
+    CloudUser,
     NotificationTypes,
     OrganizationRole,
     OrganizationRoles,
@@ -988,6 +989,19 @@ class TestSystemGroupUserSerializer:
         serializer = SystemGroupUserSerializer(data=data, context={'group': self.group, 'request': self.request})
         assert serializer.is_valid() is False
         assert 'cannot be added to group' in serializer.errors['email'][0]
+
+    def test_email_case_insensitive(self):
+        email = f'some-{uuid4()}@networkoptix.com'
+        data = {
+            'email': email.upper(),
+            'roleId': OrganizationRoles.SYSTEM_ADMINISTRATOR
+        }
+
+        serializer = SystemGroupUserSerializer(data=data, context={'group': self.group, 'request': self.request})
+        assert serializer.is_valid()
+        serializer.save()
+        user = CloudUser.objects.get(email=email)
+        assert user.email == email
 
 
 class TestOrganizationStateChangeSerializer:
