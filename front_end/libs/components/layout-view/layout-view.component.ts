@@ -204,19 +204,27 @@ export class NxLayoutViewComponent {
 
     getLayoutCacheKey = (systemId: string): string => v5(this.accountService.email, systemId);
 
+    getPreviousState = (
+        systemId: string,
+    ): Promise<{
+        value?: ReturnType<LayoutStateService['paramStateHandler']['state$$']>;
+    }> => {
+        const key = this.getLayoutCacheKey(systemId);
+        const fromSession = sessionStorage[key];
+        return (
+            fromSession
+                ? Promise.resolve({ value: JSON.parse(fromSession) })
+                : firstValueFrom(this.db.getByKey('layoutCache', key))
+        ) as Promise<{
+            value?: ReturnType<LayoutStateService['paramStateHandler']['state$$']>;
+        }>;
+    };
+
     #defaultLayout$: Observable<string> = this.layoutItemLookup$.pipe(
         switchMap(async ({ tree }) => {
             const systemId = this.systemService.currentSystem$$()?.id;
             if (systemId) {
-                const key = this.getLayoutCacheKey(systemId);
-                const fromSession = sessionStorage[key];
-                const res = (
-                    fromSession
-                        ? { value: JSON.parse(fromSession) }
-                        : await firstValueFrom(this.db.getByKey('layoutCache', key))
-                ) as {
-                    value?: ReturnType<LayoutStateService['paramStateHandler']['state$$']>;
-                };
+                const res = await this.getPreviousState(systemId);
                 const value = res?.value;
                 if (value?.params?.layoutId && findNode(tree, value.params.layoutId)) {
                     return value.params.layoutId;
@@ -322,7 +330,7 @@ export class NxLayoutViewComponent {
                 this.db
                     .update('layoutCache', {
                         key,
-                        value: state,
+                        value: { params: state.params },
                     })
                     .subscribe();
             }
@@ -365,11 +373,7 @@ export class NxLayoutViewComponent {
             return;
         }
 
-        const res = (await firstValueFrom(
-            this.db.getByKey('layoutCache', this.getLayoutCacheKey(systemId)),
-        )) as {
-            value?: ReturnType<LayoutStateService['paramStateHandler']['state$$']>;
-        };
+        const res = await this.getPreviousState(systemId);
         const queryParams = res?.value?.queryParams;
         if (this.initialLoad) {
             this.layoutStateService.paramStateHandler.state$$.set({ queryParams });
