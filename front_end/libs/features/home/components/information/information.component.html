@@ -1,6 +1,6 @@
 <nx-information-stepper [(selectedIndex)]="stepIndex">
     <cdk-step #emptyStep>
-        <nx-page-generic-placeholder-v2>
+        <nx-page-generic-placeholder>
             <svg-icon
                 nx-add-svg-src
                 [src]="icons.dirPageV2Placeholder + 'no_info.svg'"
@@ -29,7 +29,7 @@
                     Add Information
                 </button>
             </div>
-        </nx-page-generic-placeholder-v2>
+        </nx-page-generic-placeholder>
     </cdk-step>
     <cdk-step #viewStep>
         <nx-information-view

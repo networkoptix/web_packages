@@ -16,9 +16,9 @@ import {
     selectCurrentPartnerId,
     selectCurrentSubChannelPartners,
 } from '@common/store/channel-partners/channel-partners.selectors';
+import { NxPagePlaceholderGenericComponent } from '@components/placeholders/generic-page-placeholder.component';
+import { NxPagePlaceholderNothingFoundComponent } from '@components/placeholders/nothing-found/nothing-found-placeholder.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
-import { NxPagePlaceholderGenericComponent } from '@components/placeholdersV2/generic-page-placeholder.component';
-import { NxPagePlaceholderNothingFoundComponent } from '@components/placeholdersV2/nothing-found/nothing-found-placeholder.component';
 import { NxSearchComponent } from '@components/search/search.component';
 import { NxTagComponent } from '@components/tag/tag.component';
 import { NxDialogsService } from '@dialogs/dialogs.service';

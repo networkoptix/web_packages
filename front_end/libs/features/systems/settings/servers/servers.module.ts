@@ -12,10 +12,10 @@ import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.
 import { EditableModule } from '@components/editable/editable.module';
 import { NxInfoBlockComponent } from '@components/info-block/info-block.component';
 import { NxNumericComponent } from '@components/numeric-input/numeric.component';
+import { NxPagePlaceholderGenericComponent } from '@components/placeholders/generic-page-placeholder.component';
+import { NxPagePlaceholderNoSettingsComponent } from '@components/placeholders/no-settings/no-settings-page-placeholder.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxSectionPlaceholderComponent } from '@components/placeholders/section/section-placeholder.component';
-import { NxPagePlaceholderGenericComponent } from '@components/placeholdersV2/generic-page-placeholder.component';
-import { NxPagePlaceholderNoSettingsComponent } from '@components/placeholdersV2/no-settings/no-settings-page-placeholder.component';
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { NxSwitchComponent } from '@components/switch/switch.component';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';

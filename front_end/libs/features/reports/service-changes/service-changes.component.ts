@@ -3,8 +3,8 @@ import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { Store } from '@ngrx/store';
 import { take } from 'rxjs';
 
+import { NxPagePlaceholderNoReportsComponent } from '@components/placeholders/no-reports/no-reports-page-placeholder.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
-import { NxPagePlaceholderNoReportsComponent } from '@components/placeholdersV2/no-reports/no-reports-page-placeholder.component';
 import { PageChange } from '@components/table/table.types';
 import staticLang from '@language_static';
 import { NxDateTimeFormatService } from '@services/datetime-format.service';

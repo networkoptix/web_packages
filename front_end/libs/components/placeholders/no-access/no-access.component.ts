@@ -3,7 +3,7 @@ import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { NxPagePlaceholderGenericComponent } from '@components/placeholdersV2/generic-page-placeholder.component';
+import { NxPagePlaceholderGenericComponent } from '@components/placeholders/generic-page-placeholder.component';
 import staticLang from '@language_static';
 import { icons } from '@static-variables';
 @Component({

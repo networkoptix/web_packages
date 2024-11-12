@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { NxPagePlaceholder500Component } from '@components/placeholdersV2/500/500-page-placeholder.component';
+import { NxPagePlaceholder500Component } from '@components/placeholders/500/500-page-placeholder.component';
 
 import { Nx500Component } from './500.component';
 

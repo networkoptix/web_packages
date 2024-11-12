@@ -17,9 +17,9 @@ import {
 } from '@common/store/channel-partners/channel-partners.selectors';
 import { ActionItems } from '@components/dropdowns/three-dot/three-dot.component.types';
 import { NxHidableModule } from '@components/hidable/hidable.module';
+import { NxPagePlaceholderNoItemsComponent } from '@components/placeholders/no-items/no-items-page-placeholder.component';
+import { NxPagePlaceholderNothingFoundComponent } from '@components/placeholders/nothing-found/nothing-found-placeholder.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
-import { NxPagePlaceholderNoItemsComponent } from '@components/placeholdersV2/no-items/no-items-page-placeholder.component';
-import { NxPagePlaceholderNothingFoundComponent } from '@components/placeholdersV2/nothing-found/nothing-found-placeholder.component';
 import { NxSearchComponent } from '@components/search/search.component';
 import { NxSearchHighlightComponent } from '@components/search-highlight/search-highlight.component';
 import { NxTagComponent } from '@components/tag/tag.component';

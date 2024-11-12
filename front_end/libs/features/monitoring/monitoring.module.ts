@@ -8,8 +8,8 @@ import { NxAlertBlockComponent } from '@components/content-block/alert/block.com
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
 import { NxMonitoringGraphComponent } from '@components/graph/graph.component';
 import { NxLoggerComponent } from '@components/logger/logger.component';
+import { NxPagePlaceholderNoSettingsComponent } from '@components/placeholders/no-settings/no-settings-page-placeholder.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
-import { NxPagePlaceholderNoSettingsComponent } from '@components/placeholdersV2/no-settings/no-settings-page-placeholder.component';
 import { NxSelectV2ItemComponent } from '@components/select-v2/items/select-item/select-item.component';
 import { NxSelectV2Component } from '@components/select-v2/select-v2.component';
 import { AuthGuard } from '@guards/authGuard';

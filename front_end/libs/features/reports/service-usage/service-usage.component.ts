@@ -1,7 +1,7 @@
 import { Component, computed, effect, inject, input, untracked } from '@angular/core';
 
+import { NxPagePlaceholderNoReportsComponent } from '@components/placeholders/no-reports/no-reports-page-placeholder.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
-import { NxPagePlaceholderNoReportsComponent } from '@components/placeholdersV2/no-reports/no-reports-page-placeholder.component';
 import staticLang from '@language_static';
 import { ReportExportFormat } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 

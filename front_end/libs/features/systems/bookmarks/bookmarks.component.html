@@ -120,7 +120,7 @@
                             *ngIf="noMatchingResults; else noBookmarksText"
                             class="no-bookmarks-content"
                         >
-                            <nx-page-generic-placeholder-v2>
+                            <nx-page-generic-placeholder>
                                 <div class="placeholder">
                                     <svg-icon
                                         [src]="
@@ -144,10 +144,10 @@
                                         </button>
                                     </div>
                                 </div>
-                            </nx-page-generic-placeholder-v2>
+                            </nx-page-generic-placeholder>
                         </div>
                         <ng-template #noBookmarksText>
-                            <nx-page-generic-placeholder-v2>
+                            <nx-page-generic-placeholder>
                                 <div class="placeholder">
                                     <svg-icon
                                         [src]="
@@ -161,7 +161,7 @@
                                         You don't have any Bookmarks yet.
                                     </h2>
                                 </div>
-                            </nx-page-generic-placeholder-v2>
+                            </nx-page-generic-placeholder>
                         </ng-template>
                     </ng-container>
                     <div

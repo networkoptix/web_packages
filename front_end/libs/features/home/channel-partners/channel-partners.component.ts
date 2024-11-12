@@ -38,10 +38,10 @@ import {
     selectCurrentPartnerParent,
 } from '@common/store/channel-partners/channel-partners.selectors';
 import { NxAlertBlockComponent } from '@components/content-block/alert/block.component';
+import { NxPagePlaceholderFailedPartnerAccessComponent } from '@components/placeholders/failed-partner-access/failed-partner-access-page-placeholder.component';
+import { NxPagePlaceholderGenericComponent } from '@components/placeholders/generic-page-placeholder.component';
+import { NxPagePlaceholderNothingFoundComponent } from '@components/placeholders/nothing-found/nothing-found-placeholder.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
-import { NxPagePlaceholderFailedPartnerAccessComponent } from '@components/placeholdersV2/failed-partner-access/failed-partner-access-page-placeholder.component';
-import { NxPagePlaceholderGenericComponent } from '@components/placeholdersV2/generic-page-placeholder.component';
-import { NxPagePlaceholderNothingFoundComponent } from '@components/placeholdersV2/nothing-found/nothing-found-placeholder.component';
 import { NxSearchComponent } from '@components/search/search.component';
 import { NxTabsComponent } from '@components/tabs/tabs.component';
 import { Tab } from '@components/tabs/tabs.types';

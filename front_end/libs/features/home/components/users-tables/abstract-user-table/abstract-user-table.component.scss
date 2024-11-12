@@ -7,7 +7,7 @@
   height: calc(100% - 3rem);
   display: grid;
 
-  &:has(nx-page-generic-placeholder-v2) {
+  &:has(nx-page-generic-placeholder) {
     height: 100%;
     max-height: calc(100% - 165px);
   }

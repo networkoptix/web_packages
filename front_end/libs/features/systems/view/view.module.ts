@@ -6,10 +6,10 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { CookieService } from 'ngx-cookie-service';
 
 import { NxVmsClientTextComponent } from '@components/open-vms-client/vms-client-text/vms-client-text.component';
+import { NxPagePlaceholderGenericComponent } from '@components/placeholders/generic-page-placeholder.component';
+import { NxPagePlaceholderOfflineComponent } from '@components/placeholders/offline/offline-page-placeholder.component';
 import { NxPlayerPlaceholderComponent } from '@components/placeholders/player/player-placeholder.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
-import { NxPagePlaceholderGenericComponent } from '@components/placeholdersV2/generic-page-placeholder.component';
-import { NxPagePlaceholderOfflineComponent } from '@components/placeholdersV2/offline/offline-page-placeholder.component';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { PipesModule } from '@pipes/pipes.module';
 import { currentSystemResolver } from '@resolvers/current-system-resolver';

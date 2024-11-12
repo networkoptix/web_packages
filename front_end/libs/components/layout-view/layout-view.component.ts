@@ -48,7 +48,7 @@ import {
 } from '@components/layout-grid/layout-grid.types';
 import { findNode } from '@components/layout-grid-tree/utils/find-node';
 import { NxLayoutPtzComponent } from '@components/layout-ptz/layout-ptz.component';
-import { NxPagePlaceholderOfflineComponent } from '@components/placeholdersV2/offline/offline-page-placeholder.component';
+import { NxPagePlaceholderOfflineComponent } from '@components/placeholders/offline/offline-page-placeholder.component';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import staticLang from '@language_static';
 import { WebRTCStreamManager } from '@openLibs/webrtc-stream-manager';

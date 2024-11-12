@@ -10,10 +10,10 @@ import { NxContentBlockComponent } from '@components/content-block/content-block
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
 import { NxInfoBlockComponent } from '@components/info-block/info-block.component';
 import { NxPaginatorComponent } from '@components/paginator/paginator.component';
+import { NxPagePlaceholder500Component } from '@components/placeholders/500/500-page-placeholder.component';
+import { NxPagePlaceholderGenericComponent } from '@components/placeholders/generic-page-placeholder.component';
+import { NxPagePlaceholderOfflineComponent } from '@components/placeholders/offline/offline-page-placeholder.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
-import { NxPagePlaceholder500Component } from '@components/placeholdersV2/500/500-page-placeholder.component';
-import { NxPagePlaceholderGenericComponent } from '@components/placeholdersV2/generic-page-placeholder.component';
-import { NxPagePlaceholderOfflineComponent } from '@components/placeholdersV2/offline/offline-page-placeholder.component';
 import { NxSearchComponent } from '@components/search/search.component';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { AuthGuard } from '@guards/authGuard';

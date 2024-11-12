@@ -19,7 +19,7 @@
         }
 
         @if (outdatedVersion) {
-            <nx-page-generic-placeholder-v2>
+            <nx-page-generic-placeholder>
                 <svg-icon
                     [src]="icons.dirPagePlaceholder + 'NewVersion.svg'"
                     [svgStyle]="{ 'height.px': 200 }"
@@ -37,7 +37,7 @@
                     Your current version is incompatible with this feature. Please update your
                     servers to the latest version to use this feature.
                 </div>
-            </nx-page-generic-placeholder-v2>
+            </nx-page-generic-placeholder>
         }
         <ng-template [ngTemplateOutlet]="fileUpload"></ng-template>
     </div>

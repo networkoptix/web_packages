@@ -5,9 +5,9 @@ import { escape } from 'lodash-es';
 
 import { NxCheckAllContainerDirective } from '@components/checkbox/checkbox-check-all-container.directive';
 import { NxCheckAllDirective } from '@components/checkbox/checkbox-check-all.directive';
-import { NxPagePlaceholderGenericComponent } from '@components/placeholdersV2/generic-page-placeholder.component';
-import { NxPagePlaceholderNoUsersComponent } from '@components/placeholdersV2/no-users/no-users-page-placeholder.component';
-import { NxPagePlaceholderNothingFoundComponent } from '@components/placeholdersV2/nothing-found/nothing-found-placeholder.component';
+import { NxPagePlaceholderGenericComponent } from '@components/placeholders/generic-page-placeholder.component';
+import { NxPagePlaceholderNoUsersComponent } from '@components/placeholders/no-users/no-users-page-placeholder.component';
+import { NxPagePlaceholderNothingFoundComponent } from '@components/placeholders/nothing-found/nothing-found-placeholder.component';
 import { NxSelectV2Module } from '@components/select-v2/select-v2.module';
 import { NxTooltipV2Directive } from '@directives/tooltip-v2/tooltip-v2.directive';
 import { UserRecord } from '@pages/home/components/users/channel-partner-users/channel-partner-users.types';

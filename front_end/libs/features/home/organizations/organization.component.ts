@@ -33,8 +33,8 @@ import {
 } from '@common/store/channel-partners/channel-partners.selectors';
 import { NxAlertBlockComponent } from '@components/content-block/alert/block.component';
 import { NxHidableModule } from '@components/hidable/hidable.module';
+import { NxPagePlaceholderGenericComponent } from '@components/placeholders/generic-page-placeholder.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
-import { NxPagePlaceholderGenericComponent } from '@components/placeholdersV2/generic-page-placeholder.component';
 import { NxRibbonStandaloneComponent } from '@components/ribbon/ribbon-standalone.component';
 import { NxTabsComponent } from '@components/tabs/tabs.component';
 import { Tab } from '@components/tabs/tabs.types';

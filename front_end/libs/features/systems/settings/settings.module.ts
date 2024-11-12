@@ -15,10 +15,11 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { firstValueFrom } from 'rxjs';
 
 import { NxFooterComponent } from '@components/footer/footer.component';
+import { NxPagePlaceholder404Component } from '@components/placeholders/404/404-page-placeholder.component';
+import { NxPagePlaceholderFailed2faAccessComponent } from '@components/placeholders/failed-2fa-access/failed-2fa-access-page-placeholder.component';
+import { NxPagePlaceholderFailedSystemAccessComponent } from '@components/placeholders/failed-system-access/failed-system-access-page-placeholder.component';
+import { NxPagePlaceholderGenericComponent } from '@components/placeholders/generic-page-placeholder.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
-import { NxPagePlaceholder404Component } from '@components/placeholdersV2/404/404-page-placeholder.component';
-import { NxPagePlaceholderFailed2faAccessComponent } from '@components/placeholdersV2/failed-2fa-access/failed-2fa-access-page-placeholder.component';
-import { NxPagePlaceholderFailedSystemAccessComponent } from '@components/placeholdersV2/failed-system-access/failed-system-access-page-placeholder.component';
 import { ToastType } from '@components/toast-container/toast.types';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { ApplyGuard } from '@guards/applyGuard';
@@ -37,8 +38,6 @@ import { userResolver } from '@resolvers/user-resolver';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxToastService } from '@services/toast.service';
 import { NxMenuProjectionDirective } from 'nx-components';
-
-import { NxPagePlaceholderGenericComponent } from '../../../components/placeholdersV2/generic-page-placeholder.component';
 
 import { NxSystemAdminComponent } from './admin/admin.component';
 import { NxSystemAdminModule } from './admin/admin.module';

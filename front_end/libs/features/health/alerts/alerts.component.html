@@ -1,5 +1,5 @@
 <div [ngSwitch]="healthService.alertsValues ? healthService.alertsValues.length : 0">
-    <nx-page-generic-placeholder-v2
+    <nx-page-generic-placeholder
         class="placeholder"
         *ngSwitchCase="0"
     >
@@ -19,7 +19,7 @@
         >
             Your system must be doing well!
         </div>
-    </nx-page-generic-placeholder-v2>
+    </nx-page-generic-placeholder>
 
     <div *ngSwitchDefault>
         <div

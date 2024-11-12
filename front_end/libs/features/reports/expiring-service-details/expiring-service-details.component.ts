@@ -2,8 +2,8 @@ import { Component, computed, effect, inject, input, untracked } from '@angular/
 import { Router } from '@angular/router';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
+import { NxPagePlaceholderNoReportsComponent } from '@components/placeholders/no-reports/no-reports-page-placeholder.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
-import { NxPagePlaceholderNoReportsComponent } from '@components/placeholdersV2/no-reports/no-reports-page-placeholder.component';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { icons } from '@static-variables';
 

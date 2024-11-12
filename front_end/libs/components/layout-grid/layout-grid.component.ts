@@ -77,8 +77,8 @@ import { NxLayoutGridTreeComponent } from '@components/layout-grid-tree/layout-g
 import { findOtherSiteCamera } from '@components/layout-grid-tree/utils/create-layout-item';
 import { NxWebGLService } from '@components/nx-webgl-canvas/services/webgl.service';
 import { NxWebGLCanvasComponent } from '@components/nx-webgl-canvas/webgl-canvas.component';
+import { NxPagePlaceholder404Component } from '@components/placeholders/404/404-page-placeholder.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
-import { NxPagePlaceholder404Component } from '@components/placeholdersV2/404/404-page-placeholder.component';
 import { NxLinesLoaderComponent } from '@components/skeleton-loader/variants/lines-loader/lines-loader.component';
 import { ToastType } from '@components/toast-container/toast.types';
 import { NxVideoPlayerComponent } from '@components/video-player/video-player.component';

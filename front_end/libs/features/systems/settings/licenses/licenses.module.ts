@@ -11,8 +11,8 @@ import { NxContentBlockComponent } from '@components/content-block/content-block
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
 import { NxInfoBlockComponent } from '@components/info-block/info-block.component';
+import { NxPagePlaceholderNoSettingsComponent } from '@components/placeholders/no-settings/no-settings-page-placeholder.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
-import { NxPagePlaceholderNoSettingsComponent } from '@components/placeholdersV2/no-settings/no-settings-page-placeholder.component';
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { NxLicenseSummaryComponent } from '@components/summary/summary.component';
 import { PipesModule } from '@pipes/pipes.module';

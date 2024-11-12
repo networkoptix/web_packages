@@ -14,10 +14,10 @@ import { NxThreeDotDropdown } from '@components/dropdowns/three-dot/three-dot.co
 import { EditableModule } from '@components/editable/editable.module';
 import { NxInfoBlockComponent } from '@components/info-block/info-block.component';
 import { NxNumericComponent } from '@components/numeric-input/numeric.component';
+import { NxPagePlaceholderGenericComponent } from '@components/placeholders/generic-page-placeholder.component';
+import { NxPagePlaceholderNoSettingsComponent } from '@components/placeholders/no-settings/no-settings-page-placeholder.component';
 import { NxOpenClientSectionPlaceholderComponent } from '@components/placeholders/open-client-section/open-client-section.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
-import { NxPagePlaceholderGenericComponent } from '@components/placeholdersV2/generic-page-placeholder.component';
-import { NxPagePlaceholderNoSettingsComponent } from '@components/placeholdersV2/no-settings/no-settings-page-placeholder.component';
 import { NxRadioComponent } from '@components/radio/radio.component';
 import { NxSelectV2Module } from '@components/select-v2/select-v2.module';
 import { NxSwitchComponent } from '@components/switch/switch.component';

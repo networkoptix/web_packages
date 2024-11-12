@@ -1,6 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 @Component({
-    selector: 'nx-page-generic-placeholder-v2',
+    selector: 'nx-page-generic-placeholder',
     templateUrl: 'generic-page-placeholder.component.html',
     styleUrls: ['generic-page-placeholder.component.scss'],
     encapsulation: ViewEncapsulation.None,

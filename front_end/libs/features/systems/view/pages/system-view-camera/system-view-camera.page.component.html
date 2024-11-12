@@ -1,5 +1,5 @@
 @if (!camera) {
-    <nx-page-generic-placeholder-v2 class="no-access-placeholder">
+    <nx-page-generic-placeholder class="no-access-placeholder">
         <svg-icon
             [src]="icons.dirPagePlaceholder + 'NoAccess.svg'"
             [svgStyle]="{ 'height.px': 200 }"
@@ -16,7 +16,7 @@
         >
             No camera can be accessed by this link.
         </div>
-    </nx-page-generic-placeholder-v2>
+    </nx-page-generic-placeholder>
 } @else {
     <header
         *ngIf="camera && showElementsInFSM"

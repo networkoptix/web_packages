@@ -1,6 +1,6 @@
 import { BehaviorSubject } from 'rxjs';
 
-import { NxPagePlaceholderNoSettingsComponent } from '@components/placeholdersV2/no-settings/no-settings-page-placeholder.component';
+import { NxPagePlaceholderNoSettingsComponent } from '@components/placeholders/no-settings/no-settings-page-placeholder.component';
 import { setupComponent } from '@pages/src/setup';
 
 import { NxSystemStandardServerComponent } from './server-standard.component';
