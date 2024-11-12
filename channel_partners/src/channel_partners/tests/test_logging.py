@@ -35,7 +35,7 @@ from channel_partners.logging.logging_signals import (
 )
 from channel_partners.logging.middleware import DebugLevelFilter
 from channel_partners.utils import standardize_path
-from partners.authentication import NxCloudOauthTokenAuthentication
+from partners.auth.token_auth import NxCloudOauthTokenAuthentication
 from partners.filters import CreatedTsAndIdAndNameFilter
 from partners.models import CloudUser
 from partners.tests.services.caching.test_dependent_view_cache import (

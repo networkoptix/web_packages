@@ -1,6 +1,6 @@
 from rest_framework.request import Request
 
-from partners.authentication import IntrospectionResult
+from partners.auth.introspect import IntrospectionResult
 from partners.models import (
     CloudHost,
     CloudSystemId,

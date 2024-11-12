@@ -11,7 +11,7 @@ from django.conf import settings
 from django.core.cache import caches
 from django.utils.functional import cached_property
 
-from partners.authentication import IntrospectionResult
+from partners.auth.introspect import IntrospectionResult
 from partners.models import (
     ChannelPartner,
     ChannelPartnerRoles,

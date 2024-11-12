@@ -23,10 +23,8 @@ from channel_partners.throttling.throttle import (
     AuthenticatedUserRateThrottle,
     SystemRateThrottle,
 )
-from partners.authentication import (
-    NxCloudOauthTokenAuthentication,
-    NxCloudSystemBasicAuthentication,
-)
+from partners.auth.system_auth import NxCloudSystemBasicAuthentication
+from partners.auth.token_auth import NxCloudOauthTokenAuthentication
 
 
 class NoAuthNoPermQuickResponseView(APIView):
@@ -90,7 +88,7 @@ class ThrottleTests(TestCase):
         response_fail = self.client.get('/partners/api/v2/test-anon/')
         self.assertEqual(response_fail.status_code, status.HTTP_429_TOO_MANY_REQUESTS)
 
-    @patch('partners.authentication.NxCloudOauthTokenAuthentication.authenticate')
+    @patch('partners.auth.token_auth.NxCloudOauthTokenAuthentication.authenticate')
     def test_authenticated_user_rate_throttle(self, mock_auth):
         # Create a fake user object
         fake_user = User(username='fakeuser')
@@ -105,7 +103,7 @@ class ThrottleTests(TestCase):
         response_fail = self.client.get('/partners/api/v2/test-user/')
         self.assertEqual(response_fail.status_code, status.HTTP_429_TOO_MANY_REQUESTS)
 
-    @patch('partners.authentication.NxCloudSystemBasicAuthentication.authenticate_credentials')
+    @patch('partners.auth.system_auth.NxCloudSystemBasicAuthentication.authenticate_credentials')
     def test_system_rate_throttle(self, mock_auth):
         class StubSystemId:
             system_id = "123213121"
@@ -157,7 +155,7 @@ class ThrottleTests(TestCase):
             view_class.throttle_classes,
             "SystemRateThrottle is not applied")
 
-    @patch('partners.authentication.NxCloudOauthTokenAuthentication.authenticate')
+    @patch('partners.auth.token_auth.NxCloudOauthTokenAuthentication.authenticate')
     def test_authenticated_user_extended_rate_throttle(self, mock_auth):
         # Create a fake user object
         fake_user = User(username='extended_rate_user')

@@ -368,7 +368,7 @@ def mock_auth_with_user(default_cp_admin, cloud_test_host, mocker, httpx_mock, c
     def mock(user: typing.Union[CloudUser, ChannelPartnerToUser, OrganizationToUser] = default_cp_admin, token=uuid4()):
         usr = getattr(user, 'user', user)
         mock_authenticate = mocker.patch(
-            'partners.authentication.NxCloudOauthTokenAuthentication.authenticate',
+            'partners.auth.token_auth.NxCloudOauthTokenAuthentication.authenticate',
             return_value=(getattr(user, 'user', user), token)
         )
         data = {
@@ -394,11 +394,11 @@ def mock_internal_token_auth(mocker):
 @pytest.fixture()
 def mock_auth_with_system(mocker):
     def mock(system, status: int = CloudSystemStates.ACTIVATED, authenticated: bool = True, name: str = 'name'):
-        mocked_check = mocker.patch('partners.authentication.check_system_credentials',
+        mocked_check = mocker.patch('partners.auth.system_auth.check_system_credentials',
                                     return_value=(authenticated, status, name))
-        mocker.patch('partners.authentication.NxCloudSystemBasicAuthentication.get_system_or_raise',
+        mocker.patch('partners.auth.system_auth.NxCloudSystemBasicAuthentication.get_system_or_raise',
                      return_value=system)
-        mocker.patch('partners.authentication.NxCloudSystemBasicAuthentication.get_system',
+        mocker.patch('partners.auth.system_auth.NxCloudSystemBasicAuthentication.get_system',
                      return_value=system)
         return mocked_check
     return mock
@@ -465,11 +465,11 @@ def mock_cdb_token_introspect(mocker, httpx_mock, cdb_introspect_url, random_ema
 
         # Mock the authentication functions
         mocker.patch(
-            'partners.authentication.authenticate_jwt_token',
+            'partners.auth.helpers.authenticate_jwt_token',
             return_value=email if jwt_is_valid else None
         )
         mocker.patch(
-            'partners.authentication.authenticate_regular_token',
+            'partners.auth.helpers.authenticate_regular_token',
             return_value=email if jwt_is_valid else None
         )
 

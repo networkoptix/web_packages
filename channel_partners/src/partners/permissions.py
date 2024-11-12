@@ -7,7 +7,7 @@ from uuid import UUID
 
 from rest_framework.permissions import BasePermission
 
-from partners.authentication import CdbInternalAuthentication
+from partners.auth.introspect import CdbTokenIntrospect
 from partners.models import CloudSystemId
 
 
@@ -74,6 +74,6 @@ class CanPerformChannelPartnerAction(BasePermission):
                 if system_id:
                     if not getattr(obj, 'organization_id', None):
                         return False
-                    if CdbInternalAuthentication.has_vms_roles(request, system_id, self.direct_access_allowed):
+                    if CdbTokenIntrospect.has_vms_roles(request, system_id, self.direct_access_allowed):
                         return True
         return False

@@ -53,13 +53,13 @@ from rest_framework.viewsets import (
 from rest_framework_extensions.mixins import NestedViewSetMixin
 
 from partners import filters
-from partners.authentication import (
-    CdbInternalAuthentication,
-    NxCloudOauthTokenAuthentication,
+from partners.auth.internal_auth import NxTokenAuthentication
+from partners.auth.introspect import CdbTokenIntrospect
+from partners.auth.system_auth import (
     NxCloudSystemBasicAuthentication,
     NxCloudSystemBasicAuthenticationInternal,
-    NxTokenAuthentication,
 )
+from partners.auth.token_auth import NxCloudOauthTokenAuthentication
 from partners.models import (
     ChannelPartner,
     ChannelPartnerEvent,
@@ -2220,7 +2220,7 @@ def get_authorized_system(request, system_id, roles: Iterable | VmsRoles.AnyRole
         if not cloud_system.organization:
             raise exceptions.PermissionDenied(detail='Insufficient permissions or system does not exists.')
         # Check if the request has the required VMS roles
-        if CdbInternalAuthentication.has_vms_roles(request, system_id, roles):
+        if CdbTokenIntrospect.has_vms_roles(request, system_id, roles):
             return cloud_system
         # Check if the user has the required VMS roles
         if cloud_system.has_vms_role(request.user, vms_roles=roles):

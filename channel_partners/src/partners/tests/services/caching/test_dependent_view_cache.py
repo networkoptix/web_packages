@@ -28,7 +28,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
-from partners.authentication import NxCloudOauthTokenAuthentication
+from partners.auth.token_auth import NxCloudOauthTokenAuthentication
 from partners.filters import CreatedTsAndIdAndNameFilter
 from partners.models import CloudUser
 from partners.services.cache_service import CacheService

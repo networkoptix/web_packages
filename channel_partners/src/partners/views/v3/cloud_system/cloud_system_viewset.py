@@ -11,10 +11,8 @@ from rest_framework.viewsets import GenericViewSet
 from rest_framework_extensions.mixins import NestedViewSetMixin
 
 from partners import filters
-from partners.authentication import (
-    NxCloudOauthTokenAuthentication,
-    NxCloudSystemBasicAuthentication,
-)
+from partners.auth.system_auth import NxCloudSystemBasicAuthentication
+from partners.auth.token_auth import NxCloudOauthTokenAuthentication
 from partners.models import (
     ChannelPartner,
     CloudSystemId,

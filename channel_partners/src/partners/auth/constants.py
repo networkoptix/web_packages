@@ -1,0 +1,1 @@
+CREDENTIALS_REMOVED_PERMANENTLY = 'credentialsRemovedPermanently'

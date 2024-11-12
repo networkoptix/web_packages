@@ -45,7 +45,6 @@ from django.db.models import (
 from django.db.models.functions import Greatest
 from django.utils import timezone
 from django_cte import CTEManager
-from nx_jwt.jwt_auth import SAJWTPayload
 from rest_framework.authtoken.models import Token
 from rest_framework.utils.encoders import JSONEncoder
 
@@ -140,26 +139,6 @@ class AuthToken(Token):
         auth_token.save()
         logger.info('Internal token updated', created=created, enabled=enabled)
         return auth_token
-
-
-class NxInternalService:
-    """
-    Internal service authentication identity class.
-    The class is used to bind authenticated identity
-    to the request and mimic `Model.id` field to be
-    used in caching.
-    """
-    token_payload: SAJWTPayload
-    id: str
-
-    def __init__(self, token_payload: SAJWTPayload):
-        self.token_payload = token_payload
-        # using token hash as id, it contains sub and scope
-        # and can be used to identify the user and permissions
-        self.id = token_payload.token_hash()
-
-    def is_request_allowed(self, request: Any) -> bool:
-        return self.token_payload.is_request_allowed('channel_partners', request)
 
 
 class ChannelPartnerStates:

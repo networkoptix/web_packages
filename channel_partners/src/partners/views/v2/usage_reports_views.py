@@ -27,7 +27,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 from rest_framework_extensions.mixins import NestedViewSetMixin
 
-from partners.authentication import NxCloudOauthTokenAuthentication
+from partners.auth.token_auth import NxCloudOauthTokenAuthentication
 from partners.models import (
     ChannelPartner,
     ChannelPartnerService,

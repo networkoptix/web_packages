@@ -19,10 +19,8 @@ from rest_framework import exceptions
 from rest_framework.reverse import reverse
 from rest_framework.test import APIClient
 
-from partners.authentication import (
-    CREDENTIALS_REMOVED_PERMANENTLY,
-    TokenCache,
-)
+from partners.auth.cache import TokenCache
+from partners.auth.constants import CREDENTIALS_REMOVED_PERMANENTLY
 from partners.models import (
     ActionConfirmation,
     ChannelPartner,
@@ -795,7 +793,7 @@ class TestCloudSystemViewSet:
                                       mocker, arf_basic_auth):
         cp = channel_partner_factory()
         system = system_factory(organization=None)
-        mocked_check = mocker.patch('partners.authentication.check_system_credentials',
+        mocked_check = mocker.patch('partners.auth.system_auth.check_system_credentials',
                                     return_value=(True, CloudSystemStates.ACTIVATED, 'Test'))
         system_id = f'{system.system_id}'
         password = f'{uuid4()}'
@@ -828,7 +826,7 @@ class TestCloudSystemViewSet:
         system = system_factory(organization=None)
         system.system_state = CloudSystemStates.DELETED
         system.save()
-        mocked_check = mocker.patch('partners.authentication.check_system_credentials',
+        mocked_check = mocker.patch('partners.auth.system_auth.check_system_credentials',
                                     return_value=(True, CloudSystemStates.ACTIVATED, 'Test'))
         system_id = f'{system.system_id}'
         password = f'{uuid4()}'
@@ -844,7 +842,7 @@ class TestCloudSystemViewSet:
                                       mocker, arf_basic_auth):
         cp = channel_partner_factory()
         system = system_factory(organization=organization_factory())
-        mocked_check = mocker.patch('partners.authentication.check_system_credentials',
+        mocked_check = mocker.patch('partners.auth.system_auth.check_system_credentials',
                                     return_value=(False, CloudSystemStates.DELETED, 'Test'))
         system_id = f'{system.system_id}'
         password = f'{uuid4()}'
@@ -865,7 +863,7 @@ class TestCloudSystemViewSet:
         cp = channel_partner_factory()
         cloud_host = cloud_host_factory()
         system = system_factory(organization=None, cloud_host=cloud_host)
-        mocked_check = mocker.patch('partners.authentication.check_system_credentials',
+        mocked_check = mocker.patch('partners.auth.system_auth.check_system_credentials',
                                     return_value=(True, CloudSystemStates.ACTIVATED, 'Test'))
         system_id = f'{system.system_id}'
         password = f'{uuid4()}'

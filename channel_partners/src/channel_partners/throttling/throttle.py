@@ -15,7 +15,7 @@ class SystemRateThrottle(AllowRequestMixin, ParseRateMixin, UserRateThrottle):
     scope = 'system'
 
     def is_system_user(self, request):
-        from partners.authentication import NxCloudSystemBasicAuthentication
+        from partners.auth.system_auth import NxCloudSystemBasicAuthentication
         return isinstance(request.successful_authenticator, NxCloudSystemBasicAuthentication)
 
     def get_cache_key(self, request, view) -> None:
