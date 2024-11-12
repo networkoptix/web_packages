@@ -86,6 +86,8 @@
     "!/docs/developers/**",
     "!/partners/**",
     "!/nx-components-storybook",
-    "!/nx-components-storybook/**"
+    "!/nx-components-storybook/**",
+    "!/cloud_notifications/**",
+    "!/qrcode/**"
   ]
 }

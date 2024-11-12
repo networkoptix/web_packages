@@ -10,15 +10,16 @@ include:
   - ft/**/*
 
 FT / VMS 5.1:
- stage: 'ft (#ask-ft)'
- needs: [ 'cloud-deploy' ]
- script: [ 'cloud_portal_tests config:cloud_installers_5_1_url $CLOUD_HOST $CI_PIPELINE_URL' ]
- tags: [ 'cloud_portal_tests' ]
- timeout: '180m'
- rules:
-   - if: !reference [ .functional_tests_required ]
-     # noinspection YAMLSchemaValidation
-     changes: !reference [ .require_testing ]
+  stage: 'ft (#ask-ft)'
+  needs: [ 'cloud-deploy' ]
+  script: [ 'cloud_portal_tests config:cloud_installers_5_1_url $CLOUD_HOST $CI_PIPELINE_URL' ]
+  tags: [ 'cloud_portal_tests' ]
+  timeout: '180m'
+  rules:
+    - if: !reference [ .functional_tests_required ]
+      # noinspection YAMLSchemaValidation
+      changes: !reference [ .require_testing ]
+  retry: 2
 
 FT / VMS 6.0:
   stage: 'ft (#ask-ft)'
@@ -30,6 +31,7 @@ FT / VMS 6.0:
     - if: !reference [ .functional_tests_required ]
       # noinspection YAMLSchemaValidation
       changes: !reference [ .require_testing ]
+  retry: 2
 
 WebAdmin:
   stage: 'ft (#ask-ft)'
@@ -41,3 +43,4 @@ WebAdmin:
     - if: !reference [ .functional_tests_required ]
       # noinspection YAMLSchemaValidation
       changes: !reference [ .webadmin_changes ]
+  retry: 2
