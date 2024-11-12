@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, effect, inject, Input } from '@angular/core';
+import { AfterViewInit, Component, effect, inject, input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -55,7 +55,7 @@ import { DownloadsService } from '../downloads.service';
     ],
 })
 export class NxDownloadsReleasesComponentNew implements AfterViewInit {
-    @Input() downloadData: DownloadReleases;
+    downloadData = input.required<DownloadReleases>();
 
     useNewCloud = useNewCloud();
     clampWidthEffect = NxLayoutComponent.configureLayout({
@@ -126,7 +126,7 @@ export class NxDownloadsReleasesComponentNew implements AfterViewInit {
             platform = 'x';
         }
 
-        if (this.downloadData.releases) {
+        if (this.downloadData().releases) {
             this.content.level1.push({
                 id: menus.download.releases.id,
                 label: this.LANG.menu.titles.releases,
@@ -134,7 +134,7 @@ export class NxDownloadsReleasesComponentNew implements AfterViewInit {
             });
         }
 
-        if (this.downloadData.betas) {
+        if (this.downloadData().betas) {
             this.content.level1.push({
                 id: menus.download.betas.id,
                 label: this.LANG.menu.titles.betas,

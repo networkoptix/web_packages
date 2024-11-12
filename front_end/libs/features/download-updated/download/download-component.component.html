@@ -1,26 +1,28 @@
 <div class="container">
     <h1 class="old-h12">
-        {{ LANG.downloads.releasesTypes[releaseType] || releaseType | translate }}
+        {{ LANG.downloads.releasesTypes[releaseType()] || releaseType() | translate }}
     </h1>
-    @if (!sortedPlatforms) {
+    @if (!sortedPlatforms()) {
         <nx-pre-loader></nx-pre-loader>
     } @else {
         <div class="p-0">
-            @if (sortedPlatforms.length) {
+            @if (sortedPlatforms().length) {
                 <div class="nx-tab-set">
                     <ul class="justify-content-start nav nav-tabs nx-tab-set-tabs">
-                        @for (platform of sortedPlatforms; track platform.name) {
+                        @for (platform of sortedPlatforms(); track platform.name) {
                             <li class="nav-item">
                                 <a
                                     href=""
                                     class="anchor nav-link inset"
                                     [id]="platform.name"
-                                    [routerLink]="'/download/' + releaseType + '/' + platform.name"
+                                    [routerLink]="
+                                        '/download/' + releaseType() + '/' + platform.name
+                                    "
                                     [routerLinkActive]="'active'"
-                                    [attr.aria-selected]="platform.name === activePlatform"
+                                    [attr.aria-selected]="platform.name === activePlatform()"
                                     aria-disabled="false"
                                     [attr.aria-controls]="
-                                        platform.name === activePlatform
+                                        platform.name === activePlatform()
                                             ? platform.name + '-panel'
                                             : undefined
                                     "
@@ -33,7 +35,7 @@
                             </li>
                         }
                     </ul>
-                    @if (activePlatform !== 'mobile') {
+                    @if (activePlatform() !== 'mobile') {
                         <div class="nx-tab-set-content">
                             <div class="card card-default">
                                 <div class="card-body flex-md">
@@ -41,9 +43,9 @@
                                         <b translate>Latest version</b>
                                         <h2 class="h2 version-number d-flex">
                                             <b>
-                                                {{ downloadData.version }}
-                                                @if (downloadData.meta_version) {
-                                                    {{ downloadData.meta_version }}
+                                                {{ downloadData().version }}
+                                                @if (downloadData().meta_version) {
+                                                    {{ downloadData().meta_version }}
                                                 }
                                             </b>
                                         </h2>
@@ -51,11 +53,11 @@
                                             <a
                                                 class="anchor"
                                                 [href]="
-                                                    downloadData.releaseNotes ||
+                                                    downloadData().releaseNotes ||
                                                     '/download/other/' +
-                                                        releaseType +
+                                                        releaseType() +
                                                         '#' +
-                                                        downloadData.version
+                                                        downloadData().version
                                                 "
                                                 target="_blank"
                                                 translate
@@ -72,7 +74,7 @@
                                                     <a
                                                         class="media btn btn-default download-button"
                                                         [href]="
-                                                            downloadData.releaseUrl +
+                                                            downloadData().releaseUrl +
                                                             downloadButton.path
                                                         "
                                                     >
@@ -92,7 +94,7 @@
                                                                 @if (!downloadButton.niceName) {
                                                                     <span>{{
                                                                         installerName(
-                                                                            activePlatform
+                                                                            activePlatform()
                                                                         )
                                                                     }}</span>
                                                                 }
@@ -104,12 +106,12 @@
                                                     </a>
                                                 }
                                                 @if (
-                                                    CONFIG.testedOperatingSystems[activePlatform]
+                                                    CONFIG.testedOperatingSystems[activePlatform()]
                                                 ) {
                                                     <p
                                                         [innerHTML]="
                                                             CONFIG.testedOperatingSystems[
-                                                                activePlatform
+                                                                activePlatform()
                                                             ]
                                                         "
                                                     ></p>
@@ -118,7 +120,7 @@
                                         </div>
                                         @if (otherPackages?.length > 0) {
                                             <div class="installers">
-                                                @if (activePlatform !== 'sdk') {
+                                                @if (activePlatform() !== 'sdk') {
                                                     <h5 class="nx-h5--bottom-margin">
                                                         <b translate>Other packages:</b>
                                                     </h5>
@@ -135,7 +137,7 @@
                                                         <a
                                                             class="anchor"
                                                             [href]="
-                                                                downloadData.releaseUrl +
+                                                                downloadData().releaseUrl +
                                                                 otherPackage.path
                                                             "
                                                             >{{ otherPackage.niceName }}</a
@@ -149,14 +151,14 @@
                             </div>
                         </div>
                     }
-                    @if (activePlatform === 'mobile' && releaseType === 'releases') {
+                    @if (activePlatform() === 'mobile' && releaseType() === 'releases') {
                         <div class="nx-tab-set-content">
                             <nx-download-mobile></nx-download-mobile>
                         </div>
                     }
                 </div>
             }
-            @if (!sortedPlatforms.length && activePlatform !== 'mobile') {
+            @if (!sortedPlatforms().length && activePlatform() !== 'mobile') {
                 <nx-section-placeholder
                     svgFileName="error_placeholder"
                     height="150"

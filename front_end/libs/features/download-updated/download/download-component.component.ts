@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, input, OnChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
@@ -41,10 +41,10 @@ import { images } from '@static-variables';
     ],
 })
 export class DownloadComponent implements OnChanges {
-    @Input() releaseType: string;
-    @Input('platform') activePlatform: string;
-    @Input() downloadData: Downloads;
-    @Input() sortedPlatforms: Platform[];
+    releaseType = input.required<string>();
+    activePlatform = input.required<string>({ alias: 'platform' });
+    downloadData = input.required<Downloads>();
+    sortedPlatforms = input.required<Platform[]>();
 
     CONFIG: IConfig;
     LANG = staticLang;
@@ -65,7 +65,7 @@ export class DownloadComponent implements OnChanges {
     }
 
     private calcDisplayedPackages(platformName: string): void {
-        const platform = this.sortedPlatforms.find(platform => platform.name === platformName);
+        const platform = this.sortedPlatforms().find(platform => platform.name === platformName);
         this.downloadButton = undefined;
         this.otherPackages = [];
         if (platform !== undefined) {
@@ -92,7 +92,7 @@ export class DownloadComponent implements OnChanges {
     private parsePlatform(): void {
         for (const mobile in this.CONFIG.downloads.mobile) {
             const { name, os } = this.CONFIG.downloads.mobile[mobile];
-            if (os === this.activePlatform) {
+            if (os === this.activePlatform()) {
                 const link = this.LANG.downloads.mobile[name].link;
                 if (link !== 'disabled') {
                     document.location.href = link;
@@ -101,8 +101,8 @@ export class DownloadComponent implements OnChanges {
                 break;
             }
         }
-        const platform = this.downloadData.platforms.find(
-            ({ name }) => name === this.activePlatform,
+        const platform = this.downloadData().platforms.find(
+            ({ name }) => name === this.activePlatform(),
         );
         if (platform) {
             platform.files = platform.files
@@ -128,7 +128,7 @@ export class DownloadComponent implements OnChanges {
                 });
         }
 
-        this.calcDisplayedPackages(this.activePlatform);
+        this.calcDisplayedPackages(this.activePlatform());
     }
     installerName(platformName: string): string {
         return (

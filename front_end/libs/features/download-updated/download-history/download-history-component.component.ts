@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, Injector, Input, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Injector, input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';
@@ -36,9 +36,9 @@ export class DownloadHistoryComponent implements OnInit, AfterViewInit {
     injector: Injector;
     build: string;
     section: string;
-    @Input() downloadsData: BuildHistory;
     activeBuilds: Downloads[];
-    @Input('type') activeType: string;
+    downloadsData = input.required<BuildHistory>();
+    activeType = input.required<string>({ alias: 'type' });
     noteTypes: string[] = [];
     linkbase: string;
 
@@ -50,17 +50,17 @@ export class DownloadHistoryComponent implements OnInit, AfterViewInit {
         public appStateService: NxAppStateService,
     ) {}
     ngOnInit(): void {
-        this.activeBuilds = this.downloadsData[this.activeType];
-        this.currentTab = this.activeType;
+        this.activeBuilds = this.downloadsData()[this.activeType()];
+        this.currentTab = this.activeType();
         this.linkbase =
-            this.downloadsData.updatesPrefix ||
-            this.downloadsData[this.activeType][0].updatesPrefix;
+            this.downloadsData().updatesPrefix ||
+            this.downloadsData()[this.activeType()][0].updatesPrefix;
 
-        this.noteTypes = Object.keys(this.downloadsData || {})
+        this.noteTypes = Object.keys(this.downloadsData() || {})
             .filter(noteType => {
                 return (
-                    Array.isArray(this.downloadsData[noteType]) &&
-                    this.downloadsData[noteType].length
+                    Array.isArray(this.downloadsData()[noteType]) &&
+                    this.downloadsData()[noteType].length
                 );
             })
             .reverse();
@@ -82,7 +82,7 @@ export class DownloadHistoryComponent implements OnInit, AfterViewInit {
 
     public switchTabs(name: string): false {
         this.currentTab = name;
-        this.activeBuilds = this.downloadsData[name];
+        this.activeBuilds = this.downloadsData()[name];
 
         this.router.navigate([`/download/other/${name}`]);
         return false;
