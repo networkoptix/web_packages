@@ -156,6 +156,7 @@ export class NxLayoutViewComponent {
     );
 
     layoutItemLookup$ = this.systemService.currentSystem$.pipe(
+        filter(system => !!system),
         switchMap(system =>
             forkJoin([
                 this.layoutStateService.loadUnsavedLayouts(system.id),
@@ -383,6 +384,8 @@ export class NxLayoutViewComponent {
         }
     }
 
+    wakeLock = navigator.wakeLock.request().catch(() => null);
+
     ngOnInit(): void {
         this.selectedSystem$.pipe(untilDestroyed(this)).subscribe(system => {
             this.setQueryParamState();
@@ -398,6 +401,10 @@ export class NxLayoutViewComponent {
                 untilDestroyed(this),
             )
             .subscribe(layout => !layout && this.pageService.redirect404());
+    }
+
+    ngOnDestroy(): void {
+        this.wakeLock.then(lock => lock?.release());
     }
 
     initTour = (tourGroup: CloudLayoutTours = CloudLayoutTours.DEFAULT): void => {

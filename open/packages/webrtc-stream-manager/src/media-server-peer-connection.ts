@@ -2,6 +2,7 @@
 
 import { WebSocketSubject } from 'rxjs/webSocket';
 import { BufferHandler, ConnectionType, SignalingMessage, StreamHandler } from './types';
+import { asapScheduler, debounceTime, Subject } from 'rxjs';
 
 export class MediaServerPeerConnection extends RTCPeerConnection {
     connectionId: string;
@@ -46,19 +47,51 @@ export class MediaServerPeerConnection extends RTCPeerConnection {
     clearTracks(): void {
         this.getSenders().forEach(sender => {
             sender.track?.stop();
+            if (this.signalingState === 'closed') {
+                return;
+            }
             this.removeTrack(sender);
         });
     }
 
     clearDataChannel(): void {
         this.remoteDataChannel?.close();
-        this.remoteDataChannel = null;
+        delete this.remoteDataChannel;
     }
+
+    static forceGarbageCollection = (() => {
+        const updater$ = new Subject<void>()
+
+        updater$.pipe(debounceTime(500, asapScheduler)).subscribe(() => {
+            let img = document.createElement("img");
+            img.src = URL.createObjectURL(new Blob([new ArrayBuffer(5e+7)]));
+            img.onerror = function() {
+              URL.revokeObjectURL(this.src);
+              img = null
+            }
+        });
+
+        return () => updater$.next();
+    })();
 
     close() {
         this.closed = true;
+        this.removeEventListener('datachannel', this.initDataChannel);
         this.clearDataChannel();
         this.clearTracks();
+        delete this.getWebSocket;
+        delete this.closeWebsocket;
+        delete this.reconnectionHandler;
+        delete this.getCurrentStreamAndPosition;
+        delete this.handleDataChannelMessage;
+        delete this.updateConnectionType;
+        delete this.logger;
+        delete this.ontrack;
+        delete this.onicecandidate;
+        delete this.bufferHandler;
+        delete this.initDataChannel
+        MediaServerPeerConnection.forceGarbageCollection();
+
         return super.close();
     }
 
@@ -66,12 +99,38 @@ export class MediaServerPeerConnection extends RTCPeerConnection {
         return this.getWebSocket();
     }
 
+    private initDataChannel = ({ channel }: RTCDataChannelEvent) => {
+        this.clearDataChannel();
+        channel.binaryType = 'arraybuffer';
+        this.logger?.info('datachannel created', { ordered: channel.ordered, maxPacketLifeTime: channel.maxPacketLifeTime, maxRetransmits: channel.maxRetransmits, protocol: channel.protocol });
+        channel.addEventListener('message', ({ data }: MessageEvent<string | ArrayBuffer | { status: number }>) => {
+            if (!this.handleDataChannelMessage || !this.bufferHandler) {
+                return this.close();
+            }
+            if (typeof(data) === 'string') {
+                this.handleDataChannelMessage(data)
+            } else if ('status' in data) {
+                this.logger?.log('dc status: ' + data.status);
+                // if (webrtc.deliveryMethod != null && webrtc.deliveryMethod == 'mse') {
+                //     // Note that initial segment can be received before 200, so restarting MSE on 100.
+                //     restartMse();
+                //   }
+            } else {
+                this.bufferHandler(data);
+            }
+        })
+        this.remoteDataChannel = channel;
+        this.remoteDataChannel.onopen = () => {
+            this.remoteDataChannel.send(JSON.stringify(this.getCurrentStreamAndPosition()))
+        }
+    }
+
     constructor(
         private getWebSocket: () => WebSocketSubject<SignalingMessage>,
         private closeWebsocket: () => void,
         public reconnectionHandler: (lostConnection: boolean) => void,
         trackHandler: StreamHandler,
-        bufferHandler: BufferHandler,
+        private bufferHandler: BufferHandler,
         private getCurrentStreamAndPosition: () => { stream: 0 | 1, position: number, speed: number | 'unlimited' },
         private handleDataChannelMessage: (message: string) => void,
         public updateConnectionType: (connectionType: Partial<ConnectionType>) => void,
@@ -86,27 +145,7 @@ export class MediaServerPeerConnection extends RTCPeerConnection {
             }
         };
 
-        this.addEventListener('datachannel', ({ channel }) => {
-            this.clearDataChannel();
-            channel.binaryType = 'arraybuffer';
-            this.logger?.info('datachannel created', { ordered: channel.ordered, maxPacketLifeTime: channel.maxPacketLifeTime, maxRetransmits: channel.maxRetransmits, protocol: channel.protocol });
-            channel.addEventListener('message', ({ data }: MessageEvent<string | ArrayBuffer | { status: number }>) => {
-                if (typeof(data) === 'string') {
-                    this.handleDataChannelMessage(data)
-                } else if ('status' in data) {
-                    this.logger?.log('dc status: ' + data.status);
-                    // if (webrtc.deliveryMethod != null && webrtc.deliveryMethod == 'mse') {
-                    //     // Note that initial segment can be received before 200, so restarting MSE on 100.
-                    //     restartMse();
-                    //   }
-                } else {
-                    bufferHandler(data);
-                }
-            })
-            this.remoteDataChannel = channel;
-            this.remoteDataChannel.onopen = () => {
-                this.remoteDataChannel.send(JSON.stringify(this.getCurrentStreamAndPosition()))
-            }
-        });
+        this.addEventListener('datachannel', this.initDataChannel);
+        MediaServerPeerConnection.forceGarbageCollection();
     }
 }

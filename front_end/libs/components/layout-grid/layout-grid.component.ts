@@ -27,7 +27,6 @@ import {
     Signal,
     untracked,
     viewChild,
-    ViewChild,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
@@ -407,13 +406,7 @@ export class NxLayoutGridComponent {
         }
     }
 
-    @ViewChild('gridSection') set gridSection(value: ElementRef) {
-        this.layoutStateService.gridSection = value.nativeElement;
-    }
-
-    @ViewChild('otherSystems') set otherSystems(element: ElementRef<HTMLDetailsElement>) {
-        this.detailsRef$$.set(element?.nativeElement);
-    }
+    detailsRef$$ = viewChild<HTMLDetailsElement>('otherSystems');
 
     treeLoaded$$ = computed(() =>
         this.layoutItemLookup$$().tree.some(
@@ -462,7 +455,6 @@ export class NxLayoutGridComponent {
 
     webGlService = inject(NxWebGLService);
 
-    detailsRef$$ = signal<HTMLDetailsElement | null>(null);
     otherSystemsOpen$$ = computed(() => {
         const otherSitesMenuOpen =
             this.layoutStateService.paramStateHandler.state$$().queryParams?.otherSitesMenuOpen;

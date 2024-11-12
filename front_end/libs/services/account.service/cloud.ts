@@ -121,7 +121,9 @@ export class CloudAccount extends BaseAccount {
         }
 
         try {
-            const account = await firstValueFrom(this.cloudApi.account(forceUpdate));
+            const account = await firstValueFrom(this.cloudApi.account(forceUpdate)).catch(
+                () => this.account,
+            );
             if (!account?.is_authenticated) {
                 this.account = undefined;
                 return undefined;

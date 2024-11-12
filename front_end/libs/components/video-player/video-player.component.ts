@@ -307,10 +307,8 @@ export class NxVideoPlayerComponent {
         this.originalStream.nativeElement.onblur = event => event.preventDefault();
         this.webRtcStreamRef.nativeElement.volume = this.volume$$();
         this.nxVideoPlaying.latestFrame.pipe(untilDestroyed(this)).subscribe(frame => this.capturedFrame$$.update(previous => {
-            setTimeout(() => {
-                URL.revokeObjectURL(previous);
-                URL.revokeObjectURL(this.thumbnail$$());
-            }, 2_500)
+            URL.revokeObjectURL(previous);
+            URL.revokeObjectURL(this.thumbnail$$());
             return frame;
         }));
 
@@ -398,13 +396,12 @@ export class NxVideoPlayerComponent {
         this.renderParams();
         this.showFisheye();
         this.dewarpingParams$$();
-        this.notifyChanges();
         this.debugInfo$$();
         this.shiftRotated$$();
         this.lastFrame$$();
         this.previewLoaded$$();
         this.availableStreams$$();
-        this.cdr.detectChanges();
+        this.notifyChanges();
     });
 
     ngOnDestroy(): void {

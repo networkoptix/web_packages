@@ -309,7 +309,7 @@ export class WebRTCStreamManager {
                 WebRTCStreamManager.logger?.info(`No cameras available to switch quality`)
             }
 
-            if (clientSidePerformanceIssue || streamsToDowngrade.length) {
+            if (clientSidePerformanceIssue || streamsToDowngrade.length && document.visibilityState === 'visible') {
                 WebRTCStreamManager.performanceIssueNotifier$.next();
             }
         }),
@@ -471,6 +471,16 @@ export class WebRTCStreamManager {
             filter(res => !!res),
             takeUntil(instance.closeNotifier$),
             tap(({
+                next: ([mediaStream]) => {
+                    if (!mediaStream) {
+                        instance.restartHandleFrozenStream$.next(true);
+                        return;
+                    }
+                    if (videoElement) {
+                        instance.registerFrameNotifier(videoElement);
+                    }
+                    instance.handleFrozenStream();
+                },
                 unsubscribe: () => instance.unregisterElement(videoElement)
             }))
         );
@@ -764,6 +774,8 @@ export class WebRTCStreamManager {
             elementAndObserver.observer.disconnect();
             this.updateTrackerRefs();
         }
+
+        MediaServerPeerConnection.forceGarbageCollection();
     }
 
     /** Subject ot trigger closing open websocket observables */
@@ -783,11 +795,19 @@ export class WebRTCStreamManager {
     private stopCurrentStream = (): void => {
         const currentSource = this.mediaStream$.value?.[0]
 
-        if (!currentSource || typeof currentSource === 'string') {
+        if (!currentSource) {
             return;
         }
 
-        currentSource.getTracks().forEach(track => track.stop())
+        currentSource.getTracks().forEach(track => {
+            track.stop();
+            if (!this.peerConnection?.signalingState || this.peerConnection.signalingState !== 'closed') {
+                return;
+            }
+            try {
+                currentSource.removeTrack(track);
+            } catch {}
+        })
     };
 
     /** Peer Connection Helpers */
@@ -839,20 +859,22 @@ export class WebRTCStreamManager {
         if (mediaStream && clearStream) {
             mediaStream.getTracks().forEach(track => {
                 track.stop();
-                mediaStream.removeTrack(track);
+                try {
+                    mediaStream.removeTrack(track);
+                } catch {}
             });
             this.mediaStream$.next([null, null, this]);
         }
         if (this.mediaSource) {
             for (const buffer of this.mediaSource.sourceBuffers) {
                 try {
-                    this.mediaSource.removeSourceBuffer(buffer);
-                    buffer.abort();
-                    buffer.remove(0, buffer.buffered.end(0));
-
                     if (this.sourceBuffer === buffer) {
                         this.sourceBuffer = null;
                     }
+
+                    this.mediaSource.removeSourceBuffer(buffer);
+                    buffer.abort();
+                    buffer.remove(0, buffer.buffered.end(0));
                 } catch(e) {
                     WebRTCStreamManager.logger?.error(e);
                 }
@@ -929,23 +951,33 @@ export class WebRTCStreamManager {
     private mediaSource: MediaSource = null;
     private sourceBuffer: SourceBuffer = null;
 
+    private buffers: BufferSource[] = [];
+
+    private appendFromBuffers = () => {
+        const nextBuffer = this.buffers.pop();
+        if (!nextBuffer) {
+            return
+        }
+
+        try {
+            if (this.sourceBuffer.updating) {
+                throw new Error('Buffer updating');
+            } else {
+                this.sourceBuffer.appendBuffer(nextBuffer);
+            }
+        } catch(e) {
+            this.buffers.push(nextBuffer);
+        }
+    }
+
     private appendBuffer = (buffer: BufferSource) => {
+        this.buffers.unshift(buffer);
         if (!this.sourceBuffer) {
             this.initializeMse();
             return;
         }
 
-        if (this.sourceBuffer.updating) {
-            this.cleanupBuffers(false);
-            this.initializeMse();
-            return;
-        }
-
-        try {
-            this.sourceBuffer.appendBuffer(buffer);
-        } catch(e) {
-            this.close(0.1);
-        }
+        this.appendFromBuffers();
     }
 
     private videoRef: HTMLVideoElement & { captureStream: () => MediaStream }
@@ -955,7 +987,9 @@ export class WebRTCStreamManager {
     private registerFrameNotifier = (video: HTMLVideoElement) => {
         const handleFrameNotification = (time: number) => {
             this.frameTimes$.next(time);
-            video.requestVideoFrameCallback(handleFrameNotification);
+            if (video === this.video || this.videoElements.some(({ element }) => element === video)) {
+                video.requestVideoFrameCallback(handleFrameNotification);
+            }
         }
         video.requestVideoFrameCallback(handleFrameNotification);
     }
@@ -978,7 +1012,7 @@ export class WebRTCStreamManager {
             filter(([prev, current]) => !prev.length && !current.length),
             take(1),
             takeUntil(this.restartHandleFrozenStream$),
-            takeUntil(this.closeWsConnectionNotifier$)
+            takeUntil(this.closeNotifier$)
         ).subscribe(() => {
             WebRTCStreamManager.logger?.info('frame check: no frames received in last 10 seconds');
             this.close(0.1);
@@ -1043,27 +1077,29 @@ export class WebRTCStreamManager {
             this.video.src = URL.createObjectURL(this.mediaSource)
 
             const newStream = this.video.captureStream();
+            this.stopCurrentStream();
             this.mediaStream$.next([newStream, null, this]);
             const webRtcStreamManager = this;
             let bufferStartTime = 0;
             let lowBufferCounter = 0;
             this.mediaSource.onsourceopen = function () {
-                const mediaSource = this;
                 WebRTCStreamManager.logger?.log(`ms is opened: ${mimeType}`);
                 if (!webRtcStreamManager.sourceBuffer && this.readyState === 'open') {
                     webRtcStreamManager.sourceBuffer = this.addSourceBuffer(mimeType);
                     webRtcStreamManager.sourceBuffer.mode = 'sequence';
                     webRtcStreamManager.sourceBuffer.onupdateend = function() {
+                        if (webRtcStreamManager.buffers.length) {
+                            return webRtcStreamManager.appendFromBuffers();
+                        }
+
                         try {
-                            if (!this.buffered?.length || this.updating) {
+                            if (!this.buffered?.length) {
                                 return;
                             }
-                        } catch(e) {
-                            if (mediaSource.readyState === 'open') {
-                                mediaSource.setLiveSeekableRange(0, 0);
-                            }
+                        } catch (_) {
                             return;
                         }
+
 
                         const bufferStart = bufferStartTime;
                         const bufferedEnd = this.buffered.end(0);
@@ -1158,6 +1194,7 @@ export class WebRTCStreamManager {
             this.close(false);
         }
         if ('mime' in signal) {
+            this.cleanupBuffers();
             this.initializeMse(signal.mime);
         }
 
@@ -1488,7 +1525,6 @@ export class WebRTCStreamManager {
         await firstValueFrom(this.mediaStream$.pipe(
             filter((stream) => !!stream),
             takeUntil(this.closeNotifier$),
-            // tap(() => this.handleFrozenStream()),
             timeout({ first: 10_000, with: () => Promise.resolve() })
         ))
     };
