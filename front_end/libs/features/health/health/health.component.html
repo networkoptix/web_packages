@@ -7,18 +7,10 @@
         class="h-100"
     >
         @if (canShowOffline()) {
-            @if (!healthService.ready) {
-                <nx-pre-loader />
-            } @else {
-                <nx-page-placeholder-offline />
-            }
-        }
-
-        @if (hasServerError) {
+            <nx-page-placeholder-offline />
+        } @else if (hasServerError) {
             <nx-page-placeholder-500 />
-        }
-
-        @if (outdatedVersion) {
+        } @else if (outdatedVersion) {
             <nx-page-generic-placeholder>
                 <svg-icon
                     [src]="icons.dirPagePlaceholder + 'NewVersion.svg'"
