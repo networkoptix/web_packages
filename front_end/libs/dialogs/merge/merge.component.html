@@ -164,11 +164,13 @@
                         </nx-select-item>
                     }
                 </nx-select-v2>
-            } @else if (machine.state.show.helpText) {
+            }
+            @if (machine.state.show.helpText) {
                 <p class="paragraph light-text">
                     {{ machine.state.template.helpText | nxTranslate }}
                 </p>
-            } @else if (machine.state.show.serverUrlInput) {
+            }
+            @if (machine.state.show.serverUrlInput) {
                 <div
                     class="d-flex flex-column server-url add-specificity"
                     [ngClass]="{
@@ -210,7 +212,8 @@
                         ></p>
                     }
                 </div>
-            } @else if (machine.state.show.checkingErrorText) {
+            }
+            @if (machine.state.show.checkingErrorText) {
                 <p
                     [ngClass]="{ 'error-text-margin': machine.state.show.serverUrlInput }"
                     [innerHTML]="machine.state.template.checkingErrorText | nxTranslate"

@@ -67,7 +67,10 @@ export class NxMergeSelectSystemComponent implements OnInit, OnChanges {
     // class variables
     processedSystems: MergeDropdownItem[];
     systemsProcessed = false;
-    selectedSystem: MergeDropdownItem;
+    selectedSystem: MergeDropdownItem = {
+        value: '',
+        name: '',
+    };
     downloadHTML: string;
     currentSystemName: string;
     isOffline: boolean;
@@ -273,7 +276,7 @@ export class NxMergeSelectSystemComponent implements OnInit, OnChanges {
      * other system selected in dropdown: otherSystem.emit + set serverUrl to ''
      * other system auto-changed from input change: otherSystem.emit
      */
-    async setTargetSystem(selectedSystem: MergeDropdownItem): Promise<void> {
+    setTargetSystem(selectedSystem: MergeDropdownItem): void {
         // TODO: probably need to add the top part of the original setTargetSystem in about canceling process service
         // gets triggered for peer discovered only (not cloud or other systems)
         if (!selectedSystem) {
@@ -303,11 +306,8 @@ export class NxMergeSelectSystemComponent implements OnInit, OnChanges {
         } else {
             let targetSystem: MergeSystem;
             if (!this.isWebadmin) {
-                const systemModuleInfo = await this.getSystemInfo(selectedSystem.value);
-
                 for (const system of this.mergeSystems) {
                     if (system.id === selectedSystem.value) {
-                        system.protoVersion = systemModuleInfo.reply.protoVersion;
                         targetSystem = system;
                         break;
                     }

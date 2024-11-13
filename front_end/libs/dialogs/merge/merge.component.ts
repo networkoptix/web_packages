@@ -97,7 +97,10 @@ export class MergeModalContent {
     serverUrlInputExists: boolean;
     systemMergeable: string;
     targetSystem;
-    targetSystemDropdown: SystemDropdownItem;
+    targetSystemDropdown: SystemDropdownItem = {
+        value: '',
+        name: '',
+    };
     targetSystemService;
     tooManyServers: boolean;
     nonCloudMerge = false;

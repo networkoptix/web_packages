@@ -431,22 +431,32 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
         this.stateHistory$$.update(history => [...history, MergeState.select]);
     }
 
-    cloudSetup(): void {
+    async cloudSetup(): Promise<void> {
         let state: MergeState;
         if (this.systems.length === 0) {
             this.failedToFindAnySystem = true;
             state = MergeState.generic;
         } else {
-            this.mergeSystems = this.systems.map(
-                ({ id, name, canMerge, stateOfHealth = '' }: NxSystemInfo) => ({
-                    id,
-                    name,
-                    stateOfHealth,
-                    canMerge,
+            this.mergeSystems = await Promise.all(
+                this.systems.map(async system => {
+                    let protoVersion: number | undefined;
+                    if (system.stateOfHealth !== 'offline') {
+                        const systemInfo = await this.getSystemInfo(system.id);
+                        protoVersion = systemInfo.reply.protoVersion;
+                    }
+
+                    return {
+                        id: system.id,
+                        name: system.name,
+                        stateOfHealth: system.stateOfHealth,
+                        canMerge: system.canMerge,
+                        protoVersion,
+                    };
                 }),
             );
             state = MergeState.select;
         }
+
         this.stateHistory$$.update(history => [...history, state]);
     }
 
