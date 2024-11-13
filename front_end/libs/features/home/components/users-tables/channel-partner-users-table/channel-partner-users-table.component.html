@@ -122,7 +122,7 @@
                             [nxTooltip]="
                                 (row.rolesIds.includes(ChannelPartnerRoleIds.ADMINISTRATOR) &&
                                 admins$$().length === 1
-                                    ? LANG.channelPartners.usersTable.adminTooltip
+                                    ? LANG.channelPartners.usersTable.adminWarning
                                     : LANG.channelPartners.usersTable.singleOrgAdminTooltip
                                 ) | nxTranslate
                             "
