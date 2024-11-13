@@ -602,8 +602,8 @@ html[data-theme="light"], .theme-override[data-theme="light"] {
     --input-hover-bg : var(--additional_light2, #{$additional_light2});
     --input-color : var(--dark9, #{$dark9});
     --input-border-color : var(--light6, #{$light6});
-    --input-error-color : var(--red_l2, #{$red_l2});
-    --input-error-border-color : var(--red_l2, #{$red_l2});
+    --input-error-color : var(--red-l2, #{$red-l2});
+    --input-error-border-color : var(--red-l2, #{$red-l2});
     --input-hover-color : var(--dark9, #{$dark9});
     --input-hover-border-color : var(--light8, #{$light8});
     --input-focus-color : var(--dark9, #{$dark9});
