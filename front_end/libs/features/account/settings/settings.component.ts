@@ -47,7 +47,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy {
         dir: string;
     };
 
-    private saveAccount: Process;
+    private saveAccount?: Process;
 
     constructor(
         translateService: TranslateService,
@@ -106,7 +106,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy {
                         this.applyService.createFormWatcher(
                             'accountForm',
                             this.accountForm,
-                            this.saveAccount,
+                            this.saveAccount as Process,
                         );
                     });
                 }

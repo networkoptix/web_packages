@@ -12,6 +12,7 @@ import { ApplyGuard } from '@guards/applyGuard';
 import { AuthGuard } from '@guards/authGuard';
 import { MenuModule } from '@menu/menu.module';
 import { NxAccountComponent } from '@pages/account/account.component';
+import { NxBetaSettingsBetaComponent } from '@pages/account/beta/beta.component';
 import { NxAccountPasswordComponent } from '@pages/account/password/password.component';
 import { NxAccountPasswordModule } from '@pages/account/password/password.module';
 import { NxAccountSecurityComponent } from '@pages/account/security/security.component';
@@ -21,7 +22,7 @@ import { NxAccountSettingsModule } from '@pages/account/settings/settings.module
 import { PipesModule } from '@pipes/pipes.module';
 import { NxMenuProjectionDirective } from 'nx-components';
 
-const RequiresReloadGuard: CanDeactivateFn<NxAccountSettingsComponent> = (
+const RequiresReloadGuard: CanDeactivateFn<NxBetaSettingsBetaComponent> = (
     component,
     _currentRoute,
     _currentState,
@@ -57,6 +58,12 @@ const appRoutes: Routes = [
                 component: NxAccountSecurityComponent,
                 canDeactivate: [ApplyGuard],
             },
+            {
+                path: 'beta-features',
+                title: 'betaFeatures',
+                component: NxBetaSettingsBetaComponent,
+                canDeactivate: [ApplyGuard, RequiresReloadGuard],
+            },
         ],
     },
 ];
@@ -77,6 +84,7 @@ const appRoutes: Routes = [
         NxPreLoaderComponent,
         NxTooltipDirective,
         NxMenuProjectionDirective,
+        NxBetaSettingsBetaComponent,
     ],
     declarations: [NxAccountComponent],
 })

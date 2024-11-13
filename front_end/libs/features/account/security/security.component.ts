@@ -50,11 +50,11 @@ export class NxAccountSecurityComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.accountService.get().then(account => {
+        this.accountService.get().then((account: Account) => {
             this.account = account;
-            this.account2faEnabled = account.account2faEnabled;
-            this.account2faEnabledCheck = account.account2faEnabled;
-            this.totpExistsForAccount = account.totpExistsForAccount;
+            this.account2faEnabled = this.account.account2faEnabled;
+            this.account2faEnabledCheck = this.account.account2faEnabled;
+            this.totpExistsForAccount = this.account.totpExistsForAccount;
         });
 
         this.systemsService.systemsSubject.pipe(untilDestroyed(this)).subscribe(systems => {

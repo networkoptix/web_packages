@@ -16,7 +16,6 @@ import { NxThemeSwitcherComponent } from '@components/theme-switcher/theme-switc
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { NxFocusMeDirective } from '@directives/nx-focus-me';
 import { NxTooltipDirective } from '@directives/nx-tooltip.directive';
-import { NxBetaSettingsBetaComponent } from '@pages/account/settings/beta/beta.component';
 import { NxAccountSettingsComponent } from '@pages/account/settings/settings.component';
 import { PipesModule } from '@pipes/pipes.module';
 
@@ -39,7 +38,6 @@ import { PipesModule } from '@pipes/pipes.module';
         NxCheckboxComponent,
         NxSearchComponent,
         NxSearchHighlightComponent,
-        NxBetaSettingsBetaComponent,
     ],
     providers: [],
     declarations: [NxAccountSettingsComponent],

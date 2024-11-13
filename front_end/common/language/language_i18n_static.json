@@ -663,7 +663,8 @@
         "security": "Security",
         "newPasswordLabel": "New password",
         "passwordChangedSuccess": "Password successfully changed",
-        "saveChanges": "Save"
+        "saveChanges": "Save",
+        "betaFeatures": "Beta Features"
     },
     "activeActions": {
         "resetPassword": "Reset Password",

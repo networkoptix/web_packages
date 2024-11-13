@@ -166,10 +166,7 @@
         </nx-block>
     </div>
 
-    @if (
-        CONFIG.featureFlags.userOverridesStaffFlags ||
-        CONFIG.featureFlags.userOverridesUserBetaFlags
-    ) {
+    @if (CONFIG.featureFlags.userOverridesStaffFlags) {
         <div class="col-12 mt-3 p-0">
             <nx-block>
                 <header>
@@ -177,12 +174,9 @@
                         class="h4"
                         translate
                     >
-                        Beta Features
+                        Internal Staff Overrides
                     </h4>
                 </header>
-                <nx-section>
-                    <nx-beta-settings-component (requiresReload)="requiresReload$$.set(true)" />
-                </nx-section>
                 @if (account.is_staff) {
                     <nx-section>
                         <h4 class="h4">{{ 'Internal Staff Overrides' }}</h4>

@@ -1,87 +1,33 @@
-{
-    "name": "All Beta Features",
-    "description": "Enables all beta features",
+[
+  {
+    "name": "Layouts",
+    "description": "Enables an ability to create, view, and edit layouts in the Cloud Portal",
     "featureConfig": {
-        "key": "allBetaFeatures",
-        "flags": []
-    },
-    "betaGroups": [
-        {
-            "name": "System Beta Features",
-            "description": "Enables all system beta features",
-            "featureConfig": {
-                "key": "systemBetaFeatures",
-                "flags": ["newSystemColorProvider", "newSystemLayoutWrapper"]
-            },
-            "betaGroups": [
-                {
-                    "name": "All Cloud Layouts Beta",
-                    "description": "Enables all cloud layouts beta features",
-                    "featureConfig": {
-                        "key": "allCloudLayoutsBeta",
-                        "flags": []
-                    },
-                    "betaGroups": [
-                        {
-                            "name": "Cloud Layouts Editing Beta",
-                            "description": "Enables the ability to edit cloud layouts",
-                            "featureConfig": {
-                                "key": "crossSiteEditingBeta",
-                                "flags": ["layouts", "layoutsEditable"]
-                            }
-                        },
-                        {
-                            "name": "Cross-Site Layouts Beta",
-                            "description": "Enables the ability to use layouts from other sites",
-                            "featureConfig": {
-                                "key": "crossSiteLayoutsBeta",
-                                "flags": ["layoutsCrossSystem", "layoutsCrossSystemEditing"]
-                            }
-                        },
-                        {
-                            "name": "Replace View Tab",
-                            "description": "Replaces the view tab with cloud layouts",
-                            "featureConfig": {
-                                "key": "replaceViewTabBeta",
-                                "flags": ["layoutsReplaceViewTab", "layoutsTimeline"]
-                            }
-                        },
-                        {
-                            "name": "Experimental Beta",
-                            "description": "Enables experimental features for cloud layouts",
-                            "featureConfig": {
-                                "key": "cloudLayoutsExperimentalBeta",
-                                "flags": ["layoutsFisheye", "layoutsDeviceSettings"]
-                            }
-                        },
-                        {
-                            "name": "Layouts Debug",
-                            "description": "Enabled debug mode for layouts",
-                            "featureConfig": {
-                                "key": "cloudLayoutsDebugMode",
-                                "flags": ["layoutsFrameRateDebug"]
-                            }
-                        }
-                    ]
-                },
-                {
-                    "name": "Bookmark Sharing",
-                    "description": "Enables the ability to share bookmarks",
-                    "featureConfig": {
-                        "key": "bookmarkSharingBeta",
-                        "flags": ["bookmarkSharing"]
-                    }
-                }
-            ]
-        },
-        {
-            "name": "Cloud 2.0 Beta",
-            "description": "Enables the new cloud experience",
-            "featureConfig": {
-                "key": "cloud2Beta",
-                "immediateReload": true,
-                "flags": ["newCloudColorProvider", "newCloudLayoutWrapper"]
-            }
-        }
-    ]
-}
+      "key": "layoutsBeta",
+      "flags": [
+        "layouts",
+        "layoutsEditable",
+        "layoutsChangeResolution",
+        "layoutsServers",
+        "layoutsAuthorizeCamera",
+        "layoutsShowBetaTag",
+        "layoutsCrossSystemEditing",
+        "layoutsUpdatedCrossSystemMenu",
+        "layoutsCameraGroups",
+        "layoutsItemNewPlaceholder"
+      ]
+    }
+  },
+  {
+    "name": "Cloud 2.0 Beta",
+    "description": "Enables the new cloud experience",
+    "featureConfig": {
+      "key": "cloud2Beta",
+      "immediateReload": true,
+      "flags": [
+        "newCloudColorProvider",
+        "newCloudLayoutWrapper"
+      ]
+    }
+  }
+]

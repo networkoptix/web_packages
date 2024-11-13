@@ -92,6 +92,11 @@ export class NxAccountComponent {
                         label: this.LANG.account.security,
                         path: accountMenu.security.path,
                     },
+                    {
+                        id: accountMenu.beta.id,
+                        label: this.LANG.account.betaFeatures,
+                        path: accountMenu.beta.path,
+                    },
                 ],
             },
         ];

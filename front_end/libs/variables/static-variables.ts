@@ -409,6 +409,10 @@ export const menus = {
             id: 'security',
             path: '/security',
         },
+        beta: {
+            id: 'beta',
+            path: '/beta-features',
+        }
     },
     download: {
         baseUrl: '/download',

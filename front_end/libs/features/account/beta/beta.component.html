@@ -1,0 +1,42 @@
+<ng-template
+    #baseNodeTemplate
+    [typedTemplate]="{ node: betaOptions$$() }"
+>
+    <div class="p-0">
+        <!-- Toggle Sections -->
+        @for (node of betaOptions$$(); track node.name) {
+            <div class="group-wrapper">
+                <nx-block>
+                    <!-- Header -->
+                    <header style="align-self: center">
+                        <span class="wrapper">
+                            <h4>{{ node.name | translate }}</h4>
+                            <nx-switch
+                                [(ngModel)]="betaSettingsValues$$()[node.featureConfig.key]"
+                                (ngModelChange)="setValue(node, $event)"
+                            />
+                        </span>
+                    </header>
+
+                    <!-- Content -->
+                    <nx-section>
+                        <span>{{ node.description | translate }}</span>
+                    </nx-section>
+                </nx-block>
+            </div>
+        }
+    </div>
+</ng-template>
+
+<form
+    #betaForm="ngForm"
+    name="betaForm"
+    novalidate
+>
+    <ng-container *ngTemplateOutlet="loaded$$() ? baseNodeTemplate : loading">
+        <ng-container *ngTemplateOutlet="baseNodeTemplate"></ng-container>
+    </ng-container>
+    <ng-template #loading>
+        <nx-pre-loader></nx-pre-loader>
+    </ng-template>
+</form>

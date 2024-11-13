@@ -1,0 +1,14 @@
+@use "theme_variables_common" as theme_vars;
+
+.wrapper {
+  display: grid;
+  grid-template-columns: auto auto;
+  align-items: center;
+  justify-content: space-between;
+  overflow: hidden;
+}
+
+.group-wrapper {
+  padding: 8px;
+  border-radius: 8px;
+}
