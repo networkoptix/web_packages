@@ -66,8 +66,13 @@ const handleCoreColors: ColorMappingFunction = themeColor => {
 };
 
 const handleBrandColors: ColorMappingFunction = themeColor => {
+    const opacity = parseInt(themeColor.split('t')[1] || '0');
     if (themeColor.includes('--brand-core')) {
-        return generateCssVariableName('brand', 'initial');
+        return generateCssVariableName(
+            'brand',
+            'initial',
+            opacity ? ((opacity / 5) as Opacity) : 20,
+        );
     }
 
     const matchedBrand = themeColor.match(/^--brand-(d|l)/)?.[0];
@@ -78,7 +83,6 @@ const handleBrandColors: ColorMappingFunction = themeColor => {
     const brandShade = matchedBrand === '--dark-d' ? 'dark' : 'light';
     const shadeValue = (18 - parseInt(themeColor.replace(matchedBrand, ''))) as ShadeRange;
     const shade: `${typeof brandShade}${typeof shadeValue}` = `${brandShade}${shadeValue}`;
-    const opacity = parseInt(themeColor.split('t')[1] || '0');
     if (opacity) {
         return generateCssVariableName('brand', shade, (opacity / 5) as Opacity);
     }

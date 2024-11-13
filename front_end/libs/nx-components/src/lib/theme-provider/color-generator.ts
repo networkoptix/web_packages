@@ -95,7 +95,7 @@ export const generateHslaString = memoize(
         lightness: Percentage,
         alpha: Percentage = 100,
     ): HslaString => {
-        const values = `${Math.round(hue)}, ${Math.round(saturation)}%, ${Math.round(lightness)}%, ${Math.round(alpha / 100)}`;
+        const values = `${Math.round(hue)}, ${Math.round(saturation)}%, ${Math.round(lightness)}%, ${alpha / 100}`;
         return `hsla(${values})`;
     },
     hash,
