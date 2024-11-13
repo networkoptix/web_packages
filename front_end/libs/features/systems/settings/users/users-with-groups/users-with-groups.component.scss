@@ -75,21 +75,32 @@
 }
 
 .group-list-item {
-    margin-bottom: 1.25em;
-      @include typography.medium20nocolor;
-            color: var(--body-text-color);
+    &--readonly {
+        margin-bottom: 1.25em;
+        @include typography.medium20nocolor;
+        color: var(--body-text-color);
 
-    .group-name {
+        .group-name {
             font-style: normal;
             line-height: normal;
-            padding-bottom: 6px;
+            padding-bottom: 16px;
             font-weight: 500 !important;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
     }
 
-    &.edit {
+    &--editable {
         margin-bottom: 0;
         font-size: 0.875rem !important;
         padding-bottom: unset;
+
+        .multiple-groups-item {
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
 
         .group-name {
             font-family: var(--font-family-medium);
@@ -102,7 +113,6 @@
         .help-block {
             display: unset;
             font-family: var(--font-family-light);
-            word-break: break-all;
         }
     }
 }
@@ -117,7 +127,6 @@
     font-weight: 400;
     line-height: normal;
     overflow-y: auto;
-    padding-left: 6px;
 }
 
 .user-settings-form {

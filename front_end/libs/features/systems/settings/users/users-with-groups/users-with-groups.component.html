@@ -82,29 +82,25 @@
                 >
                     <ng-container *ngIf="canBeEdited$$() && !isTemporary$$(); else cantEdit">
                         <div
-                            class="group-list-item edit"
+                            class="group-list-item--editable"
                             *ngFor="let group of selectedGroupsList$$()"
                         >
                             <ng-container
                                 *ngIf="selectedGroupsList$$().length > 1; else singleGroup"
                             >
-                                <nx-ml-ellipsis-clamp [viewLines]="1">
-                                    <div class="multiple-groups-item">
-                                        <span class="font-weight-bold group-name">
-                                            {{
-                                                group.custom ? group.name : (group.name | translate)
-                                            }}
-                                            <span *ngIf="group.description">:</span>
-                                        </span>
-                                        <span class="help-block">
-                                            {{
-                                                group.custom
-                                                    ? group.description
-                                                    : (group.description | translate)
-                                            }}
-                                        </span>
-                                    </div>
-                                </nx-ml-ellipsis-clamp>
+                                <div class="multiple-groups-item">
+                                    <span class="font-weight-bold group-name">
+                                        {{ group.custom ? group.name : (group.name | translate) }}
+                                        <span *ngIf="group.description">:</span>
+                                    </span>
+                                    <span class="help-block">
+                                        {{
+                                            group.custom
+                                                ? group.description
+                                                : (group.description | translate)
+                                        }}
+                                    </span>
+                                </div>
                             </ng-container>
                             <ng-template #singleGroup>
                                 <span class="help-block">{{
@@ -117,14 +113,12 @@
                     </ng-container>
                     <ng-template #cantEdit>
                         <div
-                            class="group-list-item"
+                            class="group-list-item--readonly"
                             *ngFor="let group of selectedGroupsList$$()"
                         >
-                            <nx-ml-ellipsis-clamp [viewLines]="1">
-                                <div class="font-weight-bold group-name">
-                                    {{ group.custom ? group.name : (group.name | translate) }}
-                                </div>
-                            </nx-ml-ellipsis-clamp>
+                            <div class="font-weight-bold group-name">
+                                {{ group.custom ? group.name : (group.name | translate) }}
+                            </div>
                             <div class="help-block">
                                 {{
                                     group.custom
