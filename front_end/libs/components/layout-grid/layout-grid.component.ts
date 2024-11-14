@@ -2258,11 +2258,12 @@ export class NxLayoutGridComponent {
         }
     }
 
-    updateCameraCredentials(system: NxSystem, camera: NxSystemCamera): void {
+    updateCameraCredentials(camera: NxSystemCamera): void {
         // TODO: Need to update once granular permissions by camera/resource are setup.
+        const system = this.systemService.createSystemById(camera.systemId);
         if (
             !this.CONFIG.featureFlags.layoutsAuthorizeCamera ||
-            !system.permissionManager.permissions$$().editCameras
+            !system.permissionManager.canEditDevice(camera.id)
         ) {
             return;
         }
