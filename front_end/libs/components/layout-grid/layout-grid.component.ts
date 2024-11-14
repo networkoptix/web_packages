@@ -1779,7 +1779,7 @@ export class NxLayoutGridComponent {
         item,
         layoutItemLookup,
     }: {
-        item: ParsedLayoutItem;
+        item: LayoutItem;
         layoutItemLookup: NxLayoutGridComponent['layoutItemLookup'];
     }) => {
         const systemId = extractSystemAndResourceId(item.resourcePath).systemId;
@@ -1874,7 +1874,7 @@ export class NxLayoutGridComponent {
                 maxPlaceholderSize: 300,
             };
 
-            const node = this.layoutItemLookup?.[item.resourceId];
+            const node = this.getItem({ item, layoutItemLookup: this.layoutItemLookup$$() });
 
             const updatedItem = { ...item, renderConfig };
 
@@ -2154,7 +2154,7 @@ export class NxLayoutGridComponent {
         const isLayoutItem = 'id' in node;
         const id = cleanIdLegacy(isLayoutItem ? node.id : node.details?.id);
 
-        if (id && id !== cleanIdLegacy(this.layout.id)) {
+        if (id && (id !== cleanIdLegacy(this.layout.id) || id !== this.layout.systemId)) {
             this.changingLayout = id;
             this.layoutItemsErrorsStore.reset();
             if (
@@ -2402,7 +2402,9 @@ export class NxLayoutGridComponent {
     updateItemNames = (items: LayoutItem[]): LayoutItem[] =>
         items.map(item => ({
             ...item,
-            name: this.layoutItemLookup?.[dirtyId(item.resourceId)]?.name || item.name,
+            name:
+                this.getItem({ item, layoutItemLookup: this.layoutItemLookup$$() })?.name ||
+                item.name,
         }));
 
     // TODO: This can cause the main thread to be blocked for a while if a node with a lot of items is added.
