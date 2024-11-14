@@ -28,7 +28,7 @@ export class TokenSessionManager {
                     if (e instanceof SyntaxError) {
                         return EMPTY;
                     }
-                    if (logoutMethod && e?.url.includes('/api/account/refreshAccessToken')) {
+                    if (logoutMethod && e?.url?.includes('/api/account/refreshAccessToken')) {
                         logoutMethod();
                     }
                     throw e;

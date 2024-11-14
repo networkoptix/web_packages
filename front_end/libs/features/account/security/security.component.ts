@@ -119,7 +119,7 @@ export class NxAccountSecurityComponent implements OnInit, OnDestroy {
                     if (window.opener) {
                         (window.opener as Window).postMessage('twoFactorEnabled');
                     } else {
-                        reloadWindowsChannel.reloadAllWindows(false, true);
+                        reloadWindowsChannel.reloadAllWindows(false, 'waitForTwoFa');
                     }
                 }
             });

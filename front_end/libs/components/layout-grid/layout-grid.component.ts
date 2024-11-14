@@ -9,7 +9,7 @@ import {
 import { CdkContextMenuTrigger } from '@angular/cdk/menu';
 import { PortalModule } from '@angular/cdk/portal';
 import { NestedTreeControl } from '@angular/cdk/tree';
-import { CommonModule, Location } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import {
     ChangeDetectionStrategy,
@@ -29,7 +29,6 @@ import {
     viewChild,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
@@ -42,7 +41,6 @@ import {
     from,
     fromEvent,
     interval,
-    lastValueFrom,
     merge,
     Observable,
     of,
@@ -127,10 +125,10 @@ import { canViewLayouts } from '@utils/can-view-layouts';
 import { ensureLayoutItemResourcePath } from '@utils/ensure-layout-item-resource-path';
 import { extractSystemAndResourceId } from '@utils/extract-system-and-resources';
 import {
+    authenticateTwoFactorFactory,
     cleanId,
     cleanIdLegacy,
     dirtyId,
-    getOauthUrl,
     reloadWindowsChannel,
     useNewCloud,
 } from '@utils/general';
@@ -432,6 +430,7 @@ export class NxLayoutGridComponent {
                 const handleMessage = (event: MessageEvent<'twoFactorEnabled'>): void => {
                     if (event.data === 'twoFactorEnabled') {
                         opened?.close();
+                        reloadWindowsChannel.reloadAllWindows(true, 'waitForTwoFa');
                     }
                 };
                 const handleOpen = (event: MouseEvent): void => {
@@ -445,7 +444,6 @@ export class NxLayoutGridComponent {
                 enableTwoFactorLink.addEventListener('click', handleOpen);
                 return onCleanup(() => {
                     enableTwoFactorLink.removeEventListener('click', handleOpen);
-                    window.removeEventListener('message', handleMessage);
                 });
             }
         }
@@ -2608,7 +2606,6 @@ export class NxLayoutGridComponent {
     private dialogs = inject(NxDialogsService);
     private accountService = inject(NxAccountService);
     private cloudApi = inject(NxCloudApiService);
-    private routerState = inject(Router);
 
     enableTwoFactorAction = {
         action: () =>
@@ -2626,40 +2623,15 @@ export class NxLayoutGridComponent {
         error: () => {},
     };
     reloadWindowsChannel = reloadWindowsChannel;
+    openedTwoFactor?: Window;
     authenticateTwoFactorAction = {
-        action: async () => {
-            const accessToken = await lastValueFrom(this.cloudApi.getAccessToken());
-            const oauthUrl = getOauthUrl({
-                state: 'system2faAuth',
-                email: this.accountService.account.email,
-                accessToken,
-                redirectTo: Location.joinWithSlash(
-                    window.location.origin,
-                    this.routerState.routerState.snapshot.url,
-                ),
-            });
-            const opened = window.open(oauthUrl, '_blank')!;
-            await new Promise<void>(resolve => {
-                window.addEventListener('message', (event: MessageEvent<'authenticated'>) => {
-                    if (event.data === 'authenticated') {
-                        opened.close();
-                        this.reloadWindowsChannel.reloadAllWindows();
-                    }
-                });
-
-                const checkingIfOpen = timer(2_500, 1000).subscribe(() => {
-                    if (opened.closed) {
-                        checkingIfOpen.unsubscribe();
-                        resolve();
-                    }
-                });
-
-                setTimeout(() => {
-                    checkingIfOpen.unsubscribe();
-                    resolve();
-                }, 60_000);
-            });
-        },
+        action: () =>
+            authenticateTwoFactorFactory(this.cloudApi, this.accountService, opened => {
+                this.openedTwoFactor = opened;
+            })().then(
+                authenticated =>
+                    new Promise(resolve => setTimeout(resolve, authenticated ? 10_000 : 1_000)),
+            ),
         success: () => {},
         error: () => {},
     };

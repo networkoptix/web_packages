@@ -6,11 +6,13 @@ import { Location } from '@angular/common';
 import { isDevMode } from '@angular/core';
 import { BroadcastChannel } from 'broadcast-channel';
 import { last, memoize, zip } from 'lodash-es';
-import { combineLatest, Observable, timer } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { combineLatest, defer, lastValueFrom, Observable, timer } from 'rxjs';
+import { catchError, delay, map, retry } from 'rxjs/operators';
 import { NIL, v4, v5 } from 'uuid';
 
 import { environment } from '@environments/environment';
+import { NxAccountService } from '@services/account.service';
+import { NxCloudApiService } from '@services/nx-cloud-api';
 import { nxConfig } from '@services/nx-config/config';
 import {
     CameraProjection,
@@ -862,6 +864,7 @@ export const useNewCloud = (): boolean =>
 class ReloadWindowBroadcastChannel extends BroadcastChannel<{
     initiator: string;
     waitForTwoFa?: boolean;
+    sessionVerified?: boolean;
 }> {
     windowId = v4();
 
@@ -870,20 +873,28 @@ class ReloadWindowBroadcastChannel extends BroadcastChannel<{
     override onmessage = ({
         initiator,
         waitForTwoFa,
+        sessionVerified,
     }: Parameters<ReloadWindowBroadcastChannel['postMessage']>[0]): void => {
         if (initiator !== this.windowId) {
-            if (waitForTwoFa) {
-                this.requiredTwoFaVerification = true;
-            } else {
+            this.requiredTwoFaVerification ||= !!waitForTwoFa;
+            if (!this.requiredTwoFaVerification || sessionVerified) {
                 location.reload();
             }
         }
     };
 
-    reloadAllWindows = (includeCurrent = true, waitForTwoFa = false): void => {
-        this.postMessage({ initiator: this.windowId, waitForTwoFa });
+    reloadAllWindows = (
+        includeCurrent = true,
+        action: 'waitForTwoFa' | 'sessionVerified' | undefined = undefined,
+    ): void => {
+        const waitForTwoFa = action === 'waitForTwoFa';
+        const sessionVerified = action === 'sessionVerified';
+        this.postMessage({ initiator: this.windowId, waitForTwoFa, sessionVerified });
         if (includeCurrent) {
-            location.reload();
+            this.requiredTwoFaVerification ||= !!waitForTwoFa;
+            if (!this.requiredTwoFaVerification || sessionVerified) {
+                location.reload();
+            }
         }
     };
 
@@ -967,4 +978,72 @@ export const getOauthUrl = (config: OauthConfig | undefined): string => {
     return useNewCloud()
         ? `${window.location.origin}?${params.toString()}`
         : `${host}/authorize?${params.toString()}`;
+};
+
+export const authenticateTwoFactorFactory =
+    (
+        cloudApi: NxCloudApiService,
+        accountService: NxAccountService,
+        handleWindowRef: (opened: Window) => void = () => {},
+    ) =>
+    async () => {
+        const accessToken = await lastValueFrom(cloudApi.getAccessToken());
+        const oauthUrl = getOauthUrl({
+            state: 'system2faAuth',
+            email: accountService.account.email,
+            accessToken,
+        });
+        const opened = window.open(oauthUrl, '_blank')!;
+        handleWindowRef(opened);
+        let authenticated = false;
+        await new Promise<void>(resolve => {
+            const checkingIfOpen = timer(2_500, 1000).subscribe(() => {
+                if (opened.closed) {
+                    resolve();
+                    checkingIfOpen.unsubscribe();
+                }
+            });
+
+            window.addEventListener('message', (event: MessageEvent<'authenticated'>) => {
+                if (event.data === 'authenticated') {
+                    authenticated = true;
+                    opened.close();
+                    defer(() => cloudApi.getAllAccountInfo(true))
+                        .pipe(
+                            map(({ account2faEnabled }) => {
+                                if (!account2faEnabled) {
+                                    throw new Error('Waiting for cache to update');
+                                }
+                            }),
+                            retry({
+                                delay: 500,
+                                count: 10,
+                            }),
+                            delay(500),
+                            catchError(() => Promise.resolve()),
+                        )
+                        .subscribe(() => {
+                            reloadWindowsChannel.reloadAllWindows(true, 'sessionVerified');
+                        });
+                }
+            });
+        });
+        return authenticated;
+    };
+
+export const enableTwoFactor = (): Promise<void> => {
+    const opened = window.open('/account/security');
+    if (opened) {
+        const handleMessage = (event: MessageEvent<'twoFactorEnabled'>): void => {
+            if (event.data === 'twoFactorEnabled') {
+                opened?.close();
+                reloadWindowsChannel.reloadAllWindows(true, 'waitForTwoFa');
+            }
+        };
+        window.addEventListener('message', handleMessage);
+        opened.addEventListener('beforeunload', () => {
+            window.removeEventListener('message', handleMessage);
+        });
+    }
+    return new Promise<void>(() => {});
 };

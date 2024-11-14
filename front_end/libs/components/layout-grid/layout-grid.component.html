@@ -218,7 +218,6 @@
                             ) {
                                 <div class="site-placeholder-wrapper">
                                     @switch (
-                                        placeholderName === 'twoFactorNotAvailable' &&
                                         reloadWindowsChannel.requiredTwoFaVerification
                                             ? 'twoFactorNotEnabled'
                                             : placeholderName
@@ -269,6 +268,9 @@
                                             <div>
                                                 <nx-async-action-button
                                                     [action]="authenticateTwoFactorAction"
+                                                    [busy]="
+                                                        reloadWindowsChannel.requiredTwoFaVerification
+                                                    "
                                                     translate
                                                 >
                                                     Enter 2FA code
@@ -276,7 +278,10 @@
                                                 <button
                                                     class="btn btn-secondary"
                                                     type="button"
-                                                    (click)="currentSite$$.set('')"
+                                                    (click)="
+                                                        currentSite$$.set('');
+                                                        openedTwoFactor?.close()
+                                                    "
                                                     translate
                                                 >
                                                     Cancel

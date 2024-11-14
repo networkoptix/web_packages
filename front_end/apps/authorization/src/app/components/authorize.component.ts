@@ -408,6 +408,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         }
         if (this.clientType === 'system2faAuth') {
             this.localStorageService.store(oauthStore.verify2fa, code);
+            window.opener?.postMessage('authenticated');
         }
 
         if (this.clientType === 'renewSessionWeb2FA') {
@@ -571,7 +572,6 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                                         catchError(() => Promise.resolve()),
                                     ),
                                 );
-                                (window.opener as Window)?.postMessage('authenticated');
                             }
                             return res;
                         });

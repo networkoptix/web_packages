@@ -1,6 +1,6 @@
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { CdkContextMenuTrigger, CdkMenuTrigger } from '@angular/cdk/menu';
-import { CommonModule, Location } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -16,7 +16,6 @@ import { LetDirective } from '@ngrx/component';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { TourMatMenuModule } from 'ngx-ui-tour-md-menu';
-import { lastValueFrom } from 'rxjs';
 
 import { NxContextMenu } from '@components/context-menu/context-menu';
 import { NxMonitoringGraphComponent } from '@components/graph/graph.component';
@@ -52,6 +51,7 @@ import {
 } from '@services/system.service/camera-manager/camera-manager-types';
 import { NxSystemsService } from '@services/systems.service';
 import { icons } from '@static-variables';
+import { authenticateTwoFactorFactory, enableTwoFactor } from '@utils/general';
 
 const messagesLang = staticLang.layouts.itemPlaceholders.messages;
 const hintsLang = staticLang.layouts.itemPlaceholders.hints;
@@ -418,26 +418,11 @@ export class NxLayoutGridItemPlaceholderComponent {
         }
 
         if (this.has2faAction()) {
-            return async () => {
-                if (this.accountService.account.totpExistsForAccount) {
-                    const accessToken = await lastValueFrom(this.cloudApi.getAccessToken());
-                    return this.oauthService.redirectOauth({
-                        state: 'system2faAuth',
-                        email: this.accountService.account.email,
-                        accessToken,
-                        redirectTo: Location.joinWithSlash(
-                            window.location.origin,
-                            this.routerState.routerState.snapshot.url,
-                        ),
-                    });
-                }
+            if (this.accountService.account.totpExistsForAccount) {
+                return authenticateTwoFactorFactory(this.cloudApi, this.accountService);
+            }
 
-                return this.dialogs.account2faEnable().then(enabled => {
-                    if (enabled) {
-                        return this.accountService.get(true);
-                    }
-                });
-            };
+            return enableTwoFactor;
         }
     });
 
