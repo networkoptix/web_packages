@@ -74,10 +74,10 @@
                 [ngClass]="{ 'active-menu': layoutGridService.isLeftMenuOpen$$() }"
             >
                 <svg-icon
-                    #resources
                     (click)="layoutGridService.toggleMenu('left', true); $event.stopPropagation()"
                     nx-add-svg-src
-                    [src]="icons.dirTextButtons + 'arrow_left.svg'"
+                    [src]="icons.dirLayouts + 'arrow_6x14.svg'"
+                    [svgStyle]="{ 'width.px': '6', 'height.px': '14' }"
                 >
                 </svg-icon>
             </div>
@@ -119,7 +119,8 @@
                     >
                         <svg-icon
                             nx-add-svg-src
-                            [src]="icons.dirTextButtons + 'arrow_expand.svg'"
+                            [src]="icons.dirLayouts + 'arrow_6x14.svg'"
+                            [svgStyle]="{ 'width.px': '6', 'height.px': '14', 'rotate.deg': '-90' }"
                         >
                         </svg-icon>
                     </button>
@@ -151,6 +152,7 @@
                         >
                             <svg-icon
                                 nx-add-svg-src
+                                class="icon-close"
                                 [src]="icons.dirLayouts + 'close.svg'"
                             ></svg-icon>
                         </div>
@@ -170,6 +172,7 @@
                         >
                             <svg-icon
                                 nx-add-svg-src
+                                class="icon-refresh"
                                 [src]="icons.dirLayouts + 'refresh.svg'"
                             ></svg-icon>
                         </div>

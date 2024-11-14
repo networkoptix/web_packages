@@ -915,6 +915,11 @@ html[data-theme="hsl"] {
 
     --no-systems-description-color: var(--dark17);
 
+    --sidebar-background: var(--new-dark5);
+    --sidebar-tab-hover: var(--new-dark6);
+    --sidebar-tab-active: var(--new-dark4);
+    --sidebar-tab-closed: var(--new-dark8);
+
     /* Layouts */
     --layout-grid-item-hover: var(--new-light15);
     --layout-grid-item-playing: var(--new-light6);
@@ -971,6 +976,8 @@ html[data-theme="hsl"] {
     --overlay-status-title: var(--new-light10);
     --other-sites-title: var(--new-light10);
     --other-sites-heading-background: var(--new-dark6);
+    --other-sites-heading-background-hover: var(--new-dark7);
+    --other-sites-heading-background-active: var(--new-dark4);
     --other-sites-expand-stroke: var(--new-light16);
 
     --no-camera-placeholder-color: var(--new-light10);

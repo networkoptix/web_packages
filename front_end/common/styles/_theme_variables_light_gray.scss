@@ -697,6 +697,7 @@ html[data-theme="light-gray"], .theme-override[data-theme="light-gray"] {
     --svg-tab-arrow-color: var(--dark5);
     --sidebar-background: var(--light5);
     --sidebar-tab-hover: var(--light6);
+    --sidebar-tab-active: var(--light4);
     --sidebar-tab-closed: var(--light8);
 
     --layout-grid-item-hover: var(--light15);
@@ -758,6 +759,8 @@ html[data-theme="light-gray"], .theme-override[data-theme="light-gray"] {
     --overlay-status-title: var(--light_gray_10);
     --other-sites-title: var(--dark12);
     --other-sites-heading-background: var(--light6);
+    --other-sites-heading-background-hover: var(--light7);
+    --other-sites-heading-background-active: var(--light4);
     --other-sites-expand-stroke: var(--dark16);
 
 	/* Merge */

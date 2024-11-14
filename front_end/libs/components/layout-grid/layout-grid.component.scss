@@ -68,7 +68,7 @@ nx-webgl-canvas, .saas-placeholder {
 }
 
 .other-systems {
-    min-height: 0px;
+    height: 0;
     margin-left: -16px;
     margin-bottom: -16px;
     padding-left: 16px;
@@ -76,6 +76,10 @@ nx-webgl-canvas, .saas-placeholder {
     padding-bottom: 0;
     overflow: hidden;
     flex-shrink: 0;
+
+    transition-property: height;
+    transition-duration: 150ms;
+    transition-timing-function: ease-in-out;
 
     &[open] {
         flex-grow: 1;
@@ -103,6 +107,7 @@ nx-webgl-canvas, .saas-placeholder {
         & > span {
             white-space: nowrap;
             overflow: hidden;
+            line-height: 150%;
             & span {
                 &:first-of-type:not(:last-of-type) {
                     margin-right: 0.5em;
@@ -136,14 +141,12 @@ nx-webgl-canvas, .saas-placeholder {
         }
 
         & > .right-button > svg-icon {
-            bottom : 12px;
-
-            .refresh-icon {
-                fill: var(--other-sites-title);
-            }
-
-            .close-icon {
+            bottom: 12px;
+            &.icon-close .icon-with-fill {
                 fill: var(--other-sites-expand-stroke);
+            }
+            &.icon-refresh .icon-with-fill {
+                fill: var(--other-sites-title);
             }
         }
 
@@ -163,6 +166,12 @@ nx-webgl-canvas, .saas-placeholder {
             align-items: center;
             & > svg-icon {
                 position: absolute;
+            }
+            &:hover {
+                background-color: var(--other-sites-heading-background-hover);
+            }
+            &:active {
+                background-color: var(--other-sites-heading-background-active);
             }
         }
     }
@@ -314,6 +323,9 @@ div.tab {
     &:hover {
         background: var(--sidebar-tab-hover);
     }
+    &:active {
+        background: var(--sidebar-tab-active);
+    }
 }
 
 .cdk-drag.menu-resize {
@@ -324,41 +336,6 @@ div.tab {
     width: 2px;
     background-color: transparent;
     cursor: col-resize;
-}
-
-.resources-sidebar {
-    z-index: 200;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: min(50vw, 360px);
-    display: flex;
-    flex-direction: column;
-    justify-content: stretch;
-    transform: translateX(0);
-    transition: transform 150ms cubic-bezi er(0.33, 1, 0.68, 1);
-    background: var(--header-bg);
-
-    span.cdk-drag-disabled,
-    h4 {
-        @include typography.light18light10;
-        margin-top: 8px;
-    }
-
-    cdk-drag {
-        padding-left: 16px !important;
-        white-space: nowrap;
-    }
-
-    .placeholder-menu {
-        font-size: 28px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100%;
-        color: var(--brand-core);
-    }
 }
 
 .hide-settings {
