@@ -2468,8 +2468,13 @@ export class NxLayoutGridComponent {
                     this.cd.detach();
                 }
 
-                const isLocalLayout = !hasCrossSystemItems(items, this.system.id);
+                let isLocalLayout = !hasCrossSystemItems(items, this.system.id);
                 const layoutOrFocus = this.layoutItemLookup?.[dirtyId(this.layout.id)];
+
+                if (isLocalLayout && layoutOrFocus && assertResourceOfType.layout(layoutOrFocus)) {
+                    isLocalLayout = !layoutOrFocus.crossSystem;
+                }
+
                 if (
                     layoutOrFocus &&
                     assertResourceOfType.layout(layoutOrFocus) &&
