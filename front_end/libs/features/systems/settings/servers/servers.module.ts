@@ -17,10 +17,13 @@ import { NxPagePlaceholderNoSettingsComponent } from '@components/placeholders/n
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxSectionPlaceholderComponent } from '@components/placeholders/section/section-placeholder.component';
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
+import { NxSelectV2ItemComponent } from '@components/select-v2/items/select-item/select-item.component';
+import { NxSelectV2Component } from '@components/select-v2/select-v2.component';
 import { NxSwitchComponent } from '@components/switch/switch.component';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { NxTooltipDirective } from '@directives/nx-tooltip.directive';
 import { NxResizeObserver } from '@directives/resize/nx-resize.directive';
+import { NxTooltipV2Directive } from '@directives/tooltip-v2/tooltip-v2.directive';
 import { PipesModule } from '@pipes/pipes.module';
 
 import { NxCloudStorageModule } from '../cloud-storage/cloud-storage.module';
@@ -56,6 +59,9 @@ import { NxStorageSizeComponent } from './storage-advanced/size/size.component';
         NxSwitchComponent,
         NxPagePlaceholderNoSettingsComponent,
         NxPagePlaceholderGenericComponent,
+        NxSelectV2Component,
+        NxSelectV2ItemComponent,
+        NxTooltipV2Directive,
     ],
     providers: [],
     declarations: [

@@ -2313,6 +2313,11 @@
             "changing": "Changing mode...",
             "disabled": "Disabled"
         },
+        "policies": {
+            "exclusive": "Exclusive",
+            "shared": "Shared",
+            "isolated": "Isolated"
+        },
         "alreadyUsed": "Storage path {url} is already used by another server.",
         "deleteExternalStorage": "Delete External Storage?",
         "failed": "Failed to add external storage",

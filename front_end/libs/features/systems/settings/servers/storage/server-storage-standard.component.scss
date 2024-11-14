@@ -6,6 +6,31 @@ form.form-horizontal {
     overflow: auto auto !important;
 }
 
+:host::ng-deep nx-select-v2 .select-wrapper {
+    background-color: transparent !important;
+    box-shadow: none !important;
+    justify-content: unset !important;
+
+    .select-box {
+        flex-grow: unset;
+        padding: 5px 0 5px 12px;
+    }
+}
+
+:host::ng-deep nx-select-v2.has-icon .select-wrapper .select-box {
+    padding: 5px 0 5px 4px;
+}
+
+hr {
+    width        : 95%;
+    margin       : 6px auto;
+    border-color : var(--light4);
+
+    &.narrow-hr {
+        width : calc(95% - 16px);
+    }
+}
+
 .storage-container {
     overflow-x: scroll;
     table {
@@ -17,6 +42,10 @@ form.form-horizontal {
 
         &.hasAction {
             grid-template-columns: 40% fit-content(100%) auto fit-content(100%);
+
+            th:last-child {
+                border: 0;
+            }
         }
     }
 
@@ -27,6 +56,21 @@ form.form-horizontal {
 
         &.hasAction {
             grid-column-end: span 4;
+        }
+    }
+
+    table.hasPolicy {
+        grid-template-columns: 30% fit-content(100%) fit-content(100%) auto;
+
+        &.hasAction {
+            grid-template-columns: 30% fit-content(100%) fit-content(100%) auto fit-content(100%);
+        }
+    }
+
+    .table-row-spacer.hasPolicy {
+        grid-column-end: span 4;
+        &.hasAction {
+            grid-column-end: span 5;
         }
     }
 
@@ -52,10 +96,6 @@ form.form-horizontal {
         height: 32px !important;
     }
 
-    th:last-child {
-        border: 0;
-    }
-
     td {
         @include typography.regular13nocolor;
         color: var(--card-header-text);
@@ -65,7 +105,7 @@ form.form-horizontal {
         display: flex;
         align-items: center;
 
-        svg-icon {
+        svg-icon:not(.policy-warning) {
             svg {
                 height: 20px;
                 width: 20px;
@@ -74,6 +114,10 @@ form.form-horizontal {
                     fill: var(--card-header-text) !important;
                 }
             }
+        }
+
+        svg-icon.policy-warning > svg > path {
+            fill: var(--yellow-d1);
         }
 
         &:last-of-type {

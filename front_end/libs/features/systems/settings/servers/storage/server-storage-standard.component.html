@@ -1,10 +1,10 @@
 <ng-template #noStorages>
     <nx-pre-loader
-        *ngIf="waitingForStorages"
+        *ngIf="waitingForStorages$$()"
         type="storage"
     ></nx-pre-loader>
     <nx-section-placeholder
-        *ngIf="!waitingForStorages"
+        *ngIf="!waitingForStorages$$()"
         svgFileName="system_settings_placeholder"
         [wrapperHeight]="144"
         [translatedMessage]="LANG.system.settings.notAbleToLoadStorageInfo | translate"
@@ -22,12 +22,12 @@
                 Storage Locations
             </h4>
             <div
-                *ngIf="canSeeDetailInfo && currentStorageState?.locations.length"
+                *ngIf="canSeeDetailInfo$$() && currentStorageState?.locations.length"
                 class="buttons"
             >
                 <button
                     class="legacy-btn server-buttons pr-0"
-                    [routerLink]="infoPath"
+                    [routerLink]="infoPath$$()"
                 >
                     <span>
                         <svg-icon
@@ -57,16 +57,27 @@
             >
                 <table
                     *ngIf="
-                        currentStorageState?.locations.length && !waitingForStorages;
+                        currentStorageState?.locations.length && !waitingForStorages$$();
                         else noStorages
                     "
                     class="dropdown-override"
-                    [ngClass]="{ hasAction: currentStorageState?.hasAction }"
+                    [ngClass]="{
+                        hasAction: currentStorageState?.hasAction,
+                        hasPolicy: canSeePolicySettings$$()
+                    }"
                 >
                     <thead>
                         <tr>
                             <th translate>Address</th>
                             <th translate>Mode</th>
+                            @if (canSeePolicySettings$$()) {
+                                <th
+                                    [style.padding-left.px]="24"
+                                    translate
+                                >
+                                    Read-Write Policy
+                                </th>
+                            }
                             <th translate>Space</th>
                             <th *ngIf="currentStorageState?.hasAction">&nbsp;</th>
                         </tr>
@@ -75,7 +86,10 @@
                     <tbody>
                         <tr
                             class="table-row-spacer"
-                            [ngClass]="{ hasAction: currentStorageState?.hasAction }"
+                            [ngClass]="{
+                                hasAction: currentStorageState?.hasAction,
+                                hasPolicy: canSeePolicySettings$$()
+                            }"
                         ></tr>
                         <tr *ngFor="let store of currentStorageState?.locations; let row = index">
                             <td
@@ -124,22 +138,37 @@
                                         <div
                                             *ngSwitchCase="STATUS.IN_USE"
                                             [style.minWidth.px]="ddWidth"
-                                            [style.paddingLeft.px]="8"
+                                            [style.paddingLeft.px]="4"
                                         >
-                                            <nx-select
-                                                [componentId]="'storageModeSelect'"
-                                                [type]="'clear-fit'"
-                                                [items]="getModes(store)"
-                                                [selected]="selectMode(store)"
-                                                (onSelected)="changeMode(store, $event)"
-                                                [hrMargin]="true"
-                                            ></nx-select>
+                                            <nx-select-v2
+                                                [(ngModel)]="store.mode"
+                                                [ngModelOptions]="{
+                                                    standalone: true
+                                                }"
+                                                (ngModelChange)="changeMode(store, $event)"
+                                            >
+                                                @for (mode of modes; track mode.value) {
+                                                    @if (mode.name !== 'horizontal') {
+                                                        <nx-select-item
+                                                            [value]="mode.value"
+                                                            [disabled]="
+                                                                mode.value !== 'main' &&
+                                                                store.mainOnly
+                                                            "
+                                                        >
+                                                            {{ mode.name | translate }}
+                                                        </nx-select-item>
+                                                    } @else {
+                                                        <hr class="hr" />
+                                                    }
+                                                }
+                                            </nx-select-v2>
                                             <svg-icon
                                                 nx-add-svg-src
                                                 *ngIf="checkArchiveWarning(store)"
                                                 class="archive-warning"
                                                 [style.left.px]="
-                                                    (dropdownOffsetCalc$ | async) + ddWidth - 20
+                                                    dropdownOffsetCalc$$() + ddWidth - 20
                                                 "
                                                 [nxTooltip]="
                                                     LANG.storage.stillHasArchives | translate
@@ -191,6 +220,39 @@
                                     </div>
                                 </td>
                             </ng-template>
+                            @if (canSeePolicySettings$$()) {
+                                <td [style.padding-left]="0">
+                                    <div [style.width.px]="24">
+                                        @if (true) {
+                                            <div
+                                                nxTooltipV2
+                                                [tooltipTheme]="'contrast'"
+                                                [tooltipContent]="
+                                                    'The storage has different read-write policies across various Servers in the System.'
+                                                        | translate
+                                                "
+                                            >
+                                                <svg-icon
+                                                    class="policy-warning"
+                                                    nx-add-svg-src
+                                                    [src]="icons.dirNonStandard + 'warning.svg'"
+                                                    [applyClass]="true"
+                                                ></svg-icon>
+                                            </div>
+                                        }
+                                    </div>
+                                    <nx-select-v2
+                                        class="has-icon"
+                                        [(ngModel)]="store.mode"
+                                    >
+                                        @for (policy of policies; track policy.value) {
+                                            <nx-select-item [value]="policy.value">
+                                                {{ policy.name | translate }}
+                                            </nx-select-item>
+                                        }
+                                    </nx-select-v2>
+                                </td>
+                            }
                             <td class="size-chart">
                                 <nx-storage-size-component
                                     [store]="store"
@@ -206,19 +268,19 @@
                                     class="btn btn-text has-icon"
                                     [disabled]="
                                         updatingModes.includes(store.storageId) ||
-                                        (store.isBackup && reindexingBackup) ||
-                                        (!store.isBackup && reindexingMain)
+                                        (store.isBackup && reindexingBackup$$()) ||
+                                        (!store.isBackup && reindexingMain$$())
                                     "
                                     [ngClass]="{
                                         'disabled-action':
                                             updatingModes.includes(store.storageId) ||
-                                            (store.isBackup && reindexingBackup) ||
-                                            (!store.isBackup && reindexingMain)
+                                            (store.isBackup && reindexingBackup$$()) ||
+                                            (!store.isBackup && reindexingMain$$())
                                     }"
+                                    (click)="deleteStorage(store)"
                                     *ngIf="
                                         store.hasAction && store.storageType !== storageTypes.CLOUD
                                     "
-                                    (click)="deleteStorage(store)"
                                 >
                                     <svg-icon
                                         nx-add-svg-src
@@ -256,9 +318,9 @@
 <!-- Disable block if 4.3 system, updated implementation for that version pending -->
 <nx-block
     *ngIf="
-        !this.system.useRest &&
-        !loading &&
-        (forceShowBackupBlock || currentStorageState?.onlineBackups)
+        !system$$().useRest &&
+        !loading$$() &&
+        (forceShowBackupBlock$$() || currentStorageState?.onlineBackups)
     "
     type="mb-3"
     header-style="fixed"
@@ -266,7 +328,7 @@
     <header>
         <div class="header-top-bar">
             <nx-switch
-                [(ngModel)]="backupState"
+                [(ngModel)]="backupState$$"
                 id="archive-backup"
                 name="archive-backup"
             ></nx-switch>
@@ -278,11 +340,11 @@
             </h4>
         </div>
     </header>
-    <nx-section *ngIf="backupState$ | async">
+    <nx-section *ngIf="backupState$$()">
         <div class="archive-backup-container">
             <ng-container
                 *ngIf="
-                    customSettings && (!system.useRest || isBackupOn.originalValue);
+                    customSettings$$() && (!system$$().useRest || isBackupOn.originalValue);
                     else defaultMessage
                 "
             >
@@ -330,7 +392,7 @@
 <nx-block
     id="reindex-archive-block"
     *ngIf="
-        !loading &&
+        !loading$$() &&
         currentStorageState?.locations?.length &&
         (doesModeExist(storageModes.MAIN) || doesModeExist(storageModes.BACKUP))
     "
@@ -358,11 +420,11 @@
             </p>
             <button
                 class="btn btn-default mt-3"
-                *ngIf="!reindexingMain; else reindexMainProgress"
+                *ngIf="!reindexingMain$$(); else reindexMainProgress"
                 [disabled]="modeReindexDisabled(storageModes.MAIN)"
                 type="button"
                 [nxTooltip]="tooltipContent"
-                (click)="reindexingMain = true; reindexStorage(storageModes.MAIN)"
+                (click)="reindexingMain$$.set(true); reindexStorage(storageModes.MAIN)"
                 translate
             >
                 Reindex Main Storage
@@ -376,7 +438,7 @@
                     <div class="progress-bar-section mr-3">
                         <div class="progress-bar-header mb-1">
                             <div translate>Reindexing Main Storage...</div>
-                            <span>{{ percentMainDone | percent: '1.0-0' : locale }}</span>
+                            <span>{{ percentMainDone$$() | percent: '1.0-0' : locale }}</span>
                         </div>
                         <div class="progress-wrapper">
                             <div class="progress reindex-progress-container"></div>
@@ -384,7 +446,7 @@
                                 class="progress-bar reindex-progress"
                                 role="progressbar"
                                 [ngStyle]="{
-                                    width: (percentMainDone * 100).toFixed() + '%'
+                                    width: (percentMainDone$$() * 100).toFixed() + '%'
                                 }"
                                 aria-valuemin="0"
                                 aria-valuemax="100"
@@ -393,7 +455,7 @@
                     </div>
                     <button
                         class="btn btn-default"
-                        (click)="reindexingMain = false; cancelIndexing(storageModes.MAIN)"
+                        (click)="reindexingMain$$.set(false); cancelIndexing(storageModes.MAIN)"
                         translate
                     >
                         Cancel
@@ -402,12 +464,12 @@
             </ng-template>
             <ng-container *ngIf="doesModeExist(storageModes.BACKUP)">
                 <button
-                    *ngIf="!reindexingBackup; else reindexBackupProgress"
+                    *ngIf="!reindexingBackup$$(); else reindexBackupProgress"
                     class="btn btn-default mt-2"
                     type="button"
                     [disabled]="modeReindexDisabled(storageModes.BACKUP)"
                     [nxTooltip]="tooltipContent"
-                    (click)="reindexingBackup = true; reindexStorage(storageModes.BACKUP)"
+                    (click)="reindexingBackup$$.set(true); reindexStorage(storageModes.BACKUP)"
                     translate
                 >
                     Reindex Backup Storage
@@ -420,7 +482,7 @@
                         <div class="progress-bar-section mr-3">
                             <div class="progress-bar-header mb-1">
                                 <div translate>Reindexing Backup Storage...</div>
-                                <span>{{ percentBackupDone | percent: '1.0-0' : locale }}</span>
+                                <span>{{ percentBackupDone$$() | percent: '1.0-0' : locale }}</span>
                             </div>
                             <div class="progress-wrapper">
                                 <div class="progress reindex-progress-container">
@@ -428,7 +490,7 @@
                                         class="progress-bar reindex-progress"
                                         role="progressbar"
                                         [ngStyle]="{
-                                            width: (percentBackupDone * 100).toFixed() + '%'
+                                            width: (percentBackupDone$$() * 100).toFixed() + '%'
                                         }"
                                         aria-valuemin="0"
                                         aria-valuemax="100"
@@ -438,7 +500,9 @@
                         </div>
                         <button
                             class="btn btn-default"
-                            (click)="reindexingBackup = false; cancelIndexing(storageModes.BACKUP)"
+                            (click)="
+                                reindexingBackup$$.set(false); cancelIndexing(storageModes.BACKUP)
+                            "
                             translate
                         >
                             Cancel
