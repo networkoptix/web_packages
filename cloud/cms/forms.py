@@ -103,7 +103,7 @@ def get_vms_branding_shortcuts(customization=None, request=None):
 
     vms_context = Context.objects.filter(
         asset_type__type=AssetType.ASSET_TYPES.vms,
-        name="General information",
+        name__startswith="General",
         deprecated=False,
     ).last()
     vms_structures = vms_context.datastructure_set.all() if vms_context else []
