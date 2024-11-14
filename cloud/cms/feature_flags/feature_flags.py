@@ -140,6 +140,7 @@ class FLAGS(metaclass=_FlagType):
     use_500_error_interceptor = ('Use 500 Error Interceptor', 'use500ErrorInterceptor', '%USE_500_ERROR_INTERCEPTOR%')
     bookmark_sharing = ('Enable Bookmark Sharing', 'bookmarkSharing')
     oauth_v1_enabled = ('Enable OAuth/v1/token API', 'oauthV1Enabled')
+    qr_code_deployment = ('QR Code Deployment', 'qrCodeDeployment')
 
     # beta features
     access_integration_store = ('Lets the desktop client know if the integration store is enabled.',

@@ -174,6 +174,7 @@ export const FeatureFlagKeys = [
     'landingPage',
     'kbInstantSearch',
     'newHeader',
+    'qrCodeDeployment',
     'readonlyAPIs',
     'requestCaching',
     'requestCachingRemoteSync',

@@ -316,6 +316,18 @@ const lazyRoutes: Routes = [
             ),
     },
     {
+        path: 'test-qrcode-deployment',
+        canMatch: [FeatureGuardActivate],
+        data: {
+            flag: FeatureFlagStrings.qrCodeDeployment,
+        },
+        canActivate: [AuthGuard],
+        loadChildren: () =>
+            import('@pages/test-qrcode-deployment/test-qrcode-deployment.module').then(
+                m => m.TestQrCodeDeploymentModule,
+            ),
+    },
+    {
         path: '500',
         loadChildren: () => import('@pages/500/500.module').then(m => m.Nx500Module),
     },
