@@ -893,6 +893,16 @@ export class WebRTCStreamManager {
         this.sourceBuffer = null;
     };
 
+    private disabledStreams: AvailableStreams[] = [];
+
+    private get availableStreams() {
+        return this._availableStreams.filter(stream => !this.disabledStreams.includes(stream));
+    }
+
+    private set availableStreams(streams: AvailableStreams[]) {
+        this._availableStreams = streams;
+    }
+
     /**
      * Updates the stream used for connection.
      *
@@ -910,7 +920,7 @@ export class WebRTCStreamManager {
             }
         }
 
-        if (!this.availableStreams.includes(stream)) {
+        if (!this.availableStreams.includes(stream) && isAuto) {
             stream = this.availableStreams[0];
         }
 
@@ -941,7 +951,9 @@ export class WebRTCStreamManager {
 
         const isAuto = streams.length > 1;
 
-        const targetStream = isAuto ? initialStream : streams[0];
+        const autoStream = this.availableStreams.includes(initialStream) ? initialStream : this.availableStreams[0];
+
+        const targetStream = isAuto ? autoStream : streams[0];
 
         clearTimeout(this.cooldownLock);
         this.cooldownLock = null;
@@ -1060,6 +1072,13 @@ export class WebRTCStreamManager {
 
     public mimeType: string;
 
+    private disableCurrentStream = () => {
+        this.disabledStreams.push(this.currentStream());
+        if (this.availableStreams.length) {
+            this.updateStream(this.availableStreams[0]);
+        }
+    }
+
     private initializeMse = async (mimeType?: string): Promise<void> => {
         if (mimeType) {
             this.mimeType = mimeType;
@@ -1067,7 +1086,13 @@ export class WebRTCStreamManager {
             mimeType = this.mimeType;
         }
         if (!MediaSource || !MediaSource.isTypeSupported(mimeType)) {
-            this.mediaStream$.next([null, ConnectionError.transcodingDisabled, this]);
+            this.disableCurrentStream();
+
+            if (this.availableStreams.length) {
+                this.close(0.1);
+            } else {
+                this.mediaStream$.next([null, ConnectionError.transcodingDisabled, this]);
+            }
             return;
         }
 
@@ -1190,8 +1215,14 @@ export class WebRTCStreamManager {
                 this.close(0.1);
                 return;
             }
-            this.mediaStream$.next([null, ConnectionError.transcodingDisabled, this]);
-            this.close(false);
+
+            this.disableCurrentStream();
+            if (this.availableStreams.length) {
+                this.close(0.1);
+            } else {
+                this.mediaStream$.next([null, ConnectionError.transcodingDisabled, this]);
+                this.close(false);
+            }
         }
         if ('mime' in signal) {
             this.cleanupBuffers();
@@ -1466,13 +1497,9 @@ export class WebRTCStreamManager {
             }
             this.usingMse = true;
         } else if (!this.allowTranscoding && targetStream && requiresTranscoding.includes(targetStream.codec)) {
-                const alternateStream = this.availableStreams.filter(stream => stream !== targetStream.encoderIndex)[0]
-                if (typeof alternateStream === 'number' ) {
-                const alternateTarget = streams.find(({ encoderIndex }) => encoderIndex === alternateStream);
-                if (alternateTarget && !requiresTranscoding.includes(alternateTarget.codec)) {
-                    this.updateAvailableStreams([alternateStream])
-                    return this.close(.1);
-                }
+                this.disableCurrentStream();
+                if (this.availableStreams.length) {
+                    return this.close(0.1);
                 }
                 this.mediaStream$.next([null, targetStream.codec === RequiresTranscoding.MJPEG ? ConnectionError.mjpegDisabled : ConnectionError.transcodingDisabled, this]);
                 return this.close(5);
@@ -1750,7 +1777,7 @@ export class WebRTCStreamManager {
      */
     private constructor(
         private webRtcUrlFactoryOrConfig: WebRtcUrlFactoryOrConfig,
-        private availableStreams: AvailableStreams[] = [AvailableStreams.PRIMARY, AvailableStreams.SECONDARY],
+        private _availableStreams: AvailableStreams[] = [AvailableStreams.PRIMARY, AvailableStreams.SECONDARY],
         private accessToken = () => '',
         public allowTranscoding = false,
         public connectionKey = '',
