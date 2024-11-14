@@ -18,8 +18,6 @@ import {
     timer,
     throttle,
     BehaviorSubject,
-    mergeMap,
-    distinctUntilChanged,
 } from 'rxjs';
 import staticLang from '@language_static';
 import { LayoutItem } from '@services/system-api.types/layouts.types';
@@ -39,7 +37,6 @@ import { isDewarpingCapable } from '@utils/general';
 import { NxVideoPlayingDirective } from '@directives/video-playing.directive';
 import { NxVideoPlayerQueueService } from './video-player-queue.service';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { pipeSignal } from '@utils/signals';
 import { NxResizeObserver } from '@directives/resize/nx-resize.directive';
 import { NxBlockLoaderComponent } from '@components/skeleton-loader/variants/block-loader/block-loader.component';
 
@@ -87,22 +84,7 @@ export class NxVideoPlayerComponent {
 
     videoElementSize$$ = signal({ width: 0, height: 0 });
 
-    capturedFrame$$ = signal('');
-
-    thumbnail$$ = pipeSignal(this.camera$$, camera$ => camera$.pipe(
-        mergeMap((camera) => camera.previewUrl),
-        distinctUntilChanged(),
-        shareReplay({ bufferSize: 1, refCount: false }),
-    ), '');
-
-    lastFrame$$ = computed(() => {
-        const capturedFrame = this.capturedFrame$$();
-        if (capturedFrame) {
-            return capturedFrame;
-        }
-
-        return this.thumbnail$$();
-    });
+    lastFrame$$ = signal('');
 
     shiftRotated$$ = computed(() => {
         const rotation = this.rotation$$();
@@ -291,8 +273,7 @@ export class NxVideoPlayerComponent {
             }
         }
 
-        URL.revokeObjectURL(this.capturedFrame$$());
-        URL.revokeObjectURL(this.thumbnail$$());
+        URL.revokeObjectURL(this.lastFrame$$());
     }
 
     ngZone = inject(NgZone);
@@ -306,14 +287,12 @@ export class NxVideoPlayerComponent {
 
         this.originalStream.nativeElement.onblur = event => event.preventDefault();
         this.webRtcStreamRef.nativeElement.volume = this.volume$$();
-        this.nxVideoPlaying.latestFrame.pipe(untilDestroyed(this)).subscribe(frame => this.capturedFrame$$.update(previous => {
+        this.nxVideoPlaying.latestFrame.pipe(untilDestroyed(this)).subscribe(frame => this.lastFrame$$.update(previous => {
             URL.revokeObjectURL(previous);
-            URL.revokeObjectURL(this.thumbnail$$());
             return frame;
         }));
 
-        const availableStreams: AvailableStreams[] = this.availableStreams$$();
-        const targetStream = !availableStreams.includes(AvailableStreams.SECONDARY) ? TargetStream.HIGH : TargetStream.LOW;
+        const targetStream = TargetStream.AUTO;
 
         this.cdr.detach();
         this.hasChanges$.pipe(throttle(() => timer(500), { leading: false, trailing: true }), throttleByFrameRate(), untilDestroyed(this)).subscribe(() => this.cdr.detectChanges());
@@ -406,8 +385,7 @@ export class NxVideoPlayerComponent {
 
     ngOnDestroy(): void {
         this.streamCleanup();
-        URL.revokeObjectURL(this.capturedFrame$$());
-        URL.revokeObjectURL(this.thumbnail$$());
+        URL.revokeObjectURL(this.lastFrame$$());
         this.dequeue$.next(Date.now());
     }
 

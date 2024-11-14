@@ -47,6 +47,7 @@ import {
     Subject,
     throwError,
     timer,
+    zip,
 } from 'rxjs';
 import {
     catchError,
@@ -59,6 +60,7 @@ import {
     map,
     retry,
     shareReplay,
+    skip,
     startWith,
     switchMap,
     take,
@@ -134,7 +136,7 @@ import {
 } from '@utils/general';
 import { hasCrossSystemItems } from '@utils/has-cross-system-items';
 import { NgChanges } from '@utils/ng-changes';
-import { paramModel } from '@utils/signals';
+import { paramModel, pipeSignal } from '@utils/signals';
 import { ExtractObservable } from '@utils/type-helpers';
 import { NxMenuProjectionDirective } from 'nx-components';
 
@@ -1351,26 +1353,52 @@ export class NxLayoutGridComponent {
             );
         });
 
-        effect(() => {
-            const resolutions = this.layoutStateService.cameraResolutionLookup$$();
-            const transcodingDisabled = this.cameraTranscodingDisabled$$();
-            for (const { id, primary, secondary } of transcodingDisabled) {
-                if (
-                    ![ConnectionError.mjpegDisabled, ConnectionError.transcodingDisabled].includes(
-                        this.layoutItemsErrorsStore.statuses$$()[id] as ConnectionError,
-                    )
-                ) {
-                    continue;
-                }
-                const currentResolution = resolutions[id].resolution;
-                const useSecondary = currentResolution === Resolution.LOW && !secondary;
-                const usePrimary = currentResolution === Resolution.HIGH && !primary;
+        this.initClearTranscodingErrors();
+    }
 
-                if (usePrimary || useSecondary || ![primary, secondary].some(Boolean)) {
-                    this.layoutItemsErrorsStore.remove(id, true);
-                }
+    private initClearTranscodingErrors(): void {
+        const resolutions$$ = computed(() => {
+            const resolutionLookup = this.layoutStateService.cameraResolutionLookup$$();
+            const layout = this.layout$$();
+
+            if (!layout) {
+                return {} as typeof resolutionLookup;
             }
+
+            return layout.items.reduce(
+                (resolutions, { id }) => {
+                    const resolution = resolutionLookup[id];
+                    return {
+                        ...resolutions,
+                        [id]: resolution,
+                    };
+                },
+                {} as typeof resolutionLookup,
+            );
         });
+
+        const resolutionHistory$$ = pipeSignal(
+            resolutions$$,
+            resolutions$ =>
+                zip(resolutions$.pipe(skip(1)), resolutions$).pipe(
+                    map(([previous, current]) => ({ previous, current })),
+                ),
+            { previous: {}, current: {} },
+        );
+
+        effect(
+            () => {
+                const { previous, current } = resolutionHistory$$();
+                for (const id in current) {
+                    if (current[id] !== previous[id]) {
+                        this.layoutItemsErrorsStore.remove(id, true);
+                    }
+                }
+            },
+            {
+                allowSignalWrites: true,
+            },
+        );
     }
 
     cameraTranscodingDisabled$$ = signal<{ id: string; primary: boolean; secondary: boolean }[]>(

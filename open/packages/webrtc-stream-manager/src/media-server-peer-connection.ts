@@ -4,6 +4,8 @@ import { WebSocketSubject } from 'rxjs/webSocket';
 import { BufferHandler, ConnectionType, SignalingMessage, StreamHandler } from './types';
 import { asapScheduler, debounceTime, Subject } from 'rxjs';
 
+import { iceServers } from './config_check_excluded';
+
 export class MediaServerPeerConnection extends RTCPeerConnection {
     connectionId: string;
     timeIssueOccurred = 0;
@@ -136,7 +138,9 @@ export class MediaServerPeerConnection extends RTCPeerConnection {
         public updateConnectionType: (connectionType: Partial<ConnectionType>) => void,
         private logger?: Console,
     ) {
-        super();
+        super({
+            iceServers
+        });
 
         this.ontrack = (event: RTCTrackEvent): void => {
             this.clearTracks();
