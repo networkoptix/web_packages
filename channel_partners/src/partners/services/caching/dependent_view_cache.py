@@ -640,7 +640,7 @@ def should_skip_processing_request(request: NxRequest) -> bool:
     and the cache settings.
     """
     # Run simplest checks first.
-    if (request.method != 'get'
+    if (request.method.lower() != 'get'
             or request.headers.get(CACHE_SKIP_HEADER_KEY, "false").lower() == "true"):
         return True
 
