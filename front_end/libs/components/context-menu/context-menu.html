@@ -41,7 +41,6 @@
                 cdkMenuItem
                 (click)="item.action($event, context); $event.stopPropagation()"
                 [ngClass]="{checked: item.checked$$?.()}"
-                [disabled]="item.disabled$$?.()"
             >
                 {{ item.name | translate }}
                 @if (item.checked$$?.()) {
@@ -60,7 +59,7 @@
         @if (item.disabled$$?.()) {
             <button
                 cdkMenuItem
-                [disabled]="item.disabled$$?.()"
+                disabled
             >
                 {{ item.name | translate }}
             </button>
