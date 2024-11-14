@@ -109,9 +109,17 @@ export const parseOtherSystems = (
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const lookupCloudSystems = (cloudSystems: CloudSystemLight[]) =>
         cloudSystems
-            .map(system =>
-                groupedSystems.organizationSystems?.find(({ id }) => id === system.systemId),
-            )
+            .map(system => {
+                const index = groupedSystems.organizationSystems.findIndex(
+                    ({ id }) => id === system.systemId,
+                );
+
+                if (index === -1) {
+                    return null;
+                }
+
+                return groupedSystems.organizationSystems.splice(index, 1)[0];
+            })
             .filter(Boolean);
 
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -149,7 +157,7 @@ export const parseOtherSystems = (
             name: staticLang.layouts.otherSystems.sharedWithMe,
             type: ResourceType.SYSTEMS_GROUP,
             details: { id: 'sharedSystems' },
-            children: groupedSystems.sharedSystems || [],
+            children: [...groupedSystems.organizationSystems, ...groupedSystems.sharedSystems],
         },
     ];
 };
