@@ -81,13 +81,18 @@ function push()
 
     REPOSITORY=$DOCKER_REGISTRY$REPOSITORY_PATH
 
+    # Use $PUSH_MODULE if exists, otherwise use $MODULE.
+    # $MODULE is more dsecriptive to prevent collision of tags of different projects on the build server.
+    # When we push, we push to a specific project's repository path so it does not need to be descriptive.
+    PUSH_MODULE=${PUSH_MODULE:-$MODULE}
+
     if [ -n "${DOCKER_IMAGE_CI_TAG}" ]
     then
-        docker tag $MODULE:$VERSION $REPOSITORY/$MODULE:"${DOCKER_IMAGE_CI_TAG}"
-        docker push $REPOSITORY/$MODULE:"${DOCKER_IMAGE_CI_TAG}"
+        docker tag $MODULE:$VERSION $REPOSITORY/$PUSH_MODULE:"${DOCKER_IMAGE_CI_TAG}"
+        docker push $REPOSITORY/$PUSH_MODULE:"${DOCKER_IMAGE_CI_TAG}"
     else
-        docker tag $MODULE:$VERSION $REPOSITORY/$MODULE:$VERSION
-        docker push $REPOSITORY/$MODULE:$VERSION
+        docker tag $MODULE:$VERSION $REPOSITORY/$PUSH_MODULE:$VERSION
+        docker push $REPOSITORY/$PUSH_MODULE:$VERSION
     fi
 }
 

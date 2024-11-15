@@ -22,17 +22,26 @@ function publish() {
   stage
   pushd channel_partners_prod
   echo "In $(pwd)"
-  MODULE="app"
+  MODULE="channel_partners/app"
+  PUSH_MODULE="app"
   pack
   push
   popd
 
   pushd nginx
-  MODULE="nginx"
+  MODULE="channel_partners/nginx"
+  PUSH_MODULE="nginx"
   pack
   push
   popd
   rm -rf channel_partners_prod/stage
+}
+
+function clean() {
+  MODULE="channel_partners/app"
+  clean
+  MODULE="channel_partners/nginx"
+  clean
 }
 
 main $@

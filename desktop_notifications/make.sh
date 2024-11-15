@@ -20,4 +20,11 @@ function publish() {
   push
 }
 
+function clean() {
+  MODULE=cloud_notifications
+  clean
+  MODULE=cloud_notifications_nginx
+  clean
+}
+
 main $@
