@@ -590,3 +590,35 @@ def test_ipvd_update(mocker, superuser):
     mocker.patch('waffle.flag_is_active', return_value=False)
     response = client.post(path=path)
     assert response.status_code == status.HTTP_403_FORBIDDEN
+
+
+class TestGetCustomizations:
+
+    @pytest.fixture(autouse=True)
+    def setup(self, mocker, arf, default_customization, customization_factory, other_customization):
+        self.arf = arf
+        default_customization.supports_mobile = True
+        default_customization.save()
+        self.default_customization = default_customization
+        other_customization.supports_mobile = False
+        other_customization.save()
+        self.other_customization = other_customization
+
+    def test_names(self, superuser):
+        request = self.arf.get('/api/utils/customizations')
+        request.user = superuser
+        request.session = {}
+        response = async_to_sync(utils.get_customizations)(request)
+        assert response.status_code == status.HTTP_200_OK
+        assert self.default_customization.name in response.data
+        assert self.other_customization.name in response.data
+
+    def test_object_format(self, superuser):
+        request = self.arf.get('/api/utils/customizations?response_format=object')
+        request.user = superuser
+        request.session = {}
+        response = async_to_sync(utils.get_customizations)(request)
+        assert response.status_code == status.HTTP_200_OK
+        data = [dict(**d) for d in response.data]
+        assert {'name': 'default', 'supportsMobile': True} in response.data
+        assert {'name': 'other', 'supportsMobile': False} in response.data

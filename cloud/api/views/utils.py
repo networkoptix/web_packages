@@ -683,12 +683,12 @@ CUSTOMIZATIONS_STAFF_ONLY = f'Customizations list only available to users on the
 async def get_customizations(request):
     if not request.user.email.endswith(settings.SUPERUSER_DOMAIN):
         raise APIForbiddenException(CUSTOMIZATIONS_STAFF_ONLY)
-    is_flat = request.query_params.get('format', None) != 'object'
+    is_flat = request.query_params.get('response_format', None) != 'object'
     if is_flat:
-        customizations = await sync_to_async(Customization.objects.filter(enabled=True).values_list)('name', flat=True)
-        return Response(customizations)
-    customizations = await sync_to_async(Customization.objects.filter(enabled=True).all)()
-    return Response(CustomizationSerializer(customizations, many=True).data)
+        customizations = Customization.objects.filter(enabled=True).only('name')
+        return Response(await sync_to_async(lambda: [c.name for c in customizations])())
+    customizations = Customization.objects.filter(enabled=True).only('name', 'supports_mobile')
+    return Response(await sync_to_async(lambda: CustomizationSerializer(customizations, many=True).data)())
 
 
 @swagger_auto_schema(method="GET",

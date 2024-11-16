@@ -541,7 +541,7 @@ class CustomizationNameSerializer(serializers.Serializer):
 
 
 class CustomizationSerializer(CustomizationNameSerializer):
-    supportsMobile = serializers.BooleanField(required=False, default=False)
+    supportsMobile = serializers.BooleanField(source='supports_mobile', required=False, default=False,)
 
 
 class ForceSyncSerializer(serializers.Serializer):
