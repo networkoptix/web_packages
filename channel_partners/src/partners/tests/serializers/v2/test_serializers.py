@@ -990,6 +990,28 @@ class TestSystemGroupUserSerializer:
         assert serializer.is_valid() is False
         assert 'cannot be added to group' in serializer.errors['email'][0]
 
+    def test_missing_role(self, random_email):
+        data = {
+            'email': random_email,
+            'title': 'New Title',
+        }
+        serializer = SystemGroupUserSerializer(data=data, context={'group': self.group, 'request': self.request})
+        assert serializer.is_valid() is False
+        assert serializer.errors['role'][0] == "One of 'role' or 'roleId' must be set."
+        assert serializer.errors['roleId'][0] == "One of 'role' or 'roleId' must be set."
+
+    def test_role_and_roleId_set(self, random_email):
+        data = {
+            'email': random_email,
+            'title': 'New Title',
+            'role': 'Power User',
+            "roleId": OrganizationRoles.POWER_USER,
+        }
+        serializer = SystemGroupUserSerializer(data=data, context={'group': self.group, 'request': self.request})
+        assert serializer.is_valid() is False
+        assert serializer.errors['role'][0] == "Either 'role' or 'roleId' must be set only."
+        assert serializer.errors['roleId'][0] == "Either 'role' or 'roleId' must be set only."
+
     def test_email_case_insensitive(self):
         email = f'some-{uuid4()}@networkoptix.com'
         data = {

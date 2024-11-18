@@ -17,3 +17,10 @@ def validate_dict_max_size(value, max_size=3000) -> None:
         raise ValidationError(f'JSON size exceeds the maximum allowed size of {max_size} bytes.')
 
 
+def validate_role_and_roleId(attrs: dict) -> None:
+    if not attrs.get('role') and not attrs.get('roleId'):
+        msg = "One of 'role' or 'roleId' must be set."
+        raise ValidationError(detail={'role': [msg], 'roleId': [msg]})
+    if attrs.get('role') and attrs.get('roleId'):
+        msg = "Either 'role' or 'roleId' must be set only."
+        raise ValidationError(detail={'role': [msg], 'roleId': [msg]})

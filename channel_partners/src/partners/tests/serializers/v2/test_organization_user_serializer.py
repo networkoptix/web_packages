@@ -279,6 +279,31 @@ class TestOrganizationUserSerializer:
         serializer.save()
         mock_mark_organization_user.assert_not_called()
 
+    def test_missing_role(self, arf, org_user_factory):
+        request = arf.post('/')
+        request.user = org_user_factory(organization=self.org)
+        data = {
+            'email': self.user.email,
+            'title': 'New Title',
+        }
+        serializer = OrganizationUserSerializer(data=data, context={'organization': self.org, 'request': request})
+        assert serializer.is_valid() is False
+        assert serializer.errors['role'][0] == "One of 'role' or 'roleId' must be set."
+        assert serializer.errors['roleId'][0] == "One of 'role' or 'roleId' must be set."
+
+    def test_role_and_roleId_set(self, arf, org_user_factory):
+        request = arf.post('/')
+        request.user = org_user_factory(organization=self.org)
+        data = {
+            'email': self.user.email,
+            'role': 'Organization Administrator',
+            'roleId': OrganizationRoles.ORGANIZATION_ADMINISTRATOR,
+        }
+        serializer = OrganizationUserSerializer(data=data, context={'organization': self.org, 'request': request})
+        assert serializer.is_valid() is False
+        assert serializer.errors['role'][0] == "Either 'role' or 'roleId' must be set only."
+        assert serializer.errors['roleId'][0] == "Either 'role' or 'roleId' must be set only."
+
     def test_user_email_case_insensitive_existing_user(self, org_user_factory, arf, mock_mark_organization_user):
         mock_mark_organization_user.reset_mock()
         request = arf.post('/')

@@ -93,6 +93,7 @@ from partners.utils.context_vars import get_context_vars
 from partners.validators import (
     validate_active_organization,
     validate_dict_max_size,
+    validate_role_and_roleId,
 )
 from tools.helpers import (
     forward_cdb_resp,
@@ -671,6 +672,7 @@ class ChannelPartnerUserSerializer(serializers.ModelSerializer):
         return user
 
     def validate(self, attrs):
+        validate_role_and_roleId(attrs)
         user = attrs.get('user').get('email')
         role = attrs.get('roleId') or attrs.get('role')
         channel_partner = self.context.get('channel_partner')
@@ -851,6 +853,7 @@ class OrganizationUserSerializer(serializers.ModelSerializer):
         return relation.title
 
     def validate(self, attrs: dict) -> dict:
+        validate_role_and_roleId(attrs)
         organization = self.context.get('organization')
         user = attrs.get('email')
         role = attrs.get('roleId') or attrs.get('role')
@@ -1923,9 +1926,7 @@ class SystemGroupUserSerializer(serializers.ModelSerializer):
         ]
 
     def validate(self, attrs):
-        if not attrs.get('role') and not attrs.get('roleId'):
-            msg = "One of 'role' or 'roleId' must be set."
-            raise exceptions.ValidationError(detail={'role': [msg], 'roleId': [msg]})
+        validate_role_and_roleId(attrs)
         email = attrs.get('user', {}).get('email')
         group: SystemGroup = self.context.get('group')
         user, _ = CloudUser.objects.get_or_create(email=email)

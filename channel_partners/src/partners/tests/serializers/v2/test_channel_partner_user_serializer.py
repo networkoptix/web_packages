@@ -371,3 +371,24 @@ class TestChannelPartnerUserSerializer:
         mock_mark_organization_user.asser_called_once_with(email.lower())
 
 
+    def test_missing_role(self):
+        data = {
+            'email': self.user.email,
+            'title': 'New Title',
+        }
+        serializer = ChannelPartnerUserSerializer(data=data, context=self.context)
+        assert serializer.is_valid() is False
+        assert serializer.errors['role'][0] == "One of 'role' or 'roleId' must be set."
+        assert serializer.errors['roleId'][0] == "One of 'role' or 'roleId' must be set."
+
+    def test_role_and_roleId_set(self):
+        data = {
+            'email': self.user.email,
+            'title': 'New Title',
+            'role': 'Administrator',
+            "roleId": ChannelPartnerRoles.ADMINISTRATOR,
+        }
+        serializer = ChannelPartnerUserSerializer(data=data, context=self.context)
+        assert serializer.is_valid() is False
+        assert serializer.errors['role'][0] == "Either 'role' or 'roleId' must be set only."
+        assert serializer.errors['roleId'][0] == "Either 'role' or 'roleId' must be set only."
