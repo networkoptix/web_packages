@@ -36,7 +36,6 @@ type ServerInfoApiV1 = {
 };
 
 type ServerInfoApiV3 = ServerInfoApiV1 & {
-    ecDbReadOnly: boolean;
     hwPlatform: string;
     organizationId: DirtyId;
     saasState: SaasState;
@@ -82,12 +81,8 @@ interface ServerInfoBase<Version extends ApiVersions> {
 interface ServerInfoV1 extends ServerInfoBase<1> {
     isSaasEnabled: false;
 }
-interface ServerInfoV3 extends ServerInfoBase<3> {
-    ecDbReadOnly: boolean;
-}
-interface ServerInfoV4 extends ServerInfoBase<4> {
-    ecDbReadOnly: boolean;
-}
+interface ServerInfoV3 extends ServerInfoBase<3> {}
+interface ServerInfoV4 extends ServerInfoBase<4> {}
 
 interface AllServerInfoTypes {
     1: ServerInfoV1;
@@ -141,7 +136,6 @@ const v3Transform = (source: ServerInfoApiV3): ServerInfoV3 => {
         apiVersion: 3,
         cloudSiteId: source.cloudSystemId,
         isSaasEnabled: source.saasState === 'active',
-        ecDbReadOnly: source.ecDbReadOnly,
     };
 };
 
@@ -151,7 +145,6 @@ const v4Transform = (source: ServerInfoApiV4): ServerInfoV4 => {
         apiVersion: 4,
         cloudSiteId: source.cloudSiteId,
         isSaasEnabled: source.saasState === 'active',
-        ecDbReadOnly: source.ecDbReadOnly,
     };
 };
 

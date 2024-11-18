@@ -64,7 +64,6 @@ interface NetworkingInterfaces {
 }
 
 interface ServerFlags {
-    hasHDD: string;
     newServerFlag: string;
     publicIpFlag: string;
     ifListFlag: string;
@@ -133,7 +132,6 @@ export class WizardStateService {
 
     private readonly defaultUser = 'admin';
     private readonly flags: ServerFlags = {
-        hasHDD: 'SF_Has_HDD',
         newServerFlag: 'SF_NewSystem',
         publicIpFlag: 'SF_HasPublicIP',
         ifListFlag: 'SF_IfListCtrl',
@@ -534,12 +532,7 @@ export class WizardStateService {
                     noNetwork = !ips.length;
                 }
 
-                const noHdd =
-                    outputData.apiVersion === 3 || outputData.apiVersion === 4
-                        ? outputData.ecDbReadOnly
-                        : undefined;
                 outputData.flags = {
-                    ...(noHdd && { noHdd }),
                     noNetwork,
                     wrongNetwork,
                     hasInternet: outputData.serverFlags.includes(this.flags.publicIpFlag),
@@ -549,7 +542,6 @@ export class WizardStateService {
                 };
 
                 outputData.flags.brokenSystem =
-                    outputData.flags.noHDD ||
                     outputData.flags.noNetwork ||
                     (outputData.flags.wrongNetwork && !outputData.flags.canSetupNetwork);
                 outputData.flags.newSystem =
@@ -594,11 +586,6 @@ export class WizardStateService {
             }
             this.checkInternet();
             if (this.serverInfo.flags.brokenSystem) {
-                if (this.serverInfo.flags.noHDD) {
-                    // Error about hard drive
-                } else {
-                    // Error about network
-                }
                 this.currentState = WIZARD_STATE.BrokenSystem;
                 return Promise.reject();
             }
