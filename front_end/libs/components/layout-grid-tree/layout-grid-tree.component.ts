@@ -143,8 +143,6 @@ export class NxLayoutGridTreeComponent extends WithMenuItemsByType {
 
     showFirst$$ = input<string | null | undefined>(null, { alias: 'showFirst' });
 
-    lastQuery = '';
-
     search$$ = paramSignal('search');
 
     queryChangeSideEffect = queryChangeSideEffectsFactory(() => this.treeControl);
@@ -219,7 +217,7 @@ export class NxLayoutGridTreeComponent extends WithMenuItemsByType {
 
     ServerStats: ServerStats;
     LANG = staticLang;
-    ACTIONS_LANG = staticLang.layouts.treeActions;
+    ERRORS_LANG = staticLang.layouts.errors;
     playable: string[] = ['online', 'recording', 'scheduled'];
     readonly RESOURCE_TYPE = ResourceType;
 
@@ -330,11 +328,7 @@ export class NxLayoutGridTreeComponent extends WithMenuItemsByType {
         if (assertResourceOfType.placeholder(node) || this.dragDisabled[node.type]) {
             return;
         }
-        if (
-            !nxConfig.featureFlags.layoutsEditable ||
-            this.layout.locked ||
-            node.details?.id === this.layout.id
-        ) {
+        if (!nxConfig.featureFlags.layoutsEditable || node.details?.id === this.layout.id) {
             return;
         }
         this.doubleClick$.next(true);
@@ -348,6 +342,12 @@ export class NxLayoutGridTreeComponent extends WithMenuItemsByType {
               );
 
         if (!itemsToAdd.length) {
+            return;
+        } else if (this.layout.locked) {
+            this.layoutStateService.layoutError$.next({
+                message: this.ERRORS_LANG.layoutLocked,
+                timeout: 5_000,
+            });
             return;
         }
         const isLocalLayout = !hasCrossSystemItems(this.layout.items, this.system.id);

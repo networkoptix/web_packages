@@ -14,6 +14,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { throttleByFrameRate } from 'nx-open-web/packages/webrtc-stream-manager';
 import {
     combineLatest,
+    delay,
     distinctUntilChanged,
     fromEvent,
     map,
@@ -527,6 +528,20 @@ export class LayoutStateService {
     unsavedLayoutsInfo$$ = toSignal(this.store.select(selectUnsavedLayoutsInfo));
 
     showResolutionRibbon$ = new Subject<number>();
+
+    layoutError$ = new Subject<{
+        message: string;
+        timeout: number;
+    } | null>();
+
+    layoutErrorMessage$: Observable<string | null> = this.layoutError$.pipe(
+        switchMap(error =>
+            error ? of(null).pipe(delay(error.timeout), startWith(error.message)) : of(null),
+        ),
+    );
+    clearLayoutError = (): void => {
+        this.layoutError$.next(null);
+    };
 
     resolutionRibbonCountdown$ = this.showResolutionRibbon$.pipe(
         switchMap(showTime =>

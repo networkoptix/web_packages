@@ -1067,7 +1067,11 @@ export class NxLayoutGridComponent {
 
     getCursor = (): string => {
         if (this.addingItem$$()) {
-            return 'copy';
+            if (this.layout$$()?.locked) {
+                return 'not-allowed';
+            } else {
+                return 'copy';
+            }
         }
 
         if (this.dragging$$()) {
@@ -1078,6 +1082,18 @@ export class NxLayoutGridComponent {
     };
 
     cursorStyle$$ = computed(() => ({ cursor: this.getCursor() }));
+
+    Array = Array;
+    layoutHasError$$ = computed(() => {
+        const unsavedLayouts = this.layoutStateService.unsavedLayoutsIds$$();
+        return (
+            (unsavedLayouts &&
+                Object.values(unsavedLayouts).some(
+                    layoutState => layoutState === this.unsavedStates.saving,
+                )) ||
+            undefined
+        );
+    });
 
     unsavedLayoutState$$ = computed(() => {
         const unsavedLayouts = this.layoutStateService.unsavedLayoutsIds$$();
@@ -2475,6 +2491,14 @@ export class NxLayoutGridComponent {
                     return this.updateLayout();
                 }
 
+                if (this.layout$$()?.locked) {
+                    this.layoutStateService.layoutError$.next({
+                        message: staticLang.layouts.errors.layoutLocked,
+                        timeout: 5_000,
+                    });
+                    return this.updateLayout();
+                }
+
                 const items = this.updateItemNames([
                     ...this.layout.items,
                     ...(assertResourceOfType.layout(node)
@@ -2704,4 +2728,9 @@ export class NxLayoutGridComponent {
                     (nxConfig.allowDebugMode && 'placeholder')))
         );
     });
+
+    // make error "blink" in case it repeats while the same error is already displayed
+    layoutErrorDisplay$ = this.layoutStateService.layoutErrorMessage$.pipe(
+        switchMap(value => merge(of(null), timer(200).pipe(switchMap(() => of(value))))),
+    );
 }

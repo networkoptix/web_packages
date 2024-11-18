@@ -293,6 +293,9 @@
             "out": "ZOOM OUT",
             "exit": "Exit PTZ"
         },
+        "errors" : {
+            "layoutLocked": "This layout is locked. Unlock it to get editing functionality."
+        },
         "actions": {
             "create": {
                 "label": "Create Layout",

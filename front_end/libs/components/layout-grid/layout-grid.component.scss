@@ -364,6 +364,8 @@ h2.auto-save-overlay {
     flex-direction: column;
     align-content: stretch;
     background: var(--body-bg);
+
+    container: grid-section / size
 }
 
 .resolution-ribbon {
@@ -372,15 +374,18 @@ h2.auto-save-overlay {
 
 .unsaved-ribbon,
 .resolution-ribbon,
+.error-ribbon .content,
 .saving-ribbon .animated {
-    max-width: 100dvw;
+    @container grid-section (width > 1px) {
+        max-width: 100cqw;
+    }
     padding: 6px 16px;
     display: flex;
     align-items: flex-start;
     gap: 8px;
 
     & > svg-icon {
-        margin-top: 3px;
+        margin-top: 2px;
     }
 
     .info-svg {
@@ -423,7 +428,24 @@ h2.auto-save-overlay {
     }
 
     &.error {
-        background-color: #AA1E1E;
+        background-color: var(--badge-danger-bg);
+    }
+}
+
+.error-ribbon {
+    // change this to make it float over scene and not stack with other ribbons
+    // position: absolute;
+    width: 100%;
+    z-index: var(--z-index-status-ribbon);
+    background-color: var(--badge-danger-bg);
+    .content {
+        line-height: 20px;
+    }
+    svg-icon {
+        margin-bottom: 3px;
+        .icon-with-fill {
+            fill: var(--light1);
+        }
     }
 }
 

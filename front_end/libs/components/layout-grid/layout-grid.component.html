@@ -638,6 +638,27 @@
                 </div>
             }
         }
+        @if (layoutErrorDisplay$ | async; as error) {
+            <div class="error-ribbon">
+                <div class="content">
+                    <svg-icon
+                        nx-add-svg-src
+                        [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
+                        [src]="icons.dirLayouts + 'cancel.svg'"
+                    ></svg-icon>
+                    <span class="ribbon-message">
+                        {{ error | translate }}
+                    </span>
+                    <button
+                        class="legacy-btn ribbon-button"
+                        (click)="layoutStateService.clearLayoutError()"
+                    >
+                        <span translate>Close</span>
+                    </button>
+                </div>
+            </div>
+        }
+
         @if (layout$$(); as layout) {
             <div
                 class="grid-wrapper"
