@@ -1,12 +1,13 @@
 @use "../styles/typography";
 @use "../styles/spacing";
+@use "../styles/color" as color;
 
 
 @include typography.defaults;
 
 .wrapper {
     @include spacing.with-spacing-for(padding, 8);
-    background-color: var(--example-background-color, green);
+    background-color: color.$dark3;
     width: calc(100% - 144px);
     border: 2px solid currentColor;
 }

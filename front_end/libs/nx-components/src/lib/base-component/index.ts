@@ -1,5 +1,6 @@
-import { Directive, effect, ElementRef, inject, Signal } from '@angular/core';
+import { computed, Directive, effect, ElementRef, inject, Signal } from '@angular/core';
 
+import { commonColors } from '../styles/colors';
 import { fontColorsCommon } from '../styles/fonts';
 import { CssColorVariables, stepCount, ThemeOptions } from '../theme-provider/color-types';
 import { createComponentVariablesEvent } from '../theme-provider/events';
@@ -37,12 +38,11 @@ export abstract class BaseComponent {
      *   });
      * ```
      */
-    abstract variablesDeclaration: Signal<
-        Record<string, CssColorVariables | 'currentColor' | 'initial'>
-    >;
+    variablesDeclaration: Signal<Record<string, CssColorVariables | 'currentColor' | 'initial'>> =
+        computed(() => ({}) as const);
 
     // Add common colors here
-    protected readonly commonColors = { ...fontColorsCommon } as const;
+    protected readonly commonColors = { ...fontColorsCommon, ...commonColors } as const;
 
     protected readonly updateStyleEffect = effect(() => {
         const colorVariablesDeclarations = {

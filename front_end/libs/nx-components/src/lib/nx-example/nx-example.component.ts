@@ -13,7 +13,6 @@ import { FormsModule } from '@angular/forms';
 import { dispatch } from '../../common';
 import { BaseComponent } from '../base-component';
 import { Percentage } from '../theme-provider';
-import { generateCssVariableName } from '../theme-provider/color-generator';
 import { createThemePatchEvent } from '../theme-provider/events';
 
 /**
@@ -66,11 +65,4 @@ export class NxExampleComponent extends BaseComponent {
         useHct: this.useHct(),
         coreSaturation: this.coreSaturation(),
     }));
-
-    override variablesDeclaration = computed(
-        () =>
-            ({
-                '--example-background-color': generateCssVariableName('core', 'dark3'),
-            }) as const,
-    );
 }
