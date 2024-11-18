@@ -529,47 +529,52 @@ export class NxSystemRestAPI3 extends NxSystemRestAPI2 {
         }
 
         cameraId = cleanId(cameraId);
+        const params = new URLSearchParams();
 
         switch (transport) {
             case 'webRtc':
+                params.set('camera_id', cameraId);
+                params.set('x-server-guid', cleanId(this.serverId));
                 url = `${
                     resolvedRelay ? `wss://${resolvedRelay}` : this.getUrlBase('wss:')
-                }/webrtc-tracker/?camera_id=${cameraId}&x-server-guid=${cleanId(this.serverId)}&`;
+                }/webrtc-tracker/`;
                 break;
             case 'webRtc2':
+                params.set('x-server-guid', cleanId(this.serverId));
                 url = `${
                     resolvedRelay ? `wss://${resolvedRelay}` : this.getUrlBase('wss:')
-                }/rest/v3/devices/${cameraId}/webrtc?x-server-guid=${cleanId(this.serverId)}&`;
+                }/rest/v3/devices/${cameraId}/webrtc`;
                 break;
             case 'hls':
-                url = `${this.getUrlBase()}/web/hls/${cameraId}.m3u8?stream=${hlsResolutionOrEmpty(resolution)}&`;
-                if (position) {
-                    url += `pos=${position}&`;
-                }
-                return url;
+                params.set('stream', hlsResolutionOrEmpty(resolution));
+                url = `${this.getUrlBase()}/web/hls/${cameraId}.m3u8`;
+                break;
             case 'rtsp':
                 let urlBase = this.getUrlBase();
                 // If we are in webadmin we need to have the origin or else https is not replaced with rtsp.
                 if (!urlBase) {
                     urlBase = window.location.origin;
                 }
-                url = `${urlBase}/${cameraId}?stream=${resolution}&`.replace(
-                    /https?:\/\//,
-                    'rtsp://',
-                );
+                params.set('stream', resolution);
+                url = `${urlBase}/${cameraId}`.replace(/https?:\/\//, 'rtsp://');
                 break;
             default:
                 // Rtsp plays as webm but does not support transcoding.
                 if (transport === 'mjpeg') {
                     transport = 'webm';
                 }
-                url = `${this.getUrlBase()}/rest/v3/devices/${cameraId}/media.${transport}?resolution=${resolution || ''}`;
+                params.set('resolution', resolution || '');
+                url = `${this.getUrlBase()}/rest/v3/devices/${cameraId}/media.${transport}`;
         }
 
         if (position) {
-            url += `${transport === 'webRtc' ? 'position' : 'positionMs'}=${position}&`;
+            if (transport === 'hls') {
+                params.set('pos', position.toString());
+            } else {
+                params.set(transport === 'webRtc' ? 'position' : 'positionMs', position.toString());
+            }
         }
-        return url;
+        return url + '?' + params.toString();
     }
 
     override getServerInfo = getServerInfoRestV3;

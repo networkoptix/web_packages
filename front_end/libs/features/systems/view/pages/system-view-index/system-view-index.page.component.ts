@@ -291,7 +291,10 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
             (transport: string, quality: string, t?: ms) => {
                 const url = this.system?.mediaserver.getPlaybackUrl(c.id, transport, quality, t);
                 let link = of(url);
-                if (this.system.mediaserver.version >= NxSystemRestAPI3.VERSION) {
+                if (
+                    this.system.mediaserver.version >= NxSystemRestAPI3.VERSION &&
+                    transport !== 'hls'
+                ) {
                     link = (this.system.mediaserver as NxSystemRestAPI3)
                         .createTicket()
                         .pipe(map(({ token }) => replaceAuthWithTicket(url, token)));
