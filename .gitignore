@@ -1,6 +1,7 @@
 build_scripts/language_pack
 build_scripts/stage
 build_scripts/*.ts
+build_scripts/build_env
 
 subinclude:robot_tests/.hgignore
 

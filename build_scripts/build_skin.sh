@@ -33,9 +33,8 @@ do
     echo "Overwrite them with localized sources"
     cp -rf $lang_dir/templates/* $TARGET_DIR/$SKIN/templates/lang_$LANG/src/ || true
 
-    pushd $TARGET_DIR/$SKIN/templates/lang_$LANG/src
-        python preprocess.py
-    popd
+    echo "Preprocess templates"
+    python preprocess.py --path $TARGET_DIR/$SKIN/templates/lang_$LANG/
 
     echo "Templates success"
 

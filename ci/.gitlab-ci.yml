@@ -47,7 +47,7 @@ include:
   before_script:
     - cd cloud
     - echo "Waiting for mysql server to be ready"
-    - poetry -C /builds/dev/cloud_portal/cloud export --with prod,test,front-build --without-hashes --without-urls -o /app/requirements.txt
+    - poetry -C /builds/dev/cloud_portal/cloud export --with prod,test --without-hashes --without-urls -o /app/requirements.txt
     - >
       for i in {1..60}; do
         if ! mysql --host=mysql -u root -e ";"

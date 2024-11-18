@@ -508,7 +508,7 @@ function install_cli() {
 }
 
 function export_poetry_requirements() {
-    poetry --directory=cloud/ export --with test,front-build,prod,piplicenses --without-hashes --without-urls -o cloud/requirements.txt
+    poetry --directory=cloud/ export --with test,prod,piplicenses --without-hashes --without-urls -o cloud/requirements.txt
     sed -i '' '1s/^/# NOTE!!! This requirements file is used in development only.\n/' cloud/requirements.txt
     sed -i '' '2s/^/# Production requirements file is generated during build.\n/' cloud/requirements.txt
     sed -i '' '3s/^/\n/' cloud/requirements.txt

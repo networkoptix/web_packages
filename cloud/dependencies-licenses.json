@@ -40,16 +40,6 @@
         ]
     },
     {
-        "name": "cssutils",
-        "licenses": [
-            "GNU Lesser General Public License v3.0 (LGPLv3)"
-        ],
-        "url": "https://github.com/jaraco/cssutils",
-        "licenseFiles": [
-            "https://github.com/jaraco/cssutils/blob/master/LICENSE"
-        ]
-    },
-    {
         "name": "django-admin-tools",
         "licenses": [
             "MIT License"
@@ -300,16 +290,6 @@
         ]
     },
     {
-        "name": "htmlmin",
-        "licenses": [
-            "BSD License"
-        ],
-        "url": "https://htmlmin.readthedocs.io/en/latest/",
-        "licenseFiles": [
-            "https://github.com/mankyd/htmlmin/blob/master/LICENSE"
-        ]
-    },
-    {
         "name": "httpx",
         "licenses": [
             "BSD 3-Clause License"
@@ -327,16 +307,6 @@
         "url": "https://github.com/python/importlib_metadata",
         "licenseFiles": [
             "https://github.com/python/importlib_metadata/blob/master/LICENSE"
-        ]
-    },
-    {
-        "name": "inlinestyler",
-        "licenses": [
-            "BSD License"
-        ],
-        "url": "http://github.com/dlanger/inlinestyler",
-        "licenseFiles": [
-            "http://github.com/dlanger/inlinestyler/blob/master/LICENSE"
         ]
     },
     {

@@ -7,6 +7,28 @@ NPM_VERSION="10.8.3"
 BUILD_NUMBER=${BUILD_NUMBER:-0}
 VERSION="23.3.0.$BUILD_NUMBER"
 
+#DIR is the location of the cloud_portal build script in the repository
+#Can be called like this from with build_scripts "./build.sh"
+# or from cloud_portal "./build_scripts/build.sh"
+#or like this from outside the repository "../build_scripts/build.sh"
+
+PORTAL_REPOSITORY="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/.."
+[[ "$PORTAL_REPOSITORY" =~ (.*\/cloud_portal).* ]]; REPO=${BASH_REMATCH[1]}
+
+BUILD_ENV_DIR="$PORTAL_REPOSITORY/build_scripts/build_env"
+
+function setup_build_env () {
+    echo "Setting up build environment"
+    echo "Removing $BUILD_ENV_DIR"
+    rm -rf $BUILD_ENV_DIR
+    python3 -m venv $BUILD_ENV_DIR
+    source $BUILD_ENV_DIR/bin/activate
+    pip install setuptools==56.0.0
+    pip install wheel==0.37.0
+    pip install -r $PORTAL_REPOSITORY/build_scripts/requirements.txt
+    echo "Clean up open/node_modules"
+    rm -rf $PORTAL_REPOSITORY/open/node_modules
+}
 
 function build_frontend () {
     echo "Building front_end"
@@ -45,13 +67,7 @@ function move_fonts_and_help() {
 
     rm -rf ../front_end/dist/fonts || true
 }
-#DIR is the location of the cloud_portal build script in the repository
-#Can be called like this from with build_scripts "./build.sh"
-# or from cloud_portal "./build_scripts/build.sh"
-#or like this from outside the repository "../build_scripts/build.sh"
 
-PORTAL_REPOSITORY="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/.."
-[[ "$PORTAL_REPOSITORY" =~ (.*\/cloud_portal).* ]]; REPO=${BASH_REMATCH[1]}
 
 #If we are not using the repository we should update necessary files
 if [[ ! $PWD =~ $REPO ]]; then
@@ -61,12 +77,9 @@ else
     echo -e "\nIn repository skip copying sources *************"
 fi
 
-echo -e "\npip install requirements"
-[ ! -d "env" ] && python3 -m venv env
-. ./env/bin/activate
-pip install setuptools==56.0.0
-pip install wheel==0.37.0
-pip install -r $PORTAL_REPOSITORY/build_scripts/requirements.txt
+echo -e "\ninstalling requirements"
+#[ ! -d "env" ] && python3 -m venv env
+setup_build_env
 
 echo -e "\nrunning nodeenv..."
 [ -e nenv ] && rm -rf nenv
@@ -181,7 +194,8 @@ if ! python check_mustache_templates.py; then
 else
     echo "No template errors"
 fi
-
+echo "Deactivating virtual env"
+deactivate
 echo -e "\n*******************************************"
 echo -e "***   Cloud portal build is finished   ***"
 echo -e "*******************************************"
