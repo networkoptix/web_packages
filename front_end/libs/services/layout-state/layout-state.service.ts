@@ -126,13 +126,13 @@ export class LayoutStateService {
 
     contextMenu: TemplateRef<unknown>;
 
-    gridSection: HTMLElement;
+    gridSection: HTMLDivElement | undefined;
 
     toggleLayoutFullScreen(): void {
         if (this.isFullScreen()) {
             document.exitFullscreen();
         } else {
-            this.gridSection.requestFullscreen({ navigationUI: 'hide' });
+            this.gridSection?.requestFullscreen({ navigationUI: 'hide' });
         }
     }
 

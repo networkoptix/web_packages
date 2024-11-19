@@ -406,6 +406,8 @@ export class NxLayoutGridComponent {
         }
     }
 
+    gridSection$$ = viewChild<ElementRef<HTMLDivElement>>('gridSection');
+
     detailsRef$$ = viewChild<HTMLDetailsElement>('otherSystems');
 
     treeLoaded$$ = computed(() =>
@@ -482,6 +484,13 @@ export class NxLayoutGridComponent {
         if (otherSystemsDetails) {
             otherSystemsDetails.open = otherSystemsLoaded;
         }
+    });
+
+    gridSectionChangeEffect = effect(onCleanup => {
+        this.layoutStateService.gridSection = this.gridSection$$()?.nativeElement;
+        onCleanup(() => {
+            this.layoutStateService.gridSection = null;
+        });
     });
 
     /**
