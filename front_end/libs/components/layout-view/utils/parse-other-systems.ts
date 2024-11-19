@@ -93,19 +93,24 @@ export const parseOtherSystems = (
             children: parsedCameras.length && systemVersionSupported ? parsedCameras : placeholder,
         };
     });
+    const groupedSystems = new Proxy(
+        groupBy<(typeof allSystems)[number]>(allSystems, ({ details }) => {
+            if (isOrgSystem(details) && details.organizationId) {
+                return 'organizationSystems';
+            }
 
-    const groupedSystems = groupBy<(typeof allSystems)[number]>(allSystems, ({ details }) => {
-        if (isOrgSystem(details) && details.organizationId) {
-            return 'organizationSystems';
-        }
+            if (details.isMine) {
+                return 'mySystems';
+            }
 
-        if (details.isMine) {
-            return 'mySystems';
-        }
-
-        return 'sharedSystems';
-    });
-
+            return 'sharedSystems';
+        }),
+        {
+            get(target, prop) {
+                return Reflect.get(target, prop) || [];
+            },
+        },
+    );
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const lookupCloudSystems = (cloudSystems: CloudSystemLight[]) =>
         cloudSystems
