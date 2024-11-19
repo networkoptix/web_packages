@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cms', '0173_alter_readonlyapifile_type'),
+        ('cms', '0172_rename_flags'),
     ]
 
     operations = [
