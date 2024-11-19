@@ -96,11 +96,14 @@ export class NxSystemService {
                               map(camerasWithArchives =>
                                   cameras.map(({ recordingStatus, ...camera }) => ({
                                       ...camera,
-                                      recordingStatus: camerasWithArchives.includes(
-                                          dirtyId(camera.id),
-                                      )
-                                          ? RecordingStatus.Archive
-                                          : recordingStatus,
+                                      recordingStatus:
+                                          camerasWithArchives.includes(dirtyId(camera.id)) &&
+                                          ![
+                                              RecordingStatus.Recording,
+                                              RecordingStatus.Scheduled,
+                                          ].includes(recordingStatus)
+                                              ? RecordingStatus.Archive
+                                              : recordingStatus,
                                   })),
                               ),
                           ),
