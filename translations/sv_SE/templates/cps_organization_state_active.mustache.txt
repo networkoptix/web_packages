@@ -1,6 +1,6 @@
 Hej, {{message.userFullName}}
 
-{{message.sharer_name}} har delat åtkomst till organisation "{{message.organization_name}}" med dig.
+{{message.sharer_name}} har delad åtkomst till organisationen "{{message.organization_name}}" med dig.
 Funktionalitet är nu fullt tillgänglig.
 
-Visa i %CLOUD_NAME% -portalen med denna länk: {{ config.portal_url }}
+Visa i %CLOUD_NAME% Portal: {{ config.portal_url }}

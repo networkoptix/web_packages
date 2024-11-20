@@ -21,10 +21,10 @@
     "emailSubject": "{{{message.asset}}}{{/message.asset}}에 카메라 페이지 피드백{{#message.asset}}"
   },
   "ownership_transfer_invite": {
-    "emailSubject": "Ownership transfer for {{message.system_name}}"
+    "emailSubject": "{{message.system_name}}에 대한 소유권 이전"
   },
   "ownership_transfer_response": {
-    "emailSubject": "Ownership transfer for {{message.system_name}} - {{message.status}}"
+    "emailSubject": "{{message.system_name}} - {{message.status}}에 대한 소유권 이전"
   },
   "review_version": {
     "emailSubject": "{{message.asset_type}}: {{{message.asset}}}에 새로운 버전이 있습니다."
@@ -39,33 +39,39 @@
     "emailSubject": "비디오 시스템 {{{message.system_name}}}이 공유되었습니다"
   },
   "cps_organization_invite": {
-    "emailSubject": "{{message.sharer_name}} invites you to %CLOUD_NAME%"
+    "emailSubject": "{{{message.sharer_name}}}가 당신을 %CLOUD_NAME%로 초대합니다"
   },
   "cps_organization_share": {
-    "emailSubject": "Organization {{message.organization_name}} was shared with you"
+    "emailSubject": "조직 {{{message.organization_name}}}이 귀하와 공유되었습니다."
   },
   "cps_organization_state_active": {
-    "emailSubject": "The status of organization {{message.organization_name}} is changed to {{message.status_name}}"
+    "emailSubject": "조직 {{{message.organization_name}}}의 상태가 {{message.status_name}}로 변경되었습니다."
   },
   "cps_organization_state_confirmation": {
-    "emailSubject": "Confirm the transfer of organization {{message.organization_name}} to the status {{message.status_name}}"
+    "emailSubject": "조직 {{{message.organization_name}}}을 상태 {{message.status_name}}로 전환을 확인하세요."
   },
   "cps_organization_state_suspended": {
-    "emailSubject": "The status of organization {{message.organization_name}} is changed to {{message.status_name}}"
+    "emailSubject": "조직 {{{message.organization_name}}}의 상태가 {{message.status_name}}로 변경되었습니다."
+  },
+  "cps_organization_name_change": {
+    "emailSubject": "조직의 이름이 변경되었습니다"
   },
   "cps_partner_invite": {
-    "emailSubject": "{{message.sharer_name}} invites you to %CLOUD_NAME%"
+    "emailSubject": "{{{message.sharer_name}}}가 당신을 %CLOUD_NAME%로 초대합니다"
   },
   "cps_partner_share": {
-    "emailSubject": "Partner {{message.partner_name}} was shared with you"
+    "emailSubject": "파트너 {{{message.partner_name}}}이 귀하와 공유되었습니다."
   },
   "cps_partner_state_active": {
-    "emailSubject": "The status of partner {{message.partner_name}} is changed to {{message.status_name}} "
+    "emailSubject": "파트너 {{{message.partner_name}}}의 상태가 {{message.status_name}}로 변경되었습니다."
   },
   "cps_partner_state_confirmation": {
-    "emailSubject": "Confirm the transfer of partner {{message.partner_name}} to status {{message.status_name}} "
+    "emailSubject": "파트너 {{{message.partner_name}}}의 상태를 {{message.status_name}}로 변경합니다."
   },
   "cps_partner_state_suspended": {
-    "emailSubject": "The status of partner {{message.partner_name}} is changed to {{message.status_name}} "
+    "emailSubject": "파트너 {{{message.partner_name}}}의 상태가 {{message.status_name}}로 변경되었습니다."
+  },
+  "cps_partner_name_change": {
+    "emailSubject": "파트너의 이름이 변경되었습니다"
   }
 }

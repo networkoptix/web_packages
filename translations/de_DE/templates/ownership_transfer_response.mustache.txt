@@ -1,1 +1,3 @@
+Hello, {{ message.userFullName }}
+
 {{ message.user_full_name }} ({{ message.user_email }}) hat Ihren Antrag auf Besitzübertragung für {{ message.system_name }} {{ message.status }}

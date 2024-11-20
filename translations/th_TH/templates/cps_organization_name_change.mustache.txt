@@ -1,0 +1,5 @@
+สวัสดี {{message.userFullName}}
+
+ชื่อขององค์กร {{message.old_organization_name}} ถูกเปลี่ยนเป็น {{message.new_organization_name}}
+
+ดูใน %CLOUD_NAME% พอร์ทัลโดยใช้ลิงก์นี้: {{ config.portal_url }}

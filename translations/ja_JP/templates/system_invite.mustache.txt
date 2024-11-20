@@ -1,12 +1,12 @@
 %CLOUD_NAME%へようこそ
 
 {{#message.sharer_name}}
-{{message.sharer_name}} ({{message.sharer_email}}) は、あなたを%CLOUD_NAME%に招待し、システム {{message.system_name}} を共有します。
+{{message.sharer_name}} ({{message.sharer_email}}) は %CLOUD_NAME% への参加を招待しており、システム {{message.system_name}} をあなたと共有しています。
 {{/message.sharer_name}}
 
 {{^message.sharer_name}}
 あなたは %CLOUD_NAME%に招待されています。
-{{message.system_name}}へのアクセスが許可されています
+{{message.system_name}} へのアクセスが許可されました。
 {{/message.sharer_name}}
 
 登録してシステムを表示: {{config.portal_url}}/authorize/register/{{message.code}}

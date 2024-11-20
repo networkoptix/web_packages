@@ -1,7 +1,5 @@
-Hello, {{message.userFullName}}
+Ola, {{message.userFullName}}
 
-{{message.sharer_name}} has shared access to channel partner "{{message.partner_name}}" with you.
+{{message.sharer_name}} compartiu o acceso á canle asociada "{{message.partner_name}}" contigo. Para velo e xestionalo, por favor, crea unha conta en %CLOUD_NAME% usando o teu enderezo de correo electrónico actual e sigue as instrucións.
 
-To view and manage it, please create account on %CLOUD_NAME% using your current email address and follow further instructions.
-
-Create Account using this link: {{ config.portal_url }}/authorize/register/
+Crear conta: {{ config.portal_url }}/authorize/register/

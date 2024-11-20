@@ -1,5 +1,5 @@
 Merhaba, {{message.userFullName}}
 
-{{message.sharer_name}} has shared access to channel partner "{{message.partner_name}}" with you.
+{{message.sharer_name}} sizinle "{{message.partner_name}}" kanal partner erişimini paylaştı.
 
-View in %CLOUD_NAME% Portal using this link: {{ config.portal_url }}
+%NX_CONNECT_NAME% Portalında görüntüle: %NX_CONNECT_URL%

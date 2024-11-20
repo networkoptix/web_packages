@@ -1,10 +1,10 @@
-There is a new version for {{ message.asset }}({{message.asset_type}}) to review.
+Hai unha nova versión para {{ message.asset }} ({{message.asset_type}}) para revisar.
 
-Click on the link to review draft {{ message.id }} for {{ message.asset }}
+Fai clic na ligazón para revisar o borrador {{ message.id }} para {{ message.asset }}
 
-Link to review: {{ config.portal_url }}/admin/cms/assetcustomizationreview/{{ message.id }}/change/
+Ligazón para revisar: {{ config.portal_url }}/admin/cms/assetcustomizationreview/{{ message.id }}/change/
 
-On this page you can
-1) Create a preview to see the most recent changes.
-2) Publish this version which will update all content.
-3) Edit contexts by clicking on the edit record button. To see those changes you will need to create a new version.
+Nesta páxina podes
+1) Crear unha vista previa para ver os cambios máis recentes.
+2) Publicar esta versión, que actualizará todo o contido.
+3) Editar contextos facendo clic no botón Editar rexistro. Para ver eses cambios, terás que crear unha nova versión.

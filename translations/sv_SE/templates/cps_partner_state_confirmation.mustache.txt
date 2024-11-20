@@ -1,6 +1,6 @@
 Hej, {{message.userFullName}}
 
-Använd verifieringskoden nedan för att slutföra statusändringen från {message.partner_name}} till {{message.status_name}}.
+Använd verifieringskoden nedan för att slutföra statusändringen från {{message.partner_name}} till {{message.status_name}}.
 
 Verifieringskod:
 {{message.code}}

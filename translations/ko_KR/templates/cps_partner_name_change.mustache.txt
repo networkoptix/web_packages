@@ -1,0 +1,5 @@
+안녕하세요, {{message.userFullName}}
+
+파트너 {{message.old_partner_name}} 의 이름이 {{message.new_partner_name}}로 변경되었습니다.
+
+%NX_CONNECT_NAME% 이 링크를 사용하여 포털에서 보기: %NX_CONNECT_URL%

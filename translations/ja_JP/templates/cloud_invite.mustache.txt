@@ -1,12 +1,12 @@
 こんにちは、
 
-%CLOUD_NAME% に登録されました。
+%CLOUD_NAME%に招待されました。
 {{#message.message}}
 
 {{ message.message }}
 
 {{/message.message}}
-%CLOUD_NAME%アカウントを作成してください
-メールアドレスを使用して指示に従ってください
+このメールアドレスを使用して %CLOUD_NAME% にアカウントを作成し、
+続く指示に従ってください。
 
 このリンクを使用してアカウント登録してください: {{ config.portal_url }}/authorize/register/{{ message.code }}

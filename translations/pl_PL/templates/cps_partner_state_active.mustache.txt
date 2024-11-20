@@ -1,6 +1,6 @@
-Hello, {{message.userFullName}}
+Witaj {{message.userFullName}}
 
-The status of partner {{message.partner_name}} is changed to {{message.status_name}}.
-Functionality is now fully available.
+Status partnera {{message.partner_name}} został zmieniony na {{message.status_name}}.
+Funkcjonalność jest obecnie w pełni dostępna.
 
-View in %CLOUD_NAME% Portal using this link: {{ config.portal_url }}
+Zobacz w portalu %NX_CONNECT_NAME%: %NX_CONNECT_URL%

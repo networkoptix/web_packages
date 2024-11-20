@@ -1,5 +1,5 @@
-Hello, {{message.userFullName}}
+Bonjour, {{message.userFullName}}
 
-{{message.sharer_name}} has shared access to channel partner "{{message.partner_name}}" with you.
+{{message.sharer_name}} a partagé l'accès au partenaire de distribution "{{message.partner_name}}" avec vous.
 
-View in %CLOUD_NAME% Portal using this link: {{ config.portal_url }}
+Voir sur le portail %NX_CONNECT_NAME% : %NX_CONNECT_URL%

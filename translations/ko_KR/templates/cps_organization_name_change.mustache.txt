@@ -1,0 +1,5 @@
+안녕하세요, {{message.userFullName}}
+
+조직 {{message.old_organization_name}} 의 이름이 {{message.new_organization_name}}로 변경되었습니다.
+
+%CLOUD_NAME% 이 링크를 사용하여 포털에서 보기: {{ config.portal_url }}

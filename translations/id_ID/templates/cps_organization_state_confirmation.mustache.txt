@@ -1,6 +1,6 @@
-Hello, {{message.userFullName}}
+Halo, {{message.userFullName}}
 
-Use the verification code below to complete status change of {{message.organization_name}} to {{message.status_name}}.
+Gunakan kode verifikasi di bawah ini untuk menyelesaikan perubahan status dari {{message.organization_name}} menjadi {{message.status_name}}.
 
-Verification code:
+Kode verifikasi:
 {{message.code}}

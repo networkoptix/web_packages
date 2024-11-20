@@ -1,1 +1,3 @@
+Hello, {{ message.userFullName }}
+
 {{ message.user_full_name }} ({{ message.user_email }}) có {{ message.status }} yêu cầu của bạn để chuyển quyền sở hữu của {{ message.system_name }}

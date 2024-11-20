@@ -1,0 +1,5 @@
+Ola, {{message.userFullName}}
+
+O nome da organización {{message.old_organization_name}} cambiouse a {{message.new_organization_name}}.
+
+Ver no portal %CLOUD_NAME% usando esta ligazón: {{ config.portal_url }}

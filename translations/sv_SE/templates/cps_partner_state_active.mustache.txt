@@ -3,4 +3,4 @@ Hej, {{message.userFullName}}
 Statusen för partnern {{message.partner_name}} ändras till {{message.status_name}}.
 Funktionalitet är nu fullt tillgänglig.
 
-Visa i %CLOUD_NAME% -portalen med denna länk: {{ config.portal_url }}
+Visa i %NX_CONNECT_NAME% Portal: %NX_CONNECT_URL%

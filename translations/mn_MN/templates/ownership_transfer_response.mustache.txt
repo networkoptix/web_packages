@@ -1,1 +1,3 @@
+Hello, {{ message.userFullName }}
+
 {{ message.user_full_name }} ({{ message.user_email }})-д таны {{ message.system_name }} системийн эзэмшигчийг өөрчлөх {{ message.status }} хүсэлт очсон байна

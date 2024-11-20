@@ -1,5 +1,5 @@
 Merhaba, {{message.userFullName}}
 
-{{message.sharer_name}} has shared access to organization  "{{message.organization_name}}" with you.
+{{message.sharer_name}} "{{message.organization_name}}" kuruluşuna erişimi sizinle paylaştı.
 
-View in %CLOUD_NAME% Portal using this link: {{ config.portal_url }}
+%CLOUD_NAME% Portalda görüntüle: {{ config.portal_url }}

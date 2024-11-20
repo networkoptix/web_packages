@@ -1,0 +1,5 @@
+Merhaba {{message.userFullName}},
+
+{{message.old_partner_name}} Partner adı {{message.new_partner_name}} olarak değiştirildi.
+
+Bağlantıyı kullanarak %NX_CONNECT_NAME% Portalında görüntüleyin: %NX_CONNECT_URL%

@@ -1,6 +1,6 @@
 {{message.userFullName}} さん、こんにちは。
 
-{{message.sharer_name}} が、組織 "{{message.organization_name}}" へのアクセス権を共有しました。
+{{message.sharer_name}} が、組織  {{message.organization_name}} へのアクセスを共有しました。
 すべての機能が利用可能になりました。
 
-このリンクを使用して %CLOUD_NAME% ポータルで表示: {{ config.portal_url }}
+%CLOUD_NAME% ポータルで表示: {{ config.portal_url }}

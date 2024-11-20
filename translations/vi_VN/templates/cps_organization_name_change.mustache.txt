@@ -1,0 +1,5 @@
+Xin chào {{message.userFullName}}
+
+Tên của tổ chức {{message.old_organization_name}} đã được đổi thành {{message.new_organization_name}}.
+
+Xem trong Cổng thông tin %CLOUD_NAME% bằng liên kết này: {{ config.portal_url }}

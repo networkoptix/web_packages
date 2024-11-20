@@ -1,5 +1,5 @@
-Hello, {{message.userFullName}}
+안녕하세요, {{message.userFullName}}
 
-The status of partner {{message.partner_name}} is changed to {{message.status_name}}.
+파트너 {{message.partner_name}} 의 상태가 {{message.status_name}}로 변경됩니다.
 
-Please contact your partner for more details.
+자세한 내용은 파트너에게 문의하세요.

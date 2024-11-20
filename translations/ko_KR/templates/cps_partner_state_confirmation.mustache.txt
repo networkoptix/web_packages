@@ -1,6 +1,6 @@
-Hello, {{message.userFullName}}
+안녕하세요, {{message.userFullName}}
 
-Use the verification code below to complete status change of {message.partner_name}} to {{message.status_name}}.
+아래의 확인 코드를 사용하여 {{message.partner_name}} 에서 {{message.status_name}}로 상태 변경을 완료하세요.
 
-Verification code:
+인증 코드:
 {{message.code}}

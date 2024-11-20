@@ -9,7 +9,7 @@
     "emailSubject": "{{{message.subject}}}"
   },
   "sales_inquiry": {
-    "emailSubject": "{{{message.asset}}} に関するお問い合わせ"
+    "emailSubject": "{{{message.asset}}} の販売に関するお問い合わせ"
   },
   "technical_inquiry": {
     "emailSubject": "{{{message.asset}}} に関する技術的なお問い合わせ"
@@ -21,10 +21,10 @@
     "emailSubject": "{{{message.asset}}}{{/message.asset}}のカメラページフィードバック{{#message.asset}}"
   },
   "ownership_transfer_invite": {
-    "emailSubject": "{{message.system_name}} の所有権移転"
+    "emailSubject": "{{message.system_name}} の所有権譲渡"
   },
   "ownership_transfer_response": {
-    "emailSubject": "{{message.system_name}} の所有権移転 - {{message.status}}"
+    "emailSubject": "{{message.system_name}} の所有権譲渡 - {{message.status}}"
   },
   "review_version": {
     "emailSubject": "{{message.asset_type}}: {{{message.asset}}} に新しいバージョンがあります。"
@@ -36,36 +36,42 @@
     "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} があなたを %CLOUD_NAME% に招待しました。{{/message.sharer_name}}{{^message.sharer_name}}ビデオシステム {{{message.system_name}} が共有されました。{{/message.sharer_name}}"
   },
   "system_shared": {
-    "emailSubject": "ビデオシステム{{{message.system_name}}が共有されました。"
+    "emailSubject": "ビデオシステム {{{message.system_name}}} が共有されました。"
   },
   "cps_organization_invite": {
-    "emailSubject": "{{message.sharer_name}} さんがあなたを %CLOUD_NAME%に招待しています"
+    "emailSubject": "{{{message.sharer_name}}} さんが、あなたを %CLOUD_NAME% に招待しています"
   },
   "cps_organization_share": {
-    "emailSubject": "組織 {{message.organization_name}} が共有されました"
+    "emailSubject": "組織 {{{message.organization_name}}} が共有されました"
   },
   "cps_organization_state_active": {
-    "emailSubject": "組織 {{message.organization_name}} のステータスが {{message.status_name}} に変更されました"
+    "emailSubject": "組織 {{{message.organization_name}}} のステータスが {{message.status_name}} に変更されました"
   },
   "cps_organization_state_confirmation": {
-    "emailSubject": "組織 {{message.organization_name}} のステータス {{message.status_name}} への遷移について確認してください"
+    "emailSubject": "組織 {{{message.organization_name}}} のステータス {{message.status_name}} への遷移について確認してください"
   },
   "cps_organization_state_suspended": {
-    "emailSubject": "組織 {{message.organization_name}} のステータスが {{message.status_name}} に変更されました"
+    "emailSubject": "組織 {{{message.organization_name}}} のステータスが {{message.status_name}} に変更されました"
+  },
+  "cps_organization_name_change": {
+    "emailSubject": "組織名が変更されました"
   },
   "cps_partner_invite": {
-    "emailSubject": "{{message.sharer_name}} さんがあなたを %CLOUD_NAME%に招待しています"
+    "emailSubject": "{{{message.sharer_name}}} さんが、あなたを %CLOUD_NAME% に招待しています"
   },
   "cps_partner_share": {
-    "emailSubject": "パートナー {{message.partner_name}} が共有されました"
+    "emailSubject": "パートナー {{{message.partner_name}}} が共有されました"
   },
   "cps_partner_state_active": {
-    "emailSubject": "パートナー {{message.partner_name}} のステータスが {{message.status_name}} に変更されました "
+    "emailSubject": "パートナー {{{message.partner_name}}} のステータスが {{message.status_name}} に変更されました"
   },
   "cps_partner_state_confirmation": {
-    "emailSubject": "パートナー {{message.partner_name}} のステータス {{message.status_name}} への遷移について確認してください "
+    "emailSubject": "パートナー {{{message.partner_name}}} のステータス {{message.status_name}} への遷移について確認してください"
   },
   "cps_partner_state_suspended": {
-    "emailSubject": "パートナー {{message.partner_name}} のステータスが {{message.status_name}} に変更されました "
+    "emailSubject": "パートナー {{{message.partner_name}}} のステータスが {{message.status_name}} に変更されました"
+  },
+  "cps_partner_name_change": {
+    "emailSubject": "パートナーの名前が変更されました"
   }
 }

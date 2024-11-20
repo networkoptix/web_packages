@@ -1,0 +1,5 @@
+{{message.userFullName}} さん、こんにちは。
+
+パートナー {{message.old_partner_name}} の名前が {{message.new_partner_name}} に変更されました。
+
+%NX_CONNECT_NAME% ポータル表示リンク: %NX_CONNECT_URL%

@@ -1,0 +1,5 @@
+Hej, {{message.userFullName}}
+
+Namnet på partner {{message.old_partner_name}} har ändrats till {{message.new_partner_name}}.
+
+Visa i %NX_CONNECT_NAME% Portal med denna länk: %NX_CONNECT_URL%

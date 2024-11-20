@@ -1,0 +1,5 @@
+Hei, {{message.userFullName}}
+
+Navnet på organisasjonen {{message.old_organization_name}} er endret til {{message.new_organization_name}}.
+
+Se i %CLOUD_NAME% -portalen ved å bruke denne lenken: {{ config.portal_url }}

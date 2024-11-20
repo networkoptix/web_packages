@@ -1,0 +1,5 @@
+Bonjour, {{message.userFullName}}
+
+Le nom du partenaire {{message.old_partner_name}} a été changé en {{message.new_partner_name}}.
+
+Voir dans le portail %NX_CONNECT_NAME% en utilisant ce lien : %NX_CONNECT_URL%

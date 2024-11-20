@@ -1,6 +1,6 @@
 Hei, {{message.userFullName}}
 
-Bruk bekreftelseskoden nedenfor for å fullføre statusendringen fra {message.partner_name}} til {{message.status_name}}.
+Bruk bekreftelseskoden nedenfor for å fullføre statusendring av {{message.partner_name}} til {{message.status_name}}.
 
 Bekreftelseskode:
 {{message.code}}

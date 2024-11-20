@@ -1,5 +1,5 @@
-Hello, {{message.userFullName}}
+안녕하세요, {{message.userFullName}}
 
-{{message.sharer_name}} has shared access to organization  "{{message.organization_name}}" with you.
+{{message.sharer_name}} 님이 조직 "{{message.organization_name}}"에 대한 접근 권한을 귀하와 공유했습니다.
 
-View in %CLOUD_NAME% Portal using this link: {{ config.portal_url }}
+%CLOUD_NAME% 이 링크를 사용하여 포털에서 보기: {{ config.portal_url }}

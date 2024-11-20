@@ -1,0 +1,5 @@
+Xin chào, {{message.userFullName}}
+
+Tên của đối tác {{message.old_partner_name}} đã được đổi thành {{message.new_partner_name}}.
+
+View in %NX_CONNECT_NAME% Portal using this link: %NX_CONNECT_URL%
