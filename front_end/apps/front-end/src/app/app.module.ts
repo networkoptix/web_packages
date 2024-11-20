@@ -42,7 +42,6 @@ import { NxNavFooterComponent } from '@components/nav-footer/nav-footer.componen
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { PopoverModule } from '@components/popover/popover.module';
 import { NxTourStepComponent } from '@components/tour-step/tour-step.component';
-import { NxScrollHelperDirective } from '@directives/nx-scroll-helper';
 import { NxResizeObserver } from '@directives/resize/nx-resize.directive';
 import { environment } from '@environments/environment';
 import { CloudSessionTruncatedInterceptor } from '@interceptors/cloud-session-truncated-interceptor';
@@ -134,7 +133,6 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
         NgxMaskModule.forRoot(),
         TourMatMenuModule.forRoot(),
         NxResizeObserver,
-        NxScrollHelperDirective,
         NgxSkeletonLoaderModule.forRoot({
             appearance: 'line',
             count: 1,

@@ -26,6 +26,7 @@ import { NxApplyComponent } from '@components/apply/apply.component';
 import { NxNavFooterComponent } from '@components/nav-footer/nav-footer.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxTourStepComponent } from '@components/tour-step/tour-step.component';
+import { NxScrollHelperDirective } from '@directives/nx-scroll-helper';
 import { NxResizeObserver } from '@directives/resize/nx-resize.directive';
 import { environment } from '@environments/environment';
 import { NxAppStateService } from '@services/nx-app-state.service';
@@ -95,6 +96,7 @@ require('what-input');
         NxApplyComponent,
         NxResizeObserver,
         CdkScrollableModule,
+        NxScrollHelperDirective,
     ],
 })
 export class LegacyCloudAppComponent implements OnInit {
