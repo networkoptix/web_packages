@@ -1,6 +1,5 @@
 import { DialogModule } from '@angular/cdk/dialog';
 import { FullscreenOverlayContainer, OverlayContainer } from '@angular/cdk/overlay';
-import { CdkScrollableModule } from '@angular/cdk/scrolling';
 import { CommonModule, Location, LocationStrategy, PathLocationStrategy } from '@angular/common';
 import {
     HTTP_INTERCEPTORS,
@@ -128,7 +127,6 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
             registrationStrategy: 'registerImmediately',
         }),
         DialogModule,
-        CdkScrollableModule,
         // HoverPreloadModule,
         NxPreLoaderComponent,
         NxNavFooterComponent,

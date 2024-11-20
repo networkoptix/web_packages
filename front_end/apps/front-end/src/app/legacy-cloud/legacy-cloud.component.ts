@@ -1,3 +1,4 @@
+import { CdkScrollableModule } from '@angular/cdk/scrolling';
 import { CommonModule } from '@angular/common';
 import {
     Component,
@@ -93,6 +94,7 @@ require('what-input');
         NxTourStepComponent,
         NxApplyComponent,
         NxResizeObserver,
+        CdkScrollableModule,
     ],
 })
 export class LegacyCloudAppComponent implements OnInit {
