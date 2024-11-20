@@ -9,5 +9,5 @@
 {{message.system_name}}에 대한 액세스 권한이 부여되었습니다.
 {{/message.sharer_name}}
 
-Register and view the system: {{config.portal_url}}/authorize/register/{{message.code}}
+시스템을 등록하고 확인하세요: {{config.portal_url}}/authorize/register/{{message.code}}
 
