@@ -1,11 +1,11 @@
 {
     "jira": {
-        "project_keys": [
-            "CLOUD",
-            "INFRA",
-            "LIC",
-            "CPS"
-        ]
+        "project_mapping": {
+            "CLOUD": "cloud_portal",
+            "INFRA": "automation",
+            "LIC": "cloud_portal",
+            "CPS": "cloud_portal"
+        }
     },
     "repo": {
         "path": "/tmp/workflow_robocat/cloud_portal",
@@ -17,7 +17,8 @@
         "essential",
         "job_status",
         "workflow",
-        "follow_up"
+        "follow_up",
+	"post_processing"
     ],
     "job_status_check_rule": {
         "open_source": {
