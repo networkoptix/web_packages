@@ -1,5 +1,3 @@
-import { cloneDeep } from 'lodash-es';
-
 import * as generalUtils from './general';
 import * as nxUtils from './nx';
 import { parseJWTToken } from './token-tools';
@@ -105,80 +103,10 @@ describe('Nx utils', () => {
     });
 });
 
-/* Everything below here is deprecated and kept for archive purposes only */
-/* eslint-disable */
-
-/** @deprecated
- * Replaced with lodash `cloneDeep()`.
- *
- * Source: https://stackoverflow.com/a/40293777
- */
-function deepCopyWithCircularReference<T extends Object>(
-    obj: T,
-    hash = new WeakMap()
-): T {
-    if (Object(obj) !== obj || obj instanceof Function) {
-        return obj;
-    }
-    if (hash.has(obj)) {
-        return hash.get(obj); // Cyclic reference
-    }
-    const result: unknown = Object.create(Object.getPrototypeOf(obj));
-    if (obj instanceof Map) {
-        Array.from(
-            obj,
-            ([key, val]: [string, unknown]) =>
-                (result as Map<string, unknown>).set(
-                    deepCopyWithCircularReference(key, hash),
-                    deepCopyWithCircularReference(val, hash)
-                )
-        );
-    } else if (obj instanceof Set) {
-        Array.from(
-            obj,
-            (key: unknown) => (result as Set<unknown>).add(
-                deepCopyWithCircularReference(key, hash)
-            )
-        );
-    }
-    hash.set(obj, result);
-    return Object.assign(
-        result as T,
-        ...Object.keys(obj).map(key => ({
-            [key]: deepCopyWithCircularReference(obj[key], hash)
-        }))
-    );
-}
-
-describe('deepCopyWithCircularReference', () => {
-    /* https://github.com/lodash/lodash/blob/2f79053d7bc7c9c9561a30dda202b3dcd2b72b90/test/clone-methods.js#L106 */
-    it('should match _.cloneDeep() with lots of circular references', () => {
-        const LARGE_ARRAY_SIZE = 200;
-        const cyclical = {};
-
-        for (let i = 0; i < LARGE_ARRAY_SIZE + 1; i++) {
-            cyclical[`v${i}`] = [i ? cyclical[`v${i - 1}`] : cyclical];
-        }
-
-        const utilsClone = deepCopyWithCircularReference(cyclical);
-        const utilsActual = utilsClone[`v${LARGE_ARRAY_SIZE}`][0];
-        const lodashClone = cloneDeep(cyclical);
-        // const lodashActual = lodashClone[`v${LARGE_ARRAY_SIZE}`][0];
-
-        expect(utilsActual).toEqual(utilsClone[`v${LARGE_ARRAY_SIZE - 1}`]);
-        expect(utilsActual).not.toEqual(cyclical[`v${LARGE_ARRAY_SIZE - 1}`]);
-
-        // expect(utilsClone).toEqual(lodashClone); // FAIL
-        // expect(utilsActual).toEqual(lodashActual); // FAIL
-
-        expect(lodashClone).toEqual(cyclical);
-        // expect(utilsClone).toEqual(cyclical); // FAIL
-    });
-});
-
 describe('JWT token parsing', () => {
     it('should parse token', () => {
-        const token = 'nxcdb-eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6ImE4NDRiODczLWE3OTYtNGVjNy1iMzEzLTZkOWEzYTY1ZGM0YiJ9.eyJleHAiOjE3MjQ4Nzk2MjcsInB3ZFRpbWUiOjE3MjQ4Nzg5MDYsInNpZCI6IjcxYzJiMWE1LTRlNzAtNDYzZS1hNmQ5LTAzZjg3Y2RiZmZiYSIsInR5cCI6ImFjY2Vzc1Rva2VuIiwiYXVkIjoiaHR0cHM6Ly9xYS5jbG91ZC5oZHcubXgvIGNsb3VkU3lzdGVtSWQ9KiIsImlhdCI6MTcyNDg3ODkwNywic3ViIjoia3N0YXBsZXJAbmV0d29ya29wdGl4LmNvbSIsImNsaWVudF9pZCI6IiIsImlzcyI6ImNkYiJ9.cZJ1DXkEeGTUTTR-HQzjxRp_t61lXsIyRbShlEZCeO83gccibNMv4EySY4XBR8aSeqUoY_BabUKJhaZIrPXYaMClxuDFeH_M7kAts1NS8K8Wav4Cf_AiF7n7uPyPclE-zfMiddOcprtJSGNcAiZSFKmjkZxA-3OtOMxEusdewOSzNh0z5hPaKq82-4BKLV92NSpieOBFK9bhah2XWZrcPr2DH-d10a27IsWHGDue5I1i-lsNhd_Xx_MZeKfmM4-kUAY5mKKVvrZZrI9BhQr8dWWQ6Y29y7v09r3okFgFlYIrDXXJwzjycc1ZUVa3kdew7WD93swqotOZTgKHeGxiew';
+        const token =
+            'nxcdb-eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6ImE4NDRiODczLWE3OTYtNGVjNy1iMzEzLTZkOWEzYTY1ZGM0YiJ9.eyJleHAiOjE3MjQ4Nzk2MjcsInB3ZFRpbWUiOjE3MjQ4Nzg5MDYsInNpZCI6IjcxYzJiMWE1LTRlNzAtNDYzZS1hNmQ5LTAzZjg3Y2RiZmZiYSIsInR5cCI6ImFjY2Vzc1Rva2VuIiwiYXVkIjoiaHR0cHM6Ly9xYS5jbG91ZC5oZHcubXgvIGNsb3VkU3lzdGVtSWQ9KiIsImlhdCI6MTcyNDg3ODkwNywic3ViIjoia3N0YXBsZXJAbmV0d29ya29wdGl4LmNvbSIsImNsaWVudF9pZCI6IiIsImlzcyI6ImNkYiJ9.cZJ1DXkEeGTUTTR-HQzjxRp_t61lXsIyRbShlEZCeO83gccibNMv4EySY4XBR8aSeqUoY_BabUKJhaZIrPXYaMClxuDFeH_M7kAts1NS8K8Wav4Cf_AiF7n7uPyPclE-zfMiddOcprtJSGNcAiZSFKmjkZxA-3OtOMxEusdewOSzNh0z5hPaKq82-4BKLV92NSpieOBFK9bhah2XWZrcPr2DH-d10a27IsWHGDue5I1i-lsNhd_Xx_MZeKfmM4-kUAY5mKKVvrZZrI9BhQr8dWWQ6Y29y7v09r3okFgFlYIrDXXJwzjycc1ZUVa3kdew7WD93swqotOZTgKHeGxiew';
         const expectedToken = {
             tokenType: 'JWT',
             algorithm: 'RS256',
@@ -193,11 +121,12 @@ describe('JWT token parsing', () => {
             email: 'kstapler@networkoptix.com',
             jwtId: undefined,
             type: 'accessToken',
-        }
+        };
         expect(parseJWTToken(token)).toEqual(expectedToken);
     });
     it('should parse Code', () => {
-        const code = 'nxcdb-eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6ImE4NDRiODczLWE3OTYtNGVjNy1iMzEzLTZkOWEzYTY1ZGM0YiJ9.eyJleHAiOjE3MjQ4NzkwODYsInB3ZFRpbWUiOjE3MjQ4Nzg5MDYsInNpZCI6IjcxYzJiMWE1LTRlNzAtNDYzZS1hNmQ5LTAzZjg3Y2RiZmZiYSIsInR5cCI6ImF1dGhDb2RlIiwiYXVkIjoiaHR0cHM6Ly9xYS5jbG91ZC5oZHcubXgvIGNsb3VkU3lzdGVtSWQ9KiIsImlhdCI6MTcyNDg3ODkwNiwic3ViIjoia3N0YXBsZXJAbmV0d29ya29wdGl4LmNvbSIsImNsaWVudF9pZCI6ImNsb3VkL2RlZmF1bHQiLCJpc3MiOiJjZGIifQ.mYYuBG8sA8PESf_ATDNRiXdldCgQmWEkFNdYqM7Om024Ky0PjMlliszrrBdMSgnyGfsIydTWnW_Z-tigiWxnKd9u12OSmomQL6GWpxriY73MS8ZgSDPJ6ymWrCO3gC6-TX30Do0x7_XQQnvFAGgRct7vOG86hF-agN7fIKtvGCb9iCZ4CQzhbnfyEpPRE616tp4sq-e6Fm2m94yRpBZdpWApBcEBa3hifGAdV32oLU-X9n3IeF16GeGtfKP9Sk3zC565nXl3hJ1OFI-D05DjUTe9CIaO9u2GzrHbwrPEhBfz-jtyRo6DBFJFH0dPDsKc9AvRIWd_lBjU2SoYHThU9Q';
+        const code =
+            'nxcdb-eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6ImE4NDRiODczLWE3OTYtNGVjNy1iMzEzLTZkOWEzYTY1ZGM0YiJ9.eyJleHAiOjE3MjQ4NzkwODYsInB3ZFRpbWUiOjE3MjQ4Nzg5MDYsInNpZCI6IjcxYzJiMWE1LTRlNzAtNDYzZS1hNmQ5LTAzZjg3Y2RiZmZiYSIsInR5cCI6ImF1dGhDb2RlIiwiYXVkIjoiaHR0cHM6Ly9xYS5jbG91ZC5oZHcubXgvIGNsb3VkU3lzdGVtSWQ9KiIsImlhdCI6MTcyNDg3ODkwNiwic3ViIjoia3N0YXBsZXJAbmV0d29ya29wdGl4LmNvbSIsImNsaWVudF9pZCI6ImNsb3VkL2RlZmF1bHQiLCJpc3MiOiJjZGIifQ.mYYuBG8sA8PESf_ATDNRiXdldCgQmWEkFNdYqM7Om024Ky0PjMlliszrrBdMSgnyGfsIydTWnW_Z-tigiWxnKd9u12OSmomQL6GWpxriY73MS8ZgSDPJ6ymWrCO3gC6-TX30Do0x7_XQQnvFAGgRct7vOG86hF-agN7fIKtvGCb9iCZ4CQzhbnfyEpPRE616tp4sq-e6Fm2m94yRpBZdpWApBcEBa3hifGAdV32oLU-X9n3IeF16GeGtfKP9Sk3zC565nXl3hJ1OFI-D05DjUTe9CIaO9u2GzrHbwrPEhBfz-jtyRo6DBFJFH0dPDsKc9AvRIWd_lBjU2SoYHThU9Q';
         const expectedCode = {
             tokenType: 'JWT',
             algorithm: 'RS256',
@@ -212,7 +141,7 @@ describe('JWT token parsing', () => {
             email: 'kstapler@networkoptix.com',
             jwtId: undefined,
             type: 'authCode',
-        }
+        };
         expect(parseJWTToken(code)).toEqual(expectedCode);
     });
 });

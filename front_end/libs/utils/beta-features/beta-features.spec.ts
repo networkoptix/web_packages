@@ -2,8 +2,8 @@ import { BetaConfiguration } from './beta.types';
 
 import { getBetaConfig, getUserBetaFeatures, getUserEnabledBetaFeatureFlags } from './index';
 
-jest.mock('lodash-es', () => ({
-    memoize: jest.fn(fn => fn),
+vi.mock('lodash-es', () => ({
+    memoize: fn => fn,
 }));
 
 describe('Beta Features', () => {
@@ -18,18 +18,21 @@ describe('Beta Features', () => {
                 },
             },
         ];
-        jest.mock('./beta-config.json', () => betaConfig, { virtual: true });
+
+        vi.doMock('./beta-config.json', () => {
+            return { default: betaConfig };
+        });
 
         const config = await getBetaConfig();
         expect(config).toEqual(betaConfig);
     });
 
     it('should get user beta features', async () => {
-        global.fetch = jest.fn(() =>
+        vi.stubGlobal('fetch', () =>
             Promise.resolve({
                 json: () => Promise.resolve({ testKey: true }),
             }),
-        ) as jest.Mock;
+        );
 
         const features = await getUserBetaFeatures();
         expect(features).toEqual({ testKey: true });
@@ -46,13 +49,15 @@ describe('Beta Features', () => {
                 },
             },
         ];
-        jest.mock('./beta-config.json', () => betaConfig, { virtual: true });
+        vi.doMock('./beta-config.json', () => {
+            return { default: betaConfig };
+        });
 
-        global.fetch = jest.fn(() =>
+        vi.stubGlobal('fetch', () =>
             Promise.resolve({
                 json: () => Promise.resolve({ layoutsKey: true }),
             }),
-        ) as jest.Mock;
+        );
 
         const flags = await getUserEnabledBetaFeatureFlags();
         expect(flags).toEqual(['layouts51Enabled', 'layoutsAuthorizeCamera']);

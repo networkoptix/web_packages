@@ -6,6 +6,6 @@
         "declarationMap": true,
         "inlineSources": true
     },
-    "exclude": ["src/**/*.spec.ts", "src/test-setup.ts", "jest.config.ts", "src/**/*.test.ts"],
-    "include": ["**/*.ts", "../components/layout-grid/remove-system-children.ts"]
+    "exclude": ["**/*.spec.ts", "src/test-setup.ts"],
+    "include": ["**/*.ts"]
 }
