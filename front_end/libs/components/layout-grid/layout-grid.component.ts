@@ -746,7 +746,6 @@ export class NxLayoutGridComponent {
     );
 
     unsaved: Layout | false = false;
-    addingItem$$ = signal(false);
     addOffset = 0;
     changingLayout: string | boolean = true;
     icons = icons;
@@ -1087,7 +1086,7 @@ export class NxLayoutGridComponent {
     });
 
     getCursor = (): string => {
-        if (this.addingItem$$()) {
+        if (this.layoutGridService.addingItem$$()) {
             if (this.layout$$()?.locked) {
                 return 'not-allowed';
             } else {
@@ -2109,7 +2108,7 @@ export class NxLayoutGridComponent {
         itemParent?: HTMLElement,
         nodeType?: ResourceType,
     ): void => {
-        this.addingItem$$.set(true);
+        this.layoutGridService.addingItem$$.set(true);
         if (itemParent) {
             move.x -= itemParent.offsetLeft + itemParent.offsetWidth;
 
@@ -2485,8 +2484,8 @@ export class NxLayoutGridComponent {
                     this.layout.name !== this.layoutStateService.focusViewToken &&
                     !!this.layout.items.length &&
                     [x, y, resize.x, resize.y].every(change => !change) &&
-                    !this.addingItem$$();
-                this.addingItem$$.set(false);
+                    !this.layoutGridService.addingItem$$();
+                this.layoutGridService.addingItem$$.set(false);
 
                 if (notMoved && !unresolvedCollisions) {
                     return this.updateLayout();

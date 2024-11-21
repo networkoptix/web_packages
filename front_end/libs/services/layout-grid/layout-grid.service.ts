@@ -1,5 +1,5 @@
 import { CdkDragMove } from '@angular/cdk/drag-drop';
-import { computed, Injectable } from '@angular/core';
+import { computed, Injectable, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs';
 
@@ -40,6 +40,8 @@ export class NxLayoutGridService {
             previousOpenMenu: null,
         });
     }
+
+    addingItem$$ = signal(false);
 
     isLeftMenuOpen$$ = computed(() => {
         return useNewCloud() || this.layoutSettings.signal$$()?.openMenu === 'left';

@@ -70,7 +70,6 @@ import { PipesModule } from '@pipes/pipes.module';
 import { NxAccountService } from '@services/account.service';
 import { NxLayoutGridService } from '@services/layout-grid/layout-grid.service';
 import { LayoutStateService } from '@services/layout-state/layout-state.service';
-import { createAddedItems } from '@services/layout-state/store/utils/create-added-items';
 import { nxConfig } from '@services/nx-config/config';
 import { MutationType } from '@services/param-state/param-state.types';
 import { Layout } from '@services/system-api.types/layouts.types';
@@ -79,12 +78,10 @@ import { NxSystemsService } from '@services/systems.service';
 import { NxSystemInfo } from '@services/systems.service.types';
 import { icons } from '@static-variables';
 import { canViewLayouts } from '@utils/can-view-layouts';
-import { cleanIdLegacy, dirtyId } from '@utils/general';
-import { hasCrossSystemItems } from '@utils/has-cross-system-items';
+import { cleanIdLegacy } from '@utils/general';
 import { paramSignal } from '@utils/signals';
 
 import { WithMenuItemsByType } from './menu-items/with-menu-items-by-type';
-import { createLayoutItem } from './utils/create-layout-item';
 import { findNode } from './utils/find-node';
 import { queryChangeSideEffectsFactory } from './utils/query-change-side-effects';
 
@@ -325,68 +322,9 @@ export class NxLayoutGridTreeComponent extends WithMenuItemsByType {
 
     handleDoubleClick = (node: ResourceNode, event: MouseEvent): void => {
         event.stopPropagation();
-        if (assertResourceOfType.placeholder(node) || this.dragDisabled[node.type]) {
-            return;
-        }
-        if (!nxConfig.featureFlags.layoutsEditable || node.details?.id === this.layout.id) {
-            return;
-        }
+        this.layoutGridService.addingItem$$.set(true);
+        this.layoutGridService.addItem.next(node);
         this.doubleClick$.next(true);
-        const itemsToAdd = assertResourceOfType.layout(node)
-            ? node.details.items
-            : [dirtyId(node.details?.id || '')].map(
-                  createLayoutItem(
-                      this.layoutItemLookup$$(),
-                      assertResourceOfType.camera(node) ? node.details.systemId : this.system.id,
-                  ),
-              );
-
-        if (!itemsToAdd.length) {
-            return;
-        } else if (this.layout.locked) {
-            this.layoutStateService.layoutError$.next({
-                message: this.ERRORS_LANG.layoutLocked,
-                timeout: 5_000,
-            });
-            return;
-        }
-        const isLocalLayout = !hasCrossSystemItems(this.layout.items, this.system.id);
-        const updatedLayout = {
-            ...this.layout,
-            items: createAddedItems(this.layout.items, itemsToAdd),
-        };
-        const currentUser = this.system.permissionManager.currentUser$$();
-
-        const focusView = this.layout.name === this.layoutStateService.focusViewToken;
-
-        const crossSystemItemsAdded =
-            this.layout.systemId &&
-            hasCrossSystemItems(
-                updatedLayout.items,
-                this.layoutStateService.paramStateHandler.state$$().params!.systemId!,
-            );
-
-        const createNewLayout =
-            (!currentUser?.isAdmin && currentUser?.id !== this.layout.parentId) ||
-            this.layout.locked ||
-            focusView ||
-            crossSystemItemsAdded;
-
-        if (isLocalLayout && createNewLayout) {
-            if (crossSystemItemsAdded) {
-                this.layoutStateService.createNewCrossSystemLayout(
-                    updatedLayout.name,
-                    updatedLayout.items,
-                    true,
-                );
-            } else if (focusView) {
-                this.layoutStateService.createNewLayout(updatedLayout.items);
-            } else {
-                this.layoutStateService.duplicateAsNewLayout(updatedLayout);
-            }
-        } else {
-            this.layoutStateService.updateLayout(updatedLayout);
-        }
     };
 
     treeMenuItems = Object.entries(this.menuItemsByType).reduce((acc, [type, value]) => {
