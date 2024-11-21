@@ -695,7 +695,15 @@
                                 @switch (layout?.name) {
                                     @case (PLACEHOLDER_NAME_LOOKUP.show404) {
                                         <div class="error-404-placeholder">
-                                            <nx-page-placeholder-404 />
+                                            @defer (on timer(5s)) {
+                                                @if (systemOnline$ | async) {
+                                                    <nx-page-placeholder-404 />
+                                                } @else {
+                                                    <nx-page-placeholder-offline />
+                                                }
+                                            } @placeholder {
+                                                <nx-pre-loader></nx-pre-loader>
+                                            }
                                         </div>
                                     }
                                     @case (PLACEHOLDER_NAME_LOOKUP.noLayouts) {
@@ -793,22 +801,29 @@
                                 !layoutItemLookup[layout.items[0].resourceId] &&
                                 layout.items[0].resourceId === layout.items[0].id
                             ) {
-                                <!-- does this one work? -->
                                 <div class="deleted-layout-placeholder">
-                                    <svg-icon
-                                        nx-add-svg-src
-                                        [svgStyle]="{
-                                            'width.px': '64',
-                                            'height.px': '64'
-                                        }"
-                                        [src]="icons.dirLayouts + 'layouts_placeholder.svg'"
-                                    ></svg-icon>
-                                    <h3
-                                        class="h3"
-                                        translate
-                                    >
-                                        Layout has been deleted
-                                    </h3>
+                                    @defer (on timer(5s)) {
+                                        @if (systemOnline$ | async) {
+                                            <svg-icon
+                                                nx-add-svg-src
+                                                [svgStyle]="{
+                                                    'width.px': '64',
+                                                    'height.px': '64'
+                                                }"
+                                                [src]="icons.dirLayouts + 'layouts_placeholder.svg'"
+                                            ></svg-icon>
+                                            <h3
+                                                class="h3"
+                                                translate
+                                            >
+                                                Layout has been deleted
+                                            </h3>
+                                        } @else {
+                                            <nx-page-placeholder-offline />
+                                        }
+                                    } @placeholder {
+                                        <nx-pre-loader></nx-pre-loader>
+                                    }
                                 </div>
                             } @else {
                                 @for (item of layout.items; track item.id; let index = $index) {

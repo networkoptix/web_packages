@@ -49,6 +49,7 @@ import {
 import { findNode } from '@components/layout-grid-tree/utils/find-node';
 import { NxLayoutPtzComponent } from '@components/layout-ptz/layout-ptz.component';
 import { NxPagePlaceholderOfflineComponent } from '@components/placeholders/offline/offline-page-placeholder.component';
+import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import staticLang from '@language_static';
 import { WebRTCStreamManager } from '@openLibs/webrtc-stream-manager';
@@ -118,6 +119,7 @@ const onlyActiveOrgs = (org: Organization): boolean => org.effectiveState === 'a
         TourMatMenuModule,
         NxPagePlaceholderOfflineComponent,
         LayoutStateModule,
+        NxPreLoaderComponent,
     ],
     host: {
         class: 'theme-override',
@@ -150,7 +152,7 @@ export class NxLayoutViewComponent {
             ),
         ),
         catchError(() => Promise.resolve(false)),
-        startWith(true),
+        startWith(false),
         shareReplay({ bufferSize: 1, refCount: true }),
         untilDestroyed(this),
     );

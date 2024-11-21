@@ -37,6 +37,7 @@ import { TourMatMenuModule, TourService } from 'ngx-ui-tour-md-menu';
 import {
     BehaviorSubject,
     combineLatest,
+    defer,
     firstValueFrom,
     from,
     fromEvent,
@@ -58,6 +59,7 @@ import {
     distinctUntilChanged,
     filter,
     map,
+    repeat,
     retry,
     shareReplay,
     skip,
@@ -77,6 +79,7 @@ import { findOtherSiteCamera } from '@components/layout-grid-tree/utils/create-l
 import { NxWebGLService } from '@components/nx-webgl-canvas/services/webgl.service';
 import { NxWebGLCanvasComponent } from '@components/nx-webgl-canvas/webgl-canvas.component';
 import { NxPagePlaceholder404Component } from '@components/placeholders/404/404-page-placeholder.component';
+import { NxPagePlaceholderOfflineComponent } from '@components/placeholders/offline/offline-page-placeholder.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxLinesLoaderComponent } from '@components/skeleton-loader/variants/lines-loader/lines-loader.component';
 import { ToastType } from '@components/toast-container/toast.types';
@@ -375,6 +378,7 @@ const calculateResize = (
         NxAsyncActionButtonComponent,
         NxMenuProjectionDirective,
         NxPagePlaceholder404Component,
+        NxPagePlaceholderOfflineComponent,
     ],
 })
 export class NxLayoutGridComponent {
@@ -409,6 +413,14 @@ export class NxLayoutGridComponent {
     gridSection$$ = viewChild<ElementRef<HTMLDivElement>>('gridSection');
 
     detailsRef$$ = viewChild<HTMLDetailsElement>('otherSystems');
+
+    systemOnline$ = defer(() => this.system.mediaserver.ping()).pipe(
+        map(() => true),
+        catchError(() => Promise.resolve(false)),
+        repeat({ delay: 5_000 }),
+        startWith(false),
+        shareReplay({ bufferSize: 1, refCount: true }),
+    );
 
     treeLoaded$$ = computed(() =>
         this.layoutItemLookup$$().tree.some(

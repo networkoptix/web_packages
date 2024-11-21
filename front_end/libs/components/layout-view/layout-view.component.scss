@@ -31,8 +31,14 @@ nx-layout-timeline {
     grid-area: timeline;
 }
 
-nx-layout-grid {
+nx-layout-grid, nx-page-placeholder-offline, nx-pre-loader {
     grid-area: main;
+}
+
+nx-pre-loader {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .select-wrapper {

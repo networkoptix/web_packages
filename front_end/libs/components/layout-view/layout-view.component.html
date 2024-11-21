@@ -8,7 +8,11 @@
             [system]="selectedSystem$ | async"
         ></nx-layout-grid>
     } @placeholder {
-        <nx-page-placeholder-offline />
+        @defer (on timer(2s)) {
+            <nx-page-placeholder-offline />
+        } @placeholder {
+            <nx-pre-loader></nx-pre-loader>
+        }
     }
 
     @defer (
