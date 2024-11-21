@@ -17,7 +17,8 @@ export const getLayoutShareActionsFactory =
             node.shared ||
             node.locked ||
             !isAdmin ||
-            !nxConfig.featureFlags.layoutsShare
+            !nxConfig.featureFlags.layoutsShare ||
+            !nxConfig.featureFlags.layoutsEditable
         ) {
             return [];
         }

@@ -16,6 +16,7 @@ describe('getLayoutShareActionsFactory', () => {
 
     beforeEach(() => {
         nxConfig.featureFlags.layoutsShare = true;
+        nxConfig.featureFlags.layoutsEditable = true;
         node = {
             details: {
                 id: uuid(),
