@@ -18,6 +18,8 @@ import {
     timer,
     throttle,
     BehaviorSubject,
+    filter,
+    distinctUntilChanged,
 } from 'rxjs';
 import staticLang from '@language_static';
 import { LayoutItem } from '@services/system-api.types/layouts.types';
@@ -36,7 +38,7 @@ import { ServiceModule } from '@services/services.module';
 import { isDewarpingCapable } from '@utils/general';
 import { NxVideoPlayingDirective } from '@directives/video-playing.directive';
 import { NxVideoPlayerQueueService } from './video-player-queue.service';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { NxResizeObserver } from '@directives/resize/nx-resize.directive';
 import { NxBlockLoaderComponent } from '@components/skeleton-loader/variants/block-loader/block-loader.component';
 
@@ -155,7 +157,12 @@ export class NxVideoPlayerComponent {
     posterFailures = 0
     error = '';
     loading = true;
-    lostConnection = false;
+    lostConnection$$ = signal(false);
+    startConnection$ = toObservable(this.lostConnection$$).pipe(
+        distinctUntilChanged(),
+        filter(lostConnection => !lostConnection),
+        map(() => Date.now())
+    );
     streamManager = WebRTCStreamManager;
 
     connection$$ = signal<WebRTCStreamManager | null>(null);
@@ -320,7 +327,7 @@ export class NxVideoPlayerComponent {
 
                     this.connectionEstablished = true;
 
-                    if (this.lostConnection) {
+                    if (this.lostConnection$$()) {
                         if (!this.lostConnectionPlaceholder) {
                             this.ribbon$.next({
                                 message: { value: staticLang.layouts.toasts.reconnected, params: { name: this.camera.name } },
@@ -328,14 +335,14 @@ export class NxVideoPlayerComponent {
                                 duration: 5000,
                             })
                         }
-                        this.lostConnection = false;
+                        this.lostConnection$$.set(false);
                     }
                 }
 
                 if (error) {
                     if (error === ConnectionError.lostConnection) {
-                        if (!this.lostConnection) {
-                            this.lostConnection = true;
+                        if (!this.lostConnection$$()) {
+                            this.lostConnection$$.set(true);
                             if (!this.lostConnectionPlaceholder) {
                                 this.ribbon$.next({
                                     message: { value: staticLang.layouts.toasts.connectionLost, params: { name: this.camera.name } },
@@ -380,6 +387,7 @@ export class NxVideoPlayerComponent {
         this.lastFrame$$();
         this.previewLoaded$$();
         this.availableStreams$$();
+        this.lostConnection$$();
         this.notifyChanges();
     });
 

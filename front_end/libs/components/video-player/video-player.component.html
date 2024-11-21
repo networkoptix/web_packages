@@ -6,7 +6,7 @@
         {{ ribbonContent.message | nxTranslate }}
     </div>
 }
-@if (lostConnection && lostConnectionPlaceholder) {
+@if (lostConnection$$() && lostConnectionPlaceholder) {
     <div class="placeholder-wrapper">
         <ng-container *ngTemplateOutlet="lostConnectionPlaceholder"></ng-container>
     </div>
@@ -27,7 +27,7 @@
     class="web-rtc-stream"
     autoplay
     [muted]="isMuted$$()"
-    [style.opacity]="lostConnection ? 0 : 1"
+    [style.opacity]="lostConnection$$() ? 0 : 1"
     [nxRotate]="rotation$$()"
     (resize)="videoElementSize$$.set($event)"
     [poster]="lastFrame$$()"
@@ -45,7 +45,7 @@
         }
     }
 } @placeholder {
-    @if (!lostConnection) {
+    @if (!lostConnection$$()) {
         @if (previewLoaded$$()) {
             <nx-pre-loader />
         } @else {
