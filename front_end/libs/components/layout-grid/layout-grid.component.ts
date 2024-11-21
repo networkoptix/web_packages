@@ -2082,26 +2082,6 @@ export class NxLayoutGridComponent {
 
     parseLayout = (layout: Layout): ParsedLayout => ({
         ...layout,
-        items: layout.items.map(item => ({
-            ...item,
-            systemStatusOld$$: computed(() => {
-                const systems = this.systemsService.systems$$();
-                const { systemId } = extractSystemAndResourceId(item.resourcePath);
-                const system = systems?.find(({ id }) => id === systemId) || { id: systemId };
-                const { connectingToSystem, unknownSystem, systemUnavailable } =
-                    staticLang.layouts.otherSystems;
-                const value = !('stateOfHealth' in system)
-                    ? unknownSystem
-                    : system.stateOfHealth === 'online'
-                      ? connectingToSystem
-                      : systemUnavailable;
-
-                return {
-                    value,
-                    params: system,
-                };
-            }),
-        })),
         locked:
             (!nxConfig.featureFlags.layoutsEditable && !nxConfig.featureFlags.layoutsDemo) ||
             layout.locked,

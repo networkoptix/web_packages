@@ -38,7 +38,6 @@ import { NxTooltipV2Directive } from '@directives/tooltip-v2/tooltip-v2.directiv
 import staticLang from '@language_static';
 import { ConnectionError } from '@openLibs/webrtc-stream-manager';
 import { NxImageComponent } from '@pages/health/table-components/image/image.component';
-import { Translatable } from '@pipes/nx-translate.types';
 import { PipesModule } from '@pipes/pipes.module';
 import { NxAccountService } from '@services/account.service';
 import { LayoutItemsErrorsStore } from '@services/layout-items/layout-items-errors.store';
@@ -51,6 +50,7 @@ import {
 } from '@services/system.service/camera-manager/camera-manager-types';
 import { NxSystemsService } from '@services/systems.service';
 import { icons } from '@static-variables';
+import { extractSystemAndResourceId } from '@utils/extract-system-and-resources';
 import { authenticateTwoFactorFactory, enableTwoFactor } from '@utils/general';
 
 const messagesLang = staticLang.layouts.itemPlaceholders.messages;
@@ -268,7 +268,30 @@ export class NxLayoutGridItemPlaceholderComponent {
     /** to be deprecated */
     renderConfig = input.required<ParsedLayoutItem['renderConfig']>();
     /** to be deprecated */
-    systemStatus = input.required<Translatable>();
+    systemStatus = computed(() => {
+        const systems = this.systemsService.systems$$();
+        const item = this.item();
+        if (!item) {
+            return '';
+        }
+        const { systemId } = extractSystemAndResourceId(item.resourcePath);
+        const system = systems?.find(({ id }) => id === systemId) || { id: systemId };
+        const { connectingToSystem, unknownSystem, systemUnavailable } =
+            staticLang.layouts.otherSystems;
+        const value = !('stateOfHealth' in system)
+            ? unknownSystem
+            : system.stateOfHealth === 'online'
+              ? connectingToSystem
+              : systemUnavailable;
+
+        return {
+            value,
+            params: {
+                id: system.id,
+                name: 'name' in system ? system.name : system.id,
+            },
+        };
+    });
 
     @Output() updateCameraCredentials = new EventEmitter<NxSystemCamera>();
 

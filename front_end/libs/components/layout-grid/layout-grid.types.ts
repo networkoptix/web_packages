@@ -1,9 +1,7 @@
 import { Point } from '@angular/cdk/drag-drop';
-import { Signal } from '@angular/core';
 import { Observable, ObservedValueOf } from 'rxjs';
 import { v4 as uuid } from 'uuid';
 
-import { Translatable } from '@pipes/nx-translate.types';
 import { GroupItem } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import type { Layout, LayoutItem, WebPage } from '@services/system-api.types/layouts.types';
 import {
@@ -72,8 +70,6 @@ export interface LayoutItemRenderConfig {
 }
 
 export interface ParsedLayoutItem extends LayoutItem {
-    /** @deprecated */
-    systemStatusOld$$: Signal<Translatable>;
     renderConfig: LayoutItemRenderConfig;
 }
 
