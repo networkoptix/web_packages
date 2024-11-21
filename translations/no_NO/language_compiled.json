@@ -30,7 +30,7 @@
     "1 professional license channel will be used": "1 profesjonell lisenskanal vil bli brukt",
     "2-Way Audio": "2-veis lyd",
     "2-way audio devices": "2-veis lydenheter",
-    "2FA DISABLED": "2FA DISABLED",
+    "2FA DISABLED": "2FA DEAKTIVERET",
     "<p class=\"mb-0\">You are about to merge systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.</p><p>Settings and the name will be taken from <strong>{primarySystem}</strong>.</p>": "<p class=\"mb-0\">Du er i ferd med å slå sammen systemer <strong>{primarySystem}</strong> og <strong>{secondarySystem}</strong>.</p><p>Innstillinger og navnet vil bli tatt fra <strong>{primarySystem}</strong>.</p>",
     "<p class=\"mb-2\">A server appears to be listing itself under both the selected and the current system.</p><p>Remove offline and incompatible servers from each system and try again.</p>": "<p class=\"mb-2\">En server ser ut til å liste seg selv under både det valgte og det gjeldende systemet.</p><p>Fjern frakoblede og inkompatible servere fra hver system og prøv igjen.</p>",
     "<p class=\"mb-2\">Can't access the {targetSystem} system.</p><p>Make sure the specified server is online and try again.</p>": "<p class=\"mb-2\">Får ikke tilgang til {targetSystem} -systemet.</p><p>Kontroller at den angitte serveren er online, og prøv igjen.</p>",
