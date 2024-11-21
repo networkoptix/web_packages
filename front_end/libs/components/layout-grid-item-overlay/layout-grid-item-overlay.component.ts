@@ -181,7 +181,6 @@ export class NxLayoutGridItemOverlayComponent {
     allowDebugMode: boolean;
     layoutsEditable: boolean;
     layoutsItemStatus: boolean;
-    layoutsItemChangeResolution: boolean;
 
     nodeName$$ = computed(() => {
         const node = this.node$$();
@@ -706,7 +705,7 @@ export class NxLayoutGridItemOverlayComponent {
                     this.MENU_ITEMS.showOnItem,
                     this.MENU_ITEMS.screenshot,
                     this.allowDebugMode && this.canEdit$$() && this.MENU_ITEMS.rotate,
-                    this.layoutsItemChangeResolution && this.MENU_ITEMS.resolution,
+                    nxConfig.featureFlags.layoutsItemChangeResolution && this.MENU_ITEMS.resolution,
                     this.allowDebugMode && this.MENU_ITEMS.zoomWindow,
                     this.removeAction$$() && this.MENU_ITEMS.divider,
                     this.removeAction$$(),
@@ -734,8 +733,6 @@ export class NxLayoutGridItemOverlayComponent {
         this.allowDebugMode = configService.getConfig().allowDebugMode;
         this.layoutsItemStatus = !!configService.getConfig().featureFlags.layoutsItemStatus;
         this.layoutsEditable = !!configService.getConfig().featureFlags.layoutsEditable;
-        this.layoutsItemChangeResolution =
-            !!configService.getConfig().featureFlags.layoutsItemChangeResolution;
     }
 
     handleIconClick(action: MenuItemAction<LayoutItem> | undefined, $event: MouseEvent): void {
