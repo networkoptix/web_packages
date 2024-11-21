@@ -3757,12 +3757,12 @@ class Flag(AbstractUserFlag):
     def get_json_key(self):
         return FLAGS.json_key(FLAGS.value_to_key(self.name))
 
-    def is_active(self, request):
+    def is_active(self, request, read_only: bool = False):
         if override := request.META.get(f'HTTP_FEATURE_{self.get_json_key()}'.upper()):
             with suppress(ValueError):
                 return bool(int(override))
 
-        return super(AbstractUserFlag, self).is_active(request)
+        return super(AbstractUserFlag, self).is_active(request, read_only=read_only)
 
     def is_active_for_user(self, user, overrides=None, *, customization=None, request=None):
         """

@@ -1203,14 +1203,17 @@ reference = "pypi-remote"
 
 [[package]]
 name = "django-waffle"
-version = "2.5.0"
+version = "4.2.0"
 description = "A feature flipper for Django."
 optional = false
-python-versions = "*"
+python-versions = ">=3.8"
 files = [
-    {file = "django-waffle-2.5.0.tar.gz", hash = "sha256:d8caa239b63c47ec202012259afa86d9d631e3c8f0857b7369e041946a2ae2ce"},
-    {file = "django_waffle-2.5.0-py3-none-any.whl", hash = "sha256:f937df11cd56f7c8dfd74f1afa1398fe5f6e2c029ee9a830082f6bd83498fbf8"},
+    {file = "django_waffle-4.2.0-py3-none-any.whl", hash = "sha256:774f45b929627c9d303620c85419ce1da54066f2082d741af014f5bbd747e372"},
+    {file = "django_waffle-4.2.0.tar.gz", hash = "sha256:97709550f4e75ce2a20b13e29f39777e1439a968569f2ee89398ca368afd586c"},
 ]
+
+[package.dependencies]
+django = ">=3.2"
 
 [package.source]
 type = "legacy"
@@ -3312,4 +3315,4 @@ reference = "pypi-remote"
 [metadata]
 lock-version = "2.0"
 python-versions = "~3.11.0"
-content-hash = "0ca6a6e3f03a492d858759e4bb203866f3bdf4025c143da685a0374a0174e872"
+content-hash = "455e93f200d1600ac236fc12855be1ace6a59c1ed2a90a291e4c6576cb6cab98"
