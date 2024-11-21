@@ -444,18 +444,19 @@ export class NxOrganizationCardContainerComponent {
                                     this.cpService
                                         .deleteGroup(group.id)
                                         .pipe(switchMap(() => systemsSource))
-                                        .subscribe(
-                                            res => {
+                                        .subscribe({
+                                            next: res => {
                                                 this.groupsStore.deleteGroupWithUndo(
                                                     group.id,
                                                     currentOrgId,
                                                 );
                                                 this.usersStore.setSelectedGroup('');
                                             },
-                                            () => {
+                                            complete: () => {
+                                                this.usersStore.updateGroupCache();
                                                 // TODO: Waiting for direction from design on error handling//
                                             },
-                                        );
+                                        });
                                 }
                             });
                     },
