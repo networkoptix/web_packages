@@ -979,6 +979,7 @@ export class WebRTCStreamManager {
             }
         } catch(e) {
             this.buffers.push(nextBuffer);
+            this.cleanupBuffers();
         }
     }
 
@@ -1226,7 +1227,9 @@ export class WebRTCStreamManager {
         }
         if ('mime' in signal) {
             this.cleanupBuffers();
-            this.initializeMse(signal.mime);
+            if (this.usingMse) {
+                this.initializeMse(signal.mime);
+            }
         }
 
         if ('sdp' in signal) {
@@ -1692,26 +1695,7 @@ export class WebRTCStreamManager {
         }
     };
 
-    private prefixGenerator = (() => {
-        function* randomStringGenerator() {
-            while(true) {
-                const prefix = generateRandomString()
-                for (let i = 0; i < 5; i++) {
-                    yield prefix;
-                }
-            }
-        }
-        const generators: Record<string, ReturnType<typeof randomStringGenerator>> = {}
-
-        return new Proxy({} as Record<string, string>, {
-            get: (target, prop: string) => {
-                if (!generators[prop]) {
-                    generators[prop] = randomStringGenerator();
-                }
-                return generators[prop].next().value!;
-            }
-        })
-    })()
+    private prefix = generateRandomString();
 
     private generateWebRtcUrl = (config: WebRtcUrlConfig): WebRtcUrlFactory => {
         const currentStreamInfo = this.getCurrentStreamInfo();
@@ -1719,7 +1703,7 @@ export class WebRTCStreamManager {
         const cameraId = cleanId(config.cameraId);
         const serverId = cleanId(config.serverId);
 
-        const subDomain = WebRTCStreamManager.USE_RELAY_PREFIX ? `${this.prefixGenerator[systemId]}---${systemId}` : systemId;
+        const subDomain = WebRTCStreamManager.USE_RELAY_PREFIX ? `${this.prefix}---${systemId}` : systemId;
 
         const host = WebRTCStreamManager.RELAY_URL.replace('{systemId}', subDomain);
         const useV2 = this.apiVersion === ApiVersions.v2;
