@@ -59,6 +59,10 @@
             padding-left: 38px !important;
         }
 
+          .dropdown-menu--list .dropdown-item-container .dropdown-item.inset nx-checkbox + label.more-bottom-margin {
+            margin-bottom: .5rem !important;
+        }
+
         hr {
             width: 95%;
             margin: 6px auto;
