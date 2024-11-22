@@ -309,7 +309,12 @@ export class NxDialogsService {
     /* WebAdmin */
     wizard = this.dialogV1Factory<Dt.Wizard>(
         () => import('./wizard/wizard.component').then(m => m.WizardModalContent),
-        { width: DIALOG_SIZE.SMALL, disableClose: true, hasBackdrop: false },
+        {
+            width: DIALOG_SIZE.SMALL,
+            disableClose: true,
+            hasBackdrop: true,
+            panelClass: 'full-backdrop',
+        },
     );
 
     loginWebAdmin = this.dialogV1Factory<Dt.LoginWebAdmin>(
