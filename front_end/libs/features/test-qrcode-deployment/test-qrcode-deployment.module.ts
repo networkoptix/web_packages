@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
+import { AddServersComponent } from './add-servers/add-servers.component';
 import { ExistingSiteDeployment } from './existing-site/existing-site-deployment.component';
 import { NewSiteDeploymentComponent } from './new-site/new-site-deployment.component';
 import { TestQrCodeDeploymentComponent } from './test-qrcode-deployment.component';
@@ -17,6 +18,10 @@ const appRoutes: Routes = [
     {
         path: 'existing-site',
         component: ExistingSiteDeployment,
+    },
+    {
+        path: 'add-servers',
+        component: AddServersComponent,
     },
 ];
 
