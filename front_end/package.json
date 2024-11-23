@@ -10,7 +10,7 @@
     "scripts": {
         "// COMMONLY USED COMMANDS //": "Commonly used commands",
         "lint": "npx nx run-many --target=lint --parallel=$(($(getconf _NPROCESSORS_ONLN) / 3)) --all --fix",
-        "test": "npx nx run-many --target test --parallel=$(($(getconf _NPROCESSORS_ONLN) / 3)) --all --configuration=ci",
+        "test": "npx nx run-many --target test --configuration=ci",
         "test:watch": "npm run test -- --watch",
         "// SERVE FRONTEND COMMAND //": "Preconfigured cloud targets: local, cloud-test, dev2, dev3, stage, qa, regress, meta, meta-demo, and meta-cloud-test. Use either preconfigured target or enter custom instance url",
         "serve-frontend": "export CLOUD_TARGET=$(npm run getCloudTarget | tail -n1) && npm run serve:cloud",
