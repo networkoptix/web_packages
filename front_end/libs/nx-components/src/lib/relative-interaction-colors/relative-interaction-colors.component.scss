@@ -1,0 +1,74 @@
+@use "../styles/interaction-states-mixins.scss";
+
+.page-container {
+    display: flex;
+    flex-direction: column;
+    color: white;
+    gap: 25px;
+
+    $dark1: #060809;
+    $dark3: #12181C;
+    $dark6: #253137;
+    $dark7: #2B3940;
+    $dark9: #374953;
+    $dark11: #435A65;
+    $dark14: #567281;
+    $dark15: #5C7A8A;
+    $light1: #FFFFFF;
+    $light4: #DAE2E7;
+    $light12: #91A9B6;
+    $light10: #A3B8C2;
+    $light15: #7594A3;
+    $attention-red: #ef5350;
+    $attention-green: #4CAF50;
+    $attention-yellow: #FFCA28;
+    $additional-pink: #EC407A;
+    $additional-purple: #AB47BC;
+    $additional-cyan: #26C6DA;
+    $additional-orange: #FFA726;
+    $brand: #2FA2DB;
+    $purple: blueviolet;
+    $three-digit-color: #d23;
+    $eight-digit-color: #ab120099;
+    $rgb-color: rgb(255, 200, 0);
+    $rgba-color: rgba(128, 255, 0, 0.8);
+    $hsl-color: hsl(286, 100%, 50%);
+    $hsla-color: hsla(221, 100%, 50%, 0.3);
+    $hsla-color: hsla(221, 100%, 50%, 0.3);
+
+    $test-colors: $dark1, $dark3, $dark6, $dark7, $dark9, $dark11, $dark14, $dark15, $light1, $light4, $light12, $light10, $light15, $attention-red, $attention-green, $attention-yellow, $additional-pink, $additional-purple, $additional-cyan, $additional-orange, $brand, $purple, $three-digit-color, $eight-digit-color, $rgb-color, $rgba-color, $hsl-color, $hsla-color;
+
+    @for $i from 1 through length($test-colors) {
+        $color: nth($test-colors, $i);
+
+        .row-#{$i} {
+            display: flex;
+            gap: 25px;
+
+            .block1 {
+                @include interaction-states-mixins.interactionStates("background-color", $color, ('hover', 'focused', 'active'));
+            }
+
+            .block2 {
+                @include interaction-states-mixins.hoverColor(--myColorProperty, $color);
+                background-color: var(--myColorProperty);
+            }
+
+            .block3 {
+                @include interaction-states-mixins.pressedColor("background-color", $color);
+            }
+
+            .block4 {
+                @include interaction-states-mixins.backgroundColor("background-color", $color);
+            }
+        }
+    }
+
+    .block {
+        height: 75px;
+        width: 75px;
+        text-align: center;
+        align-content: center;
+        font-size: 14px;
+    }
+}

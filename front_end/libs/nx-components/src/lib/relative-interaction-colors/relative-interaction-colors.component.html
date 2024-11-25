@@ -1,0 +1,11 @@
+<!-- eslint-disable nx/template/no-untranslated -->
+<div class="page-container">
+    @for (color of colors; track color.name) {
+        <div [ngClass]="'row-' + ($index + 1)">
+            <div class="block block1">{{ color.name + ': ' + color.value }}</div>
+            <div class="block block2">Hover</div>
+            <div class="block block3">Pressed</div>
+            <div class="block block4">Background</div>
+        </div>
+    }
+</div>

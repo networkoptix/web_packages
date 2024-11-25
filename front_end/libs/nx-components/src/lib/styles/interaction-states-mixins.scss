@@ -1,0 +1,103 @@
+@use 'sass:list';
+@use 'sass:meta';
+
+$interactionStates: hover, focused, active;
+$propertyOptions: background-color, background, border, border-bottom-color, border-color, border-left-color, border-right-color, border-top-color, box-shadow, caret-color, color, column-rule, column-rule-color, filter, opacity, outline-color, outline, text-decoration, text-decoration-color, text-shadow;
+
+@mixin validateColorProperty($color) {
+    @if meta.type-of($color) !=color {
+        @error "#{$color} is not a valid color";
+    }
+}
+
+@mixin validatePropType($prop) {
+    @if not index($propertyOptions, $prop) and str-index($prop, "--") != 1 {
+        @error "#{$prop} is not a valid property. Expected a variable or one of #{$propertyOptions}.";
+    }
+}
+
+@mixin interactionStates($prop, $color, $allStates) {
+
+    // Verify that all states passed are valid
+    @each $state in $allStates {
+        @if not index($interactionStates, $state) {
+            @error "#{$state} is not a valid interaction state. Expected one of #{$interactionStates}.";
+        }
+    }
+
+    @include validateColorProperty($color);
+    @include validatePropType($prop);
+
+    #{$prop}: $color;
+
+    @each $state in $allStates {
+        @if $state =='hover' {
+            &:hover {
+                #{$prop}: hsl(from $color h s calc(l + 6));
+            }
+        }
+
+        @else if $state =='focused' {
+            &:focus {
+                #{$prop}: hsl(from $color h s calc(l + 6));
+            }
+        }
+
+        @else if $state =='active' {
+            &:active {
+                #{$prop}: hsl(from $color h s calc(l - 3));
+            }
+        }
+    }
+
+    @supports (color: hsl(from red h s calc(l + 1%))) {
+        @each $state in $allStates {
+            @if $state =='hover' {
+                &:hover {
+                    #{$prop}: hsl(from $color h s calc(l + 6%));
+                }
+            }
+
+            @else if $state =='focused' {
+                &:focus {
+                    #{$prop}: hsl(from $color h s calc(l + 6%));
+                }
+            }
+
+            @else if $state =='active' {
+                &:active {
+                    #{$prop}: hsl(from $color h s calc(l - 3%));
+                }
+            }
+        }
+    }
+}
+
+@mixin hoverColor($prop, $color) {
+    @include validateColorProperty($color);
+    @include validatePropType($prop);
+
+    #{$prop}: hsl(from $color h s calc(l + 6));
+
+    @supports (color: hsl(from red h s calc(l + 1%))) {
+        #{$prop}: hsl(from $color h s calc(l + 6%));
+    }
+}
+
+@mixin pressedColor($prop, $color) {
+    @include validateColorProperty($color);
+    @include validatePropType($prop);
+
+    #{$prop}: hsl(from $color h s calc(l - 3));
+
+    @supports (color: hsl(from red h s calc(l + 1%))) {
+        #{$prop}: hsl(from $color h s calc(l - 3%));
+    }
+}
+
+@mixin backgroundColor($prop, $color) {
+    @include validateColorProperty($color);
+    @include validatePropType($prop);
+
+    #{$prop}: hsl(from $color h s 15%);
+}
