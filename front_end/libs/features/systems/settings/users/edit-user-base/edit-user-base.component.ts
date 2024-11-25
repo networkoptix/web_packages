@@ -108,6 +108,8 @@ export abstract class NxSystemUsersBaseComponent implements OnInit, OnChanges, A
     username: string;
     role: string;
 
+    inEditMode$$ = signal<boolean>(false);
+
     @ViewChild('pageApply', { read: ViewContainerRef, static: true })
     protected pageApply: ViewContainerRef;
 
@@ -124,7 +126,7 @@ export abstract class NxSystemUsersBaseComponent implements OnInit, OnChanges, A
 
     ngOnChanges(changes: NgChanges<NxSystemUsersBaseComponent>): void {
         const user = changes.selectedUser?.currentValue;
-        if (user) {
+        if (user && !this.inEditMode$$()) {
             this.selectedUser$$.set(user);
             this.menuService.selectedDetailsSection$$.set(user.id);
             this.locked.clear();
@@ -136,6 +138,10 @@ export abstract class NxSystemUsersBaseComponent implements OnInit, OnChanges, A
     public ngOnInit(): void {
         this.system.infoSubject.pipe(untilDestroyed(this)).subscribe(() => {
             this.systemAvailable = this.system.isAvailable && this.system.mergeInfo === undefined;
+        });
+
+        this.userForm.pipe(untilDestroyed(this)).subscribe(form => {
+            this.inEditMode$$.set(form?.dirty || false);
         });
 
         this.initProcesses();
@@ -217,7 +223,7 @@ export abstract class NxSystemUsersBaseComponent implements OnInit, OnChanges, A
         this.isLdap$$.set(user.type === UserType.ldap);
         this.isWebadmin$$.set(user.type === UserType.local);
         this.isTemporary$$.set(user.type === UserType.temporaryLocal);
-        this.isMe$$.set(currentUser.id === user.id);
+        this.isMe$$.set(currentUser?.id === user.id);
         this.hasCustomPermissions$$.set(user.hasCustomPermissions);
 
         this.deleteMessage = this.isCloud$$()

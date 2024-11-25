@@ -93,6 +93,9 @@ export class NxSystemUsersWithGroupsComponent extends NxSystemUsersBaseComponent
                 .pipe(debounceTime(100), takeUntil(this.removeOldForm$))
                 .subscribe(values => {
                     if (this.editPermissions$$().changePermissions) {
+                        this.user$$.update(user => ({ ...user, ...values }));
+                        this.userForm.emit(this.userGroupForm);
+
                         this.processSelectedGroupsList(values.groupIds);
                     }
                 });
