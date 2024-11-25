@@ -24,8 +24,8 @@
     #exportBtn
     [ngClass]="{ disabled: !exportEnabled }"
     class="anchor export-link"
-    href="#"
     (click)="downloadFile()"
+    [href]="exportLink$ | async"
     (mouseenter)="showLegend(popLegendExportTemplate, exportBtn)"
     (mouseout)="closeLegend()"
     [download]="exportName"

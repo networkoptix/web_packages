@@ -25,7 +25,10 @@ import { VideoManagementSystemService } from '@view/services/vms.service';
 
 import { TimelineSelectionService } from '../../services/timeline.selection.service';
 import { TimelineService } from '../../services/timeline.service';
-import type { TimelineSelectionServiceStatus } from '../../services/timeline.services.types';
+import {
+    SELECTION_DRAG_MODE,
+    TimelineSelectionServiceStatus,
+} from '../../services/timeline.services.types';
 
 @UntilDestroy()
 @Component({
@@ -38,7 +41,7 @@ export class TimelineSelectionActionPanelComponent implements OnInit {
     private system: NxSystem;
 
     exportEnabled: boolean;
-    private exportLink$: Observable<string>;
+    protected exportLink$: Observable<string>;
     exportName: string;
     icons = icons;
 
@@ -59,19 +62,23 @@ export class TimelineSelectionActionPanelComponent implements OnInit {
 
     ngOnInit(): void {
         this.selection.subject.pipe(untilDestroyed(this)).subscribe(s => {
-            this.status = s;
             this.self.nativeElement.classList.toggle('active', s.isActive);
-            if (s.isActive) {
+
+            // Do calcs only on drag end
+            if (
+                s.isActive &&
+                this.status?.dragMode !== SELECTION_DRAG_MODE.NO_DRAGGING &&
+                s.dragMode === SELECTION_DRAG_MODE.NO_DRAGGING
+            ) {
                 this.exportUrl();
                 this.exportEnabled = !!this.vms.selectedCamera.getRecords(
                     Math.max(this.status.range.start, this.timeline.fullRange.start),
                     Math.min(this.status.range.end, this.timeline.fullRange.end),
                     1000,
                 ).length;
-            } else {
-                this.exportLink$ = of('');
-                this.exportBtn.nativeElement.href = '#';
             }
+
+            this.status = s;
         });
 
         // TODO: Remove duplicate system initialize
@@ -92,6 +99,8 @@ export class TimelineSelectionActionPanelComponent implements OnInit {
     }
 
     downloadFile(): void {
+        // The logic behind ...arghhh
+        // Re-subscribing will refresh exportLink$ causing exportLink to request a new ticket
         this.exportLink$.subscribe(url => {
             this.exportBtn.nativeElement.href = url;
         });
@@ -105,14 +114,19 @@ export class TimelineSelectionActionPanelComponent implements OnInit {
         }
         let exportLink = of('');
         if (this.system) {
-            const exportUrl = this.system.mediaserver.getExportUrl(this.selection.exportUrlParams);
-            exportLink = of(exportUrl);
+            const selectionUri = this.system.mediaserver.getExportUrl(
+                this.selection.exportUrlParams,
+            );
+            exportLink = of(selectionUri);
             if (this.system.mediaserver.version >= NxSystemRestAPI3.VERSION) {
+                // Request new ticket (on 1st run or on button click)
                 exportLink = (this.system.mediaserver as NxSystemRestAPI3)
                     .createTicket()
-                    .pipe(map(({ token }) => replaceAuthWithTicket(exportUrl, token)));
+                    .pipe(map(({ token }) => replaceAuthWithTicket(selectionUri, token)));
             }
         }
+
+        // Re-fresh exportLink$
         this.exportLink$ = defer(() => exportLink);
 
         this.exportName = `${this.vms.selectedCamera.id}.${transport}`;
