@@ -260,7 +260,7 @@ export class TimelineSelectionComponent implements OnInit, AfterViewInit {
     get svgLeftArrowPoints(): string {
         let offset: number;
 
-        if (this.selectionStatus.dragMode || this.selectionStatus.hoverMode) {
+        if (this.selectionStatus.dragMode || this.selectionStatus.hoverEars) {
             offset = this.left - WNM;
 
             this.tl = this.left - offset + MARGIN;
@@ -290,7 +290,7 @@ export class TimelineSelectionComponent implements OnInit, AfterViewInit {
 
         let offset: number;
 
-        if (this.selectionStatus.dragMode || this.selectionStatus.hoverMode) {
+        if (this.selectionStatus.dragMode || this.selectionStatus.hoverEars) {
             const canvasWidth =
                 this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr;
             const range = this.left + this.duration;

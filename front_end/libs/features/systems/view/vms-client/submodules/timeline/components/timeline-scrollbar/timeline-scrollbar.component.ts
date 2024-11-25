@@ -129,7 +129,7 @@ export class TimelineScrollbarComponent implements AfterViewInit {
                 this.selectionWidthPixel = 0;
             }
 
-            this.disabled = !!s.dragMode || s.hoverMode;
+            this.disabled = !!s.dragMode || s.hoverEars;
         });
 
         interval(0, animationFrameScheduler)

@@ -5,6 +5,11 @@ import dateFormat from 'dateformat';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { px } from '@view/datatypes/type-aliases';
 import { VideoManagementSystemService } from '@view/services/vms.service';
+import { TimelineSelectionService } from '@vms-client/submodules/timeline/services/timeline.selection.service';
+import {
+    SELECTION_ACTION,
+    TimelineSelectionServiceStatus,
+} from '@vms-client/submodules/timeline/services/timeline.services.types';
 
 import { TimelineService } from '../../services/timeline.service';
 import { TimelineTimeUnderMouseService } from '../../services/timeline.time-under-mouse.service';
@@ -22,11 +27,12 @@ const PRIMARY_WIDTH = 140;
     styleUrls: ['./time-under-mouse.component.scss'],
 })
 export class TimeUnderMouseComponent implements OnInit {
-    date: string = '';
-    time: string = '';
-
     private honestOffset: px;
     private visualOffset: px;
+    private timelineSelectionStatus: TimelineSelectionServiceStatus;
+
+    date: string = '';
+    time: string = '';
 
     constructor(
         languageService: NxLanguageProviderService,
@@ -34,15 +40,30 @@ export class TimeUnderMouseComponent implements OnInit {
         private vms: VideoManagementSystemService,
         private timeline: TimelineService,
         private timeUnderMouse: TimelineTimeUnderMouseService,
+        private selection: TimelineSelectionService,
     ) {
         languageService.loadTimelineTranslations();
         this.self.nativeElement.style.opacity = 0.0;
     }
 
     ngOnInit(): void {
+        this.selection.subject.pipe(untilDestroyed(this)).subscribe(selection => {
+            this.timelineSelectionStatus = selection;
+        });
+
         this.timeUnderMouse.subject.pipe(untilDestroyed(this)).subscribe(s => {
-            if (s.isMouseInside) {
+            // Spaghetti code and meatball events :( ...
+            // Selection service doesn't emit selection subject when move (to select) /line 172: this.emit(SELECTION_ACTION.DRAGGING);/
+            // Also after selection is made subject indicate that cursor is not hovering selection ear (not true)
+            // Added action prop to selection to hide time under cursor after selection is made. "Move" event will reset it.
+            // This is a patch as current TL is in maintenance mode --[T]
+            if (
+                s.isMouseInside &&
+                !this.timelineSelectionStatus.hoverEars &&
+                this.timelineSelectionStatus.action !== SELECTION_ACTION.UP
+            ) {
                 this.self.nativeElement.style.opacity = 1.0;
+                this.honestOffset = s.offsetX;
                 let offset = s.offsetX;
 
                 const marginLeft = MARGIN + PRIMARY_WIDTH / 2;
@@ -57,7 +78,6 @@ export class TimeUnderMouseComponent implements OnInit {
                     offset = marginRight;
                 }
 
-                this.honestOffset = s.offsetX;
                 this.visualOffset = offset;
                 this.self.nativeElement.style.left = `${offset}px`;
                 // sometimes Infinity comes in as the timestamp and dateformat fails

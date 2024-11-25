@@ -10,8 +10,11 @@ import { VideoManagementSystemService } from '@view/services/vms.service';
 
 import { TimeRange } from './TimeRange';
 import { TimelineService } from './timeline.service';
-import type { TimelineSelectionServiceStatus } from './timeline.services.types';
-import { SELECTION_DRAG_MODE } from './timeline.services.types';
+import {
+    SELECTION_ACTION,
+    SELECTION_DRAG_MODE,
+    TimelineSelectionServiceStatus,
+} from './timeline.services.types';
 
 const MIN_SELECTION_WIDTH_PX = 5;
 const PLAYBACK_OVERLAY_THRESHOLD_PX = 5;
@@ -24,7 +27,7 @@ export class TimelineSelectionService {
     isActive: boolean = false;
     private selectedRange: TimeRange = new TimeRange(0, 0);
 
-    private hoverMode: boolean = false;
+    private hoverEars: boolean = false;
     private dragMode: SELECTION_DRAG_MODE = SELECTION_DRAG_MODE.NO_DRAGGING;
     private dragAnchorPx: px = 0;
     private dragAnchorMs: ms = 0;
@@ -52,7 +55,7 @@ export class TimelineSelectionService {
         range: new TimeRange(0, 0),
         pixelRange: { left: 0, right: 0 },
         dragMode: SELECTION_DRAG_MODE.NO_DRAGGING,
-        hoverMode: false,
+        hoverEars: false,
     });
 
     get range(): TimeRange {
@@ -75,16 +78,21 @@ export class TimelineSelectionService {
         this.emit();
     }
 
-    private emit(): void {
+    private emit(withAction?: SELECTION_ACTION): void {
+        let pxlRange: { left: px; right: px } = { left: 0, right: 0 };
+        if (this.isActive) {
+            pxlRange = {
+                left: this.timeline.timeToDomOffsetX(this.range.start),
+                right: this.timeline.timeToDomOffsetX(this.range.end),
+            };
+        }
         this.subject.next({
             isActive: this.isActive,
             range: this.range,
-            pixelRange: {
-                left: this.timeline.timeToDomOffsetX(this.range.start),
-                right: this.timeline.timeToDomOffsetX(this.range.end),
-            },
+            pixelRange: pxlRange,
             dragMode: this.dragMode,
-            hoverMode: this.hoverMode,
+            hoverEars: this.hoverEars,
+            action: withAction,
         });
     }
 
@@ -114,7 +122,7 @@ export class TimelineSelectionService {
             console.warn('mouse down while already dragging', this.dragMode);
         }
 
-        this.emit();
+        this.emit(SELECTION_ACTION.DOWN);
     }
 
     handleLeftEarMouseDown(e: MouseEvent): void {
@@ -141,7 +149,7 @@ export class TimelineSelectionService {
     }
 
     handleEarMouseInOut(status: boolean): void {
-        this.hoverMode = status;
+        this.hoverEars = status;
         this.emit();
     }
 
@@ -161,7 +169,7 @@ export class TimelineSelectionService {
                     this.selectedRange.start = this.dragAnchorMs;
                 }
 
-                this.emit();
+                this.emit(SELECTION_ACTION.DRAGGING);
                 // Keep this just in case UX change their mind ... again
                 // } else if (this._dragMode === SELECTION_DRAG_MODE.DRAGGING_SELECTED_RANGE) {
                 //     const offsetPx = offsetPx - this._dragAnchorPx;
@@ -200,7 +208,7 @@ export class TimelineSelectionService {
                     this.selectedRange.start = oldEnd;
                 }
 
-                this.emit();
+                this.emit(SELECTION_ACTION.DRAGGING);
             } else if (this.dragMode === SELECTION_DRAG_MODE.DRAGGING_RIGHT_EAR) {
                 const newEnd = this.timeline.domOffsetXtoTime(offsetPx);
 
@@ -213,7 +221,7 @@ export class TimelineSelectionService {
                     this.selectedRange.end = oldStart;
                 }
 
-                this.emit();
+                this.emit(SELECTION_ACTION.DRAGGING);
             }
             return true;
         } else {
@@ -253,10 +261,6 @@ export class TimelineSelectionService {
     handleMouseUp(): boolean {
         let result = true;
 
-        // prevent time under the mouse showing up at wrong position.
-        // it will be reset by mouse move and moveInOut method -- [T]
-        this.hoverMode = true;
-
         if (
             this.dragMode === SELECTION_DRAG_MODE.DRAGGING_BACKGROUND &&
             this.timeline.durationToDomWidth(this.selectedRange.duration) <= MIN_SELECTION_WIDTH_PX
@@ -265,17 +269,17 @@ export class TimelineSelectionService {
             result = false;
             // console.log('hmuRes', this.rangeText, this.range)
         } else {
+            this.dragMode = SELECTION_DRAG_MODE.NO_DRAGGING;
             this.snapRangeEdgesToPlayback();
-            this.emit();
+            this.emit(SELECTION_ACTION.UP);
         }
-        // console.log('hmuAfter', this.range)
-        this.dragMode = SELECTION_DRAG_MODE.NO_DRAGGING;
+
         return result;
     }
 
     reset(): void {
         this.isActive = false;
         this.selectedRange = new TimeRange(0, 0);
-        this.emit();
+        this.emit(SELECTION_ACTION.RESET);
     }
 }

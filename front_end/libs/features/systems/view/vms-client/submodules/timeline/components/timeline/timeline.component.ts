@@ -82,8 +82,7 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
             systemService.getCurrentSystem().version >= VMS_VERSION_TIMELINE_ENABLED;
 
         this.selection.subject.pipe(untilDestroyed(this)).subscribe(selection => {
-            this.isDragging =
-                selection.dragMode !== SELECTION_DRAG_MODE.NO_DRAGGING || selection.hoverMode;
+            this.isDragging = selection.dragMode !== SELECTION_DRAG_MODE.NO_DRAGGING; // || selection.hoverEars;
         });
     }
 

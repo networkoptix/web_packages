@@ -29,7 +29,8 @@ export interface TimelineSelectionServiceStatus {
     range: TimeRange;
     pixelRange: PixelRange;
     dragMode: number;
-    hoverMode: boolean;
+    hoverEars: boolean;
+    action?: SELECTION_ACTION;
 }
 
 export interface TimelineServiceStatus {
@@ -56,4 +57,11 @@ export enum SELECTION_DRAG_MODE {
     DRAGGING_LEFT_EAR = 2,
     DRAGGING_RIGHT_EAR = 3,
     DRAGGING_SELECTED_RANGE = 4,
+}
+
+export enum SELECTION_ACTION {
+    UP,
+    DOWN,
+    DRAGGING,
+    RESET,
 }
