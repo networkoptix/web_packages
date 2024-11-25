@@ -1,8 +1,0 @@
-project_id: 199203
-base_path: ..
-preserve_hierarchy: true
-
-files:
-  -
-    source: '/robot_tests/translations/variables_language_en_US.json'
-    translation: '/robot_tests/translations/variables_language_%locale_with_underscore%.json'
