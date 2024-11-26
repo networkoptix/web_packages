@@ -46,7 +46,12 @@
         'main-m': viewType === 'mobile'
     }"
     *ngIf="createHeader"
-    [ngStyle]="{ height: 'calc(480px - ' + createHeader.offsetHeight + 'px)' }"
+    [ngStyle]="{
+        height:
+            viewType === 'web'
+                ? 'calc(475px - ' + createHeader.offsetHeight + 'px)'
+                : 'calc(480px - ' + createHeader.offsetHeight + 'px)'
+    }"
 >
     <form
         #accountForm
