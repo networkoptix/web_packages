@@ -2,9 +2,11 @@
     "extends": "./tsconfig.lib.prod.json",
     "compilerOptions": {
         "outDir": "../../dist/out-tsc",
-        "module": "commonjs",
         "target": "es2016",
-        "types": ["jest", "node"]
+        "types": ["node"]
     },
-    "include": ["src/test-setup.ts", "src/setup.ts", "jest.config.ts", "**/*.spec.ts", "**/*.d.ts"]
+    "files": ["src/test-setup.ts", "../../node_modules/vitest/globals.d.ts"],
+    "include": ["**/*.spec.ts", "**/*.d.ts"],
+    "exclude": [],
+    "typeRoots": [],
 }

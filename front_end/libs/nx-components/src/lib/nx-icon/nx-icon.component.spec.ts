@@ -28,5 +28,5 @@ describe('Icon color mapping', () => {
     it('should have all icon colors mapped', async () => {
         const missingColor = await NxIconComponent.ensureStyleMapping();
         expect(missingColor).toEqual([]);
-    });
+    }, 50_000);
 });

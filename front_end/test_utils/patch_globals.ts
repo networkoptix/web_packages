@@ -2,7 +2,7 @@ import { TextDecoder, TextEncoder } from 'util';
 
 import ResizeObserver from 'resize-observer-polyfill';
 
-class DataTransfer {
+export class DataTransfer {
     value = '';
 
     setData(_: string, value: string): void {
@@ -13,7 +13,7 @@ class DataTransfer {
     }
 }
 
-class ClipboardEvent {
+export class ClipboardEvent {
     clipboardData: DataTransfer;
 
     preventDefault(): void {}

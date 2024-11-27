@@ -1,6 +1,12 @@
-import { ComponentFixture } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { SvgIconComponent } from 'angular-svg-icon';
+import { MockComponent } from 'ng-mocks';
+import type { MockInstance } from 'vitest';
 
-import { setupComponent } from '../../setup';
+import {
+    ClipboardEvent as MockClipoardEvent,
+    DataTransfer as MockDataTransfer,
+} from '../../../../../test_utils/patch_globals';
 
 import { NxNumericComponent } from './numeric.component';
 
@@ -43,6 +49,9 @@ function dispatchPasteEvent(el: HTMLInputElement): Event {
 }
 
 describe('NumericComponent', () => {
+    vi.stubGlobal('DataTransfer', MockDataTransfer);
+    vi.stubGlobal('ClipboardEvent', MockClipoardEvent);
+
     let component: NxNumericComponent;
     let fixture: ComponentFixture<NxNumericComponent>;
     let el: HTMLInputElement;
@@ -53,7 +62,11 @@ describe('NumericComponent', () => {
     const maxValue = 65535;
 
     beforeEach(async () => {
-        ({ component, fixture } = await setupComponent(NxNumericComponent));
+        TestBed.configureTestingModule({
+            imports: [NxNumericComponent, MockComponent(SvgIconComponent)],
+        }).compileComponents();
+        fixture = TestBed.createComponent(NxNumericComponent);
+        component = fixture.componentInstance;
 
         el = fixture.debugElement.nativeElement.querySelector('input');
         up = fixture.debugElement.nativeElement.querySelector(
@@ -78,7 +91,7 @@ describe('NumericComponent', () => {
 
     describe('Events', () => {
         it('should call valueChanged on keyup', () => {
-            const spy = jest.spyOn(component, 'valueChanged');
+            const spy = vi.spyOn(component, 'valueChanged');
 
             dispatchKeyEvent(el, 'keyup', '5');
             fixture.detectChanges();
@@ -87,7 +100,7 @@ describe('NumericComponent', () => {
         });
 
         it('should call valueChanged on input', () => {
-            const spy = jest.spyOn(component, 'valueChanged');
+            const spy = vi.spyOn(component, 'valueChanged');
 
             const event = dispatchInputEvent(el);
             fixture.detectChanges();
@@ -96,8 +109,7 @@ describe('NumericComponent', () => {
         });
 
         it('should call onPaste on paste', () => {
-            const spy = jest.spyOn(component, 'onPaste');
-            spy.mockImplementation();
+            const spy = vi.spyOn(component, 'onPaste').mockImplementation(() => {});
 
             const event = dispatchPasteEvent(el);
             fixture.detectChanges();
@@ -106,7 +118,7 @@ describe('NumericComponent', () => {
         });
 
         it('should call onKeyDown on keydown', () => {
-            const spy = jest.spyOn(component, 'onKeyDown');
+            const spy = vi.spyOn(component, 'onKeyDown');
 
             const event = dispatchKeyEvent(el, 'keydown', '5');
             fixture.detectChanges();
@@ -115,8 +127,8 @@ describe('NumericComponent', () => {
         });
 
         it('should call increment on mousedown', () => {
-            const increment = jest.spyOn(component, 'increment');
-            const decrement = jest.spyOn(component, 'decrement');
+            const increment = vi.spyOn(component, 'increment');
+            const decrement = vi.spyOn(component, 'decrement');
 
             const mouseEvent = dispatchMouseEvent(up, 'mousedown');
             fixture.detectChanges();
@@ -125,9 +137,10 @@ describe('NumericComponent', () => {
             expect(increment).toBeCalledWith(mouseEvent);
             expect(decrement).not.toHaveBeenCalled();
         });
+
         it('should call decrement on mousedown', () => {
-            const increment = jest.spyOn(component, 'increment');
-            const decrement = jest.spyOn(component, 'decrement');
+            const increment = vi.spyOn(component, 'increment');
+            const decrement = vi.spyOn(component, 'decrement');
 
             const mouseEvent = dispatchMouseEvent(down, 'mousedown');
             fixture.detectChanges();
@@ -152,7 +165,7 @@ describe('NumericComponent', () => {
     });
 
     describe('onKeyDown', () => {
-        const preventDefault = jest.fn();
+        const preventDefault = vi.fn();
         const getEvent = (char: string): KeyboardEvent =>
             ({
                 key: char,
@@ -174,16 +187,16 @@ describe('NumericComponent', () => {
     });
 
     describe('valueChanged', () => {
-        let setValue: jest.SpyInstance;
-        let getNativeValue: jest.SpyInstance;
-        let checkUpdateNativeValue: jest.SpyInstance;
+        let setValue: MockInstance;
+        let getNativeValue: MockInstance;
+        let checkUpdateNativeValue: MockInstance;
 
         beforeEach(async () => {
-            checkUpdateNativeValue = jest
+            checkUpdateNativeValue = vi
                 .spyOn(component, 'checkUpdateNativeValue')
-                .mockImplementation();
-            setValue = jest.spyOn(component, 'setValue').mockImplementation();
-            getNativeValue = jest.spyOn(component, 'getNativeValue');
+                .mockImplementation(() => {});
+            setValue = vi.spyOn(component, 'setValue').mockImplementation(() => {});
+            getNativeValue = vi.spyOn(component, 'getNativeValue');
             getNativeValue.mockReturnValue(baseValue);
         });
 
@@ -212,13 +225,13 @@ describe('NumericComponent', () => {
 
     describe('checkUpdateNativeValue', () => {
         let input: { value: string };
-        let getNativeValue: jest.SpyInstance;
+        let getNativeValue: MockInstance;
 
         beforeEach(() => {
             input = {
                 value: `${baseValue}`,
             };
-            getNativeValue = jest.spyOn(component, 'getNativeValue');
+            getNativeValue = vi.spyOn(component, 'getNativeValue');
             getNativeValue.mockReturnValue(baseValue);
         });
 
@@ -236,13 +249,13 @@ describe('NumericComponent', () => {
 
     describe('increment and decrement', () => {
         let event: MouseEvent;
-        let preventDefault: jest.SpyInstance;
-        let setValue: jest.SpyInstance;
+        let preventDefault: MockInstance;
+        let setValue: MockInstance;
 
         beforeEach(() => {
-            preventDefault = jest.fn();
+            preventDefault = vi.fn();
             event = { preventDefault } as unknown as MouseEvent;
-            setValue = jest.spyOn(component, 'setValue');
+            setValue = vi.spyOn(component, 'setValue');
         });
 
         it('increments native value and updates internal value', () => {
@@ -266,10 +279,10 @@ describe('NumericComponent', () => {
     });
 
     describe('onPaste', () => {
-        let setValue: jest.SpyInstance;
+        let setValue: MockInstance;
 
         beforeEach(() => {
-            setValue = jest.spyOn(component, 'setValue');
+            setValue = vi.spyOn(component, 'setValue');
         });
 
         it('should check and set partially valid value', () => {
@@ -295,14 +308,14 @@ describe('NumericComponent', () => {
     });
 
     describe('setValue', () => {
-        let onTouchedCallback: jest.SpyInstance;
-        let onChangeCallback: jest.SpyInstance;
-        let onChangeEmit: jest.SpyInstance;
+        let onTouchedCallback: MockInstance;
+        let onChangeCallback: MockInstance;
+        let onChangeEmit: MockInstance;
 
         beforeEach(() => {
-            onTouchedCallback = jest.spyOn(component, <never>'onTouchedCallback');
-            onChangeCallback = jest.spyOn(component, <never>'onChangeCallback');
-            onChangeEmit = jest.spyOn(component.onChange, 'emit');
+            onTouchedCallback = vi.spyOn(component, <never>'onTouchedCallback');
+            onChangeCallback = vi.spyOn(component, <never>'onChangeCallback');
+            onChangeEmit = vi.spyOn(component.onChange, 'emit');
         });
 
         const expectSetValue = (value: number | null): void => {
