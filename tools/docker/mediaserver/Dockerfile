@@ -1,4 +1,4 @@
-FROM ubuntu:18.04
+FROM ubuntu:24.04
 
 # This will override our EULA check.
 ENV DEBIAN_FRONTEND noninteractive
@@ -16,7 +16,7 @@ COPY "${mediaserver_deb}" /debs/
 RUN apt-get update \
     && apt-get install -y \
         /debs/${mediaserver_deb} \
-    && apt-get install -y curl \
+    && apt-get install -y curl libdrm-dev \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 

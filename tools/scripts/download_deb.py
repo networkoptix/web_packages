@@ -42,7 +42,7 @@ def find_deb(installers, build_number, customization):
     deb_platform = 'linux_x64' if x86_64_linux or intel_macos else 'linux_arm64'
     appType = 'server'
     for installer in installers:
-        if installer['platform'] == deb_platform and installer['appType'] == appType:
+        if installer['platform'] == deb_platform and installer['appType'] == appType and 'deb' in installer['fileName']:
             return f"{DOWNLOADS_BASE}/{customization}/{build_number}/{installer['path']}"
     return ''
 

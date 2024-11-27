@@ -5,11 +5,11 @@ mkdir -p /root/.config/nx_ini
 # Override external.dat
 [ "$COPY" == "copy" ] && cp external.dat /opt/$CUSTOMIZATION/mediaserver/bin
 
-#Override cloud host for systems >= 4.3
+#Override cloud-host for systems rest systems (5.0+)
 echo "customizedCloudHost=\"default:$CLOUD_HOST\"" >> /root/.config/nx_ini/nx_vms_server.ini
 
-# Change cloud host for systems < 4.3. Defaults to cloud-test
-/patch-cloud-host.sh $CLOUD_HOST
+# Change cloud host for systems non rest systems ( version < 5.0). Keeping for legacy reasons
+# /patch-cloud-host.sh $CLOUD_HOST
 
 # Timout for owner actions. Default value is 10 minutes. Can be changed to shorten testing time.
 echo "maxSessionAgeForPrivilegedApiS=600" >> /root/.config/nx_ini/nx_network_rest.ini
