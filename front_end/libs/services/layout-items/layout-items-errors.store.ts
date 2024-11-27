@@ -24,15 +24,21 @@ type Entity = { id: string; value: string };
 type Collection = 'status' | 'layoutError' | 'icon' | 'message';
 type Collections = [Collection];
 type EntityValueParam = { [key in Collection]?: string | Translatable };
+type EntityClearParam =
+    | true
+    | {
+          [key in Collection]?: boolean;
+      };
 
-const entitiesToObject = (entities: Entity[]): Record<string, string> =>
-    entities.reduce(
+const entitiesToObject = (entities: Entity[]): Record<string, string> => {
+    return entities.reduce(
         (obj: Record<string, string>, { id, value }) => ({
             ...obj,
             [id]: value,
         }),
         {},
     );
+};
 
 const helpGetAdditionalErrorMessages = (): Entity[] => {
     const result: Entity[] = [];
@@ -84,6 +90,26 @@ export class LayoutItemsErrorsStore extends signalStore(
 
             patchState(store, ...updates);
         }
+        function removeMultipleEntities(entities: Record<string, EntityClearParam>): void {
+            const updates: PartialStateUpdater<NamedEntityState<Entity, string>>[] = [];
+
+            if (!entities) {
+                return;
+            }
+
+            Object.entries(entities).forEach(([id, clear]) => {
+                if (clear === true) {
+                    clear = { status: true, icon: true, message: true, layoutError: true };
+                }
+                Object.keys(clear).forEach(collection => {
+                    if (clear?.[collection]) {
+                        updates.push(removeEntity(id, { collection }));
+                    }
+                });
+            });
+
+            return patchState(store, ...updates);
+        }
 
         return {
             set: (id: string, error: EntityValueParam) => {
@@ -96,34 +122,18 @@ export class LayoutItemsErrorsStore extends signalStore(
             setMany: (entities: Record<string, EntityValueParam>) => {
                 return setMultipleEntities(entities);
             },
-            remove: (
-                id: string,
-                clear:
-                    | true
-                    | {
-                          [key in Collection]?: boolean;
-                      },
-            ) => {
-                const updates: PartialStateUpdater<NamedEntityState<Entity, string>>[] = [];
-
+            removeMany: (entities: Record<string, EntityClearParam>) => {
+                return removeMultipleEntities(entities);
+            },
+            remove: (id: string, clear: EntityClearParam) => {
                 if (!id || !clear) {
                     return;
                 }
 
-                if (clear === true) {
-                    clear = { status: true, icon: true, message: true, layoutError: true };
-                }
-
-                Object.keys(clear).forEach(collection => {
-                    if (clear?.[collection]) {
-                        updates.push(removeEntity(id, { collection }));
-                    }
-                });
-
-                return patchState(store, ...updates);
+                return removeMultipleEntities({ [id]: clear });
             },
-            reset: (collection?: Collections) =>
-                patchState(
+            reset: (collection?: Collections) => {
+                return patchState(
                     store,
                     ...(collection ?? ['status', 'layoutError', 'icon', 'message']).map(
                         (collection: Collection) => {
@@ -137,7 +147,8 @@ export class LayoutItemsErrorsStore extends signalStore(
                             }
                         },
                     ),
-                ),
+                );
+            },
         };
     }),
 ) {}

@@ -32,7 +32,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-import { cloneDeep, isEqual, pick } from 'lodash-es';
+import { cloneDeep, difference, isEqual, pick } from 'lodash-es';
 import { TourMatMenuModule, TourService } from 'ngx-ui-tour-md-menu';
 import {
     BehaviorSubject,
@@ -767,10 +767,7 @@ export class NxLayoutGridComponent {
     #fullscreenElement$ = new BehaviorSubject<Element>(null);
     unsubTooltip$ = new Subject<string>();
 
-    checkLayoutItemsErrors = (
-        layout: ParsedLayoutWithItems,
-        layoutItemLookup: LayoutResourceTree,
-    ): void => {
+    checkLayoutItemsErrors = (layout: Layout, layoutItemLookup: LayoutResourceTree): void => {
         const updates = layout.items.reduce((updates, item) => {
             const itemDetail = this.getItem({ item, layoutItemLookup });
             const resourceId = itemDetail?.details.id || cleanId(item.resourceId);
@@ -870,6 +867,9 @@ export class NxLayoutGridComponent {
 
             layoutItemStatus ||= this.layoutItemsErrorsStore.statuses$$()[resourceId];
 
+            if (!layoutItemStatus) {
+                return updates;
+            }
             return {
                 ...updates,
                 [item.id]: {
@@ -878,9 +878,19 @@ export class NxLayoutGridComponent {
             };
         }, {});
 
-        this.layoutItemsErrorsStore.reset(['layoutError']);
+        const removes = difference(
+            Object.keys(untracked(() => this.layoutItemsErrorsStore.layoutErrors$$())),
+            Object.keys(updates),
+        ).reduce(
+            (removes, id) => ({
+                ...removes,
+                [id]: { layoutError: true },
+            }),
+            {},
+        );
 
         this.layoutItemsErrorsStore.setMany(updates);
+        this.layoutItemsErrorsStore.removeMany(removes);
     };
 
     layout$: Observable<ParsedLayoutWithItems> = combineLatest([
@@ -916,12 +926,13 @@ export class NxLayoutGridComponent {
     );
 
     layout$$ = toSignal(this.layout$);
+    initialLayout$$ = toSignal(this.initialLayout$);
 
     wrapperSize$$ = toSignal(this.#wrapperSize$);
 
     updateLayoutErrorsEffect = effect(
         () => {
-            const layout = this.layout$$();
+            const layout = this.initialLayout$$();
             if (layout) {
                 this.checkLayoutItemsErrors(layout, this.layoutItemLookup$$());
             }
@@ -1426,7 +1437,7 @@ export class NxLayoutGridComponent {
             () => {
                 const { previous, current } = resolutionHistory$$();
                 for (const id in current) {
-                    if (current[id] !== previous[id]) {
+                    if (current[id].resolution !== previous[id].resolution) {
                         this.layoutItemsErrorsStore.remove(id, true);
                     }
                 }
