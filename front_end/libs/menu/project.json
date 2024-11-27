@@ -22,7 +22,9 @@
             },
             "defaultConfiguration": "production"
         },
-        "test": {},
+        "test": {
+            "executor": "@analogjs/vitest-angular:test"
+        },
         "lint": {}
     }
 }

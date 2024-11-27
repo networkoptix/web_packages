@@ -1,10 +1,19 @@
-import { TestBed } from '@angular/core/testing';
+import { ComponentFixture, ComponentFixtureAutoDetect, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
+import { SvgIconComponent } from 'angular-svg-icon';
+import { MockComponent, MockProvider } from 'ng-mocks';
 
+import { NxApplyService } from '@services/apply.service';
+import { NxAppStateService } from '@services/nx-app-state.service';
 import { NxSearchService } from '@services/search.service';
 
+import { IntersectionObserver as MockIntersectionObserver } from '../../test_utils/patch_globals';
+
 import { NxMenuComponent } from './menu.component';
+import { MenuModule } from './menu.module';
+import { NxMenuService } from './menu.service';
 import type { Content } from './menu.types';
-import { setupComponent } from './src/setup';
 
 const emptyMenu: Content = {
     base: '',
@@ -265,12 +274,25 @@ export const menuContentFull: Content = {
     selectedSubSection: '',
 };
 
-const setup = async (content = emptyMenu): ReturnType<typeof setupComponent<NxMenuComponent>> => {
-    const setup = await setupComponent(NxMenuComponent);
+vi.mock('@services/apply.service', () => ({
+    NxApplyService: {},
+}));
 
-    setup.component.content = content;
-
-    setup.component.ngOnChanges({
+const setup = async (content = emptyMenu): Promise<ComponentFixture<NxMenuComponent>> => {
+    await TestBed.configureTestingModule({
+        imports: [MockComponent(SvgIconComponent), TranslateModule.forRoot(), MenuModule],
+        providers: [
+            { provide: ComponentFixtureAutoDetect, useValue: true },
+            provideRouter([]),
+            NxSearchService,
+            MockProvider(NxApplyService),
+            NxAppStateService,
+            NxMenuService,
+        ],
+    }).compileComponents();
+    const fixture = TestBed.createComponent(NxMenuComponent);
+    fixture.componentInstance.content = content;
+    fixture.componentInstance.ngOnChanges({
         content: {
             currentValue: content,
             previousValue: emptyMenu,
@@ -278,13 +300,15 @@ const setup = async (content = emptyMenu): ReturnType<typeof setupComponent<NxMe
             isFirstChange: () => true,
         },
     });
-    await setup.fixture.whenStable();
-    return setup;
+    await fixture.whenStable();
+    return fixture;
 };
 
 describe('NxMenuComponent', () => {
+    vi.stubGlobal('IntersectionObserver', MockIntersectionObserver);
+
     it('should create the component', async () => {
-        const { component } = await setup();
+        const { componentInstance: component } = await setup();
         expect(component).toBeTruthy();
         expect(component.menuContent.length).toBe(0); // menu not updated yet
     });
@@ -298,7 +322,7 @@ describe('NxMenuComponent', () => {
 
     describe('with full menu content', () => {
         it('should set menuContent', async () => {
-            const { component } = await setup(menuContent);
+            const { componentInstance: component } = await setup(menuContent);
             expect(component.menuContent.length).toBe(4); // level1 nodes
         });
 
@@ -373,7 +397,8 @@ describe('NxMenuComponent', () => {
                 });
 
                 it('should filter items', async () => {
-                    const { component, fixture, debugElement } = await setup(menuContentFull);
+                    const fixture = await setup(menuContentFull);
+                    const { componentInstance: component, debugElement } = fixture;
                     const searchService = TestBed.inject(NxSearchService);
                     component.menuModel.query = '192.168.5.10';
                     component.searchMode = true;
@@ -403,9 +428,9 @@ describe('NxMenuComponent', () => {
                     );
                     expect(searchHighlight.textContent).toBe('192.168.5.100');
 
-                    // TODO: fix this test
-                    // expect(searchHighlight.querySelector('highlighted').textContent)
-                    //     .toBe('192.168.5.10');
+                    expect(searchHighlight.querySelector('.highlighted').textContent).toBe(
+                        '192.168.5.10',
+                    );
                 });
             });
         });

@@ -36,7 +36,7 @@ type IntersectionObserverCallback = (
     observer: IntersectionObserver,
 ) => void;
 
-class IntersectionObserver {
+export class IntersectionObserver {
     callback: IntersectionObserverCallback;
     constructor(callback: IntersectionObserverCallback) {
         this.callback = callback;
