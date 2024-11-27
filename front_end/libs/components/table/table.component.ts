@@ -81,6 +81,7 @@ const ROW_HEIGHT = 40; // if needed a change - do it in theme_variable_common to
 export class NxBaseTableComponent<T> implements AfterContentInit, AfterViewInit, OnChanges {
     @Input() headers: T[] = [];
     @Input() data: T[] = [];
+    @Input({ transform: booleanAttribute }) resetQueryParams: boolean = false;
 
     @Input({ alias: 'set-pagination', transform: booleanAttribute }) setPagination: boolean;
     @Input({ alias: 'set-rows', transform: booleanAttribute }) setRows: boolean;
@@ -241,7 +242,9 @@ export class NxBaseTableComponent<T> implements AfterContentInit, AfterViewInit,
     }
 
     private sortElements(keepURI: boolean = false): void {
-        this.router.navigate([], { replaceUrl: true, queryParams: {} });
+        if (this.resetQueryParams) {
+            this.router.navigate([], { replaceUrl: true, queryParams: {} });
+        }
 
         if (this.params.sortBy) {
             const sortBy = this.params.sortBy.split(',');
