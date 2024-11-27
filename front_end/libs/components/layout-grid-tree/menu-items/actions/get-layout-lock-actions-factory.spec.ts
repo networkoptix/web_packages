@@ -21,7 +21,9 @@ describe('getLayoutLockActionsFactory', () => {
             details: {
                 id: uuid(),
             },
+            shared: false,
             locked: false,
+            owned: true,
         } as ResourceNodeMap[ResourceType.LAYOUT];
         jest.resetAllMocks();
     });
@@ -32,25 +34,47 @@ describe('getLayoutLockActionsFactory', () => {
         expect(result).toEqual([]);
     });
 
-    it('should include a divider', () => {
+    it('should return an empty array if user: "any" layout: "shared"', () => {
         nxConfig.featureFlags.layoutsEditable = true;
-        currentUser.mockReturnValue({ isAdmin: true });
-
-        const result = getLayoutEditActions(node);
-
-        expect(result[0].id).toBe('divider');
-    });
-
-    it('should return an empty array if layout is not Admin or Power User', () => {
-        nxConfig.featureFlags.layoutsEditable = true;
-        currentUser.mockReturnValue({ isAdmin: false });
+        node.shared = true;
 
         const result = getLayoutEditActions(node);
 
         expect(result).toEqual([]);
     });
 
-    it('should show unlockLayout action if layout is owned and locked', () => {
+    it('should return an empty array if user: "owner" layout: "shared"', () => {
+        nxConfig.featureFlags.layoutsEditable = true;
+        node.shared = true;
+        node.owned = true;
+
+        const result = getLayoutEditActions(node);
+
+        expect(result).toEqual([]);
+    });
+
+    it('should return actions if user: "admin" layout: "shared"', () => {
+        nxConfig.featureFlags.layoutsEditable = true;
+        currentUser.mockReturnValue({ isAdmin: true });
+        node.shared = true;
+
+        const result = getLayoutEditActions(node);
+
+        expect(result[0].id).toBe('divider');
+        expect(result[1].id).toBe('lockLayout');
+    });
+
+    it('should return actions if user: "owner" layout: "!shared"', () => {
+        nxConfig.featureFlags.layoutsEditable = true;
+        node.shared = false;
+        node.owned = true;
+
+        const result = getLayoutEditActions(node);
+
+        expect(result).toEqual(availableActions(['divider', 'lockLayout']));
+    });
+
+    it('should return action: "unlockLayout" if user: "admin" layout: "locked"', () => {
         nxConfig.featureFlags.layoutsEditable = true;
         currentUser.mockReturnValue({ isAdmin: true });
         node.locked = true;
@@ -60,7 +84,7 @@ describe('getLayoutLockActionsFactory', () => {
         expect(result).toEqual(availableActions(['divider', 'unlockLayout']));
     });
 
-    it('should show lockLayout action if layout is owned and unlocked', () => {
+    it('should show action: "lockLayout" if user: "admin" layout: "!locked"', () => {
         nxConfig.featureFlags.layoutsEditable = true;
         currentUser.mockReturnValue({ isAdmin: true });
         node.locked = false;

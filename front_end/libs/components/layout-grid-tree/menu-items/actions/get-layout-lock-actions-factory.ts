@@ -14,7 +14,11 @@ export const getLayoutLockActionsFactory =
     (
         node: ResourceNodeMap[ResourceType.LAYOUT],
     ): MenuItem<ResourceNodeMap[ResourceType.LAYOUT]>[] => {
-        if (!(currentUser()?.isAdmin && nxConfig.featureFlags.layoutsEditable)) {
+        if (
+            !nxConfig.featureFlags.layoutsEditable ||
+            (node.shared && !currentUser()?.isAdmin) ||
+            !node.owned
+        ) {
             return [];
         }
 
