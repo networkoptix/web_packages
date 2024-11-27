@@ -1,15 +1,15 @@
 import * as util from './increment-until-unique';
 
-jest.mock('@services/layout-state/layout-state.service', () => ({}));
-
-const getTranslation = (name: string, number?: string): string =>
-    number ? `${name} (copy ${number})` : `${name} (copy)`;
+vi.mock('@services/layout-state/layout-state.service', () => ({
+    LayoutStateService: {
+        runInInjectionContext: () => ({
+            instant: (_: string, { name, number }: { name: string; number?: string }) =>
+                number ? `${name} (copy ${number})` : `${name} (copy)`,
+        }),
+    },
+}));
 
 describe('incrementUntilUnique', () => {
-    beforeEach(() => {
-        jest.spyOn(util, 'getTranslatedCopy').mockImplementation(getTranslation);
-    });
-
     it('should return the original name if it is unique', () => {
         const name = 'uniqueName';
         const existingNames: string[] = [];
@@ -57,10 +57,6 @@ describe('incrementUntilUnique', () => {
 });
 
 describe('incrementUntilUniqueCopy', () => {
-    beforeEach(() => {
-        jest.spyOn(util, 'getTranslatedCopy').mockImplementation(getTranslation);
-    });
-
     it('should handle first unique name', () => {
         const name = 'versionedName';
         const existingNames: string[] = [];

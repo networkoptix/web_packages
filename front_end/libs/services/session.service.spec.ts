@@ -1,14 +1,46 @@
+import { TestBed } from '@angular/core/testing';
+import { MockProvider } from 'ng-mocks';
+import { LocalStorageService } from 'ngx-webstorage';
+import { NEVER } from 'rxjs';
+import { MockInstance } from 'vitest';
+
 import { NxSessionService } from './session.service';
 import { LOGIN_STATE } from './session.service.types';
-import { setupTestBed } from './src/setup';
+import { NxSwCacheService } from './sw-cache.service';
+import { NxSystemService } from './system.service/system.service';
+
+vi.mock('./system.service/system.service', () => ({
+    NxSystemService: {},
+}));
+
+class MockLocalStorage extends Map {
+    retrieve(key: string): unknown {
+        return super.get(key);
+    }
+    store(key: string, value: unknown): void {
+        super.set(key, value);
+    }
+    observe(key: string): unknown {
+        return NEVER;
+    }
+}
 
 const setupSessionService = async (): Promise<{
     sessionService: NxSessionService;
-    clearByName: jest.SpyInstance<Promise<boolean[][]>, [cache: string]>;
+    clearByName: MockInstance<
+        Parameters<NxSwCacheService['clearByName']>,
+        ReturnType<NxSwCacheService['clearByName']>
+    >;
 }> => {
-    const { inject } = await setupTestBed();
-    const sessionService = inject(NxSessionService);
-    const clearByName = jest
+    TestBed.configureTestingModule({
+        providers: [
+            { provide: LocalStorageService, useClass: MockLocalStorage },
+            MockProvider(NxSystemService, {}),
+            MockProvider(NxSwCacheService),
+        ],
+    });
+    const sessionService = TestBed.inject(NxSessionService);
+    const clearByName = vi
         .spyOn(sessionService.nxCache, 'clearByName')
         .mockImplementation(() => Promise.resolve([]));
     return {

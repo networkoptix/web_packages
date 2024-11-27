@@ -1,10 +1,9 @@
+import { TestBed } from '@angular/core/testing';
+
 import { NxAppStateService } from '@services/nx-app-state.service';
 
-import { setupTestBed } from './src/setup';
-
 const setupAppState = async (): Promise<NxAppStateService> => {
-    const { inject } = await setupTestBed();
-    return inject(NxAppStateService);
+    return TestBed.inject(NxAppStateService);
 };
 
 describe('AppState Service', () => {

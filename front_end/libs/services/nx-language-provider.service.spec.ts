@@ -1,25 +1,48 @@
+import { TestBed } from '@angular/core/testing';
+import { TranslateModule } from '@ngx-translate/core';
+import { MockProvider } from 'ng-mocks';
+import { LocalStorageService } from 'ngx-webstorage';
 import { firstValueFrom, of } from 'rxjs';
 import { v4 as uuid } from 'uuid';
 
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 
-import { setupTestBed } from './src/setup';
+import { NxCloudApiService } from './nx-cloud-api';
+import { NxSwCacheService } from './sw-cache.service';
+import { NxToastService } from './toast.service';
+import { NxUriCacheService } from './uri-cache.service';
+
+vi.mock('./nx-cloud-api', () => ({
+    NxCloudApiService: {},
+}));
+
+class MockLocalStorage extends Map {
+    retrieve(key: string): unknown {
+        return super.get(key);
+    }
+    store(key: string, value: unknown): void {
+        super.set(key, value);
+    }
+    observe(key: string): unknown {
+        return of(super.get(key));
+    }
+}
 
 const setupLangProvider = async (): Promise<NxLanguageProviderService> => {
-    const { inject } = await setupTestBed();
-    return inject(NxLanguageProviderService);
+    TestBed.configureTestingModule({
+        imports: [TranslateModule.forRoot()],
+        providers: [
+            MockProvider(NxCloudApiService, {}),
+            MockProvider(NxToastService),
+            { provide: LocalStorageService, useClass: MockLocalStorage },
+            MockProvider(NxUriCacheService),
+            MockProvider(NxSwCacheService),
+        ],
+    });
+    return TestBed.inject(NxLanguageProviderService);
 };
 
 describe('Language provider service', () => {
-    beforeAll(() => {
-        const location = window.location;
-        delete window.location;
-        window.location = {
-            ...location,
-            reload: jest.fn(),
-        };
-    });
-
     it('should create the service', async () => {
         const langProvider = await setupLangProvider();
         expect(langProvider).toBeTruthy();
@@ -29,7 +52,7 @@ describe('Language provider service', () => {
         const langProvider = await setupLangProvider();
         const lang = 'en_US';
         langProvider.setTranslations(lang, { Cancel: 'Cancel' });
-        expect(langProvider.translate.translations[lang]['Cancel']()).toBe('Cancel');
+        expect(langProvider.translate.translations[lang]['Cancel']).toBe('Cancel');
     });
 
     it('should have setter and getter (defaultLanguage)', async () => {
@@ -40,17 +63,17 @@ describe('Language provider service', () => {
 
     it('should have setter and getter (currentLang)', async () => {
         const langProvider = await setupLangProvider();
-        jest.spyOn(langProvider, 'loadLanguage').mockImplementation(() =>
+        vi.spyOn(langProvider, 'loadLanguage').mockImplementation(() =>
             firstValueFrom(of({ Cancel: 'Cancel' })),
         );
-        const clearUriCache = jest
+        const clearUriCache = vi
             .spyOn(langProvider.cacheService, 'clearData')
             .mockImplementation(() => {});
-        const clearAllCache = jest
+        const clearAllCache = vi
             .spyOn(langProvider.swCacheService, 'clearAllCache')
             .mockImplementation(() => Promise.resolve([]));
         const translation = { [uuid()]: uuid() };
-        const loadLanguage = jest
+        const loadLanguage = vi
             .spyOn(langProvider, 'loadLanguage')
             .mockImplementation(() => Promise.resolve(translation));
         const lang = uuid();

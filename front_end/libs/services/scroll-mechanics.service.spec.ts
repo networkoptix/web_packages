@@ -1,17 +1,43 @@
+import { TestBed } from '@angular/core/testing';
+import type { MockInstance } from 'vitest';
+
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { GridBreakpoints } from '@styles/theme-variables-common';
 
-import { setupTestBed } from './src/setup';
+type MmParams = Parameters<typeof globalThis.matchMedia>;
+type MmReturn = ReturnType<typeof globalThis.matchMedia>;
+
+const patchMatchMedia = (): {
+    matchMediaSpy: MockInstance<MmParams, MmReturn>;
+    setMatches: (mockMatches: boolean) => void;
+} => {
+    let matches = false;
+
+    const setMatches = (mockMatches: boolean): void => {
+        matches = mockMatches;
+    };
+
+    const matchMediaSpy = vi.fn<MmParams, MmReturn>(query => ({
+        matches,
+        media: query,
+        onchange: null,
+        addListener: vi.fn(), // Deprecated
+        removeListener: vi.fn(), // Deprecated
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+        dispatchEvent: vi.fn(),
+    }));
+
+    vi.stubGlobal('matchMedia', matchMediaSpy);
+
+    return { matchMediaSpy, setMatches };
+};
 
 const setupScrollService = async (): Promise<{
     scroll: NxScrollMechanicsService;
-    patchMatchMedia;
+    patchMatchMedia: typeof patchMatchMedia;
 }> => {
-    const {
-        inject,
-        patchWindow: { patchMatchMedia },
-    } = await setupTestBed();
-    const scroll = inject(NxScrollMechanicsService);
+    const scroll = TestBed.inject(NxScrollMechanicsService);
     return {
         scroll,
         patchMatchMedia,

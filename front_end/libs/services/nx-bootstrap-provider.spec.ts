@@ -1,21 +1,36 @@
+import { TestBed } from '@angular/core/testing';
+import { MockProvider } from 'ng-mocks';
+
+import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
+
+import type { IConfig } from './nx-config/config-types';
+import { NxConfigService } from './nx-config/nx-config.service';
+import { NxLanguageProviderService } from './nx-language-provider';
+
 // import {
 //     getCloudSettings,
 //     getLocalSettings,
 //     getModuleInformation
 // } from '@mocks/getSettings.mock';
-import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
 
-import { NxConfigService } from './nx-config/nx-config.service';
-import { setupTestBed } from './src/setup';
+vi.mock('./nx-config/nx-config.service', () => ({
+    NxConfigService: {},
+}));
+vi.mock('./nx-language-provider', () => ({
+    NxLanguageProviderService: {},
+}));
 
 const setupBootstrapProvider = async (): Promise<{
     bootstrapService: NxBootstrapProvider;
-    configService: NxConfigService;
 }> => {
-    const { inject } = await setupTestBed();
+    TestBed.configureTestingModule({
+        providers: [
+            MockProvider(NxConfigService, { getConfig: () => ({}) as IConfig }),
+            MockProvider(NxLanguageProviderService, {}),
+        ],
+    });
     return {
-        bootstrapService: inject(NxBootstrapProvider),
-        configService: inject(NxConfigService),
+        bootstrapService: TestBed.inject(NxBootstrapProvider),
     };
 };
 

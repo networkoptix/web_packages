@@ -1,12 +1,23 @@
+import { TestBed } from '@angular/core/testing';
+import { MockProvider } from 'ng-mocks';
+import { BehaviorSubject } from 'rxjs';
+
 import { headerNodes } from '@mocks/nodesMock';
 import { setupTest41System } from '@mocks/system.test';
 import { NxHeaderService } from '@services/nx-header.service';
 
-import { setupTestBed } from './src/setup';
+import { NxMenusService } from './menus.service';
+import { MenuNode } from './menus.service.types';
 
 const setupHeader = async (): Promise<NxHeaderService> => {
-    const { inject } = await setupTestBed();
-    return inject(NxHeaderService);
+    TestBed.configureTestingModule({
+        providers: [
+            MockProvider(NxMenusService, {
+                currentSystemNode$: new BehaviorSubject({} as MenuNode),
+            }),
+        ],
+    });
+    return TestBed.inject(NxHeaderService);
 };
 
 describe('Nx Header Service', () => {

@@ -12,5 +12,5 @@ export interface IEnvironment {
 export let testing = false;
 
 try {
-    testing = process.env.JEST_WORKER_ID !== undefined
+    testing = process.env.JEST_WORKER_ID !== undefined || process.env.VITEST !== undefined
 } catch(_) {}

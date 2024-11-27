@@ -1,88 +1,90 @@
-import { Observable, of } from 'rxjs';
+import { TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
+import { MockProvider } from 'ng-mocks';
+import { of } from 'rxjs';
 import { v4 as uuid } from 'uuid';
 
+import { NxDialogsService } from '@dialogs/dialogs.service';
 import { environment } from '@environments/environment';
 
+import { NxAccountService } from './account.service';
 import { NxCloudApiService } from './nx-cloud-api';
-import { nxConfig as CONFIG } from './nx-config/config';
-import { setupTestBed } from './src/setup';
+import { NxSystemService } from './system.service/system.service';
 import { NxVmsClientService } from './vms-client.service';
 
-const clientProtocol = 'test';
+vi.mock('./account.service', () => ({
+    NxAccountService: {},
+}));
+vi.mock('./system.service/system.service', () => ({
+    NxSystemService: {},
+}));
+
+const mockProtocol = vi.hoisted(() => 'test');
+vi.mock('./nx-config/config', () => ({
+    nxConfig: {
+        clientProtocol: mockProtocol,
+    },
+}));
 
 const setupVmsClientService = async (): Promise<{
     clientService: NxVmsClientService;
-    clientProtocol: string;
     systemId: string;
     auth: string;
     code: string;
-    getCodeSpy: jest.SpyInstance<
-        Observable<{
-            code: string;
-        }>,
-        [systemId: string]
-    >;
-    authKeySpy: jest.SpyInstance<Promise<{ auth_key: string }>, []>;
 }> => {
-    const { inject } = await setupTestBed();
     const systemId = uuid();
     const auth = uuid();
     const code = uuid();
-    const clientService = inject(NxVmsClientService);
-    const cloudApiService = inject(NxCloudApiService);
-    const getCodeSpy = jest.spyOn(cloudApiService, 'getCode').mockReturnValue(of({ code }));
-    const authKeySpy = jest
-        .spyOn(cloudApiService, 'authKey')
-        .mockReturnValue(Promise.resolve({ auth_key: auth }));
+    TestBed.configureTestingModule({
+        providers: [
+            provideRouter([]),
+            MockProvider(NxAccountService, {}),
+            MockProvider(NxCloudApiService, {
+                getCode: vi.fn(() => of({ code })),
+                authKey: vi.fn(() => Promise.resolve({ auth_key: auth })),
+            }),
+            MockProvider(NxSystemService, {}),
+            MockProvider(NxDialogsService),
+        ],
+    });
+
+    const clientService = TestBed.inject(NxVmsClientService);
     return {
         clientService,
-        clientProtocol,
         systemId,
         auth,
         code,
-        getCodeSpy,
-        authKeySpy,
     };
 };
 
 describe('VMS Client Service', () => {
-    let replaced: jest.ReplaceProperty<string>;
-    beforeAll(() => {
-        replaced = jest.replaceProperty(CONFIG, 'clientProtocol', clientProtocol);
-    });
-    afterAll(() => {
-        replaced.restore();
-    });
     it('should create the service', async () => {
-        const { clientService: urlService } = await setupVmsClientService();
-        expect(urlService).toBeTruthy();
+        const { clientService } = await setupVmsClientService();
+        expect(clientService).toBeTruthy();
     });
 
     it('should generatelink with client protocol', async () => {
-        const { clientService, clientProtocol, systemId, auth, code } =
-            await setupVmsClientService();
+        const { clientService, systemId, auth, code } = await setupVmsClientService();
         expect(clientService['generateLink'](systemId, auth, code)).toBe(
-            `${clientProtocol}://${environment.cloudHost}/client/${systemId}/?auth=${auth}&code=${code}`,
+            `${mockProtocol}://${environment.cloudHost}/client/${systemId}/?auth=${auth}&code=${code}`,
         );
     });
 
     it('should use code if OAuth compatible', async () => {
-        const { clientService, clientProtocol, systemId, getCodeSpy } =
-            await setupVmsClientService();
+        const { clientService, systemId } = await setupVmsClientService();
         const { code, link } = await clientService['getLinkOauth'](systemId);
-        expect(getCodeSpy).toHaveBeenCalledWith('*');
+        expect(clientService['cloudApiService'].getCode).toHaveBeenCalledWith('*');
         expect(link).toBe(
-            `${clientProtocol}://${environment.cloudHost}/client/${systemId}/?code=${code}`,
+            `${mockProtocol}://${environment.cloudHost}/client/${systemId}/?code=${code}`,
         );
     });
 
     it('should use authKey if OAuth-incompatible', async () => {
-        const { clientService, clientProtocol, systemId, auth, authKeySpy } =
-            await setupVmsClientService();
+        const { clientService, systemId, auth } = await setupVmsClientService();
         const link = await clientService['getLinkLegacy'](systemId);
-        expect(authKeySpy).toHaveBeenCalledWith();
+        expect(clientService['cloudApiService'].authKey).toHaveBeenCalledWith();
         expect(link).toBe(
-            `${clientProtocol}://${environment.cloudHost}/client/${systemId}/?auth=${auth}`,
+            `${mockProtocol}://${environment.cloudHost}/client/${systemId}/?auth=${auth}`,
         );
     });
 });

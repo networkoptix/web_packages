@@ -1,23 +1,28 @@
-import { ToastOptions } from '@components/toast-container/toast.types';
-import staticLang from '@language_static';
-import { Translatable } from '@pipes/nx-translate.types';
+import { TestBed } from '@angular/core/testing';
+import { MockProvider } from 'ng-mocks';
+import { MockInstance } from 'vitest';
 
-import { setupTestBed } from '../src/setup';
+import staticLang from '@language_static';
+import { NxSessionService } from '@services/session.service';
+import { NxToastService } from '@services/toast.service';
 
 import { NxProcessService } from './process.service';
+
+vi.mock('../session.service', () => ({
+    NxSessionService: {},
+}));
 
 const toastOptions = { autohide: true };
 
 const setupProcess = async (): Promise<{
     process: NxProcessService;
-    toastSpy: jest.SpyInstance<
-        void,
-        [content: Translatable, type?: string, options?: ToastOptions]
-    >;
+    toastSpy: MockInstance<Parameters<NxToastService['show']>, ReturnType<NxToastService['show']>>;
 }> => {
-    const { inject } = await setupTestBed();
-    const process = inject(NxProcessService);
-    const toastSpy = jest.spyOn(process.toastService, 'show').mockImplementation(() => {});
+    TestBed.configureTestingModule({
+        providers: [MockProvider(NxSessionService, {}), MockProvider(NxToastService)],
+    });
+    const process = TestBed.inject(NxProcessService);
+    const toastSpy = vi.spyOn(process.toastService, 'show').mockImplementation(() => {});
 
     return {
         toastSpy,

@@ -1,16 +1,15 @@
+import { TestBed } from '@angular/core/testing';
+
 import { setupTest41System } from '@mocks/system.test';
 import { NxAppSourceService } from '@services/nx-app-source.service';
 import { menus } from '@variables/static-variables';
-
-import { setupTestBed } from './src/setup';
 
 const setupAppSource = async (): Promise<{
     appSourceService: NxAppSourceService;
     systemMock: ReturnType<typeof setupTest41System>;
 }> => {
-    const { inject } = await setupTestBed();
     const systemMock = setupTest41System();
-    const appSourceService = inject(NxAppSourceService);
+    const appSourceService = TestBed.inject(NxAppSourceService);
     return {
         appSourceService,
         systemMock,

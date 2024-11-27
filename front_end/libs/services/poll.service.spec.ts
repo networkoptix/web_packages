@@ -7,9 +7,6 @@ describe('Poll service', () => {
     let poll: NxPollService;
 
     beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
-            providers: [],
-        });
         poll = TestBed.inject(NxPollService);
     }));
 

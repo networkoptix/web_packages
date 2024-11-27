@@ -1,12 +1,31 @@
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { EventEmitter } from '@angular/core';
+import { TestBed } from '@angular/core/testing';
+import { Store } from '@ngrx/store';
+import { TranslateService } from '@ngx-translate/core';
+import { identity } from 'lodash-es';
+import { MockProvider } from 'ng-mocks';
+import { of } from 'rxjs';
+
 import { headerNodes } from '@mocks/nodesMock';
 import { setupTest41System } from '@mocks/system.test';
 
 import { NxMenusService } from './menus.service';
 import { nxConfig } from './nx-config/config';
-import { setupTestBed } from './src/setup';
 
 const setupMenu = async (): Promise<NxMenusService> => {
-    const { inject } = await setupTestBed();
+    TestBed.configureTestingModule({
+        providers: [
+            provideHttpClient(),
+            provideHttpClientTesting(),
+            MockProvider(Store, { select: () => of('') }),
+            MockProvider(TranslateService, {
+                instant: identity,
+                onTranslationChange: new EventEmitter(),
+            }),
+        ],
+    });
     nxConfig.dynamicMenus = {
         header: {
             title: '',
@@ -14,7 +33,7 @@ const setupMenu = async (): Promise<NxMenusService> => {
             nodes: headerNodes,
         },
     };
-    return inject(NxMenusService);
+    return TestBed.inject(NxMenusService);
 };
 
 describe('Menus service', () => {
@@ -45,6 +64,10 @@ describe('Menus service', () => {
     it('should set active system menu', async () => {
         const menu = await setupMenu();
         const systemMock = setupTest41System();
+        // @ts-expect-error We only need it to fire
+        systemMock.infoSubject = of('');
+        systemMock.canViewADevice = () => true;
+        systemMock.canViewBookmarks = () => false;
         menu.updateActiveSystemMenu(systemMock);
 
         menu.currentSystemNode$.subscribe(activeSystemNode => {

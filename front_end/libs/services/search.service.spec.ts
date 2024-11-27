@@ -1,13 +1,13 @@
+import { TestBed } from '@angular/core/testing';
+
 import { NxSearchService } from './search.service';
 import { ButtonArrowType, SearchModel } from './search.service.types';
-import { setupTestBed } from './src/setup';
 
 const setupSearchService = async (): Promise<{
     modelMock: SearchModel;
     searchService: NxSearchService;
 }> => {
-    const { inject } = await setupTestBed();
-    const searchService = inject(NxSearchService);
+    const searchService = TestBed.inject(NxSearchService);
     const modelMock: SearchModel = {
         query: '',
         queryExactMatch: '',

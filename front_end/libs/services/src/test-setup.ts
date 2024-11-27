@@ -1,6 +1,9 @@
-import 'jest-preset-angular/setup-jest.mjs';
-import { patchGlobals } from 'test_utils/patch_globals';
-import { setupMocks } from 'test_utils/setup_mocks';
+import '@analogjs/vitest-angular/setup-zone';
 
-patchGlobals();
-setupMocks();
+import { getTestBed } from '@angular/core/testing';
+import {
+    BrowserDynamicTestingModule,
+    platformBrowserDynamicTesting,
+} from '@angular/platform-browser-dynamic/testing';
+
+getTestBed().initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicTesting());

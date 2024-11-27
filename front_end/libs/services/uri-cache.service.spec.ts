@@ -1,7 +1,7 @@
 import { HttpResponse } from '@angular/common/http';
+import { TestBed } from '@angular/core/testing';
 import { v4 as uuid } from 'uuid';
 
-import { setupTestBed } from './src/setup';
 import { NxUriCacheService } from './uri-cache.service';
 
 const setupUriCacheService = async (): Promise<{
@@ -12,8 +12,7 @@ const setupUriCacheService = async (): Promise<{
     cachedUData: NxUriCacheService['cachedData'];
     cacheKeys: [string, string];
 }> => {
-    const { inject } = await setupTestBed();
-    const uriCacheService = inject(NxUriCacheService);
+    const uriCacheService = TestBed.inject(NxUriCacheService);
     const cachedUri = uriCacheService['cachedUri'];
     const cachedUData = uriCacheService['cachedData'];
 
