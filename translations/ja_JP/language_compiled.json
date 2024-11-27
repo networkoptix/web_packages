@@ -654,7 +654,7 @@
     "Event rule setup in progress...": "イベントルールのセットアップ中...",
     "Events: Server Offline (24h)": "イベント: サーバーオフライン (24時間)",
     "Events: Time Changed (24h)": "イベント: 時刻変更 (24時間)",
-    "Exclusive": "専用",
+    "Exclusive": "排他",
     "Execute": "実行",
     "Existing System URL (https://host:port)": "既存システムのURL (https://host:port)",
     "Exit Full Screen": "フルスクリーン表示終了",
