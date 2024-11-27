@@ -1117,13 +1117,12 @@ export class NxLayoutGridComponent {
 
     cursorStyle$$ = computed(() => ({ cursor: this.getCursor() }));
 
-    Array = Array;
-    layoutHasError$$ = computed(() => {
+    layoutSavingError$$ = computed(() => {
         const unsavedLayouts = this.layoutStateService.unsavedLayoutsIds$$();
         return (
             (unsavedLayouts &&
                 Object.values(unsavedLayouts).some(
-                    layoutState => layoutState === this.unsavedStates.saving,
+                    layoutState => layoutState === this.unsavedStates.error,
                 )) ||
             undefined
         );

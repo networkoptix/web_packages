@@ -464,6 +464,9 @@ h2.auto-save-overlay {
         }
     }
 
+    &.error {
+        display: none;
+    }
     &.hide {
         opacity: 0;
         visibility: hidden;

@@ -423,7 +423,8 @@
             class="saving-ribbon"
             [ngClass]="{
                 show: layoutSaving$$(),
-                hide: !layoutSaving$$()
+                hide: !layoutSaving$$(),
+                error: layoutSavingError$$()
             }"
         >
             <div class="animated">
