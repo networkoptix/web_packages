@@ -812,7 +812,10 @@ export class NxLayoutGridComponent {
                 layoutItemStatus = 'systemOffline';
             } else if (isSystemIncompatible) {
                 layoutItemStatus = 'systemIncompatible';
-            } else if (!permissionManager.canViewDevice(resourceId)) {
+            } else if (
+                !permissionManager.canViewDevice(cleanId(resourceId)) &&
+                !(isServer && permissionManager.permissions$$().systemHealth)
+            ) {
                 layoutItemStatus = getTwoFactorStatus() || 'noAccess';
             }
 
