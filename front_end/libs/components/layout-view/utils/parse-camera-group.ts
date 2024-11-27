@@ -14,7 +14,8 @@ export const parseCameraGroup = (
 
     const groupIds = encodeURI(groupId)
         .split('%0A')
-        .map(s => decodeURI(s));
+        .map(s => decodeURI(s))
+        .filter(Boolean);
 
     return addToGroup(resourceLookup, groupIds, camera);
 };
