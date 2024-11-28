@@ -12,7 +12,6 @@ import type { NxSystem } from '@services/system.service/system';
 import type { License } from '@services/system.service/types/licenses.types';
 import type { NxSystemServer } from '@services/system.service/types/servers.types';
 import { menus } from '@static-variables';
-import { cleanIdLegacy } from '@utils/general';
 
 import { getDynamicLicense } from './dynamic-license';
 
@@ -177,7 +176,7 @@ export class NxSystemLicensesComponent implements OnInit {
     }
 
     private buildLicensesInfo(info): void {
-        const serversTime = info?.times || [];
+        const serversTime = info?.times?.reply || [];
         const hardwareIds = info?.hardwareIds?.reply || [];
         const licensesInfo = info?.licensesInfo?.licenses || [];
         this.licenseSummaries = [];
@@ -204,7 +203,7 @@ export class NxSystemLicensesComponent implements OnInit {
                 if (Object.keys(server).length) {
                     if (serversTime.length) {
                         item.info.serverTime = serversTime.find(time => {
-                            return cleanIdLegacy(server.id) === time.serverId;
+                            return server.id === time.serverId;
                         }).vmsTime;
                     }
 
