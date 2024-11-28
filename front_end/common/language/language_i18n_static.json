@@ -1485,7 +1485,7 @@
         "usersTable": {
             "singleOrgAdminTooltip": "There must be at least one Organization Administrator. To change the permission group, add another user with the Organization Administrators permissions.",
             "noAccessTooltip": "User with access based on access to higher-level folders",
-            "adminWarning": "There must be at least one administrator. To change the permission group, add another user with the Administrator permissions.",
+            "adminWarning": "There must be at least one Administrator. To change the permission group, add another user with the Administrators permissions.",
             "deleteDialog": {
                 "delete": "Delete",
                 "deleteAccess": "Delete Access",
