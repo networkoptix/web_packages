@@ -17,17 +17,23 @@
             {{ systemStatus() | nxTranslate }}
         </div>
     }
-} @else if (placeholder()) {
-    <nx-layout-grid-item-placeholder-template
-        *ngrxLet="placeholder() as placeholder"
-        [icon]="placeholder.icon"
-        [message]="placeholder.message"
-        [hint]="placeholder.hint"
-        [description]="placeholder.description"
-        [action]="action()"
-        [actionName]="placeholder.actionName"
-        [isError]="placeholder.isError"
-        [hasAction]="hasAction()"
-    >
-    </nx-layout-grid-item-placeholder-template>
+} @else {
+    @defer (on timer(5s); when itemDetail()) {
+        @if (placeholder()) {
+            <nx-layout-grid-item-placeholder-template
+                *ngrxLet="placeholder() as placeholder"
+                [icon]="placeholder.icon"
+                [message]="placeholder.message"
+                [hint]="placeholder.hint"
+                [description]="placeholder.description"
+                [action]="action()"
+                [actionName]="placeholder.actionName"
+                [isError]="placeholder.isError"
+                [hasAction]="hasAction()"
+            >
+            </nx-layout-grid-item-placeholder-template>
+        }
+    } @placeholder {
+        <nx-block-loader></nx-block-loader>
+    }
 }

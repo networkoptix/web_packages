@@ -76,7 +76,7 @@ export class LayoutItemsErrorsStore extends signalStore(
         function setMultipleEntities(entities: Record<string, EntityValueParam>): void {
             const updates: PartialStateUpdater<NamedEntityState<Entity, string>>[] = [];
 
-            if (!entities) {
+            if (!entities || Object.keys(entities).length === 0) {
                 return;
             }
 

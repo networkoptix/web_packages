@@ -1,5 +1,4 @@
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { CdkContextMenuTrigger, CdkMenuTrigger } from '@angular/cdk/menu';
 import { CommonModule } from '@angular/common';
 import {
     ChangeDetectionStrategy,
@@ -17,8 +16,6 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { TourMatMenuModule } from 'ngx-ui-tour-md-menu';
 
-import { NxContextMenu } from '@components/context-menu/context-menu';
-import { NxMonitoringGraphComponent } from '@components/graph/graph.component';
 import { assertResourceOfType } from '@components/layout-grid/layout-grid.type-guards';
 import {
     LayoutResourceTree,
@@ -28,16 +25,11 @@ import {
 import { Placeholder } from '@components/layout-grid-item-placeholder/layout-grid-item-placeholder.types';
 import { NxLayoutGridItemPlaceholderTemplateComponent } from '@components/layout-grid-item-placeholder-template/layout-grid-item-placeholder-template.component';
 import { NxLayoutGridItemPlaceholderTemplateLegacyComponent } from '@components/layout-grid-item-placeholder-template-legacy/layout-grid-item-placeholder-template-legacy.component';
-import { NxLayoutGridTreeComponent } from '@components/layout-grid-tree/layout-grid-tree.component';
-import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
-import { NxVideoPlayerComponent } from '@components/video-player/video-player.component';
+import { NxBlockLoaderComponent } from '@components/skeleton-loader/variants/block-loader/block-loader.component';
 import { NxDialogsService } from '@dialogs/dialogs.service';
-import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { NxResizeObserver } from '@directives/resize/nx-resize.directive';
-import { NxTooltipV2Directive } from '@directives/tooltip-v2/tooltip-v2.directive';
 import staticLang from '@language_static';
 import { ConnectionError } from '@openLibs/webrtc-stream-manager';
-import { NxImageComponent } from '@pages/health/table-components/image/image.component';
 import { PipesModule } from '@pipes/pipes.module';
 import { NxAccountService } from '@services/account.service';
 import { LayoutItemsErrorsStore } from '@services/layout-items/layout-items-errors.store';
@@ -239,23 +231,13 @@ const DEVICE_PLACEHOLDERS = {
         AngularSvgIconModule,
         CommonModule,
         DragDropModule,
-        NxImageComponent,
-        NxLayoutGridTreeComponent,
-        NxMonitoringGraphComponent,
-        NxPreLoaderComponent,
         PipesModule,
         TourMatMenuModule,
         TranslateModule,
-        NxVideoPlayerComponent,
-        NxResizeObserver,
-        NxAddSvgSrcDirective,
-        NxTooltipV2Directive,
-        NxContextMenu,
-        CdkMenuTrigger,
-        CdkContextMenuTrigger,
         NxLayoutGridItemPlaceholderTemplateComponent,
         NxLayoutGridItemPlaceholderTemplateLegacyComponent,
         LetDirective,
+        NxBlockLoaderComponent,
     ],
     hostDirectives: [NxResizeObserver],
 })

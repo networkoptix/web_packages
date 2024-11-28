@@ -791,6 +791,7 @@ export class NxLayoutGridComponent {
             const permissionManager = systemInfo
                 ? this.systemsService.systemsPermissionsManager$$()[systemInfo.id]
                 : null;
+            const permissionsInitialized$ = toSignal(permissionManager.permissionsInitialized);
 
             let layoutItemStatus: string = '';
 
@@ -813,6 +814,7 @@ export class NxLayoutGridComponent {
             } else if (isSystemIncompatible) {
                 layoutItemStatus = 'systemIncompatible';
             } else if (
+                permissionsInitialized$() &&
                 !permissionManager.canViewDevice(cleanId(resourceId)) &&
                 !(isServer && permissionManager.permissions$$().systemHealth)
             ) {
@@ -873,6 +875,7 @@ export class NxLayoutGridComponent {
             if (!layoutItemStatus) {
                 return updates;
             }
+
             return {
                 ...updates,
                 [item.id]: {
