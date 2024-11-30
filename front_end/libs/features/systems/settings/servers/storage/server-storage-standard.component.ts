@@ -169,16 +169,16 @@ export class NxSystemStorageComponent implements OnInit {
         const previousServer = system.serverManager.servers.find(
             server => server.id === previousServerId,
         );
+
+        untracked(() => {
+            this.loading$$.set(true);
+            this.waitingForStorages$$.set(true);
+        });
+
         if (system.storageManager && previousServer?.status === 'Offline') {
             system.storageManager.reinitializeForOfflineToOnlineServer();
             untracked(() => this.init());
         }
-
-        untracked(() => {
-            this.loading$$.set(true);
-            this.currentStorageState = null;
-            this.waitingForStorages$$.set(true);
-        });
     });
 
     ngOnInit(): void {
