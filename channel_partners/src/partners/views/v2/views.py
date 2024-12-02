@@ -2183,9 +2183,6 @@ def partner_events(request):
     summary='All services for a particular cloud instance',
     tags=['Internal'],
 )
-@DependentViewCache({
-    "all_services": Dependencies([], validate_user=True), # TODO: Add dependencies | Check if this is correct
-})
 @version_range(Versions(min_version="v2"))
 @api_view(['GET'])
 @authentication_classes([NxTokenAuthentication])
@@ -2236,14 +2233,6 @@ def get_authorized_system(request, system_id, roles: Iterable | VmsRoles.AnyRole
     summary='Get Systems By User Email',
     tags=['Internal'],
 )
-@DependentViewCache({
-    "user_systems": Dependencies([
-        CacheDependency(
-            model=CloudUser,
-            field=CachedDependencyFieldTypeEnum.VERSION,
-            source="path.email")
-    ], validate_user=True),
-})
 @version_range(Versions(min_version="v2"))
 @api_view(['GET'])
 @authentication_classes([NxCloudOauthTokenAuthentication])
@@ -2261,18 +2250,6 @@ def user_systems(request, email):
     summary='Get a specific user for a system',
     tags=['Internal'],
 )
-@DependentViewCache({
-    "system_user": Dependencies([
-        CacheDependency(
-            model=CloudSystemId,
-            field=CachedDependencyFieldTypeEnum.VERSION,
-            source="path.system_id"),
-        CacheDependency(
-            model=CloudUser,
-            field=CachedDependencyFieldTypeEnum.VERSION,
-            source="path.email")
-    ], validate_user=True),
-})
 @version_range(Versions(min_version="v2"))
 @api_view(['GET'])
 @authentication_classes([NxCloudSystemBasicAuthenticationInternal, NxCloudOauthTokenAuthentication])
@@ -2299,20 +2276,6 @@ def system_user(request, system_id, email):
     summary='Get users for a system',
     tags=['Internal'],
 )
-@DependentViewCache({
-    "system_users": Dependencies([
-        CacheDependency(
-            model=CloudSystemId,
-            field=CachedDependencyFieldTypeEnum.VERSION,
-            source="path.system_id"),
-        CacheDependency( # TODO: I don't know if this is needed
-            model=CloudSystemId,
-            field=CachedDependencyFieldTypeEnum.VERSION,
-            source="path.system_id",
-            target=TargetTypeEnum.ANCESTOR
-        )
-    ], validate_user=True),
-})
 @version_range(Versions(min_version="v2"))
 @api_view(['GET'])
 @authentication_classes([NxCloudSystemBasicAuthenticationInternal, NxCloudOauthTokenAuthentication])
