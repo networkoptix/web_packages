@@ -1,3 +1,5 @@
+from uuid import uuid4
+
 import pytest
 from rest_framework.reverse import reverse
 from rest_framework.test import APIClient
@@ -63,7 +65,7 @@ class TestUserSystemsBugs:
             raise ValueError(f"Invalid user role: {user}")
 
         # Test Execution
-        url = reverse("v2:user_systems", kwargs=url_args)
+        url = reverse("v3:user_systems", kwargs=url_args)
 
         # Make request | Get all systems for the user
         response = client.get(url)
@@ -129,7 +131,7 @@ class TestUserSystems:
         url_args = {
             "email": self.cp_user_admin.user.email
         }
-        url = reverse("v2:user_systems", kwargs=url_args)
+        url = reverse("v3:user_systems", kwargs=url_args)
 
 
         # Make request | Get all systems for the user
@@ -148,7 +150,7 @@ class TestUserSystems:
         url_args = {
             "email": self.cp_user_admin.user.email
         }
-        url = reverse("v2:user_systems", kwargs=url_args)
+        url = reverse("v3:user_systems", kwargs=url_args)
         self.client.force_authenticate(self.cp_user_admin.user)
         response = self.client.get(url)
         actual_records = response.data
@@ -163,7 +165,7 @@ class TestUserSystems:
         url_args = {
             "email": self.cp_user_admin.user.email
         }
-        url = reverse("v2:user_systems", kwargs=url_args)
+        url = reverse("v3:user_systems", kwargs=url_args)
         self.client.force_authenticate(self.cp_user_admin.user)
         response = self.client.get(url)
         assert response.status_code == 200
@@ -173,7 +175,7 @@ class TestUserSystems:
         url_args = {
             "email": self.org_admin.user.email
         }
-        url = reverse("v2:user_systems", kwargs=url_args)
+        url = reverse("v3:user_systems", kwargs=url_args)
         self.client.force_authenticate(self.org_admin.user)
         response = self.client.get(url)
         assert response.status_code == 200
@@ -187,7 +189,7 @@ class TestUserSystems:
         url_args = {
             "email": self.group_user.user.email
         }
-        url = reverse("v2:user_systems", kwargs=url_args)
+        url = reverse("v3:user_systems", kwargs=url_args)
         self.client.force_authenticate(self.group_user.user)
         response = self.client.get(url)
         assert response.status_code == 200
@@ -197,7 +199,7 @@ class TestUserSystems:
         url_args = {
             "email": self.org_viewer.user.email
         }
-        url = reverse("v2:user_systems", kwargs=url_args)
+        url = reverse("v3:user_systems", kwargs=url_args)
         self.client.force_authenticate(self.org_viewer.user)
         response = self.client.get(url)
         assert response.status_code == 200
@@ -207,7 +209,7 @@ class TestUserSystems:
         url_args = {
             "email": self.org_viewer.user.email
         }
-        url = reverse("v2:user_systems", kwargs=url_args)
+        url = reverse("v3:user_systems", kwargs=url_args)
         self.client.force_authenticate(self.org_admin.user)
         response = self.client.get(url)
         assert response.status_code == 403
@@ -216,7 +218,7 @@ class TestUserSystems:
         url_args = {
             "email": self.org_viewer.user.email
         }
-        url = reverse("v2:user_systems", kwargs=url_args)
+        url = reverse("v3:user_systems", kwargs=url_args)
         response = self.client.get(url)
         assert response.status_code == 401
 
@@ -224,8 +226,30 @@ class TestUserSystems:
         url_args = {
             "email": self.cp_user_admin.user.email.upper()
         }
-        url = reverse("v2:user_systems", kwargs=url_args)
+        url = reverse("v3:user_systems", kwargs=url_args)
         self.client.force_authenticate(self.cp_user_admin.user)
         response = self.client.get(url)
         assert response.status_code == 200
         assert len(response.data) == 3
+
+    def test_internal_service_200(self, mock_service_token_payload):
+        url_args = {
+            "email": self.cp_user_admin.user.email.upper()
+        }
+        url = reverse("v3:user_systems", kwargs=url_args)
+        self.client.credentials(HTTP_AUTHORIZATION=f'Service {uuid4()}')
+        mocked_get_sa_token_payload = mock_service_token_payload()
+        response = self.client.get(url)
+        assert response.status_code == 200
+
+
+    def test_internal_service_401_wrong_service(self, mock_service_token_payload, sa_jwt_payload_factory):
+        url_args = {
+            "email": self.cp_user_admin.user.email.upper()
+        }
+        url = reverse("v3:user_systems", kwargs=url_args)
+        self.client.credentials(HTTP_AUTHORIZATION=f'Service {uuid4()}')
+        token_payload = sa_jwt_payload_factory(scope='[{"service":"cloud_db"}]')
+        mocked_get_sa_token_payload = mock_service_token_payload(token_payload)
+        response = self.client.get(url)
+        assert response.status_code == 401

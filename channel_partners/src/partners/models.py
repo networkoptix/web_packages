@@ -351,6 +351,8 @@ class VmsRoles:
         SYSTEM_HEALTH_VIEWER,
     ]
 
+    ADMIN_AND_POWER_USER = {ADMINISTRATOR, POWER_USER}
+
 
 class CloudSystemStates:
     NOT_ACTIVATED = 2

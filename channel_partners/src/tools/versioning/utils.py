@@ -20,11 +20,11 @@ from drf_spectacular.views import (
     SpectacularAPIView,
     SpectacularSwaggerView,
 )
-from rest_framework.routers import BaseRouter
 from rest_framework.serializers import Serializer
 from rest_framework.views import APIView
 
 from partners.serializers.serializer_version import versions_mapping
+from tools.versioning.routers import VersionedRouter
 
 
 logger = structlog.getLogger(__name__)
@@ -54,14 +54,16 @@ def get_urlpatterns(versioned_urls: List[str], version: str) -> list:
     unfiltered_urlpatterns = []
     for mod_name in versioned_urls:
         url_mod = importlib.import_module(mod_name)
-        if getattr(url_mod, 'router', None):
-            if not issubclass(url_mod.router.__class__, BaseRouter):
-                raise ImproperlyConfigured(f"Router {url_mod.router} must be subclass of BaseRouter.")
-            unfiltered_urlpatterns += url_mod.router.get_versioned_urls(version)
-        if getattr(url_mod, 'urlpatterns', None):
-            if not isinstance(url_mod.urlpatterns, list):
-                raise ImproperlyConfigured(f"urlpatterns in {url_mod} must be a list.")
-            unfiltered_urlpatterns += url_mod.urlpatterns
+        if get_router := getattr(url_mod, 'get_router', None):
+            if router := get_router():
+                if not isinstance(router, VersionedRouter):
+                    raise ImproperlyConfigured(f"Router {router} must be instance of VersionedRouter.")
+                unfiltered_urlpatterns += router.get_versioned_urls(version)
+        if get_patterns := getattr(url_mod, 'get_urlpatterns', None):
+            if urlpatterns := get_patterns():
+                if not isinstance(urlpatterns, list):
+                    raise ImproperlyConfigured(f"urlpatterns in {url_mod} must be a list.")
+                unfiltered_urlpatterns += urlpatterns
     return unfiltered_urlpatterns
 
 
@@ -90,7 +92,7 @@ def filter_patterns(patterns: list, version: str) -> list:
     filtered = []
     for pat in patterns:
         if isinstance(pat, URLResolver) and isinstance(pat.urlconf_name, list):
-            pat.urlconf_name = filter_patterns(pat.urlconf_name, version)
+            pat.urlconf_name = pat.url_patterns = pat.urlconf_module = filter_patterns(pat.urlconf_name, version)
             if pat.url_patterns:
                 filtered.append(pat)
         if hasattr(pat.callback, 'cls'):

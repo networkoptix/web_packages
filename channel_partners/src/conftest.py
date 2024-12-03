@@ -33,6 +33,7 @@ from jwt.utils import (
 )
 from mock.mock import MagicMock
 from model_bakery import baker
+from nx_jwt.jwt_auth import SAJWTPayload
 from requests.auth import _basic_auth_str  # noqa
 from rest_framework.test import APIRequestFactory
 
@@ -1014,3 +1015,46 @@ def mock_debug_false(mocker):
 @pytest.fixture()
 def mock_debug_true(mocker):
     return mocker.patch('django.conf.settings.DEBUG', True)
+
+
+@pytest.fixture()
+def sa_jwt_payload_factory():
+    def factory(
+            auth_time: int = None,
+            exp: int = None,
+            iat: int = None,
+            jti: str = str(uuid4()),
+            scope: str = None,
+            sub: str = 'channel_partners_service',
+            token_use: str = 'access',
+            version: int = 2):
+        if scope is None:
+            scope = '[{"service":"cloud_db","rules":[{"method":"PUT","path":"/cdb/internal/v0/account/[^/]+/organization-attrs/?"},{"method":"POST","path":"/cdb/internal/accounts/info/?"}]}, {"service": "channel_partners"}]'
+        now = timezone.now().timestamp()
+        auth_time = auth_time or now - 1000
+        exp = exp or now + 2600
+        iat = iat or auth_time
+        payload = {
+            'auth_time': auth_time,
+            'client_id': 'channel_partners_service',
+            'exp': exp,
+            'iat': iat,
+            'jti': jti,
+            'scope': scope,
+            'sub': sub,
+            'token_use': token_use,
+            'version': version
+        }
+        return SAJWTPayload(**payload)
+
+    return factory
+
+
+@pytest.fixture()
+def mock_service_token_payload(mocker, sa_jwt_payload_factory):
+    def factory(payload: SAJWTPayload = None):
+        if not payload:
+            payload = sa_jwt_payload_factory()
+        return mocker.patch('partners.auth.internal_auth.get_sa_token_payload', return_value=payload)
+
+    return factory

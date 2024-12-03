@@ -40,12 +40,17 @@ class TestGetUrlPatterns:
                 return Response([])
 
         module_one = mocker.MagicMock()
-        module_one.urlpatterns = [mocker.MagicMock()]
-        module_one.router = None
+        module_one.get_urlpatterns = mocker.MagicMock(return_value=[mocker.MagicMock()])
+        module_one.get_urlpatterns.return_value = [mocker.MagicMock()]
+        module_one.get_router = mocker.MagicMock()
+        module_one.get_router.return_value = None
         module_two = mocker.MagicMock()
-        module_two.urlpatterns = None
-        module_two.router = VersionedRouter()
-        module_two.router.register('dummy_list', VersionedView, basename='test')
+        module_two.get_urlpatterns = mocker.MagicMock()
+        module_two.get_urlpatterns.return_value = None
+        router = VersionedRouter()
+        router.register('dummy_list', VersionedView, basename='test')
+        module_two.get_router = mocker.MagicMock()
+        module_two.get_router.return_value = router
         mocker.patch('importlib.import_module', side_effect=[module_one, module_two])
         modules = ['module_one', 'module_two']
         urlpatterns = get_urlpatterns(modules, 'v2')
@@ -60,12 +65,17 @@ class TestGetUrlPatterns:
                 return Response([])
 
         module_one = mocker.MagicMock()
-        module_one.urlpatterns = [mocker.MagicMock()]
-        module_one.router = None
+        module_one.get_urlpatterns = mocker.MagicMock(return_value=[mocker.MagicMock()])
+        module_one.get_urlpatterns.return_value = [mocker.MagicMock()]
+        module_one.get_router = mocker.MagicMock()
+        module_one.get_router.return_value = None
         module_two = mocker.MagicMock()
-        module_two.urlpatterns = None
-        module_two.router = VersionedRouter()
-        module_two.router.register('dummy_list', VersionedView, basename='test')
+        module_two.get_urlpatterns = mocker.MagicMock()
+        module_two.get_urlpatterns.return_value = None
+        router = VersionedRouter()
+        router.register('dummy_list', VersionedView, basename='test')
+        module_two.get_router = mocker.MagicMock()
+        module_two.get_router.return_value = router
         mocker.patch('importlib.import_module', side_effect=[module_one, module_two])
         modules = ['module_one', 'module_two']
         urlpatterns = get_urlpatterns(modules, 'v3')
@@ -403,8 +413,8 @@ class TestVersionedInclude:
 
     def mock_get_urlpatterns(self, mocker, patterns_list, router):
         module_one = mocker.MagicMock()
-        module_one.urlpatterns = patterns_list
-        module_one.router = router
+        module_one.get_urlpatterns.return_value = patterns_list
+        module_one.get_router.return_value = router
         mocker.patch('importlib.import_module', return_value=module_one)
 
     def func_patterns(self):

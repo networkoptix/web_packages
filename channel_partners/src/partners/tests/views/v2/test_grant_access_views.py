@@ -12,7 +12,7 @@ from django.test import (
 )
 from rest_framework.reverse import reverse
 
-from partners.views.v2.internal_views import grant_access
+from partners.views.v2.grant_access_views import grant_access
 
 
 class TestGrantAccessView:

@@ -1,19 +1,27 @@
+import inspect
 from typing import (
     Any,
     Callable,
+    Iterable,
     List,
+    Optional,
 )
 from uuid import UUID
 
 from rest_framework.permissions import BasePermission
 
+from partners.auth.helpers import AuthHelper
 from partners.auth.introspect import CdbTokenIntrospect
-from partners.models import CloudSystemId
+from partners.models import (
+    CloudSystemId,
+    VmsRoles,
+)
 
 
 class IsInternalToken(BasePermission):
     def has_permission(self, request, view):
-        return request.auth.internal
+        auth_token = AuthHelper.get_token(request)
+        return auth_token and auth_token.internal
 
 
 class IsInternalUser(BasePermission):
@@ -47,9 +55,9 @@ class IsAuthenticatedCloudUserOrSystem(BasePermission):
 class CanPerformChannelPartnerAction(BasePermission):
     def __init__(
             self,
-            check_function: Callable,
+            check_function: Optional[Callable],
             system_allowed: bool = False,
-            direct_access_allowed: List[UUID] = False
+            direct_access_allowed: Iterable[UUID] = False
     ):
         self.check_function = check_function
         self.system_allowed = system_allowed
@@ -76,4 +84,69 @@ class CanPerformChannelPartnerAction(BasePermission):
                         return False
                     if CdbTokenIntrospect.has_vms_roles(request, system_id, self.direct_access_allowed):
                         return True
+        return False
+
+
+class IsInternalService(BasePermission):
+
+    def has_permission(self, request, view):
+        internal_service = AuthHelper.get_internal_service(request)
+        return internal_service and internal_service.is_request_allowed(request)
+
+
+class IsOneOfAuthorized(BasePermission):
+
+    def __init__(self, permissions_classes: List[BasePermission]):
+        self.auth_classes = []
+        for auth_class in permissions_classes:
+            if inspect.isclass(auth_class):
+                auth_class = auth_class()
+            if not isinstance(auth_class, BasePermission):
+                raise ValueError('All classes must be subclasses of BasePermission')
+            self.auth_classes.append(auth_class)
+
+    def __call__(self, *args, **kwargs):
+        return self
+
+    def has_permission(self, request, view):
+        for auth_class in self.auth_classes:
+            if auth_class.has_permission(request, view):
+                return True
+        return False
+
+    def has_object_permission(self, request, view, obj):
+        for auth_class in self.auth_classes:
+            if auth_class.has_object_permission(request, view, obj):
+                return True
+        return False
+
+
+class CanAccessSystemUser(BasePermission):
+    def __init__(self, vms_roles: Iterable[UUID], email_kwarg: Optional[str] = None):
+        self.email_kwarg = email_kwarg.lower() if email_kwarg else None
+        self.vms_roles = vms_roles
+
+    def has_object_permission(self, request, view, obj):
+        if CdbTokenIntrospect.has_vms_roles(request, obj.system_id, self.vms_roles):
+            return True
+
+        # check if user has admin or power user role
+        if obj.has_vms_role(request.user, VmsRoles.ADMIN_AND_POWER_USER):
+            return True
+
+        # If email kwarg is not given stop authorization
+        if not self.email_kwarg:
+            return False
+
+        if not request.user or not (email := getattr(request.user, 'email', None)):
+            return False
+
+        # check if email kwarg is the same as the user email
+        if email.lower() != self.email_kwarg:
+            return False
+
+        # check if user has any role in system
+        if obj.has_vms_role(request.user, VmsRoles.ANY_ROLE):
+            return True
+
         return False

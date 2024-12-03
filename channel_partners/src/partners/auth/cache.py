@@ -15,16 +15,17 @@ class TokenCache:
     @staticmethod
     def token_cache_key(token: str) -> str:
         mdsum = sha256((settings.CACHE_SALT + token).encode()).hexdigest()
-        return f'user-oauth-token-{mdsum}'
+        return f'{settings.VERSION}-user-oauth-token-{mdsum}'
 
     @staticmethod
     def token_system_cache_key(token: str, system_id: str | uuid.UUID) -> str:
-        return f'{TokenCache.token_cache_key(token)}-sys-{system_id}'
+
+        return f'{settings.VERSION}-{TokenCache.token_cache_key(token)}-sys-{system_id}'
 
     @staticmethod
     def system_auth_cache_key(auth_header: str) -> str:
         mdsum = sha256((settings.CACHE_SALT + auth_header).encode()).hexdigest()
-        return f'system-authenticated-{mdsum}'
+        return f'{settings.VERSION}-system-authenticated-{mdsum}'
 
     @classmethod
     def get_token(cls, token):

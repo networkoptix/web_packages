@@ -10,7 +10,7 @@ from django.urls import (
 )
 from drf_spectacular.views import SpectacularSwaggerView
 
-from partners.views.v2.internal_views import grant_access
+from partners.views.v2.grant_access_views import grant_access
 from tools.versioning.utils import swagger_urls
 
 
