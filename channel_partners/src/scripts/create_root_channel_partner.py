@@ -1,5 +1,6 @@
-import logging
+import sys
 
+import structlog
 from django.conf import settings
 from django.db import transaction
 from nx_ireg.registry import IReg
@@ -11,7 +12,7 @@ from partners.models import (
 )
 
 
-logger = logging.getLogger(__name__)
+logger = structlog.getLogger(__name__)
 NX_NAME = 'Network Optix'
 
 
@@ -23,19 +24,20 @@ def create_root_channel_partner(root_name, host_name):
         .first()
     )
     if not root_channel_partner:
-        logger.info(f'Creating root channel partner.')
+        logger.info('Creating root channel partner.', channel_partner_name=root_name, hostname=host_name)
         host = CloudHost.objects.get_or_create(hostname=host_name)[0]
-        logger.info(f'Cloud Host: {host_name}.')
         root_channel_partner = ChannelPartner.objects.create(name=root_name, cloud_host=host)
     else:
         if root_channel_partner.cloud_host.hostname.lower() != host_name:
-            logger.info(f'Root channel partner host needs for update.')
-            logger.info(f'Current host: {root_channel_partner.cloud_host}')
-            logger.info(f'New host: {host_name}')
+            logger.info('Root channel partner host needs for update.',
+                        channel_partner_name=root_channel_partner.name,
+                        channel_partner_id=root_channel_partner.id,
+                        current_host=root_channel_partner.cloud_host.hostname,
+                        new_host=host_name)
             root_channel_partner.cloud_host.hostname = host_name
             root_channel_partner.cloud_host.save()
         else:
-            logger.info(f'Channel partner host is already up to date.')
+            logger.info('Channel partner host is already up to date.')
 
     if settings.INSTANCE_NAME != 'prod' and 'stage' not in settings.INSTANCE_NAME:
         regular_recording = ChannelPartnerService.objects.get_or_create(
@@ -78,7 +80,7 @@ def create_root_channel_partner(root_name, host_name):
 
 
 def create_customization(root_channel_partner, customization, host_name):
-    logger.info(f'Customization: {customization}')
+    logger.info('Customization: {customization}')
     channel_partner = (
         ChannelPartner.objects
         .filter(name=customization)
@@ -86,9 +88,8 @@ def create_customization(root_channel_partner, customization, host_name):
         .first()
     )
     if not channel_partner:
-        logger.info(f'Creating channel partner: {customization}')
+        logger.info('Creating channel partner', channel_partner_name=customization, hostname=host_name)
         host = CloudHost.objects.get_or_create(hostname=host_name.lower())[0]
-        logger.info(f'Cloud Host: {host}')
         channel_partner = ChannelPartner.objects.create(
             name=customization,
             cloud_host=host,
@@ -96,19 +97,25 @@ def create_customization(root_channel_partner, customization, host_name):
         )
     else:
         if channel_partner.cloud_host.hostname.lower() != host_name.lower():
-            logger.info(f'Channel partner host needs for update.')
-            logger.info(f'Current host: {channel_partner.cloud_host}')
-            logger.info(f'New host: {host_name}')
+            logger.info('Channel partner host needs for update.',
+                        channel_partner_name=channel_partner.name,
+                        channel_partner_id=channel_partner.id,
+                        current_host=channel_partner.cloud_host.hostname,
+                        new_host=host_name)
             channel_partner.cloud_host.hostname = host_name.lower()
             channel_partner.cloud_host.save()
         else:
-            logger.info(f'Channel partner host {channel_partner.cloud_host} is already up to date.')
+            logger.info('Channel partner host is already up to date.',
+                        channel_partner_name=channel_partner.name,
+                        channel_partner_id=channel_partner.id,
+                        current_host=channel_partner.cloud_host.hostname)
 
 
-def run(instance_name, root_name=None):
+def create_partners_and_services(instance_name, root_name=None):
     if settings.IS_PRIVATE_CLOUD:
         if not root_name:
-            raise ValueError('Root channel partner name is required for private cloud.')
+            logger.critical('Root channel partner name is required for private cloud.')
+            sys.exit(1)
         customizations = []
         host_name = settings.DEFAULT_HOST_NAME.lower()
     else:
@@ -117,14 +124,23 @@ def run(instance_name, root_name=None):
             host_name = ireg.get_default_host()
             customizations = ireg.get_other_customizations()
         except Exception as ex:
-            logger.critical("Cannot get data from ireg", exc_info=ex)
+            # If we can't get data from ireg, we should create a root channel partner with the default host name
+            logger.critical("Cannot get data from ireg", error=str(ex), exc_info=True)
             customizations = []
             host_name = settings.DEFAULT_HOST_NAME.lower()
-        if not host_name:
-            raise ValueError(f'No default host found in ireg for instance {instance_name}')
+
         host_name = host_name.lower()
         root_name = NX_NAME
+
     with transaction.atomic():
         root_channel_partner = create_root_channel_partner(root_name, host_name)
         for customization, host_name in customizations:
             create_customization(root_channel_partner, customization, host_name)
+
+def run(instance_name, root_name=None):
+    try:
+        create_partners_and_services(instance_name, root_name)
+    except Exception as ex:
+        # do not start the server if we can't create channel partners
+        logger.critical("Error creating channel partners", error=str(ex), exc_info=True)
+        sys.exit(1)

@@ -553,3 +553,5 @@ CACHE_STATUS_HEADER_KEY: str = "X-CPS-Cache-Status"
 CACHE_ETAG_HEADER_KEY: str = "ETag"
 
 LICENSE_MIGRATION_URL = f'{LICENSE_SERVER}/nxlicensed/api/v2/internal/migrate_legacy?acceptSaas=true'
+
+MIGRATION_STATUS_CACHE_KEY = f"migrations_status-{VERSION}"
