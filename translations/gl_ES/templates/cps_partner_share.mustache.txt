@@ -2,4 +2,4 @@ Ola, {{message.userFullName}}
 
 {{message.sharer_name}} compartiu o acceso á canle asociada "{{message.partner_name}}" contigo.
 
-View in %NX_CONNECT_NAME% Portal: %NX_CONNECT_URL%
+Ver en %NX_CONNECT_NAME% Portal: %NX_CONNECT_URL%

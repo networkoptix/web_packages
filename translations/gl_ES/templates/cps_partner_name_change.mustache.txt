@@ -2,4 +2,4 @@ Ola, {{message.userFullName}}
 
 O nome do partner {{message.old_partner_name}} cambiouse a {{message.new_partner_name}}.
 
-View in %NX_CONNECT_NAME% Portal using this link: %NX_CONNECT_URL%
+Ver no portal %NX_CONNECT_NAME% usando esta ligazón: %NX_CONNECT_URL%
