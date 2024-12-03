@@ -2,7 +2,6 @@ from uuid import uuid4
 
 from django.core.cache import caches
 from django.core.exceptions import ImproperlyConfigured
-from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema
 from rest_framework import exceptions
 from rest_framework.decorators import action
@@ -10,7 +9,6 @@ from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 from rest_framework_extensions.mixins import NestedViewSetMixin
 
-from partners import filters
 from partners.auth.system_auth import NxCloudSystemBasicAuthentication
 from partners.auth.token_auth import NxCloudOauthTokenAuthentication
 from partners.models import (
@@ -45,8 +43,6 @@ class CloudSystemViewSet(VersionedViewMixin,
     authentication_classes = (NxCloudSystemBasicAuthentication, NxCloudOauthTokenAuthentication)
     pagination_class = DefaultPagination
     queryset = CloudSystemId.objects.all().order_by('created_ts').select_related('organization')
-    filter_backends = [DjangoFilterBackend]
-    filterset_class = filters.CreatedTsAndIdAndNameFilter
     lookup_field = 'system_id'
     lookup_url_kwarg = 'id'
 
