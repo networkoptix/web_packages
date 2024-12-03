@@ -33,13 +33,34 @@ def extract_static_values(data, static_english):
     return extracted_values
 
 
+def parse_beta_config_files():
+    base_path = 'libs/utils/beta-features'
+    beta_config_path = f'{base_path}/beta-config.json'
+    no_beta_config_path = f'{base_path}/no-beta.config.json'
+
+    beta_features = {}
+
+    for config_path in [beta_config_path, no_beta_config_path]:
+        with open(config_path, 'r') as config_file:
+            config_data = json.load(config_file)
+
+        for item in config_data:
+            beta_features[item['name']] = item['name']
+            beta_features[item['description']] = item['description']
+
+            # Add support for future 'enabledDescription' field [CLOUD-15158]
+            if 'enabledDescription' in item:
+                beta_features["enabledDescription"] = item['enabledDescription']
+
+    return beta_features
+
 def merge_i18ns(path_to_translations):
     with open(f'{path_to_translations}/language_i18n.json', 'r') as auto_language:
         base_file = json.load(auto_language)
 
     static_file_keys = None
     if path_to_translations != DEFAULT_PATH:
-        with open(f'common/language/language_i18n_static.json', 'r') as static_language_keys:
+        with open('common/language/language_i18n_static.json', 'r') as static_language_keys:
             static_file_keys = json.load(static_language_keys)
 
     with open(f'{path_to_translations}/language_i18n_static.json', 'r') as static_language:
@@ -52,7 +73,11 @@ def merge_i18ns(path_to_translations):
             del static_language['language']
         static_file = extract_static_values(static_language, static_file_keys)
 
-    i18n_section = merge_json(base_file, static_file)
+    # Parse beta config files
+    beta_config_values = parse_beta_config_files()
+
+    # Merge all i18n data
+    i18n_section = merge_json(base_file, static_file, beta_config_values)
     if path_to_translations == DEFAULT_PATH:
         i18n_section['language'] = "en_US"
 

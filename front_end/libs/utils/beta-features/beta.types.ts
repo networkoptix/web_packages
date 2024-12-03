@@ -9,6 +9,8 @@ export interface FeatureConfig<T = FeatureFlagType> {
 export interface BaseBetaGroup<T = FeatureFlagType> {
     name: string;
     description: string;
+    // Future implementation; Mentioned in CLOUD-15158
+    enabledDescription?: string;
     featureConfig: FeatureConfig<T>;
 }
 
