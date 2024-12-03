@@ -90,6 +90,7 @@ export class UserWithGroupsManager extends UserManager {
         } catch (err) {
             console.info('failed to removed from system directly');
             console.error(err);
+            return Promise.reject(err);
         }
     }
 

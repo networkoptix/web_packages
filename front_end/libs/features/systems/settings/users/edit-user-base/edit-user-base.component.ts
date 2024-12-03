@@ -162,6 +162,7 @@ export abstract class NxSystemUsersBaseComponent implements OnInit, OnChanges, A
         this.dialogs.removeUser({ system: this.system, user }).then(result => {
             this.locked.delete(user.email);
             if (result) {
+                this.resetForm();
                 this.uriService
                     .navigateSystem(
                         `${menus.systemSettings.baseUrl}SYSTEM_ID/users/${nextUserId}`,
