@@ -1,9 +1,9 @@
 @mixin apply-fill-and-stroke($stroke, $fill) {
     color: inherit;
-    &[applyFill] {
+    &[apply-fill] {
         fill: $fill;
     }
-    &[applyStroke] {
+    &[apply-stroke] {
         stroke: $stroke;
     }
 }

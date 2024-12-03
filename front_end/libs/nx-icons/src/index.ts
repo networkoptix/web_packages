@@ -30,7 +30,7 @@ export const extractAllColors = memoize(async (): Promise<string[]> => {
 });
 
 export const removeInlineStyles = memoize((svg: string): string =>
-    svg.replace(/fill="[^"]*"/g, 'applyFill').replace(/stroke="[^"]*"/g, 'applyStroke'),
+    svg.replace(/fill="[^"]*"/g, 'apply-fill').replace(/stroke="[^"]*"/g, 'apply-stroke'),
 );
 
 export const normalizeClassNames = memoize((svg: string): string =>
