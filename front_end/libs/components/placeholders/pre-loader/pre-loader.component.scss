@@ -1,3 +1,70 @@
+$preloader_circle_color : var(--light);
+$preloader_circle_size : 16px;
+$preloader_circle_distance : 12px;
+
+@mixin preloader($circle_color, $circle_size, $circle_distance) {
+    & {
+        width: ($preloader_circle_size + $preloader_circle_distance) *3;
+    }
+
+    .circleG {
+        background-color: transparent;
+        float: left;
+        height: $circle_size;
+        width: $circle_size;
+        border-radius: $circle_size*0.5;
+        margin: 0 $circle_distance*0.5;
+        -webkit-transform: translate3d(0, 0, 0);
+        -webkit-animation-name: bounce_circleG;
+        animation-name: bounce_circleG;
+        -webkit-animation-duration: 1.4s;
+        animation-duration: 1.4s;
+        -webkit-animation-iteration-count: infinite;
+        animation-iteration-count: infinite;
+        -webkit-animation-direction: normal;
+        animation-direction: normal;
+    }
+
+    .circleG_2 {
+        -webkit-animation-delay: 0.15s;
+        animation-delay: 0.15s;
+    }
+
+    .circleG_3 {
+        -webkit-animation-delay: 0.3s;
+        animation-delay: 0.3s;
+    }
+
+    @-webkit-keyframes bounce_circleG {
+        0% {}
+
+        40% {
+            background-color: $circle_color;
+        }
+
+        80% {
+            background-color: transparent;
+        }
+
+        100% {}
+    }
+
+    @keyframes bounce_circleG {
+        0% {}
+
+        40% {
+            background-color: $circle_color;
+        }
+
+        80% {
+            background-color: transparent;
+        }
+
+        100% {}
+    }
+}
+
+
 .storage {
     height: 144px !important;
 }
@@ -8,4 +75,35 @@
 
 .short {
     height: 36px !important;
+}
+
+.placeholder-preloader {
+    @include preloader($preloader_circle_color, $preloader_circle_size, $preloader_circle_distance);
+}
+
+.placeholder-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    margin: 0 auto;
+    width: 100%;
+    height: 100%;
+    font-size: 130%;
+    font-weight: 300;
+    line-height: 30px;
+    color: var(--light);
+    transform: none;
+
+    a {
+        color: var(--light12);
+        text-decoration: underline;
+
+        &:hover,
+        &:active {
+            color: var(--light1);
+        }
+    }
 }
