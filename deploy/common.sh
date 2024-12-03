@@ -84,7 +84,7 @@ function push()
     # Use $PUSH_MODULE if exists, otherwise use $MODULE.
     # $MODULE is more dsecriptive to prevent collision of tags of different projects on the build server.
     # When we push, we push to a specific project's repository path so it does not need to be descriptive.
-    PUSH_MODULE=${PUSH_MODULE:-$MODULE}
+    local PUSH_MODULE=${PUSH_MODULE:-$MODULE}
 
     if [ -n "${DOCKER_IMAGE_CI_TAG}" ]
     then
