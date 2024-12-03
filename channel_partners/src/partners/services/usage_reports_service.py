@@ -395,18 +395,9 @@ class ReportSnapshotService:
         """
         Returns a report snapshot if it exists, otherwise returns None
         """
-        lookup_kwargs = {
-            'entity_id': self.entity_id,
-            'report_type': self.report_type,
-            'start_date': self.period_start,
-        }
 
-        if self.service_id:
-            lookup_kwargs['service_id'] = self.service_id
-        else:
-            lookup_kwargs['service_id__isnull'] = True
         try:
-            return ReportSnapshot.objects.get(**lookup_kwargs)
+            return ReportSnapshot.objects.get(**self.lookup_kwargs)
         except ReportSnapshot.DoesNotExist:
             return None
 
@@ -444,14 +435,25 @@ class ReportSnapshotService:
             self.snapshot.report_data = report
             self.snapshot.save()
         else:
-            ReportSnapshot.objects.create(
-                entity_id=self.entity_id,
-                report_type=self.report_type,
-                start_date=self.period_start,
-                service_id=self.service_id,
-                report_data=report,
-                organization_id=self.organization_id,
-            )
+            try:
+                self.snapshot = ReportSnapshot.objects.create(
+                    entity_id=self.entity_id,
+                    report_type=self.report_type,
+                    start_date=self.period_start,
+                    service_id=self.service_id,
+                    report_data=report,
+                    organization_id=self.organization_id,
+                )
+            except Exception as e:
+                logger.error(
+                    "Failed to save report snapshot",
+                    entity_id=self.entity_id,
+                    report_type=self.report_type,
+                    period_start=self.period_start,
+                    service_id=self.service_id,
+                    organization_id=self.organization_id,
+                    error=str(e))
+                raise
 
 
 def get_period_boundaries(period_start: datetime.date | datetime.datetime) -> Tuple[datetime.date, datetime.date]:

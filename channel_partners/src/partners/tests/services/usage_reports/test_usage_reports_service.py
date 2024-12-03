@@ -1246,6 +1246,8 @@ class TestReportSnapshotService:
         self.cp_service = cp_service_factory(channel_partner=self.cp)
         self.system = system_factory(organization=self.org)
 
+        self.other_org = organization_factory(channel_partner=self.cp)
+
     def test_init_no_existing_not_provisional(self):
         snapshot_service = ReportSnapshotService(
             entity_id=self.cp.id,
@@ -1414,6 +1416,39 @@ class TestReportSnapshotService:
         assert ReportSnapshot.objects.count() == 1
         assert ReportSnapshot.objects.first().report_data == {'key': new_value}
         assert ReportSnapshot.objects.first().service_id is None
+
+    def test_save_system_service_report_with_changed_organization(self):
+        old_value = f'{uuid.uuid4()}'
+        new_value = f'{uuid.uuid4()}'
+        report_snapshot = ReportSnapshot.objects.create(
+            entity_id=self.system.system_id,
+            organization_id=self.other_org.id,
+            service_id=self.cp_service.id,
+            report_type=ReportSnapshot.ReportType.system_regular_report,
+            start_date=datetime.date(year=2020, month=1, day=1),
+            report_data={'key': old_value}
+        )
+        assert report_snapshot.provisional is False
+        snapshot_service = ReportSnapshotService(
+            entity_id=self.system.system_id,
+            organization_id=self.system.organization_id,
+            service_id=self.cp_service.id,
+            report_type=ReportSnapshot.ReportType.system_regular_report,
+            period_start=datetime.date(year=2020, month=1, day=1),
+            generate=False
+        )
+        snapshot_service.save_snapshot({'key': new_value})
+        report_snapshot.refresh_from_db()
+        assert report_snapshot.report_data == {'key': old_value}
+        assert report_snapshot.service_id == self.cp_service.id
+        assert report_snapshot.organization_id == self.other_org.id
+
+        assert snapshot_service.snapshot.report_data == {'key': new_value}
+        assert snapshot_service.snapshot.service_id == self.cp_service.id
+        assert snapshot_service.snapshot.organization_id == self.system.organization_id
+        assert snapshot_service.snapshot.entity_id == self.system.system_id
+        assert snapshot_service.snapshot.report_type == ReportSnapshot.ReportType.system_regular_report
+
 
     def test_report_period_bound_not_existing_report(self, mocker):
         period_start = datetime.date(year=2020, month=3, day=1)

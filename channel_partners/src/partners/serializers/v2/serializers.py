@@ -1350,10 +1350,13 @@ class BindLocalSystemSerializer(serializers.ModelSerializer):
     customization = serializers.CharField()
     opaque = serializers.CharField(allow_blank=True, required=False)
     groupId = serializers.UUIDField(required=False)
+    organization = serializers.PrimaryKeyRelatedField(queryset=Organization.objects.all(),
+                                                      required=True, allow_null=False)
 
     class Meta:
         model = CloudSystemId
         fields = ['id', 'name', 'customization', 'opaque', 'organization', 'groupId']
+
 
     def validate_organization(self, value: Organization):
         req = self.context.get('request')
@@ -1806,7 +1809,8 @@ class GroupSerializer(serializers.ModelSerializer):
     systems = serializers.SlugRelatedField(slug_field='system_id', source='cloud_systems', read_only=True, many=True)
     cloudSystems = CloudSystemLightSerializer(many=True, source='cloud_systems', read_only=True)
     children = ChildGroupSerializer(source='groups', read_only=True, many=True)
-    parentId = serializers.PrimaryKeyRelatedField(source='parent', queryset=SystemGroup.objects.all(), allow_null=True)
+    parentId = serializers.PrimaryKeyRelatedField(source='parent', queryset=SystemGroup.objects.all(),
+                                                  required=False, allow_null=True)
     organizationId = serializers.UUIDField(source='organization_id', read_only=True)
     path = serializers.ListField(child=serializers.UUIDField(), source='visible_path', default=list, read_only=True)
     systemCount = serializers.IntegerField(source='system_count', read_only=True)

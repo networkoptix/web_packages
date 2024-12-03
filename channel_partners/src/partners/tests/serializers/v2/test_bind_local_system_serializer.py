@@ -15,9 +15,11 @@ from partners.serializers.v2.serializers import BindLocalSystemSerializer
 class TestBindLocalSystemSerializer:
     @pytest.fixture(autouse=True)
     def setup(self, channel_partner_factory, organization_factory, arf,
-              cloud_user_factory, org_user_factory, cloud_test_host, httpx_mock):
+              cloud_user_factory, org_user_factory, cloud_test_host,
+              system_group_factory, httpx_mock):
         self.cp = channel_partner_factory()
         self.organization = organization_factory(channel_partner=self.cp)
+        self.group = system_group_factory(organization=self.organization)
         self.cloud_user = cloud_user_factory()
         self.administrator = org_user_factory(organization=self.organization,
                                               role=OrganizationRoles.ORGANIZATION_ADMINISTRATOR)
@@ -29,6 +31,7 @@ class TestBindLocalSystemSerializer:
             "name": f"system {self.system_id}",
             "cloudSystemId": f"{self.system_id}",
             "organization": f"{self.organization.id}",
+            "groupId": f"{self.group.id}",
             "customization": "default",
             "opaque": ""
         }
@@ -104,6 +107,25 @@ class TestBindLocalSystemSerializer:
         bind_data, status_code = serializer.bind_system()
         assert bind_data == self.bind_response
         assert status_code == 200
+
+    @pytest.mark.parametrize('attr, required', [
+        ('name', False),
+        ('cloudSystemId', False),
+        ('organization', True),
+        ('groupId', False),
+        ('customization', True),
+        ('opaque', False),
+    ])
+    def test_missing_attrs(self, attr, required):
+        data = self.valid_data.copy()
+        del data[attr]
+        if attr == 'organization':
+            del data['groupId']
+        serializer = BindLocalSystemSerializer(data=data,
+                                               context=self.make_context(self.administrator.user))
+        assert serializer.is_valid() is not required
+        assert (attr in serializer.errors) is required
+
 
 
 
