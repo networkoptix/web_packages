@@ -7,7 +7,7 @@ REPOSITORY_PATH="${REPOSITORY_PATH:-"/products/channel_partners"}"
 BUILD_NUMBER=${BUILD_NUMBER:-0}
 BUILD_ARGS=(--build-arg CACHE_DATE=$(date +%s))
 
-VERSION="23.3.0.$BUILD_NUMBER"
+VERSION="24.2.0.$BUILD_NUMBER"
 
 function stage() {
     rm -rf channel_partners_prod/stage
