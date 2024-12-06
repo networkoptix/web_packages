@@ -11,6 +11,8 @@ import { ConnectionQueue, WithSkip, getConnectionKey, createConnectionKey, clean
 
 type StreamsConfig = AvailableStreams | AvailableStreams[];
 
+const bufferUpdatingError = new Error('Buffer updating');
+
 /**
  * Manages connection negotation using websockets as well as webRTC peer connections to mediaservers.
  *
@@ -22,6 +24,9 @@ export class WebRTCStreamManager {
 
     /** Time series to average */
     static PERFORMANCE_SAMPLE_SIZE = 5000
+
+    /** Maximum number of seconds behind live when using MSE before attempting reconnect */
+    static maxBehind = 60;
 
     /**
      * Prefix relay url to allow more than 6 websocket connections to the same host.
@@ -973,13 +978,15 @@ export class WebRTCStreamManager {
 
         try {
             if (this.sourceBuffer.updating) {
-                throw new Error('Buffer updating');
+                throw bufferUpdatingError;
             } else {
                 this.sourceBuffer.appendBuffer(nextBuffer);
             }
         } catch(e) {
             this.buffers.push(nextBuffer);
-            this.cleanupBuffers();
+            if (e !== bufferUpdatingError) {
+                this.close(0.1)
+            }
         }
     }
 
@@ -1080,7 +1087,7 @@ export class WebRTCStreamManager {
         }
     }
 
-    private initializeMse = async (mimeType?: string): Promise<void> => {
+    private initializeMse = (mimeType?: string): Promise<void> => {
         if (mimeType) {
             this.mimeType = mimeType;
         } else {
@@ -1106,97 +1113,120 @@ export class WebRTCStreamManager {
             this.stopCurrentStream();
             this.mediaStream$.next([newStream, null, this]);
             const webRtcStreamManager = this;
-            let bufferStartTime = 0;
-            let lowBufferCounter = 0;
+            const streamTracker = new class {
+                private streamCheckTimeout: ReturnType<typeof setTimeout>;
+                private chunks = 0;
+                private droppedChunks = 0;
+                private get duration() {
+                    const sourceBuffer = webRtcStreamManager.sourceBuffer;
+                    try {
+                        return sourceBuffer.buffered.length ? sourceBuffer.buffered.end(sourceBuffer.buffered.length - 1) - sourceBuffer.buffered.start(0) : 0;
+                    } catch(_) {
+                        webRtcStreamManager.close(0.1);
+                        return 0;
+                    }
+                }
+                private startTime = 0;
+                droppedChunk() {
+                    this.droppedChunks++;
+                }
+                addChunk() {
+                    this.droppedChunks = Math.max(0, this.droppedChunks - 3)
+                    this.chunks++;
+                }
+                getAverage() {
+                    return this.chunks && this.duration ? this.duration / this.chunks : 0.25;
+                }
+                shouldDisable() {
+                    return this.droppedChunks > 5 && webRtcStreamManager.availableStreams.includes(AvailableStreams.SECONDARY) && webRtcStreamManager.currentStream() !== AvailableStreams.SECONDARY;
+                }
+                get hasSecondary() {
+                    return webRtcStreamManager.availableStreams.includes(AvailableStreams.SECONDARY) && webRtcStreamManager.currentStream() !== AvailableStreams.SECONDARY;
+                }
+                track() {
+                    if (this.hasSecondary) {
+                        this.trackChunks();
+                    } else if (!this.streamCheckTimeout) {
+                        this.trackCurrentTime();
+                    }
+
+                }
+                private trackChunks() {
+                    const playbackTime = webRtcStreamManager.video.currentTime;
+                    const currentTime = Math.round(Date.now() / 1000)
+                    if (playbackTime && !this.startTime) {
+                        this.startTime = currentTime - playbackTime;
+                    }
+
+                    const timeSinceStart = currentTime - this.startTime;
+                    const timeBehind = timeSinceStart - playbackTime;
+
+                    if (playbackTime && timeBehind > WebRTCStreamManager.maxBehind) {
+                        WebRTCStreamManager.performanceIssueNotifier$.next()
+                        return webRtcStreamManager.close(0.1);
+                    }
+                    this.streamCheckTimeout = setTimeout(() => {
+                        this.droppedChunk();
+                        this.clear();
+                        if (this.shouldDisable()) {
+                            return webRtcStreamManager.updateAvailableStreams([AvailableStreams.SECONDARY]);
+                        } else {
+                            this.track();
+                        }
+                    }, this.getAverage() * 1000);
+                }
+                private trackCurrentTime() {
+                    const playbackTime = webRtcStreamManager.video.currentTime;
+                    if (!playbackTime) {
+                        this.streamCheckTimeout = setTimeout(() => {
+                            this.trackCurrentTime();
+                        }, 1000);
+                        return;
+                    }
+                    const currentTime = Math.round(Date.now() / 1000)
+                    this.startTime ||= currentTime - playbackTime;
+                    const timeSinceStart = currentTime - this.startTime;
+                    const timeBehind = timeSinceStart - playbackTime;
+                    if (timeBehind > WebRTCStreamManager.maxBehind) {
+                        WebRTCStreamManager.performanceIssueNotifier$.next()
+                        webRtcStreamManager.close(0.1);
+                    } else {
+                        this.streamCheckTimeout = setTimeout(() => {
+                            this.trackCurrentTime();
+                        }, (WebRTCStreamManager.maxBehind - timeBehind) * 1_000);
+                    }
+                    console.info('ran');
+                }
+                clear() {
+                    clearTimeout(this.streamCheckTimeout);
+                    this.streamCheckTimeout = null;
+                }
+            }
+            this.mediaSource.onsourceclose = function () {
+                streamTracker.clear();
+            }
             this.mediaSource.onsourceopen = function () {
-                WebRTCStreamManager.logger?.log(`ms is opened: ${mimeType}`);
                 if (!webRtcStreamManager.sourceBuffer && this.readyState === 'open') {
                     webRtcStreamManager.sourceBuffer = this.addSourceBuffer(mimeType);
                     webRtcStreamManager.sourceBuffer.mode = 'sequence';
+
+                    streamTracker.track()
+
                     webRtcStreamManager.sourceBuffer.onupdateend = function() {
-                        if (webRtcStreamManager.buffers.length) {
-                            return webRtcStreamManager.appendFromBuffers();
-                        }
+                        streamTracker.addChunk();
+                        streamTracker.track();
 
                         try {
                             if (!this.buffered?.length) {
                                 return;
                             }
-                        } catch (_) {
-                            return;
+                        } catch(_) {
+                            return webRtcStreamManager.close(0.1);
                         }
 
-
-                        const bufferStart = bufferStartTime;
-                        const bufferedEnd = this.buffered.end(0);
-                        const currentTime = webRtcStreamManager.video.currentTime;
-                        bufferStartTime = bufferedEnd;
-
-                        if (bufferedEnd > 10) {
-                            try {
-                                const currentStart = this.buffered.start(0);
-                                const updatedStart = bufferStart - 5;
-                                if (updatedStart > currentStart + 5) {
-                                    WebRTCStreamManager.logger?.info('frame check: removing buffer', { currentStart, updatedStart });
-                                    this.remove(0, updatedStart);
-                                }
-                            } catch {
-                                WebRTCStreamManager.logger?.info('frame check: failed to remove buffer');
-                            }
+                        if (webRtcStreamManager.buffers.length) {
+                            webRtcStreamManager.appendFromBuffers();
                         }
-
-                        const getCurrentSyncState = () => ({ bufferStart, currentTime, bufferedEnd, playbackRate: webRtcStreamManager.video.playbackRate });
-
-                        const isBehind = bufferStart - currentTime > 0.5;
-                        const isAhead = currentTime - bufferStart > 0.25;
-                        const remainingBuffer = bufferedEnd - currentTime;
-                        const lowBuffer = remainingBuffer < 1;
-
-                        const updatePlaybackRate = (rate: number) => {
-                            const lowBuffer = rate < 0.75;
-                            if (rate !== webRtcStreamManager.video.playbackRate) {
-                                webRtcStreamManager.video.playbackRate = rate;
-                                webRtcStreamManager.playbackRateUpdateCallback(rate);
-
-                            }
-
-                            if (lowBuffer) {
-                                lowBufferCounter++;
-                                const fiveSecondsBuffer = 5 * rate;
-                                const thirtySecondsBuffer = 30 * rate;
-                                if (lowBufferCounter > fiveSecondsBuffer) {
-                                    if (webRtcStreamManager.availableStreams.includes(AvailableStreams.SECONDARY)) {
-                                        webRtcStreamManager.updateStream(AvailableStreams.SECONDARY);
-                                    } else if (lowBufferCounter > thirtySecondsBuffer) {
-                                        webRtcStreamManager.close(1);
-                                    }
-                                }
-                            } else {
-                                lowBufferCounter = 0;
-                            }
-                        }
-
-                        if (isAhead) {
-                            updatePlaybackRate(0.75);
-                            WebRTCStreamManager.logger?.info('frame check: Time is ahead, slowing playback', getCurrentSyncState());
-                            return;
-                        }
-
-                        if (lowBuffer) {
-                            updatePlaybackRate(Math.round(Math.max(remainingBuffer, 0.2) * 10) / 10);
-                            WebRTCStreamManager.logger?.info('frame check: buffer low adjusting playback speed', getCurrentSyncState());
-                            return;
-                        }
-
-                        if(isBehind) {
-                            updatePlaybackRate(1.25);
-                            WebRTCStreamManager.logger?.info('frame check: Time is behind speeding up playback', getCurrentSyncState());
-                            return;
-                        }
-
-                        updatePlaybackRate(1);
-                        WebRTCStreamManager.logger?.info('frame check: Time is in sync', getCurrentSyncState());
-
                     }
                 }
             }
