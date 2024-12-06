@@ -28,11 +28,8 @@
                                 class="setting-title"
                                 [innerHTML]="getDescription(setting.key) | translate | safe: 'html'"
                             ></div>
-                            <div
-                                class="text-muted break-long"
-                                *ngIf="LANG.settingsConfig[setting.key]"
-                            >
-                                {{ setting.key | translate }}
+                            <div class="text-muted break-long">
+                                {{ setting.key }}
                             </div>
                         </div>
 
@@ -71,11 +68,6 @@
                                 <input
                                     *ngSwitchDefault
                                     [type]="settingsConfig[setting.key]?.type"
-                                    [autocomplete]="
-                                        settingsConfig[setting.key]?.type === 'password'
-                                            ? 'new-password'
-                                            : 'off'
-                                    "
                                     [id]="setting.key"
                                     [name]="setting.key"
                                     [ngModel]="systemSettings[setting.key]"
@@ -95,8 +87,12 @@
 
                             <div
                                 class="help-block text-left"
-                                *ngIf="settingsConfig[setting.key]?.alert"
-                                [innerHTML]="settingsConfig[setting.key]?.alert | safe: 'html'"
+                                *ngIf="settingHasWarning[setting.key]"
+                                [innerHTML]="
+                                    LANG.settingsConfig.warningAlert[setting.key]
+                                        | translate
+                                        | safe: 'html'
+                                "
                             ></div>
                         </div>
                     </div>

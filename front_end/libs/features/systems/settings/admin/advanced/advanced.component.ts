@@ -1,7 +1,8 @@
-import { Component, OnDestroy, Input, ViewChild } from '@angular/core';
+import { Component, OnDestroy, Input, ViewChild, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { firstValueFrom, Subject } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
+import { firstValueFrom } from 'rxjs';
 import { map, delay, retryWhen, take } from 'rxjs/operators';
 
 import { NxDialogsService } from '@dialogs/dialogs.service';
@@ -24,11 +25,12 @@ type SystemSetting = {
     templateUrl: 'advanced.component.html',
     styleUrls: ['advanced.component.scss'],
 })
-export class NxSystemAdvancedAdminComponent implements OnDestroy {
+export class NxSystemAdvancedAdminComponent implements OnInit, OnDestroy {
     @Input() system: NxSystem;
     @ViewChild('advancedSystemSettingsForm', { read: NgForm }) advancedSystemSettingsForm: NgForm;
 
     LANG = staticLang;
+    settingsTranslations = this.LANG.settingsConfig;
 
     haveAdvSettings: boolean;
 
@@ -37,16 +39,27 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
 
     advancedFormWatcher: FormWatcher;
     saveAdvancedSettings: Process;
-    reset$ = new Subject();
     settingsConfig = settingsConfig;
+
+    settingHasWarning = new Set(['ec2AliveUpdateIntervalSec']);
 
     constructor(
         private applyService: NxApplyService,
         private processService: NxProcessService,
         private dialogsService: NxDialogsService,
+        private translateService: TranslateService,
     ) {}
 
     ngOnInit(): void {
+        if (this.system.version >= 6.0) {
+            this.system.mediaserver
+                .getSystemSettingsManifest(this.translateService.currentLang)
+                .subscribe(manifest => {
+                    Object.entries(manifest).forEach(([name, { label }]) => {
+                        this.settingsTranslations[name] = label;
+                    });
+                });
+        }
         this.system.infoSubject
             .pipe(
                 untilDestroyed(this),
@@ -95,7 +108,7 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
         this.applyService.removeWatchers();
     }
 
-    editable(key) {
+    editable(key: string): boolean {
         return ['number', 'text', 'password', 'checkbox', 'object'].includes(
             settingsConfig[key]?.type,
         );
@@ -140,14 +153,13 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
         });
     }
 
-    getDescription(key) {
-        return this.LANG.settingsConfig[key] ? this.LANG.settingsConfig[key] : key;
+    getDescription(key: string): string {
+        return this.settingsTranslations[key] || key;
     }
 
     settingsToBeDisplayedOrUpdated = (settings): void => {
         Object.entries(settings).reduce(
             (systemSettings: SystemSetting, [key, value]: [string, unknown]) => {
-                // CLOUD-6350: Refactor advanced global settings page
                 if (settingsConfig[key]?.hiddenInAdvanced) {
                     return systemSettings;
                 }

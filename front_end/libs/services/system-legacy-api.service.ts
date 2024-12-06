@@ -23,6 +23,7 @@ import {
 import { environment } from '@environments/environment';
 import type { APIDoc } from '@pages/api-tool/api-tool-types';
 import { NxHealthService } from '@pages/health/health.service';
+import { getSystemSettingsManifestLegacy } from '@services/mediaserver-apis/endpoints/system-settings-manifest';
 import { LegacyNewUser, LegacyUser, Role, SystemUser } from '@services/system-user.types';
 import { cleanIdLegacy } from '@utils/general';
 import { InterceptorManager } from '@utils/interceptor-manager';
@@ -634,6 +635,8 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
     public getSettings(): Observable<t.SystemSettingsResp> {
         return this.settingsUpdater$.pipe(switchMap(() => this.get('/api/systemSettings')));
     }
+
+    public getSystemSettingsManifest = getSystemSettingsManifestLegacy;
 
     // TODO: Split this into two
     public updateOrGetSettings(params: Partial<t.Settings> = {}) {

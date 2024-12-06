@@ -9,6 +9,7 @@ import { NxHealthService } from '@pages/health/health.service';
 import { getSystemMetricsAlarmsV2 } from '@services/mediaserver-apis/endpoints/system-metrics-alarms';
 import { getSystemMetricsManifestV2 } from '@services/mediaserver-apis/endpoints/system-metrics-manifest';
 import { getSystemMetricsValuesV2 } from '@services/mediaserver-apis/endpoints/system-metrics-values';
+import { getSystemSettingsManifestV2 } from '@services/mediaserver-apis/endpoints/system-settings-manifest';
 import { NxSystemAPI } from '@services/system-legacy-api.service';
 import { buildTopLevelKeyMap, cleanId } from '@utils/general';
 import { memoizeAsyncLong, memoizeAsyncMedium } from '@utils/memoize';
@@ -188,6 +189,8 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
             parsedLogLevels,
         ).pipe(map(this.parseLogData));
     }
+
+    override getSystemSettingsManifest = getSystemSettingsManifestV2;
 
     // Servers
     // Todo: Type storage calls after fixing them

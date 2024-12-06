@@ -4,7 +4,7 @@
     [ngClass]="{ 'checkbox-order': getType(setting.value) === 'boolean' }"
 >
     <div class="text-muted break-long">
-        {{ LANG.settingsConfig[setting.key] || setting.key | translate }}
+        {{ setting.key }}
     </div>
     <ng-container [ngSwitch]="getType(setting.value)">
         <input

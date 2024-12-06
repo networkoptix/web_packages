@@ -1867,7 +1867,10 @@
         "targetPersistentUpdateStorage": "Target Persistent Update Storage",
         "targetUpdateInformation": "Target Update Information",
         "useCloudServiceToSendEmail": "Use Cloud Service To Send Email",
-        "useHttpsOnlyForCameras": "Use Https Only For Cameras"
+        "useHttpsOnlyForCameras": "Use Https Only For Cameras",
+        "warningAlert": {
+            "ec2ConnectionKeepAliveTimeoutSec": "Warning! It is highly recommended to keep this value at least 10% greater than \"Connection keep alive timeout\" x \"Connection keep probes\""
+        }
     },
     "result": "{count, plural, =0{# results} one{# result} other{# results}}",
     "additionalSystems": "{count, plural, =0{+ # Systems} one{+ # System} other{+ # Systems}}",
