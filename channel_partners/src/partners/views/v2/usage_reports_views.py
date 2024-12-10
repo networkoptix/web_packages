@@ -157,7 +157,7 @@ class UsageReportsBaseViewSet(ParentLookUpMixin, NestedViewSetMixin, GenericView
         try:
             report = report_func(**kwargs)
         except ReportSnapshotDoesNotExists:
-            raise PermissionDenied(
+            raise NotFound(
                 detail=f'Report has not been generated yet for requested date: {self.get_period_start()}.')
         return report
 
@@ -218,7 +218,7 @@ class OrganizationServiceReportsViewSet(VersionedViewMixin, UsageReportsBaseView
                 organization=entity,
                 period_start=self.get_period_start())
         except ReportSnapshotDoesNotExists:
-            raise PermissionDenied(
+            raise NotFound(
                 detail=f'Report has not been generated yet for requested date: {self.get_period_start()}.')
         serializer = OrganizationUsageReportRecordSerializer(
             instance=report, many=True, context=self.get_serializer_context())
@@ -326,7 +326,7 @@ class OrganizationServiceReportsViewSet(VersionedViewMixin, UsageReportsBaseView
                 service=service,
                 period_start=self.get_period_start())
         except ReportSnapshotDoesNotExists:
-            raise PermissionDenied(
+            raise NotFound(
                 detail=f'Report has not been generated yet for requested date: {self.get_period_start()}.')
         serializer = RegularUsageDetailRecordSerializer(instance=report, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -356,7 +356,7 @@ class OrganizationServiceReportsViewSet(VersionedViewMixin, UsageReportsBaseView
                 service=service,
                 period_start=self.get_period_start())
         except ReportSnapshotDoesNotExists:
-            raise PermissionDenied(
+            raise NotFound(
                 detail=f'Report has not been generated yet for requested date: {self.get_period_start()}.')
         serializer = ExpiringUsageDetailRecordSerializer(instance=report, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -478,7 +478,7 @@ class ChannelPartnerServiceReportsViewSet(VersionedViewMixin, UsageReportsBaseVi
                 channel_partner=entity,
                 period_start=self.get_period_start())
         except ReportSnapshotDoesNotExists:
-            raise PermissionDenied(
+            raise NotFound(
                 detail=f'Report has not been generated yet for requested date: {self.get_period_start()}.')
         serializer = ChannelPartnerUsageReportRecordSerializer(
             instance=report, many=True, context=self.get_serializer_context())
