@@ -18,7 +18,8 @@ from partners.serializers.v2.serializers import (
 class TestSystemServiceCurrentQuantitySerializer:
     @pytest.fixture(autouse=True)
     def setup(self, channel_partner_factory, organization_factory, system_factory,
-              cp_service_factory, service_record_factory):
+              cp_service_factory, service_record_factory, settings):
+        settings.SERVICE_USAGE_CHECK_PERIOD = 86_400
         self.channel_partner = channel_partner_factory()
         self.other_channel_partner = channel_partner_factory()
         self.organization = organization_factory(channel_partner=self.channel_partner)

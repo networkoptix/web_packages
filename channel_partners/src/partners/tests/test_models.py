@@ -1,4 +1,7 @@
-from datetime import timedelta
+from datetime import (
+    datetime,
+    timedelta,
+)
 from unittest import mock
 from uuid import uuid4
 
@@ -24,6 +27,53 @@ from partners.utils.cache_keys import (
     cache_key_cloud_system_group_children_count,
     organization_system_count,
 )
+
+
+class TestCloudSystemId:
+    def test_calculate_grace_period_expiration_date_is_called_during_setting_of_security_statuses(
+            self,
+            default_org_system_generator
+    )->None:
+        with mock.patch('partners.models.calculate_grace_period_expiration_date') as mock_calculate:
+            sys = default_org_system_generator()
+            statuses = {
+                'services': {str(sys.id): ServiceUsage.STATUS_OVER_USE},
+                'types': {0: ServiceUsage.STATUS_OVER_USE}
+            }
+            sys.set_security_statuses(statuses)
+            mock_calculate.assert_called_once()
+
+
+    def test_security_status_changes(self, default_org_system_generator, settings):
+        fixed_now = timezone.make_aware(datetime(2023, 1, 1))
+
+        with mock.patch('django.utils.timezone.now', return_value=fixed_now):
+            sys = default_org_system_generator()
+            statuses = {
+                'services': {str(sys.id): ServiceUsage.STATUS_OVER_USE},
+                'types': {0: ServiceUsage.STATUS_OVER_USE}
+            }
+            settings.SERVICE_USAGE_CHECK_PERIOD = 0 # Same as fixed time
+            sys.set_security_statuses(statuses)
+
+            types = sys.security_statuses['types']["local_recording"]["issueExpirationDate"]
+            services_key = list(sys.security_statuses['services'].keys())[0]
+            services = sys.security_statuses['services'][services_key]["issueExpirationDate"]
+            assert types == "2023-01-01 00:00:00"
+            assert services == "2023-01-01 00:00:00"
+
+            statuses = {
+                'services': {str(sys.id): ServiceUsage.UNALLOCATED_SERVICE},
+                'types': {0: ServiceUsage.UNALLOCATED_SERVICE}
+            }
+            settings.SERVICE_USAGE_CHECK_PERIOD = 1
+            sys.set_security_statuses(statuses)
+
+            types = sys.security_statuses['types']["local_recording"]["issueExpirationDate"]
+            services_key = list(sys.security_statuses['services'].keys())[0]
+            services = sys.security_statuses['services'][services_key]["issueExpirationDate"]
+            assert types == "2023-01-01 00:00:30"
+            assert services == "2023-01-01 00:00:30"
 
 
 class TestChannelPartnerEvent:
@@ -540,7 +590,6 @@ class TestOrganization:
         assert caches['default'].get(cache_key) is None
         assert org.system_count == 0
         assert caches['default'].get(cache_key) == 0
-
 
 
 class TestEffectiveStates:

@@ -71,6 +71,9 @@ from partners.utils.cache_keys import (
     organization_system_count,
 )
 from partners.utils.context_vars import get_context_vars
+from partners.utils.date_calculations import (
+    calculate_grace_period_expiration_date,
+)
 from partners.utils.db import (
     LowerCaseEmailField,
     MonthInterval,
@@ -475,7 +478,7 @@ class CloudSystemId(
         self.security_statuses = self.security_statuses or {}
         self.security_statuses['types'] = self.security_statuses.get('type', {})
         self.security_statuses['services'] = self.security_statuses.get('services', {})
-        expiration_date = (timezone.now() + relativedelta(days=30)).strftime('%Y-%m-%d %H:%M:%S')
+        expiration_date = calculate_grace_period_expiration_date()
         for service_type, new_status in statuses['types'].items():
             service_code = ChannelPartnerService.SERVICE_TYPE_TO_CODE_MAP[service_type]
             old_status = (self.security_statuses
