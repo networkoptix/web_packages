@@ -476,7 +476,7 @@ class CloudSystemId(
 
     def set_security_statuses(self, statuses):
         self.security_statuses = self.security_statuses or {}
-        self.security_statuses['types'] = self.security_statuses.get('type', {})
+        self.security_statuses['types'] = self.security_statuses.get('types', {})
         self.security_statuses['services'] = self.security_statuses.get('services', {})
         expiration_date = calculate_grace_period_expiration_date()
         for service_type, new_status in statuses['types'].items():

@@ -75,6 +75,14 @@ class TestCloudSystemId:
             assert types == "2023-01-01 00:00:30"
             assert services == "2023-01-01 00:00:30"
 
+        # Check that issueExpirationDate is not updated if statuses have not changed
+        sys.set_security_statuses(statuses)
+        types = sys.security_statuses['types']["local_recording"]["issueExpirationDate"]
+        services_key = list(sys.security_statuses['services'].keys())[0]
+        services = sys.security_statuses['services'][services_key]["issueExpirationDate"]
+        assert types == "2023-01-01 00:00:30"
+        assert services == "2023-01-01 00:00:30"
+
 
 class TestChannelPartnerEvent:
     def test_new_event(self, cloud_test_host, channel_partner_factory, organization_factory,
