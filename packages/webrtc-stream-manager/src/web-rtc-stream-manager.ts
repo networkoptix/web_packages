@@ -26,7 +26,7 @@ export class WebRTCStreamManager {
     static PERFORMANCE_SAMPLE_SIZE = 5000
 
     /** Maximum number of seconds behind live when using MSE before attempting reconnect */
-    static maxBehind = 60;
+    static maxBehind = 10;
 
     /**
      * Prefix relay url to allow more than 6 websocket connections to the same host.
