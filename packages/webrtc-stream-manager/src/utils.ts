@@ -247,3 +247,20 @@ export const throttleByFrameRateScheduler$ = frameRateTracker$.pipe(take(1), exh
 export const throttleByFrameRate = <T>() => throttle<T>(() => throttleByFrameRateScheduler$ , { leading: false, trailing: true });
 
 export const generateRandomString = () => Math.random().toString(36).slice(2)
+
+export const acquireLock = <T extends { cooldownLock: ReturnType<typeof setTimeout> }>(target: T, cooldownTime: number, force = false): boolean => {
+    if (force) {
+        clearTimeout(target.cooldownLock);
+        target.cooldownLock = undefined;
+    }
+
+    if (target.cooldownLock) {
+        return false;
+    }
+
+    target.cooldownLock = setTimeout(() => {
+        target.cooldownLock = undefined;
+    }, cooldownTime * 1000);
+
+    return true;
+}
