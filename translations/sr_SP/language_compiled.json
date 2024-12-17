@@ -1686,6 +1686,7 @@
     "Viewers": "Viewers",
     "WARNING": "WARNING",
     "Warning": "Warning",
+    "Warning! It is highly recommended to keep this value at least 10% greater than \"Connection keep alive timeout\" x \"Connection keep probes\"": "Warning! It is highly recommended to keep this value at least 10% greater than \"Connection keep alive timeout\" x \"Connection keep probes\"",
     "Warnings": "Warnings",
     "Watermark settings": "Watermark settings",
     "We are offering {compCapacity} of complimentary cloud storage per system to get you started.": "We are offering {compCapacity} of complimentary cloud storage per system to get you started.",

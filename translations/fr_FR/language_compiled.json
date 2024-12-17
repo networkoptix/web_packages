@@ -1686,6 +1686,7 @@
     "Viewers": "Visualisateur",
     "WARNING": "ATTENTION",
     "Warning": "Attention",
+    "Warning! It is highly recommended to keep this value at least 10% greater than \"Connection keep alive timeout\" x \"Connection keep probes\"": "Warning! It is highly recommended to keep this value at least 10% greater than \"Connection keep alive timeout\" x \"Connection keep probes\"",
     "Warnings": "Avertissements",
     "Watermark settings": "Paramètres du filigrane",
     "We are offering {compCapacity} of complimentary cloud storage per system to get you started.": "Nous offrons {compCapacity} de stockage cloud gratuit par système pour vous aider à démarrer.",
