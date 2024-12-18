@@ -881,9 +881,6 @@ export class WebRTCStreamManager {
      */
     public async updateStream(stream?: AvailableStreams, isAuto = false): Promise<void> {
         acquireLock(this, isAuto ? 30 : 360, true);
-        if (this.stream$.value.value === stream) {
-            return;
-        }
         if (stream === undefined) {
             if (this.availableStreams.includes(AvailableStreams.SECONDARY) && (this.allElementsSmall() || (await firstValueFrom(frameRateTracker$)).score < 50)) {
                 stream = AvailableStreams.SECONDARY;
@@ -894,6 +891,10 @@ export class WebRTCStreamManager {
 
         if (this.streamNotAvailable(stream)) {
             stream = this.availableStreams[0];
+        }
+
+        if (this.stream$.value.value === stream) {
+            return;
         }
 
         const useDataChannelUpdate = this.apiVersion === ApiVersions.v2 && !!(this.peerConnection?.remoteDataChannel?.readyState === 'open');
