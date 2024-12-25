@@ -1839,7 +1839,7 @@
     "you": "您",
     "{ loggerName } log level": "{ loggerName } 日誌等級",
     "{ newOwnerEmail } is not a user in the system": "{ newOwnerEmail } 不是該系統的使用者。",
-    "{ARTICLE_TITLE} for {VMS_NAME}": "{ARTICLE_TITLE} for {VMS_NAME}",
+    "{ARTICLE_TITLE} for {VMS_NAME}": "用於{VMS_NAME}的{ARTICLE_TITLE}",
     "{PLUGIN_NAME} for {PLUGIN_SHORT_DESCRIPTION}": "用於{PLUGIN_SHORT_DESCRIPTION}的{PLUGIN_NAME}",
     "{count, plural, =0{# GROUPS} one{# GROUP} other{# GROUPS}}": "{count, plural, =0{# GROUPS} one{# GROUP} other{# GROUPS}}",
     "{count, plural, =0{# Results} one{# Result} other{# Results}} found": "{count, plural, =0{# Results} one{# Result} other{# Results}} found",
