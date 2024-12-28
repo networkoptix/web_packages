@@ -1,4 +1,4 @@
-%CLOUD_NAME%へようこそ
+%CLOUD_NAME% へようこそ
 
 {{#message.sharer_name}}
 {{message.sharer_name}} ({{message.sharer_email}}) は %CLOUD_NAME% への参加を招待しており、システム {{message.system_name}} をあなたと共有しています。
