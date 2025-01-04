@@ -420,7 +420,7 @@
     "DEFAULT EXPORT VIDEO CODEC TEXT": "將匯出影片編碼器還原預設值",
     "DEFAULT VIDEO CODEC TEXT": "將影片編碼器還原預設值",
     "DISABLED VENDORS TEXT": "禁用廠商",
-    "DOWNLOADER PEERS TEXT": "對等下載器",
+    "DOWNLOADER PEERS TEXT": "對等下載控制器",
     "SYSTEM ALIVE UPDATE INTERVAL TEXT": "系統偵測更新間隔（秒）",
     "SYSTEM ALIVE UPDATE WARNING TEXT": "警告！強烈建議將此值保持為比「連線Keep Alive逾時」x「連線 keep probes」至少大 10%",
     "CONNECTION KEEP ALIVE TIMEOUT TEXT": "連線偵測逾時（秒）",
