@@ -382,7 +382,7 @@
     "MINUTES TEXT": "分",
     "DAYS TEXT": "日",
     "NO IMAGE TEXT": "無圖片",
-    "CAMERA UNAUTHORIZED TEXT": "攝影機未經授權",
+    "CAMERA UNAUTHORIZED TEXT": "攝影機未經身份驗證",
     "CAMERA OFFLINE TEXT": "攝影機離線",
     "PROFESSIONAL LICENSE REQUIRED TEXT": "需要專業版授權",
     "ONE LICENSE WILL BE USED TEXT": "將使用 1 個專業版授權",
