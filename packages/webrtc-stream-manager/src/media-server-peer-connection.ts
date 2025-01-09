@@ -16,7 +16,7 @@ export class MediaServerPeerConnection extends RTCPeerConnection {
         if (this.closed) {
             return;
         }
-        if (event.candidate) {
+        if (event.candidate && this.wsConnection) {
             this.wsConnection.next({ ice: event.candidate });
         }
     };
@@ -64,14 +64,14 @@ export class MediaServerPeerConnection extends RTCPeerConnection {
     static forceGarbageCollection = (() => {
         const updater$ = new Subject<void>()
 
-        updater$.pipe(debounceTime(500, asapScheduler)).subscribe(() => {
-            let img = document.createElement("img");
-            img.src = URL.createObjectURL(new Blob([new ArrayBuffer(5e+7)]));
-            img.onerror = function() {
-              URL.revokeObjectURL(this.src);
-              img = null
-            }
-        });
+        // updater$.pipe(debounceTime(500, asapScheduler)).subscribe(() => {
+        //     let img = document.createElement("img");
+        //     img.src = URL.createObjectURL(new Blob([new ArrayBuffer(5e+7)]));
+        //     img.onerror = function() {
+        //       URL.revokeObjectURL(this.src);
+        //       img = null
+        //     }
+        // });
 
         return () => updater$.next();
     })();

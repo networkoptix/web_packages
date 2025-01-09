@@ -1,6 +1,6 @@
 // Copyright 2018-present Network Optix, Inc. Licensed under MPL 2.0: www.mozilla.org/MPL/2.0/
 
-import { Observable, BehaviorSubject, timer, Subject, combineLatest, firstValueFrom, from, NEVER, interval, fromEvent, merge, of, lastValueFrom, defer, throwError } from 'rxjs';
+import { Observable, BehaviorSubject, timer, Subject, combineLatest, firstValueFrom, from, NEVER, interval, fromEvent, merge, of, lastValueFrom, defer, throwError, Observer } from 'rxjs';
 import { filter, shareReplay, switchMap, take, map, delay, takeUntil, tap, distinctUntilChanged, debounceTime, bufferCount, timeout, bufferTime, skipWhile, startWith } from 'rxjs/operators';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 import { FocusTracker, MosScoreTracker, BytesReceivedTracker } from './trackers';
@@ -1162,7 +1162,6 @@ export class WebRTCStreamManager {
                             this.trackCurrentTime();
                         }, (WebRTCStreamManager.maxBehind - timeBehind) * 1_000);
                     }
-                    console.info('ran');
                 }
                 clear() {
                     clearTimeout(this.streamCheckTimeout);
@@ -1331,6 +1330,8 @@ export class WebRTCStreamManager {
 
     usingMse = false;
 
+    private maxTimeout = 5_000
+
     start = async (lostConnection = false): Promise<unknown> => this.startHandler(lostConnection).catch(() => this.close(0.1));
 
     /** Initialization helpers */
@@ -1428,7 +1429,7 @@ export class WebRTCStreamManager {
         }
 
 
-        const resolvedHost = await fetch(`https://${relayHost}/api/ping?${directConnect && this.serverId ? `x-server-guid=${this.serverId}` : ''}`).then(response => new URL(response.url).host).catch(() => false as const)
+        const resolvedHost = await fetch(`https://${relayHost.replace(this.prefix, generateRandomString())}/api/ping?${directConnect && this.serverId ? `x-server-guid=${this.serverId}` : ''}`).then(response => new URL(response.url).host).catch(() => false as const)
 
         const invalidAccessToken = () => {
             this.mediaStream$.next([null, ConnectionError.invalidAccessToken, this]);
@@ -1472,6 +1473,7 @@ export class WebRTCStreamManager {
             }
         } else {
             this.useProxy = true;
+            this.serverId = null;
             return this.start();
         }
 
@@ -1509,45 +1511,70 @@ export class WebRTCStreamManager {
 
         let retries = 10;
 
-        ConnectionQueue.MAX_CONCURRENCY = WebRTCStreamManager.USE_RELAY_PREFIX ? 64 : 4;
+        const url = (webRtcUrl.endsWith('&') ? webRtcUrl.slice(0, -1) : webRtcUrl).replace(this.prefix, generateRandomString());
+        this.closeWsConnection();
+        this.wsConnection = webSocket(this.apiVersion === ApiVersions.v1 ? url : `${url}&_ticket=${await getOneTimeToken()}`);
 
-        ConnectionQueue.runTask(async (completeCallback, requeueCallback) => {
-            const url = webRtcUrl.endsWith('&') ? webRtcUrl.slice(0, -1) : webRtcUrl;
-            this.wsConnection = webSocket(this.apiVersion === ApiVersions.v1 ? url : `${url}&_ticket=${await getOneTimeToken()}`);
+        const openConnection = (observer: Partial<Observer<SignalingMessage>>) => this.wsConnection.pipe(
+            timeout({ first: this.maxTimeout, with: () => throwError(() => new Error('timeout')) }),
+            takeUntil(this.closeWsConnectionNotifier$)
+        ).subscribe(observer);
 
-            const requeue = () => {
-                this.closeWsConnection();
-                requeueCallback();
-            }
-
-            const complete = () => {
-                this.closeWsConnection();
-                completeCallback();
-            };
-
-            await firstValueFrom(throttleByFrameRateScheduler$);
-
-            this.wsConnection.pipe(
-                timeout({ first: 10_000, with: () => throwError(() => new Error('timeout')) }),
-                takeUntil(this.closeWsConnectionNotifier$)
-            ).subscribe({
+        if (WebRTCStreamManager.USE_RELAY_PREFIX) {
+            openConnection({
                 next: this.gotMessageFromServer,
                 error: async (err: Error) => {
+                    if (err.message === 'timeout' && this.maxTimeout < 20_000) {
+                        this.maxTimeout +- 2_500;
+                    }
                     WebRTCStreamManager.logger?.error(err);
                     await new Promise(resolve => setTimeout(resolve, 500));
                     if (--retries) {
-                        await new Promise(resolve => setTimeout(resolve, 3_500));
-                        requeue();
-                        return;
+                        await new Promise(resolve => setTimeout(resolve, 1_500));
+                        return this.start();
                     }
                     this.mediaStream$.next([null, ConnectionError.lostConnection, this]);
-                    this.close(10);
-                    complete();
-                    // invalidAccessToken()
+                    this.close(5);
                 },
-                complete,
+                complete: () => this.closeWsConnection(),
             });
-        }, new URL(webRtcUrl).host, 500, 10_000, WebRTCStreamManager.logger)
+        } else {
+            ConnectionQueue.runTask(async (completeCallback, requeueCallback) => {
+            const url = webRtcUrl.endsWith('&') ? webRtcUrl.slice(0, -1) : webRtcUrl;
+            this.wsConnection = webSocket(this.apiVersion === ApiVersions.v1 ? url : `${url}&_ticket=${await getOneTimeToken()}`);
+
+                const requeue = () => {
+                    this.closeWsConnection();
+                    requeueCallback();
+                }
+
+                const complete = () => {
+                    this.closeWsConnection();
+                    completeCallback();
+                };
+
+                openConnection({
+                    next: this.gotMessageFromServer,
+                    error: async (err: Error) => {
+                        if (err.message === 'timeout' && this.maxTimeout < 20_000) {
+                            this.maxTimeout +- 2_500;
+                        }
+                        WebRTCStreamManager.logger?.error(err);
+                        await new Promise(resolve => setTimeout(resolve, 500));
+                        if (--retries) {
+                            await new Promise(resolve => setTimeout(resolve, 1_500));
+                            requeue();
+                            return;
+                        }
+                        this.mediaStream$.next([null, ConnectionError.lostConnection, this]);
+                        this.close(10);
+                        complete();
+                    },
+                    complete,
+                });
+            }, new URL(webRtcUrl).host, 500, 10_000, WebRTCStreamManager.logger)
+        }
+
 
         await firstValueFrom(this.mediaStream$.pipe(
             filter((stream) => !!stream),

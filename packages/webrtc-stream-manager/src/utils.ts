@@ -74,7 +74,7 @@ export class WithSkip<T> {
 }
 
 export class ConnectionQueue {
-    static MAX_CONCURRENCY = 5;
+    static MAX_CONCURRENCY = 4;
     static GROUP: Record<string, ConnectionQueue> = {};
     #queue$ = new Subject<Observable<unknown>>();
     #concurrencyUpdater$ = new Subject<number>();
@@ -244,7 +244,7 @@ export const frameRateTracker$ = framesPerSecondFactory().pipe(
 
 export const throttleByFrameRateScheduler$ = frameRateTracker$.pipe(take(1), exhaustMap(({ fps }) => timer(1000 / fps)), switchMap(() => animationFrames$), shareReplay({ bufferSize: 1, refCount: false }));
 
-export const throttleByFrameRate = <T>() => throttle<T>(() => throttleByFrameRateScheduler$ , { leading: false, trailing: true });
+export const throttleByFrameRate = <T>() => throttle<T>(() => throttleByFrameRateScheduler$, { leading: false, trailing: true });
 
 export const generateRandomString = () => Math.random().toString(36).slice(2)
 
