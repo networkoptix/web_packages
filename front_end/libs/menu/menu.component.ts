@@ -182,9 +182,10 @@ export class NxMenuComponent implements OnInit, OnChanges {
     ngOnChanges(changes: NgChanges<NxMenuComponent>): void {
         const currentContent = changes.content?.currentValue;
         if (currentContent) {
-            if (!isEqual(currentContent.level1, this.menuService.content())) {
+            const menuContent = this.menuService.content();
+            if (!isEqual(currentContent.level1, menuContent)) {
                 this.menuService.content.set(cloneDeep(currentContent.level1));
-                this.menuInit = true;
+                this.menuInit = currentContent.level1.length !== menuContent.length;
             }
             // Avoid unnecessary update and overwrite user choices
             const filtered = this.menuService.cleanMenuContent(
