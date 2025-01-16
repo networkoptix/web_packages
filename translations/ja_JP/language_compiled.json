@@ -1187,7 +1187,7 @@
     "Remove User": "ユーザーを削除",
     "Remove from Layout": "レイアウトから削除",
     "Remove item from layout": "レイアウトからアイテムを削除",
-    "Remove user": "ユーザーを削除",
+    "Remove user": "ユーザーを削除しますか?",
     "Rename": "名前の変更",
     "Rename \"{name}\" layout": "\"{name}\" レイアウトの名前を変更",
     "Repeat Password": "パスワード(確認用)",
