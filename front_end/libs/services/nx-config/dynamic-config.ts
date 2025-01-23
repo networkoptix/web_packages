@@ -61,6 +61,12 @@ export class DynamicConfig {
                 ].map(res => res.then(res => res.json())),
             );
 
+            webadminConfig.dynamicMenus = JSON.parse(
+                JSON.stringify(webadminConfig.dynamicMenus)
+                    .replace(description.vmsName, '%VMS_NAME%')
+                    .replace(description.cloudName, '%CLOUD_NAME%'),
+            );
+
             return {
                 defaultLanguage,
                 supportedLanguages,

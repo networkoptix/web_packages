@@ -373,7 +373,7 @@
         },
         "System Health Viewer": {
             "description": "Members of this group can view System Health Monitoring information and server processor load in real-time (Server Monitoring).",
-            "label": "System Health Viewer"
+            "label": "System Health Viewers"
         },
         "Viewer": {
             "description": "Members of this group can, in addition to the permissions granted by the Live Viewers group, view and export archive and Bookmarks.",
@@ -1236,7 +1236,9 @@
         "alert": "Alert"
     },
     "appFooter": {
-        "copyright": "Copyright (c) {currentYear} %COMPANY_NAME%. All Rights Reserved"
+        "copyright": "Copyright (c) {currentYear} %COMPANY_NAME%. All Rights Reserved",
+        "downloadVMS": "Download %VMS_NAME%",
+        "downloadSDK": "Download SDK"
     },
     "pages": {
         "developers": {
@@ -1622,6 +1624,8 @@
         },
         "keys": {
             "name": "Name",
+            "saasAddedServices": "Services added",
+            "sassUsedServices": "Services in use",
             "servers": "Servers",
             "cameras": "Camera channels",
             "storages": "Storage locations",
@@ -1673,8 +1677,8 @@
             "recordingBitrateBps": "Recording Bitrate (5min)",
             "ipConflicts3min": "Events: IP Conflicts (3 min)",
             "firmware": "Firmware",
-            "targetBitrateBps": "Target Bitrate",
-            "actualBitrateBps": "Actual Bitrate",
+            "targetBitrateBps": "Target bitrate",
+            "actualBitrateBps": "Actual bitrate",
             "minArchiveLengthS": "Min Archive length",
             "unauthorized": "Unauthorized",
             "IOModule": "I/O Module",
@@ -1688,10 +1692,32 @@
             "readRateBps1m": "Read Rate",
             "writeRateBps1m": "Write Rate",
             "totalSpaceB": "Total",
-            "mediaSpaceP": "VMS Media (%)",
+            "mediaSpaceP": "VMS Media(%)",
             "mediaSpaceB": "VMS Media"
         },
-        "serverName": "{name} (Offline)"
+        "serverName": "{name} (Offline)",
+        "_storageType": {
+            "local": "local",
+            "usb": "usb",
+            "network": "network",
+            "smb": "network (smb)",
+            "cloud": "cloud",
+            "removable": "removable"
+        },
+        "_deviceType": {
+            "Camera": "Camera",
+            "MultisensorCamera": "MultisensorCamera",
+            "IOModule": "IOModule"
+        },
+        "_recodingStatus": {
+            "On": "On",
+            "Off": "Off",
+            "Scheduled": "Scheduled"
+        },
+        "_streamType": {
+            "primaryStream": "Primary Stream",
+            "SecondaryStream": "Secondary Stream"
+        }
     },
     "headerLabels": {
         "healthReportForSystem": "Health Report For System {systemName}"

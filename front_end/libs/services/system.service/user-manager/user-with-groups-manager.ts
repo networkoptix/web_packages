@@ -120,6 +120,10 @@ export class UserWithGroupsManager extends UserManager {
     processGroups(userGroups: UserGroup[]): void {
         const idToGroup: IdToGroup = {};
         userGroups.forEach(group => {
+            // Handle the case where the cloud name is in the group description from the VMS.
+            if (group.description.includes(nxConfig.cloudName)) {
+                group.description = group.description.replace(nxConfig.cloudName, '%CLOUD_NAME%');
+            }
             idToGroup[group.id] = group;
         });
         this.userGroups = idToGroup;
