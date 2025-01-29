@@ -261,7 +261,7 @@
     "CANNOT MERGE WITH OFFLINE SYSTEM TEXT": "%SYSTEM NAME%はオフラインのため、現在のものと統合することはできません",
     "FAILED TO FIND SYSTEM TO MERGE": "統合するシステムが見つかりませんでした",
     "FAILED TO FIND MERGE BODY": "統合したいクラウドシステムのオーナー権限を持っていることを確認してください。 もしくは、統合したいシステムがローカルネットワークを介して現在のシステムにアクセスできることを確認してください。",
-    "SYSTEMS HAVE MISMATCHING VERSIONS TEXT": "システムのソフトウェアバージョンが一致していません。両方とも最新ビルドにアップデートしてください。",
+    "SYSTEMS HAVE MISMATCHING VERSIONS TEXT": "システムのソフトウェアバージョンが一致していません。両方とも最新ビルドに更新してください。",
     "SYSTEMS HAVE DIFFERENT OWNERS TEXT": "選択したシステムと現在のシステムの両方が %PRODUCT_NAME% に接続されており、それぞれオーナーが異なります。 クラウドシステムは、オーナー権限アカウントが同じ場合にのみ統合できます。",
     "THIS SYSTEM HAS DIFFERENT OWNER TEXT": "このシステムはNx Cloudに接続されていますが、所有者が異なります。クラウドシステムは所有者アカウントが同じ場合にのみ統合できます。",
     "SERVER HAS INCOMPATIBLE VERSION TEXT": "このサーバーは互換性のないソフトウェアバージョンです。両方のシステムを最新ビルドに更新してください。",
