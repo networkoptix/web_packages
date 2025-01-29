@@ -469,7 +469,17 @@ export class WebRTCStreamManager {
     }
 
     static closeAll(): Promise<true> {
-        return Promise.allSettled(Object.values(WebRTCStreamManager.EXISTING_CONNECTIONS).map(connection => connection.close())).then(() => true);
+        return Object.values(
+            WebRTCStreamManager.EXISTING_CONNECTIONS
+        ).reduce(
+            async (promise, connection) => {
+                await promise;
+                await new Promise(resolve => setTimeout(resolve, 50));
+                await connection.close();
+                return true;
+            },
+            Promise.resolve(true as const)
+        );
     }
 
     /**
@@ -785,7 +795,7 @@ export class WebRTCStreamManager {
     /**
      * Handles cleaning up connections when no longer in use.
      */
-    public close = (retryAfterSeconds: false | number = false, checkCodec = false): Promise<true> => {
+    public close = (retryAfterSeconds: false | number = false, checkCodec = false): Promise<boolean> => {
         if (checkCodec) {
             this.codecChanged = generateRandomString();
             this.usingMse = false;
@@ -806,9 +816,9 @@ export class WebRTCStreamManager {
             setTimeout(this.start, retryAfterSeconds * 1000)
         } else {
             this.closeNotifier$.next('close');
-            delete WebRTCStreamManager.EXISTING_CONNECTIONS[getConnectionKey(this.webRtcUrlFactory())];
-            return new Promise((resolve) => setTimeout(resolve, 100)).then(() => true);
+            delete WebRTCStreamManager.EXISTING_CONNECTIONS[this.connectionKey];
         }
+        return new Promise((resolve) => setTimeout(resolve, 100)).then(() => !!retryAfterSeconds);
     };
 
     private cleanupBuffers = (clearStream = true) => {
