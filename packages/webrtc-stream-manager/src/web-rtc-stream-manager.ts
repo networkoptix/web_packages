@@ -1,7 +1,7 @@
 // Copyright 2018-present Network Optix, Inc. Licensed under MPL 2.0: www.mozilla.org/MPL/2.0/
 
 import { Observable, BehaviorSubject, timer, Subject, combineLatest, firstValueFrom, from, NEVER, interval, fromEvent, merge, of, lastValueFrom, defer, throwError, Observer } from 'rxjs';
-import { filter, shareReplay, switchMap, take, map, delay, takeUntil, tap, distinctUntilChanged, debounceTime, bufferCount, timeout, bufferTime, skipWhile, startWith } from 'rxjs/operators';
+import { filter, shareReplay, switchMap, take, map, delay, takeUntil, tap, distinctUntilChanged, debounceTime, bufferCount, timeout, bufferTime, skipWhile, startWith, scan } from 'rxjs/operators';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 import { FocusTracker, MosScoreTracker, BytesReceivedTracker } from './trackers';
 import { MediaServerPeerConnection } from './media-server-peer-connection';
@@ -452,7 +452,11 @@ export class WebRTCStreamManager {
                     }
                     instance.handleFrozenStream();
                 },
-                unsubscribe: () => instance.unregisterElement(videoElement)
+                unsubscribe: () => {
+                    instance.unregisterElement(videoElement);
+                    instance.subscribers$.next(-1);
+                },
+                subscribe: () => instance.subscribers$.next(1),
             }))
         );
     }
@@ -769,6 +773,21 @@ export class WebRTCStreamManager {
 
     public closeNotifier$ = new Subject();
 
+    /**
+     * Updater for keeping track of current subscribers
+     */
+    private subscribers$ = new Subject<1 | -1>();
+
+    /**
+     * Auto closes connection after 5 seconds of no subscribers during that time.
+     */
+    private autoClose = () => {
+        this.subscribers$.pipe(
+            scan((acc, value) => acc + value, 0),
+            switchMap(count => count ? NEVER : timer(5_000)),
+            takeUntil(this.closeNotifier$)
+        ).subscribe(() => this.close());
+    }
 
     /**
      * Stop all tracks on the stream to ensure mediaserver resources are freed up.
@@ -1593,24 +1612,10 @@ export class WebRTCStreamManager {
         ))
     };
 
-    /**
-     * Initializes peer connection cleanup. Closes all websockets and peer connections when mediasource doesn't have any observers.
-     */
-    #initPeerConnectionCleanup = (): void => {
-        WebRTCStreamManager.sync$
-            .pipe(
-                delay(WebRTCStreamManager.SYNC_INTERVAL),
-                map(() => !this.mediaStream$.observed),
-                bufferCount(5, 1),
-                filter((buffer) => buffer.every((val) => val)),
-                take(1)
-            )
-            .subscribe(() => this.close());
-    };
-
     #initRestartInactiveStream = (): void => {
         timer(0, 100).pipe(
-            filter(() => !this.usingMse && !!this.mediaStream$.observed && this.mediaStream$.value?.[0] && !this.mediaStream$.value[0].active),
+            map(() => !this.usingMse && !!this.mediaStream$.observed && this.mediaStream$.value?.[0] && !this.mediaStream$.value[0].active),
+            switchMap(inactive => inactive ? timer(1_000) : NEVER),
             takeUntil(this.closeNotifier$)
         ).subscribe(() => this.close(0.1));
     };
@@ -1827,8 +1832,9 @@ export class WebRTCStreamManager {
             distinctUntilChanged((prev, cur) => prev.every((val, i) => val === cur[i])),
             debounceTime(50)
         ).subscribe(() => this.start().catch(() => this.start()));
-        this.#initPeerConnectionCleanup();
+
         this.#initRestartInactiveStream();
+        this.autoClose();
     }
 }
 
