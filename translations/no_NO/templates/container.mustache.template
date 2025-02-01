@@ -20,13 +20,13 @@
                     <table>
                         <tbody>
                         <tr>
-                            <td><img class="icon" src="cid:home"></td>
+                            <td><img class="icon" src="cid:hjem"></td>
                             <td><div class="name">{{systemName}}</div>
                                 {{#systemSignature}}<div class="hint">{{systemSignature}}</div>{{/systemSignature}}</td>
                         </tr>
                         {{#cloud}}
                         <tr class="cloud-info">
-                            <td><img class="icon" src="cid:home"></td>
+                            <td><img class="icon" src="cid:hjem"></td>
                             <td><div class="name">{{cloud.ownerName}}</div>
                                 <div class="hint">{{cloud.ownerEmail}}</div></td>
                         </tr>
