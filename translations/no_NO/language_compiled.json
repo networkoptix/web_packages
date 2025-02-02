@@ -1800,7 +1800,7 @@
     "auto refresh in {time}s...": "automatisk oppdatering om {time}s...",
     "camera": "kamera",
     "cameras": "kameraer",
-    "can't connect to the camera": "can't connect to the camera",
+    "can't connect to the camera": "kan ikke koble til kameraet",
     "canvas": "canvas",
     "checking...": "kontrollerer...",
     "clear search": "nullstill søk",
