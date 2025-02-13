@@ -80,8 +80,8 @@ export class ConnectionQueue {
     #concurrencyUpdater$ = new Subject<number>();
     #runningTasks$ = this.#concurrencyUpdater$.pipe(scan((acc, curr) => acc + curr, 0));
 
-    static runTask(task: Parameters<ConnectionQueue['runTask']>[0], groupName: string = 'common', requeueDelay = 500, taskTimeout = 10000, logger: Console | undefined = undefined): void {
-        ConnectionQueue.GROUP[groupName] ||= new ConnectionQueue(groupName, logger);
+    static runTask(task: Parameters<ConnectionQueue['runTask']>[0], groupName: string = 'common', concurrency =ConnectionQueue.MAX_CONCURRENCY, requeueDelay = 500, taskTimeout = 10000, logger: Console | undefined = undefined): void {
+        ConnectionQueue.GROUP[groupName] ||= new ConnectionQueue(groupName, logger, concurrency);
         ConnectionQueue.GROUP[groupName].runTask(task, requeueDelay, taskTimeout);
     }
 
@@ -102,7 +102,7 @@ export class ConnectionQueue {
 
             completed$.pipe(take(1)).subscribe(() => {
                 cancelTimedOut$.next('cancel');
-                resolve();
+                setTimeout(resolve, 250)
                 this.#concurrencyUpdater$.next(-1);
             })
 
@@ -115,8 +115,8 @@ export class ConnectionQueue {
         })));
     }
 
-    private constructor(private origin: string, private logger?: Console) {
-        this.#queue$.pipe(mergeMap(notifier => notifier, ConnectionQueue.MAX_CONCURRENCY)).subscribe(state => this.logger?.info(state));
+    private constructor(private origin: string, private logger?: Console, concurrency = ConnectionQueue.MAX_CONCURRENCY) {
+        this.#queue$.pipe(mergeMap(notifier => notifier, concurrency)).subscribe(state => this.logger?.info(state));
         this.#runningTasks$.subscribe(count => this.logger?.info(`[${this.origin}] Running tasks: ${count}`));
     }
 }
