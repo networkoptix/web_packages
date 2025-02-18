@@ -1,7 +1,7 @@
 您好, {{message.userFullName}}
 
 {{#message.sharer_name}}
-{{message.sharer_name}} ({{message.sharer_email}}) 共用影像管理系統 {{message.system_name}} 給您.
+{{message.sharer_name}} ({{message.sharer_email}}) 已與您分享影像管理系統 {{message.system_name}} 的存取權限。
 {{/message.sharer_name}}
 
 {{^message.sharer_name}}
