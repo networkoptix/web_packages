@@ -1,7 +1,7 @@
 {{message.userFullName}} さん、こんにちは。
 
 {{#message.sharer_name}}
-{{message.sharer_name}} ({{message.sharer_email}}) が、映像管理システム "{{message.system_name}}" へのアクセスを共有しました。
+{{message.sharer_name}} ({{message.sharer_email}}) さんが、映像管理システム "{{message.system_name}}" へのアクセスを共有しました。
 {{/message.sharer_name}}
 
 {{^message.sharer_name}}

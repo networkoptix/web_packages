@@ -1,7 +1,7 @@
 <h1>{{message.userFullName}} さん、こんにちは。</h1>
 
 {{#message.sharer_name}}
-<p><a href="mailto:{{message.sharer_email}}"> {{message.sharer_name}} </a>が映像管理システム "{{message.system_name}}"へのアクセスを共有しました。
+<p><a href="mailto:{{message.sharer_email}}"> {{message.sharer_name}} </a>さんが、映像管理システム "{{message.system_name}}"へのアクセスを共有しました。
 
 表示および管理を行うには、このメールアドレスを使用して<a href="{{config.portal_url}}"> %CLOUD_NAME%</a> にアカウントを作成し、続く指示に従ってください。</p>
 {{/message.sharer_name}}
