@@ -50,8 +50,24 @@ export class WebRTCStreamManager {
 
     static position = 0;
 
+    static getCurrentlyHighQuality = () => Object.values(WebRTCStreamManager.EXISTING_CONNECTIONS).filter(connection => connection.stream$.value.value === 0);
+    static lowerAllStreams = () => this.getCurrentlyHighQuality().reduce((promise, connection) => promise.then(() => new Promise(resolve => setTimeout(resolve, 500))).then(() => connection.updateStream(1)), Promise.resolve());
+
+    private static _INITIAL_STREAM = AvailableStreams.SECONDARY;
+
+    static MAX_HIGH = 4;
+
     /** Default Stream for new streams. Dependent on MOS score. */
-    static INITIAL_STREAM: AvailableStreams = AvailableStreams.PRIMARY;
+    static get INITIAL_STREAM() {
+        if (Object.keys(WebRTCStreamManager.EXISTING_CONNECTIONS).length > WebRTCStreamManager.MAX_HIGH) {
+            return AvailableStreams.SECONDARY;
+        }
+        return this._INITIAL_STREAM;
+    };
+
+    static set INITIAL_STREAM(stream: AvailableStreams) {
+        this._INITIAL_STREAM = stream;
+    }
 
     private static performanceIssueNotifier$ = new Subject<void>();
 
@@ -223,26 +239,37 @@ export class WebRTCStreamManager {
             const clientPerformanceOptimal = fps > (maxFps < 60 ? 40 : 50);
             WebRTCStreamManager.INITIAL_STREAM = clientSidePerformanceIssue ? AvailableStreams.SECONDARY : AvailableStreams.PRIMARY;
 
-            const streamsToUpgrade = details.filter(({ stream,  mos, connection }) => {
-                if (connection.streamNotAvailable(stream)) {
+            const streamsToUpgrade =
+            details.length >= WebRTCStreamManager.MAX_HIGH ? [] : details
+                .filter(({ stream, mos, connection }) => {
+                    if (connection.streamNotAvailable(stream)) {
                     return false;
-                }
+                    }
 
-                if (clientSidePerformanceIssue || stream === AvailableStreams.PRIMARY) {
+                    if (
+                    clientSidePerformanceIssue ||
+                    stream === AvailableStreams.PRIMARY
+                    ) {
                     return false;
-                }
+                    }
 
-                const hasSecondary = connection.availableStreams.includes(AvailableStreams.SECONDARY);
-                if (!hasSecondary) {
+                    const hasSecondary = connection.availableStreams.includes(
+                    AvailableStreams.SECONDARY
+                    );
+                    if (!hasSecondary) {
                     return true;
-                }
+                    }
 
-                if (connection.allElementsSmall()) {
+                    if (connection.allElementsSmall()) {
                     return false;
-                }
+                    }
 
-                return clientPerformanceOptimal && mos > WebRTCStreamManager.HIGH_QUALITY_MOS_THRESHOLD
-            }).map(state => ({ ...state, upgrade: true }));;
+                    return (
+                    clientPerformanceOptimal &&
+                    mos > WebRTCStreamManager.HIGH_QUALITY_MOS_THRESHOLD
+                    );
+                })
+                .map((state) => ({ ...state, upgrade: true }));
             const streamsToDowngrade = details.filter(({ stream, mos, connection }) => {
                 if (connection.streamNotAvailable(stream)) {
                     return false;
@@ -918,6 +945,13 @@ export class WebRTCStreamManager {
             }
         }
 
+        const currentlyHighQuality = WebRTCStreamManager.getCurrentlyHighQuality();
+
+        if (this.availableStreams.includes(AvailableStreams.SECONDARY) && currentlyHighQuality.length >= WebRTCStreamManager.MAX_HIGH) {
+            WebRTCStreamManager.lowerAllStreams();
+            stream = AvailableStreams.SECONDARY;
+        }
+
         if (this.streamNotAvailable(stream)) {
             stream = this.availableStreams[0];
         }
@@ -1545,7 +1579,8 @@ export class WebRTCStreamManager {
         const url = (webRtcUrl.endsWith('&') ? webRtcUrl.slice(0, -1) : webRtcUrl);
         this.closeWsConnection();
 
-        const openConnection = (observer: Partial<Observer<SignalingMessage>>, retries = 5) => new Promise<void>(resolve => {
+        const webRtcStreamManager = this;
+        const openConnection = (observer: Partial<Observer<SignalingMessage>>, retries = 10) => new Promise<void>(resolve => {
             defer(async () => {
                 const prefixed = url.replace(this.prefix, generateRandomString());
                 this.wsConnection = new WebSocketSubject({
@@ -1555,16 +1590,16 @@ export class WebRTCStreamManager {
                          * Handles reconnecting if there's some low level error with the websocket connection.
                          */
                         next: async _close => {
-                            if (_close.code !== 1006 || this.mediaStream$.value[0]) {
+                            if (_close.code !== 1006 || webRtcStreamManager.mediaStream$.value?.[0]) {
                                 return;
                             }
-                            if (retries) {
+                            if (--retries) {
                                 ConnectionQueue.runTask(async resolve => {
-                                    await openConnection(observer, retries - 1);
+                                    await openConnection(observer, retries);
                                     resolve();
-                                }, `connect-${this.connectionKey.split('_').shift()}`, 6);
+                                }, `connect-${webRtcStreamManager.connectionKey.split('_').shift()}`, 4);
                             } else {
-                                this.close(0.1);
+                                webRtcStreamManager.start()
                             }
                         }
                     }
@@ -1586,23 +1621,25 @@ export class WebRTCStreamManager {
                 next: this.gotMessageFromServer,
                 error: async (err: Error) => {
                     if (err.message === 'timeout') {
-                        if (this.maxTimeout < 20_000) {
-                            this.maxTimeout += 2_500;
-                            if (this.maxTimeout >= 10_000) {
-                                this.mediaStream$.next([null, ConnectionError.lostConnection, this]);
+                        await new Promise(resolve => setTimeout(resolve, this.maxTimeout));
+                        if (webRtcStreamManager.maxTimeout <= 20_000) {
+                            webRtcStreamManager.maxTimeout += 2_500;
+                            if (webRtcStreamManager.maxTimeout === 12_500) {
+                                webRtcStreamManager.mediaStream$.next([null, ConnectionError.lostConnection, this])
                             }
-                            await new Promise(resolve => setTimeout(resolve, this.maxTimeout));
+                        } else {
+                            return webRtcStreamManager.start(true);
                         }
                     }
                     WebRTCStreamManager.logger?.error(err);
                     await new Promise(resolve => setTimeout(resolve, 100));
                     if (--retries) {
-                        return this.start();
+                        return webRtcStreamManager.start();
                     }
-                    this.mediaStream$.next([null, ConnectionError.lostConnection, this]);
-                    this.close(0.1);
+                    webRtcStreamManager.mediaStream$.next([null, ConnectionError.lostConnection, this]);
+                    webRtcStreamManager.start(true)
                 },
-                complete: () => this.closeWsConnection(),
+                complete: () => webRtcStreamManager.closeWsConnection(),
             });
         } else {
             ConnectionQueue.runTask(async (completeCallback, requeueCallback) => {
@@ -1620,23 +1657,22 @@ export class WebRTCStreamManager {
                     next: val => this.gotMessageFromServer,
                     error: async (err: Error) => {
                         if (err.message === 'timeout') {
-                            if (this.maxTimeout < 20_000) {
-                                this.maxTimeout += 2_500;
-                                if (this.maxTimeout >= 10_000) {
-                                    this.mediaStream$.next([null, ConnectionError.lostConnection, this]);
-                                }
-                                await new Promise(resolve => setTimeout(resolve, this.maxTimeout));
+                            await new Promise(resolve => setTimeout(resolve, this.maxTimeout));
+                            if (webRtcStreamManager.maxTimeout < 20_000) {
+                                webRtcStreamManager.maxTimeout += 2_500;
+                            } else {
+                                webRtcStreamManager.mediaStream$.next([null, ConnectionError.lostConnection, this]);
                             }
                         }
                         WebRTCStreamManager.logger?.error(err);
-                        await new Promise(resolve => setTimeout(resolve, 500));
+                        await new Promise(resolve => setTimeout(resolve, 100));
                         if (--retries) {
                             // await new Promise(resolve => setTimeout(resolve, 100));
                             requeue();
                             return;
                         }
-                        this.mediaStream$.next([null, ConnectionError.lostConnection, this]);
-                        this.close(0.1);
+                        webRtcStreamManager.mediaStream$.next([null, ConnectionError.lostConnection, this]);
+                        webRtcStreamManager.close(0.1);
                         complete();
                     },
                     complete,
@@ -1845,7 +1881,10 @@ export class WebRTCStreamManager {
         public allowTranscoding = false,
         public connectionKey = '',
     ) {
-
+        const existingConnections = WebRTCStreamManager.getCurrentlyHighQuality();
+        if (existingConnections.length >= WebRTCStreamManager.MAX_HIGH) {
+            WebRTCStreamManager.lowerAllStreams();
+        }
         if (typeof webRtcUrlFactoryOrConfig !== 'function') {
             if ('position' in webRtcUrlFactoryOrConfig) {
                 this.updatePosition(webRtcUrlFactoryOrConfig.position);
