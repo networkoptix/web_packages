@@ -1559,7 +1559,7 @@
     "This tool will change theme settings ONLY for current user. In some cases CSS may not be loaded. To reset theme use the checkbox or select theme in \"Account settings\".": "This tool will change theme settings ONLY for current user. In some cases CSS may not be loaded. To reset theme use the checkbox or select theme in \"Account settings\".",
     "This user does not exist.": "This user does not exist.",
     "This user has administrator permissions": "Tällä käyttäjällä on järjestelmänvalvojan oikeudet",
-    "This user has been disabled by a system administrator.": "This user has been disabled by a system administrator.",
+    "This user has been disabled by a system administrator.": "Järjestelmänvalvoja on poistanut tämän käyttäjän käytöstä.",
     "This user has custom permissions. Use the %VMS_NAME% application to view and set up custom permissions.": "This user has custom permissions. Use the %VMS_NAME% application to view and set up custom permissions.",
     "Thu": "Thu",
     "Thumbnails/s": "Thumbnails/s",
