@@ -248,6 +248,11 @@ export const throttleByFrameRate = <T>() => throttle<T>(() => throttleByFrameRat
 
 export const generateRandomString = () => Math.random().toString(36).slice(2)
 
+export const releaseLock = <T extends { cooldownLock: ReturnType<typeof setTimeout> }>(target: T): void => {
+    clearTimeout(target.cooldownLock);
+    target.cooldownLock = undefined;
+}
+
 export const acquireLock = <T extends { cooldownLock: ReturnType<typeof setTimeout> }>(target: T, cooldownTime: number, force = false): boolean => {
     if (force) {
         clearTimeout(target.cooldownLock);
@@ -258,9 +263,7 @@ export const acquireLock = <T extends { cooldownLock: ReturnType<typeof setTimeo
         return false;
     }
 
-    target.cooldownLock = setTimeout(() => {
-        target.cooldownLock = undefined;
-    }, cooldownTime * 1000);
+    target.cooldownLock = setTimeout(() => releaseLock(target), cooldownTime * 1000);
 
     return true;
 }

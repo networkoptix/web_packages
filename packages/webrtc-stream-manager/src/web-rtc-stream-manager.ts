@@ -7,7 +7,7 @@ import { FocusTracker, MosScoreTracker, BytesReceivedTracker } from './trackers'
 import { MediaServerPeerConnection } from './media-server-peer-connection';
 import { SignalingMessage, PlaybackDetails, ConnectionError, SdpInit, IceInit, ErrorMsg, StreamQuality, IntRange, MimeInit, AvailableStreams, ApiVersions, Stream, RequiresTranscoding, isRequiresTranscoding, WebRtcUrlFactoryOrConfig, WebRtcUrlFactory, WebRtcUrlConfig, TargetStream, DataChannelMessage, isTimeStampMessage, isStreamChangeMessage, ConnectionType, isConfirmationMessage } from './types';
 import { BaseTracker } from './trackers/base-tracker';
-import { ConnectionQueue, WithSkip, getConnectionKey, createConnectionKey, cleanId, fetchWithRedirectAuthorization, cacheSuccess, streamSupported, frameRateTracker$, throttleByFrameRate, generateRandomString, acquireLock } from './utils';
+import { ConnectionQueue, WithSkip, getConnectionKey, createConnectionKey, cleanId, fetchWithRedirectAuthorization, cacheSuccess, streamSupported, frameRateTracker$, throttleByFrameRate, throttleByFrameRateScheduler$, generateRandomString, acquireLock, releaseLock } from './utils';
 
 type StreamsConfig = AvailableStreams | AvailableStreams[];
 
@@ -469,7 +469,10 @@ export class WebRTCStreamManager {
             filter(res => !!res),
             takeUntil(instance.closeNotifier$),
             tap(({
-                next: ([mediaStream]) => {
+                next: ([mediaStream, connectionError, connection]) => {
+                    if (connectionError && [ConnectionError.transcodingDisabled, ConnectionError.mjpegDisabled].includes(connectionError)) {
+                        connection.requiresTranscodingError = true;
+                    }
                     if (!mediaStream) {
                         instance.restartHandleFrozenStream$.next(true);
                         return;
@@ -1374,23 +1377,88 @@ export class WebRTCStreamManager {
         ), `${relayHost.split('.')[0]}-version`).then(
             response => response.json() as Promise<typeof fallback>
         ).catch(
-            () => fallback).then(({ version }) => parseFloat(version)
+            () => fallback).then(({ version }) => parseFloat(version.split('.').slice(0, 2).join('.'))
         );
 
         this.apiVersion = isNaN(version) || version < 6 ? ApiVersions.v1 : ApiVersions.v2;
+        this.proxyDisabled = this.apiVersion === ApiVersions.v1 || version < 6.1;
         WebRTCStreamManager.cachedApiVersion[systemId] = this.apiVersion;
 
         return this.apiVersion
     }
 
-    private useProxy = false;
+    /**
+     * SystemId's for which proxying is disabled.
+     */
+    static proxyDisabled = new Set<string>();
+    /**
+     * ServerId's for which proxying is required.
+     */
+    static requiresProxy = new Set<string>();
+    /**
+     * Proxying is disabled for this system.
+     */
+    private set proxyDisabled(value: boolean) {
+        if (value) {
+            acquireLock(this, Infinity, true);
+            WebRTCStreamManager.proxyDisabled.add(this.systemId);
+        } else {
+            releaseLock(this);
+            WebRTCStreamManager.proxyDisabled.delete(this.systemId);
+        }
+    }
+    private get proxyDisabled() {
+        return WebRTCStreamManager.proxyDisabled.has(this.systemId);
+    }
+    /**
+     * Server is unreachable by proxy.
+     */
+    private get unreachableByProxy() {
+        return this.proxyDisabled && this.useProxy;
+    }
+    /**
+     * Proxying is required for this server.
+     */
+    private set useProxy(value: boolean) {
+        if (value) {
+            acquireLock(this, Infinity, true);
+            WebRTCStreamManager.requiresProxy.add(this.serverId);
+        } else {
+            releaseLock(this);
+            WebRTCStreamManager.requiresProxy.delete(this.serverId);
+        }
+    }
+    private get useProxy() {
+        return WebRTCStreamManager.requiresProxy.has(this.serverId);
+    }
     private serverId: string;
+    private targetServerId: string;
+
+    static cameraRequiresTranscoding = new Set<string>();
+
+    private get requiresTranscodingError() {
+        return WebRTCStreamManager.cameraRequiresTranscoding.has(this.connectionKey);
+    }
+
+    private set requiresTranscodingError(value: boolean) {
+        if (value) {
+            acquireLock(this, Infinity, true);
+            WebRTCStreamManager.cameraRequiresTranscoding.add(this.connectionKey);
+        } else {
+            releaseLock(this);
+            WebRTCStreamManager.cameraRequiresTranscoding.delete(this.connectionKey);
+        }
+    }
 
     private codecCheckKey = generateRandomString();
     private codecChanged = generateRandomString();
 
     get cameraId() {
         return this.connectionKey.split('_').pop();
+    }
+
+    private get systemId() {
+        return this.connectionKey.split('_').shift();
     }
 
     usingMse = false;
@@ -1404,8 +1472,17 @@ export class WebRTCStreamManager {
      * Initializes websocket connection for negotating peer connection.
      */
     startHandler = async (lostConnection = false): Promise<unknown> => {
-        clearTimeout(this.cooldownLock);
-        this.cooldownLock = null;
+        if (this.unreachableByProxy) {
+            this.mediaStream$.next([null, ConnectionError.proxyDisabled, this]);
+            return this.close(false, this.apiVersion === ApiVersions.v1)
+        }
+
+        if (this.requiresTranscodingError) {
+            this.mediaStream$.next([null, ConnectionError.transcodingDisabled, this]);
+            return this.close(false, this.apiVersion === ApiVersions.v1);
+        }
+
+        releaseLock(this);
         this.currentPositionTracker$.next(-1);
         const mediaStreamIdle = async (): Promise<boolean> => firstValueFrom(
             interval(100).pipe(
@@ -1424,7 +1501,6 @@ export class WebRTCStreamManager {
         if (this.apiVersion !== ApiVersions.v2) {
             this.apiVersion = await this.getApiVersion();
         }
-
 
         if (lostConnection) {
             this.updateStream(AvailableStreams.SECONDARY);
@@ -1449,8 +1525,9 @@ export class WebRTCStreamManager {
         const webRtcUrlObject = new URL(webRtcUrl);
         const relayHost = webRtcUrlObject.host;
         this.serverId = webRtcUrlObject.searchParams.get('x-server-guid');
+        this.targetServerId = this.serverId;
 
-        const fallback = ({ parameters: { mediaStreams: { streams: [] as Stream[] } }, serverId: this.serverId, id: this.cameraId }) as const;
+        const fallback = ({ parameters: { mediaStreams: { streams: [] as Stream[] } }, serverId: this.targetServerId, id: this.cameraId }) as const;
         const deviceParams = '?_keepDefault=true&_with=parameters.mediaStreams.streams.codec,parameters.mediaStreams.streams.encoderIndex,serverId,id'
         const allStreamsInfoEndpoint = `https://${relayHost}/rest/v2/devices${deviceParams}`
         const streamInfoEndpoint =
@@ -1478,23 +1555,25 @@ export class WebRTCStreamManager {
             return fetchCurrentStream();
         });
 
-        if (!this.serverId && !this.useProxy) {
-            this.serverId = cleanId((await fetchStreams).serverId);
+        this.serverId ||= cleanId((await fetchStreams).serverId)
+
+        if (!this.targetServerId && !this.useProxy) {
+            this.targetServerId = this.serverId;
         }
 
-        const directConnect = !this.useProxy && !!this.serverId;
+        const directConnect = !this.useProxy && !!this.targetServerId;
 
         if (directConnect) {
             const existing = new URL(webRtcUrl).searchParams.get('x-server-guid');
 
             if (existing) {
                 webRtcUrl = webRtcUrl.replace(`x-server-guid=${existing}&`, '');
-                webRtcUrl += `x-server-guid=${this.serverId}&`
+                webRtcUrl += `x-server-guid=${this.targetServerId}&`
             }
         }
 
 
-        const resolvedHost = await fetch(`https://${relayHost}/api/ping?${directConnect && this.serverId ? `x-server-guid=${this.serverId}` : ''}`).then(response => new URL(response.url).host)
+        const resolvedHost = await fetch(`https://${relayHost.replace(this.prefix, generateRandomString())}/api/ping?${directConnect && this.serverId ? `x-server-guid=${this.serverId}` : ''}`).then(response => new URL(response.url).host).catch(() => false as const)
 
         const invalidAccessToken = () => {
             this.mediaStream$.next([null, ConnectionError.invalidAccessToken, this]);
@@ -1507,7 +1586,7 @@ export class WebRTCStreamManager {
             let oneTimeTokenEndpoint = `https://${resolvedHost}/rest/v3/login/tickets`;
 
             if (directConnect) {
-                oneTimeTokenEndpoint += `?x-server-guid=${this.serverId}&`
+                oneTimeTokenEndpoint += `?x-server-guid=${this.targetServerId}&`
             }
 
             return fetchWithRedirectAuthorization(oneTimeTokenEndpoint, { headers: { authorization: `Bearer ${this.accessToken()}` }, method: 'POST'}).then(response => response.json()).then(res => {
@@ -1538,7 +1617,7 @@ export class WebRTCStreamManager {
             }
         } else {
             this.useProxy = true;
-            this.serverId = null;
+            this.targetServerId = null;
             return this.start();
         }
 

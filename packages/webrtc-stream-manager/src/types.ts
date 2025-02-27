@@ -34,6 +34,7 @@ export enum ConnectionError {
     websocket = 'websocket',
     authorization = 'authorization',
     lostConnection = 'lostConnection',
+    proxyDisabled = 'proxyDisabled',
     transcodingDisabled = 'transcodingDisabled',
     mjpegDisabled = 'mjpegDisabled',
     invalidAccessToken = 'invalidAccessToken'
