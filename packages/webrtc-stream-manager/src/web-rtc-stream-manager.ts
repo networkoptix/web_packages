@@ -1575,7 +1575,7 @@ export class WebRTCStreamManager {
 
         const resolvedHost = await fetch(`https://${relayHost.replace(this.prefix, generateRandomString())}/api/ping?${directConnect && this.serverId ? `x-server-guid=${this.serverId}` : ''}`).then(async response => {
             this.useProxy = cleanId((await response.json())?.reply?.moduleGuid || '') !== this.serverId;
-            return !this.useProxy && new URL(response.url).host
+            return !(this.useProxy && this.proxyDisabled) && new URL(response.url).host
         }).catch(() => false as const);
 
         const invalidAccessToken = () => {
