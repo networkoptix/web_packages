@@ -7,7 +7,7 @@ import { FocusTracker, MosScoreTracker, BytesReceivedTracker } from './trackers'
 import { MediaServerPeerConnection } from './media-server-peer-connection';
 import { SignalingMessage, PlaybackDetails, ConnectionError, SdpInit, IceInit, ErrorMsg, StreamQuality, IntRange, MimeInit, AvailableStreams, ApiVersions, Stream, RequiresTranscoding, isRequiresTranscoding, WebRtcUrlFactoryOrConfig, WebRtcUrlFactory, WebRtcUrlConfig, TargetStream, DataChannelMessage, isTimeStampMessage, isStreamChangeMessage, ConnectionType, isConfirmationMessage } from './types';
 import { BaseTracker } from './trackers/base-tracker';
-import { ConnectionQueue, WithSkip, getConnectionKey, createConnectionKey, cleanId, fetchWithRedirectAuthorization, cacheSuccess, streamSupported, frameRateTracker$, throttleByFrameRate, throttleByFrameRateScheduler$, generateRandomString, acquireLock, releaseLock } from './utils';
+import { ConnectionQueue, WithSkip, getConnectionKey, createConnectionKey, cleanId, fetchWithRedirectAuthorization, cacheSuccess, streamSupported, frameRateTracker$, throttleByFrameRate, targetPlaybackRateStrategies, generateRandomString, acquireLock, releaseLock } from './utils';
 
 type StreamsConfig = AvailableStreams | AvailableStreams[];
 
@@ -34,6 +34,12 @@ export class WebRTCStreamManager {
      * Defaults to false until relay update is released on production.
      */
     static USE_RELAY_PREFIX = false;
+    /**
+     * Whether to use unreliable data channel.
+     */
+    static USE_UNRELIABLE_DATA_CHANNEL = true;
+
+    static PLAYBACK_RATE_STRATEGY = targetPlaybackRateStrategies.default;
 
     /** For Tracking existing connections */
     static EXISTING_CONNECTIONS: Record<string, WebRTCStreamManager> = {};
@@ -1003,6 +1009,32 @@ export class WebRTCStreamManager {
 
     private buffers: BufferSource[] = [];
 
+    /**
+     * Gets the number of seconds buffered ahead of current playback position
+     *
+     * @param videoElement - HTML video element to check buffer status
+     * @returns Number of seconds buffered ahead of current position
+     */
+    public getBufferedAheadTime(videoElement: HTMLVideoElement = this.video): number {
+        if (!videoElement || !videoElement.buffered || videoElement.buffered.length === 0) {
+            return 0;
+        }
+
+        const currentTime = videoElement.currentTime;
+        const buffered = videoElement.buffered;
+
+        // Find the buffer range containing current playback position
+        for (let i = 0; i < buffered.length; i++) {
+            if (currentTime >= buffered.start(i) && currentTime <= buffered.end(i)) {
+                // Return seconds of video buffered ahead of current position
+                return buffered.end(i) - currentTime;
+            }
+        }
+
+        // If current position isn't in any buffer range, return 0
+        return 0;
+    }
+
     private appendFromBuffers = () => {
         const nextBuffer = this.buffers.pop();
         if (!nextBuffer) {
@@ -1016,7 +1048,9 @@ export class WebRTCStreamManager {
                 this.sourceBuffer.appendBuffer(nextBuffer);
             }
         } catch(e) {
-            this.buffers.push(nextBuffer);
+            if (!WebRTCStreamManager.USE_UNRELIABLE_DATA_CHANNEL) {
+                this.buffers.push(nextBuffer);
+            }
             if (e !== bufferUpdatingError) {
                 this.close(0.1)
             }
@@ -1024,7 +1058,11 @@ export class WebRTCStreamManager {
     }
 
     private appendBuffer = (buffer: BufferSource) => {
-        this.buffers.unshift(buffer);
+        if (WebRTCStreamManager.USE_UNRELIABLE_DATA_CHANNEL) {
+            this.buffers = [buffer]
+        } else {
+            this.buffers.unshift(buffer);
+        }
         if (!this.sourceBuffer) {
             this.initializeMse();
             return;
@@ -1075,7 +1113,7 @@ export class WebRTCStreamManager {
     private get video() {
         if (!this.videoRef) {
             this.videoRef = document.createElement('video') as typeof this.videoRef;
-
+            this.videoRef.onblur = event => event.preventDefault();
             this.videoRef.style.position = 'absolute';
             this.videoRef.style.top = '0px';
 
@@ -1119,6 +1157,10 @@ export class WebRTCStreamManager {
             this.updateStream(this.availableStreams[0]);
         }
     }
+
+    bufferedDuration$ = new BehaviorSubject(0);
+    chunkDuration$ = new BehaviorSubject(0);
+    playbackRate$ = new BehaviorSubject(1);
 
     private initializeMse = (mimeType?: string): Promise<void> => {
         if (mimeType) {
@@ -1242,9 +1284,24 @@ export class WebRTCStreamManager {
                     webRtcStreamManager.sourceBuffer = this.addSourceBuffer(mimeType);
                     webRtcStreamManager.sourceBuffer.mode = 'sequence';
 
+                    let beforeBufferedEnd = 0;
+
                     streamTracker.track()
+                    webRtcStreamManager.sourceBuffer.onupdatestart = function() {
+                        beforeBufferedEnd = webRtcStreamManager.getBufferedAheadTime(webRtcStreamManager.video);
+                    }
 
                     webRtcStreamManager.sourceBuffer.onupdateend = function() {
+                        const bufferedTotal = webRtcStreamManager.getBufferedAheadTime(webRtcStreamManager.video);
+                        const chunkDuration = bufferedTotal - beforeBufferedEnd;
+                        webRtcStreamManager.chunkDuration$.next(chunkDuration);
+                        webRtcStreamManager.bufferedDuration$.next(bufferedTotal);
+                        if (WebRTCStreamManager.USE_UNRELIABLE_DATA_CHANNEL) {
+                            const maxPlaybackRate = 16;
+                            const playbackRate = Math.min(maxPlaybackRate, WebRTCStreamManager.PLAYBACK_RATE_STRATEGY(webRtcStreamManager.playbackRate$.value, bufferedTotal, chunkDuration))
+                            webRtcStreamManager.playbackRate$.next(playbackRate)
+                            webRtcStreamManager.video.playbackRate = playbackRate;
+                        }
                         streamTracker.addChunk();
                         streamTracker.track();
 
@@ -1666,7 +1723,7 @@ export class WebRTCStreamManager {
             defer(async () => {
                 const prefixed = url.replace(this.prefix, generateRandomString());
                 this.wsConnection = new WebSocketSubject({
-                    url: this.apiVersion === ApiVersions.v1 ? prefixed : `${prefixed}&_ticket=${await getOneTimeToken()}&_ignore=${generateRandomString()}}`,
+                    url: this.apiVersion === ApiVersions.v1 ? prefixed : `${prefixed}&_ticket=${await getOneTimeToken()}${WebRTCStreamManager.USE_UNRELIABLE_DATA_CHANNEL ? '&unreliableTransport=true': ''}&_ignore=${generateRandomString()}}`,
                     closeObserver: {
                         /**
                          * Handles reconnecting if there's some low level error with the websocket connection.
@@ -2001,3 +2058,11 @@ export class WebRTCStreamManager {
 
 // @ts-ignore Use for debugging
 // window.toggleStreams = () =>  Object.values(WebRTCStreamManager.EXISTING_CONNECTIONS).forEach(connection => connection.updateStream(connection.stream$.value ? 0 : 1));
+
+// @ts-ignore Use for debugging
+window.setPlaybackRateStrategy = Object.entries(targetPlaybackRateStrategies).reduce((acc, [key, value]) => ({
+    ...acc,
+    [key]: () => {
+        WebRTCStreamManager.PLAYBACK_RATE_STRATEGY = value;
+    }
+}), <Record<keyof (typeof targetPlaybackRateStrategies), () => void>>{});

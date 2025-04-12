@@ -267,3 +267,34 @@ export const acquireLock = <T extends { cooldownLock: ReturnType<typeof setTimeo
 
     return true;
 }
+
+export const targetPlaybackRateStrategies = {
+    conservative: (currentPlaybackRate: number, bufferedTime: number, lastChunk: number): number => {
+        const maxBehind = 4;
+        const maxPlayback = 2;
+        const minPlayback = 0.5;
+
+        if (bufferedTime > maxBehind) {
+            return (bufferedTime - maxPlayback) * lastChunk;
+        }
+
+        const targetPlayback = Math.max(minPlayback, Math.min(maxPlayback, bufferedTime + lastChunk));
+        const variance = Math.abs(currentPlaybackRate - targetPlayback);
+
+        if (bufferedTime > minPlayback && bufferedTime < maxPlayback) {
+            return 1;
+        }
+
+        if (variance < 0.1) {
+            return currentPlaybackRate;
+        }
+        return +((currentPlaybackRate + targetPlayback) / 2).toFixed(2);
+    },
+    default: (__currentPlaybackRate: number, bufferedTime: number, lastChunk: number): number => {
+        const depleteBufferTo = 0.15;
+        const chunkFraction = 1 / lastChunk;
+        const bufferToDeplete = bufferedTime - depleteBufferTo;
+        return Math.max(bufferToDeplete * chunkFraction, 1);
+    },
+    drainIt: (_currentPlaybackRate: number, _bufferedTime: number, _lastChunk: number) => 10
+} as const
