@@ -33,7 +33,7 @@ export class WebRTCStreamManager {
      *
      * Defaults to false until relay update is released on production.
      */
-    static USE_RELAY_PREFIX = false;
+    static USE_RELAY_PREFIX = true;
     /**
      * Whether to use unreliable data channel.
      */
