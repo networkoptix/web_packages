@@ -192,7 +192,7 @@ export interface StreamChangeMessage {
     status: 301
 }
 
-export const isTimeStampMessage = (message: unknown): message is TimeStampMessage => typeof message === 'object' && ['timestamp', 'rtpTimestamp'].every(key => key in message && typeof (message as Record<string, unknown>)[key] === 'number');
+export const isTimeStampMessage = (message: unknown): message is TimeStampMessage => typeof message === 'object' && ['timestampMs', 'rtpTimestamp'].every(key => key in message && typeof (message as Record<string, unknown>)[key] === 'number');
 
 const confirmationMessage = {
     timestamp: -1,

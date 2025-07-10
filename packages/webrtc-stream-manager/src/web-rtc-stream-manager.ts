@@ -1870,6 +1870,10 @@ export class WebRTCStreamManager {
             }
 
             if(isTimeStampMessage(data)) {
+                // Keep 'timestamp' for backwards compatibility
+                if ('timestampMs' in data) {
+                    data.timestamp = data.timestampMs as number;
+                }
                 // Datachannel still using microseconds vs milliseconds for positionMs query param
                 const timestampMs = data.timestamp / 1000;
                 if (this.isLive) {
@@ -1879,7 +1883,7 @@ export class WebRTCStreamManager {
                     this.position$.next(new WithSkip(timestampMs, true));
                 }
 
-                this.currentPositionTracker$.next(timestampMs )
+                this.currentPositionTracker$.next(timestampMs)
                 return;
             }
 
