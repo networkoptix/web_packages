@@ -234,17 +234,23 @@ export type WebRtcUrlConfig = WebRtcUrlConfigV1 | WebRtcUrlConfigV2 | WebRtcUrlC
 
 export type WebRtcUrlFactoryOrConfig = WebRtcUrlFactory | WebRtcUrlConfig
 
-export interface TimeStampMessage {
-    timestamp: number;
-    rtpTimestamp: number;
-}
+export type TimeStampMessage = (
+    { timestamp: number } | { timestampMs: number }
+) & { rtpTimestamp: number };
 
 export interface StreamChangeMessage {
     timestamp: -1;
     status: 301
 }
 
-export const isTimeStampMessage = (message: unknown): message is TimeStampMessage => typeof message === 'object' && ['timestampMs', 'rtpTimestamp'].every(key => key in message && typeof (message as Record<string, unknown>)[key] === 'number');
+export const isTimeStampMessage = (message: unknown): message is TimeStampMessage => {
+    if (typeof message !== 'object' || message === null) return false;
+    const m = message as Record<string, unknown>;
+    const hasRtp = typeof m['rtpTimestamp'] === 'number';
+    const hasTimestamp = typeof m['timestamp'] === 'number';
+    const hasTimestampMs = typeof m['timestampMs'] === 'number';
+    return hasRtp && (hasTimestamp || hasTimestampMs);
+}
 
 const confirmationMessage = {
     timestamp: -1,
