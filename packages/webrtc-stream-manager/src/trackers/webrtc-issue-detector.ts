@@ -38,7 +38,7 @@ export class WebRTCIssueDetectorWithState extends WebRTCIssueDetector {
         });
     }
 
-    public stopReporting = () => this.stopWatchingNewPeerConnections;
+    public stopReporting = () => this.stopWatchingNewPeerConnections();
 
     static track = (pc: MediaServerPeerConnection, updateCallback: (mos: number) => void, issuesCallback: (issues: IssueDetectorResult) => void) => {
         const instance = new WebRTCIssueDetectorWithState(updateCallback, issuesCallback);

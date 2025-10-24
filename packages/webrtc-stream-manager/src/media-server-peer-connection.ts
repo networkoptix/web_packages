@@ -12,6 +12,10 @@ export class MediaServerPeerConnection extends RTCPeerConnection {
 
     remoteDataChannel: RTCDataChannel;
     closed = false;
+
+    // Store data channel event handlers for cleanup
+    private dataChannelMessageHandler: ((event: MessageEvent<string | ArrayBuffer | { status: number }>) => void) | null = null;
+    private dataChannelOpenHandler: (() => void) | null = null;
     onicecandidate = (event: RTCPeerConnectionIceEvent): void => {
         if (this.closed) {
             return;
@@ -57,8 +61,19 @@ export class MediaServerPeerConnection extends RTCPeerConnection {
     }
 
     clearDataChannel(): void {
-        this.remoteDataChannel?.close();
-        delete this.remoteDataChannel;
+        if (this.remoteDataChannel) {
+            // Remove event listeners before closing
+            if (this.dataChannelMessageHandler) {
+                this.remoteDataChannel.removeEventListener('message', this.dataChannelMessageHandler);
+                this.dataChannelMessageHandler = null;
+            }
+            if (this.dataChannelOpenHandler) {
+                this.remoteDataChannel.removeEventListener('open', this.dataChannelOpenHandler);
+                this.dataChannelOpenHandler = null;
+            }
+            this.remoteDataChannel.close();
+            delete this.remoteDataChannel;
+        }
     }
 
     static forceGarbageCollection = (() => {
@@ -105,7 +120,9 @@ export class MediaServerPeerConnection extends RTCPeerConnection {
         this.clearDataChannel();
         channel.binaryType = 'arraybuffer';
         this.logger?.info('datachannel created', { ordered: channel.ordered, maxPacketLifeTime: channel.maxPacketLifeTime, maxRetransmits: channel.maxRetransmits, protocol: channel.protocol });
-        channel.addEventListener('message', ({ data }: MessageEvent<string | ArrayBuffer | { status: number }>) => {
+
+        // Store message handler reference for cleanup
+        this.dataChannelMessageHandler = ({ data }: MessageEvent<string | ArrayBuffer | { status: number }>) => {
             if (!this.handleDataChannelMessage || !this.bufferHandler) {
                 return this.close();
             }
@@ -120,11 +137,16 @@ export class MediaServerPeerConnection extends RTCPeerConnection {
             } else {
                 this.bufferHandler(data);
             }
-        })
-        this.remoteDataChannel = channel;
-        this.remoteDataChannel.onopen = () => {
+        };
+        channel.addEventListener('message', this.dataChannelMessageHandler);
+
+        // Store open handler reference for cleanup
+        this.dataChannelOpenHandler = () => {
             this.remoteDataChannel.send(JSON.stringify(this.getCurrentStreamAndPosition()))
-        }
+        };
+
+        this.remoteDataChannel = channel;
+        this.remoteDataChannel.addEventListener('open', this.dataChannelOpenHandler);
     }
 
     constructor(

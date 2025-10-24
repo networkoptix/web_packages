@@ -42,7 +42,7 @@ export class MosScoreTracker extends BaseTracker<number> {
      */
     override updateMetric(time: number): number {
         this.updateWindow(time)
-        this.metricValues.push({ time, value: this.currentValue });
+        this.pushMetricValue({ time, value: this.currentValue });
         return this.getMetric();
     };
 

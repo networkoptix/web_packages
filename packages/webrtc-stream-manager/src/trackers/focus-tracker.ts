@@ -43,7 +43,7 @@ export class FocusTracker extends BaseTracker<number> {
      */
     override updateMetric(time: number): number {
         this.updateWindow(time)
-        this.metricValues.push({ time, value: this.calculateFocusScore() });
+        this.pushMetricValue({ time, value: this.calculateFocusScore() });
         return this.getMetric();
     };
 }

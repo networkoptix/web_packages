@@ -19,6 +19,15 @@ export abstract class BaseTracker<Metric> {
     protected metricValues: MetricWrapper<Metric>[] = [];
     protected checkPlayers = false;
 
+    /**
+     * Maximum number of metric values to store.
+     * Calculated as (sampleSize / updateInterval) * 2 for safety margin.
+     * Default: 10 entries (5 second window / 1 second updates * 2)
+     *
+     * Prevents unbounded memory growth while maintaining statistical accuracy.
+     */
+    protected maxMetricValues: number;
+
     public connection: MediaServerPeerConnection;
 
     public abstract weight: number;
@@ -132,6 +141,48 @@ export abstract class BaseTracker<Metric> {
     }
 
     /**
+     * Add a metric value with automatic bounds enforcement.
+     * Maintains circular buffer behavior by removing oldest entries when limit is reached.
+     *
+     * @param value MetricWrapper to add
+     */
+    protected pushMetricValue(value: MetricWrapper<Metric>) {
+        this.metricValues.push(value);
+
+        // Enforce bounds: keep only the most recent maxMetricValues entries
+        if (this.metricValues.length > this.maxMetricValues) {
+            this.metricValues = this.metricValues.slice(-this.maxMetricValues);
+        }
+    }
+
+    /**
+     * Get approximate memory usage of metricValues array.
+     * Useful for debugging and monitoring memory consumption.
+     *
+     * @returns Approximate memory usage in bytes
+     */
+    public getMetricMemoryUsage(): number {
+        // Approximate: Each MetricWrapper has time (8 bytes) + value (varies) + object overhead (~24 bytes)
+        const bytesPerEntry = 40; // Conservative estimate
+        return this.metricValues.length * bytesPerEntry;
+    }
+
+    /**
+     * Get metrics statistics for debugging.
+     *
+     * @returns Object with array length, max capacity, and memory usage
+     */
+    public getMetricStats() {
+        return {
+            currentEntries: this.metricValues.length,
+            maxEntries: this.maxMetricValues,
+            memoryUsageBytes: this.getMetricMemoryUsage(),
+            memoryUsageKB: Math.round(this.getMetricMemoryUsage() / 1024 * 100) / 100,
+            utilizationPercent: Math.round((this.metricValues.length / this.maxMetricValues) * 100)
+        };
+    }
+
+    /**
      * Assert that metric values are of type number.
      *
      * @param metrics - unknown[]
@@ -201,12 +252,16 @@ export abstract class BaseTracker<Metric> {
      */
     defaultUpdateMetricHandler(this: BaseTracker<number>, time: number): number {
         this.updateWindow(time)
-        this.metricValues.push({ time, value: time });
+        this.pushMetricValue({ time, value: time });
         return this.defaultMetricHandler();
     }
 
     constructor(
         public sampleSize = 5000,
         protected logger?: Console,
-    ) { }
+    ) {
+        // Calculate max values: (sampleSize / 1000ms update interval) * 2 for safety
+        // Default: (5000 / 1000) * 2 = 10 entries
+        this.maxMetricValues = Math.max(10, Math.ceil((sampleSize / 1000) * 2));
+    }
 }

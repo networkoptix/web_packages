@@ -72,7 +72,7 @@ export abstract class BaseConnectionTracker<RTCReportType = InboundRtpReport> ex
      */
     updateMetric = (time: number): number => {
         this.updateWindow(time)
-        this.getScoreFromConnection().then(value => this.metricValues.push({ time, value }))
+        this.getScoreFromConnection().then(value => this.pushMetricValue({ time, value }))
         return this.getMetric();
     };
 }

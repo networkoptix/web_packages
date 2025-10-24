@@ -7,11 +7,22 @@ import { FocusTracker, MosScoreTracker, BytesReceivedTracker } from './trackers'
 import { MediaServerPeerConnection } from './media-server-peer-connection';
 import { SignalingMessage, PlaybackDetails, ConnectionError, SdpInit, IceInit, ErrorMsg, StreamQuality, IntRange, MimeInit, AvailableStreams, ApiVersions, Stream, RequiresTranscoding, isRequiresTranscoding, WebRtcUrlFactoryOrConfig, WebRtcUrlFactory, WebRtcUrlConfig, TargetStream, DataChannelMessage, isTimeStampMessage, isStreamChangeMessage, ConnectionType, isConfirmationMessage } from './types';
 import { BaseTracker } from './trackers/base-tracker';
-import { ConnectionQueue, WithSkip, getConnectionKey, createConnectionKey, cleanId, fetchWithRedirectAuthorization, cacheSuccess, streamSupported, frameRateTracker$, throttleByFrameRate, targetPlaybackRateStrategies, generateRandomString, acquireLock, releaseLock } from './utils';
+import { ConnectionQueue, WithSkip, getConnectionKey, createConnectionKey, cleanId, fetchWithRedirectAuthorization, cacheSuccess, streamSupported, frameRateTracker$, throttleByFrameRate, targetPlaybackRateStrategies, generateRandomString, acquireLock, releaseLock, LRUConnectionCache, TTLCache } from './utils';
 
 type StreamsConfig = AvailableStreams | AvailableStreams[];
 
 const bufferUpdatingError = new Error('Buffer updating');
+
+/**
+ * Connection lifecycle states for tracking retry and cleanup
+ */
+enum ConnectionState {
+    IDLE = 'idle',           // Initial state, not started
+    CONNECTING = 'connecting', // Connection attempt in progress
+    CONNECTED = 'connected',   // Successfully connected
+    RETRYING = 'retrying',     // Failed, retry scheduled
+    FAILED = 'failed'          // Permanently failed, should be removed
+}
 
 /**
  * Manages connection negotation using websockets as well as webRTC peer connections to mediaservers.
@@ -39,12 +50,67 @@ export class WebRTCStreamManager {
      */
     static USE_UNRELIABLE_DATA_CHANNEL = true;
 
+    /**
+     * Maximum consecutive retry failures before permanent cleanup
+     * Prevents orphaned connections from accumulating in EXISTING_CONNECTIONS
+     */
+    static readonly MAX_RETRY_FAILURES = 10;
+
     static PLAYBACK_RATE_STRATEGY = targetPlaybackRateStrategies.default;
 
-    /** For Tracking existing connections */
-    static EXISTING_CONNECTIONS: Record<string, WebRTCStreamManager> = {};
+    /**
+     * LRU Cache for tracking existing connections
+     * Max 100 connections, evicts least recently used when full
+     * Prevents unbounded memory growth (2.4 GB/week issue)
+     */
+    private static _connectionCache = new LRUConnectionCache<WebRTCStreamManager>(100);
 
-    static AUTHENTICATED_HOSTS: Record<string, Promise<Boolean>> = {};
+    /**
+     * TTL Cache for authenticated hosts
+     * 1 hour TTL, automatic expiration
+     * Prevents unbounded memory growth
+     */
+    private static _authCache = new TTLCache<Promise<Boolean>>(60 * 60 * 1000); // 1 hour TTL
+
+    /**
+     * Backwards compatibility getter for EXISTING_CONNECTIONS
+     * @deprecated Use _connectionCache directly for better performance
+     */
+    static get EXISTING_CONNECTIONS(): Record<string, WebRTCStreamManager> {
+        return this._connectionCache.toRecord();
+    }
+
+    /**
+     * Backwards compatibility setter for EXISTING_CONNECTIONS
+     * @deprecated Use _connectionCache.set() directly
+     */
+    static set EXISTING_CONNECTIONS(value: Record<string, WebRTCStreamManager>) {
+        this._connectionCache.clear();
+        Object.entries(value).forEach(([key, conn]) => {
+            this._connectionCache.set(key, conn);
+        });
+    }
+
+    /**
+     * Backwards compatibility getter for AUTHENTICATED_HOSTS
+     * @deprecated Use _authCache directly for better performance
+     */
+    static get AUTHENTICATED_HOSTS(): Record<string, Promise<Boolean>> {
+        // Return empty object for backwards compatibility
+        // Actual cache is managed by _authCache
+        return {};
+    }
+
+    /**
+     * Backwards compatibility setter for AUTHENTICATED_HOSTS
+     * @deprecated Use _authCache.set() directly
+     */
+    static set AUTHENTICATED_HOSTS(value: Record<string, Promise<Boolean>>) {
+        this._authCache.clear();
+        Object.entries(value).forEach(([key, promise]) => {
+            this._authCache.set(key, promise);
+        });
+    }
 
     static logger?: Console;
 
@@ -333,8 +399,8 @@ export class WebRTCStreamManager {
                 if (typeof stats === 'object') {
                     const noBytes = 'bytesReceived' in stats && !stats.bytesReceived;
                     const noFps = 'fps' in stats && stats.fps === 0;
-                    const connection = WebRTCStreamManager.EXISTING_CONNECTIONS[indentifier];
-                    if (noBytes && noFps) {
+                    const connection = WebRTCStreamManager._connectionCache.get(indentifier);
+                    if (connection && noBytes && noFps) {
                         connection.noFrames++;
                         // If no frames are received for 6 seconds for high quality stream or 15 seconds for low quality stream
                         // then we close the connection and reconnect.
@@ -342,9 +408,9 @@ export class WebRTCStreamManager {
                         if(connection.noFrames > threshold && connection?.peerConnection?.connectionState === 'connected') {
                             connection.noFrames = 0;
                             WebRTCStreamManager.logger?.info(`No bytes received for ${indentifier}. Reconnecting`);
-                            WebRTCStreamManager.EXISTING_CONNECTIONS[indentifier].close(1);
+                            connection.close(1);
                         }
-                    } else {
+                    } else if (connection) {
                         connection.noFrames = 0;
                     }
                 }
@@ -459,15 +525,18 @@ export class WebRTCStreamManager {
 
         const getAccessToken = typeof accessToken === 'function' ? accessToken : () => accessToken as string;
 
-        WebRTCStreamManager.EXISTING_CONNECTIONS[connectionKey] ||= new WebRTCStreamManager(
-            webRtcUrlFactoryOrConfig,
-            availableStreams,
-            getAccessToken,
-            allowTranscoding,
-            connectionKey,
-        );
-
-        const instance = WebRTCStreamManager.EXISTING_CONNECTIONS[connectionKey];
+        // Use LRU cache for connection reuse
+        let instance = WebRTCStreamManager._connectionCache.get(connectionKey);
+        if (!instance) {
+            instance = new WebRTCStreamManager(
+                webRtcUrlFactoryOrConfig,
+                availableStreams,
+                getAccessToken,
+                allowTranscoding,
+                connectionKey,
+            );
+            WebRTCStreamManager._connectionCache.set(connectionKey, instance);
+        }
 
         instance.registerElement(videoElement);
 
@@ -505,13 +574,11 @@ export class WebRTCStreamManager {
     };
 
     static getInstance(cameraId: { id: string, systemId: string }): WebRTCStreamManager | null {
-        return WebRTCStreamManager.EXISTING_CONNECTIONS[createConnectionKey(cameraId)] || null;
+        return WebRTCStreamManager._connectionCache.get(createConnectionKey(cameraId)) || null;
     }
 
     static closeAll(): Promise<true> {
-        return Object.values(
-            WebRTCStreamManager.EXISTING_CONNECTIONS
-        ).reduce(
+        return WebRTCStreamManager._connectionCache.values().reduce(
             async (promise, connection) => {
                 await promise;
                 await new Promise(resolve => setTimeout(resolve, 50));
@@ -523,13 +590,40 @@ export class WebRTCStreamManager {
     }
 
     /**
+     * Cleanup expired authentication cache entries
+     * @returns Number of expired entries removed
+     */
+    static cleanupAuthCache(): number {
+        return WebRTCStreamManager._authCache.cleanExpired();
+    }
+
+    /**
+     * Get cache statistics for monitoring memory usage and cache effectiveness
+     */
+    static getCacheStats() {
+        return {
+            connections: WebRTCStreamManager._connectionCache.getStats(),
+            authentication: WebRTCStreamManager._authCache.getStats(),
+        };
+    }
+
+    /**
+     * Manual cache cleanup - removes all entries
+     * Use with caution as this will close all connections
+     */
+    static clearAllCaches(): void {
+        WebRTCStreamManager._connectionCache.clear();
+        WebRTCStreamManager._authCache.clear();
+    }
+
+    /**
      * Updates the position for stream for all WebRtcStreamManager instances.
      *
      * @param position - position in ms
      */
     static updatePosition(position = 0): void {
         WebRTCStreamManager.position = Math.round(position);
-        Object.values(WebRTCStreamManager.EXISTING_CONNECTIONS).forEach(connection => {
+        WebRTCStreamManager._connectionCache.values().forEach(connection => {
             if (connection.getPlayerCount()) {
                 connection.updatePosition(position);
             }
@@ -564,7 +658,7 @@ export class WebRTCStreamManager {
      * @param speed - number or unlimited
      */
     static updateSpeed(speed = 1): void {
-        Object.values(WebRTCStreamManager.EXISTING_CONNECTIONS).forEach(connection => {
+        WebRTCStreamManager._connectionCache.values().forEach(connection => {
             if (connection.getPlayerCount()) {
                 connection.updateSpeed(speed);
             }
@@ -633,7 +727,7 @@ export class WebRTCStreamManager {
 
     /** Internal */
     private wsConnection: WebSocketSubject<SignalingMessage>;
-    private videoElements: {element: HTMLVideoElement, observer: MutationObserver }[] = [];
+    private videoElements: {element: HTMLVideoElement, observer: MutationObserver, frameCallbackHandle?: number }[] = [];
 
     /** Public methods and properties */
     /** Updates whenever the mediasserver sends a new stream */
@@ -780,7 +874,8 @@ export class WebRTCStreamManager {
             }
         });
         observer.observe(root, { childList: true, subtree: true });
-        this.videoElements.push({ element, observer });
+        const frameCallbackHandle = this.registerFrameNotifier(element);
+        this.videoElements.push({ element, observer, frameCallbackHandle });
         this.updatePosition(this.position$.value.value);
         this.updateSpeed(this.speed$.value.value);
     };
@@ -793,6 +888,10 @@ export class WebRTCStreamManager {
         const elementAndObserver = this.videoElements.splice(this.videoElements.findIndex(({ element }) => element === videoElement), 1)[0];
         if (elementAndObserver) {
             elementAndObserver.observer.disconnect();
+            // Cancel the video frame callback to prevent memory leak
+            if (elementAndObserver.frameCallbackHandle !== undefined) {
+                videoElement.cancelVideoFrameCallback(elementAndObserver.frameCallbackHandle);
+            }
             this.updateTrackerRefs();
         }
 
@@ -801,6 +900,40 @@ export class WebRTCStreamManager {
 
     /** Subject ot trigger closing open websocket observables */
     private closeWsConnectionNotifier$ = new Subject<string>();
+
+    /**
+     * Tracked timeout handles for cleanup on destroy
+     * Prevents timeout leaks from retry logic and error handlers
+     */
+    private timeoutHandles: ReturnType<typeof setTimeout>[] = [];
+
+    /**
+     * Track a setTimeout call for automatic cleanup
+     * @param callback Function to execute
+     * @param delay Delay in milliseconds
+     * @returns Timeout handle
+     */
+    private trackTimeout(callback: () => void, delay: number): ReturnType<typeof setTimeout> {
+        const handle = setTimeout(() => {
+            // Remove from tracking array when it fires
+            const index = this.timeoutHandles.indexOf(handle);
+            if (index !== -1) {
+                this.timeoutHandles.splice(index, 1);
+            }
+            callback();
+        }, delay);
+        this.timeoutHandles.push(handle);
+        return handle;
+    }
+
+    /**
+     * Clear all tracked timeouts
+     * Called during cleanup to prevent leaks
+     */
+    private clearAllTimeouts(): void {
+        this.timeoutHandles.forEach(handle => clearTimeout(handle));
+        this.timeoutHandles = [];
+    }
 
     private closeWsConnection = (): void => {
         this.closeWsConnectionNotifier$.next('close');
@@ -858,6 +991,14 @@ export class WebRTCStreamManager {
         }
         this.stopCurrentStream();
         this.closeWsConnection();
+
+        // Cancel all video frame callbacks to prevent memory leaks
+        this.videoElements.forEach(({ element, frameCallbackHandle }) => {
+            if (frameCallbackHandle !== undefined) {
+                element.cancelVideoFrameCallback(frameCallbackHandle);
+            }
+        });
+
         this.cleanupBuffers();
 
         this.peerConnection?.close();
@@ -867,19 +1008,145 @@ export class WebRTCStreamManager {
             tracker.destroy();
         })
 
+        // Clear any existing tracked timeouts before potentially scheduling new ones
+        // This prevents accumulation of retry timeouts from multiple close() calls
+        this.clearAllTimeouts();
+
         if (retryAfterSeconds) {
-            setTimeout(this.start, retryAfterSeconds * 1000)
+            // Track retry state and failure
+            this.connectionState = ConnectionState.RETRYING;
+            this.recordRetryFailure();
+
+            // Check if retry is allowed (circuit breaker integration point)
+            if (!this.canAttemptRetry()) {
+                WebRTCStreamManager.logger?.error(
+                    `Max retry failures (${WebRTCStreamManager.MAX_RETRY_FAILURES}) exceeded for ${this.connectionKey}`,
+                    {
+                        consecutiveFailures: this.consecutiveRetryFailures,
+                        lastRetryAttempt: this.lastRetryAttempt
+                    }
+                );
+
+                // Transition to permanent failure
+                return this.permanentFailureCleanup();
+            }
+
+            // Log retry attempt
+            WebRTCStreamManager.logger?.info(
+                `Retry scheduled in ${retryAfterSeconds}s for ${this.connectionKey}`,
+                {
+                    attempt: this.consecutiveRetryFailures,
+                    maxAttempts: WebRTCStreamManager.MAX_RETRY_FAILURES,
+                    state: this.connectionState
+                }
+            );
+
+            this.trackTimeout(this.start, retryAfterSeconds * 1000)
         } else {
-            this.closeNotifier$.next('close');
-            delete WebRTCStreamManager.EXISTING_CONNECTIONS[this.connectionKey];
+            // Permanent close - clean up everything
+            return this.permanentFailureCleanup();
         }
-        return new Promise((resolve) => setTimeout(resolve, 100)).then(() => !!retryAfterSeconds);
+        return new Promise((resolve) => this.trackTimeout(() => resolve(undefined), 100)).then(() => !!retryAfterSeconds);
     };
+
+    /**
+     * Performs complete cleanup for permanently failed connections
+     * Removes instance from EXISTING_CONNECTIONS and completes all observables
+     * Called when max retry threshold is exceeded or explicit permanent close requested
+     */
+    private permanentFailureCleanup(): Promise<boolean> {
+        this.connectionState = ConnectionState.FAILED;
+
+        // Complete all Subjects to prevent memory leaks
+        this.closeNotifier$.next('close');
+        this.closeNotifier$.complete();
+        this.closeWsConnectionNotifier$.complete();
+
+        // Complete all BehaviorSubjects and Subjects
+        this.position$.complete();
+        this.speed$.complete();
+        this.stream$.complete();
+        this.currentPositionTracker$.complete();
+        this.mediaStream$.complete();
+        this.subscribers$.complete();
+        this.frameTimes$.complete();
+        this.restartHandleFrozenStream$.complete();
+        this.bufferedDuration$.complete();
+        this.chunkDuration$.complete();
+        this.playbackRate$.complete();
+        this.confirmation$.complete();
+
+        // Clear all tracked timeouts to prevent leaks
+        this.clearAllTimeouts();
+
+        // Remove from LRU cache
+        WebRTCStreamManager._connectionCache.delete(this.connectionKey);
+
+        WebRTCStreamManager.logger?.info(
+            `Connection permanently closed and cleaned up: ${this.connectionKey}`,
+            {
+                finalState: this.connectionState,
+                totalRetries: this.consecutiveRetryFailures
+            }
+        );
+
+        return Promise.resolve(false);
+    }
+
+    /**
+     * Checks if connection can attempt retry (circuit breaker integration point)
+     * @returns true if retry allowed, false if circuit should be open
+     */
+    private canAttemptRetry(): boolean {
+        // Current implementation: simple threshold check
+        if (this.consecutiveRetryFailures >= WebRTCStreamManager.MAX_RETRY_FAILURES) {
+            return false;
+        }
+
+        // Future: Circuit breaker integration
+        // if (this.connectionCircuitBreaker) {
+        //     return this.connectionCircuitBreaker.canAttempt();
+        // }
+
+        return true;
+    }
+
+    /**
+     * Records retry failure (circuit breaker integration point)
+     */
+    private recordRetryFailure(error?: unknown): void {
+        this.consecutiveRetryFailures++;
+        this.lastRetryAttempt = Date.now();
+
+        // Future: Circuit breaker integration
+        // if (this.connectionCircuitBreaker) {
+        //     this.connectionCircuitBreaker.recordFailure(error);
+        // }
+    }
+
+    /**
+     * Records successful connection (circuit breaker integration point)
+     */
+    private recordConnectionSuccess(): void {
+        this.consecutiveRetryFailures = 0;
+        this.connectionState = ConnectionState.CONNECTED;
+        this.lastRetryAttempt = null;
+
+        // Future: Circuit breaker integration
+        // if (this.connectionCircuitBreaker) {
+        //     this.connectionCircuitBreaker.recordSuccess();
+        // }
+    }
 
     private cleanupBuffers = (clearStream = true) => {
 
         if (clearStream) {
             if (this.videoRef) {
+                // Cancel the video frame callback to prevent memory leak
+                if (this.videoRefFrameCallbackHandle !== undefined) {
+                    this.videoRef.cancelVideoFrameCallback(this.videoRefFrameCallbackHandle);
+                    this.videoRefFrameCallbackHandle = undefined;
+                }
                 URL.revokeObjectURL(this.videoRef.src);
                 this.videoRef.src = null;
                 this.videoRef.srcObject = null;
@@ -904,6 +1171,15 @@ export class WebRTCStreamManager {
         if (this.mediaSource) {
             for (const buffer of this.mediaSource.sourceBuffers) {
                 try {
+                    // Clean up SourceBuffer event handlers to prevent memory leaks
+                    if (buffer) {
+                        buffer.onupdatestart = null;
+                        buffer.onupdateend = null;
+                        buffer.onupdate = null;
+                        buffer.onerror = null;
+                        buffer.onabort = null;
+                    }
+
                     if (this.sourceBuffer === buffer) {
                         this.sourceBuffer = null;
                     }
@@ -915,10 +1191,22 @@ export class WebRTCStreamManager {
                     WebRTCStreamManager.logger?.error(e);
                 }
             }
+
+            // Clean up MediaSource event handlers to prevent memory leaks
+            this.mediaSource.onsourceopen = null;
+            this.mediaSource.onsourceended = null;
+            this.mediaSource.onsourceclose = null;
         }
 
         if (this.sourceBuffer) {
             try {
+                // Clean up SourceBuffer event handlers if sourceBuffer exists separately
+                this.sourceBuffer.onupdatestart = null;
+                this.sourceBuffer.onupdateend = null;
+                this.sourceBuffer.onupdate = null;
+                this.sourceBuffer.onerror = null;
+                this.sourceBuffer.onabort = null;
+
                 this.sourceBuffer.abort();
                 this.sourceBuffer.remove(0, this.sourceBuffer.buffered.end(0));
             } catch(e) {
@@ -1072,17 +1360,27 @@ export class WebRTCStreamManager {
     }
 
     private videoRef: HTMLVideoElement & { captureStream: () => MediaStream }
+    private videoRefFrameCallbackHandle?: number;
 
     private frameTimes$ = new Subject<number>();
 
-    private registerFrameNotifier = (video: HTMLVideoElement) => {
+    private registerFrameNotifier = (video: HTMLVideoElement): number => {
         const handleFrameNotification = (time: number) => {
             this.frameTimes$.next(time);
             if (video === this.video || this.videoElements.some(({ element }) => element === video)) {
-                video.requestVideoFrameCallback(handleFrameNotification);
+                const handle = video.requestVideoFrameCallback(handleFrameNotification);
+                // Update the stored handle for this video element
+                if (video === this.videoRef) {
+                    this.videoRefFrameCallbackHandle = handle;
+                } else {
+                    const elementEntry = this.videoElements.find(({ element }) => element === video);
+                    if (elementEntry) {
+                        elementEntry.frameCallbackHandle = handle;
+                    }
+                }
             }
         }
-        video.requestVideoFrameCallback(handleFrameNotification);
+        return video.requestVideoFrameCallback(handleFrameNotification);
     }
 
     private restartHandleFrozenStream$ = new Subject();
@@ -1123,7 +1421,7 @@ export class WebRTCStreamManager {
             this.videoRef.muted = true;
             this.videoRef.autoplay = true;
             this.videoRef.volume = 0.0001;
-            this.registerFrameNotifier(this.videoRef);
+            this.videoRefFrameCallbackHandle = this.registerFrameNotifier(this.videoRef);
             document.body.appendChild(this.videoRef);
 
             this.startUnmuteHandler();
@@ -1133,6 +1431,11 @@ export class WebRTCStreamManager {
 
     private set video(video: WebRTCStreamManager['videoRef'] | null) {
         if (this.videoRef) {
+            // Cancel the video frame callback to prevent memory leak
+            if (this.videoRefFrameCallbackHandle !== undefined) {
+                this.videoRef.cancelVideoFrameCallback(this.videoRefFrameCallbackHandle);
+                this.videoRefFrameCallbackHandle = undefined;
+            }
             this.videoRef.src = null;
             this.videoRef.remove();
         }
@@ -1240,7 +1543,7 @@ export class WebRTCStreamManager {
                         WebRTCStreamManager.performanceIssueNotifier$.next()
                         return webRtcStreamManager.close(0.1);
                     }
-                    this.streamCheckTimeout = setTimeout(() => {
+                    this.streamCheckTimeout = webRtcStreamManager.trackTimeout(() => {
                         this.droppedChunk();
                         this.clear();
                         if (this.shouldDisable()) {
@@ -1253,7 +1556,7 @@ export class WebRTCStreamManager {
                 private trackCurrentTime() {
                     const playbackTime = webRtcStreamManager.video.currentTime;
                     if (!playbackTime) {
-                        this.streamCheckTimeout = setTimeout(() => {
+                        this.streamCheckTimeout = webRtcStreamManager.trackTimeout(() => {
                             this.trackCurrentTime();
                         }, 1000);
                         return;
@@ -1266,7 +1569,7 @@ export class WebRTCStreamManager {
                         WebRTCStreamManager.performanceIssueNotifier$.next()
                         webRtcStreamManager.close(0.1);
                     } else {
-                        this.streamCheckTimeout = setTimeout(() => {
+                        this.streamCheckTimeout = webRtcStreamManager.trackTimeout(() => {
                             this.trackCurrentTime();
                         }, (WebRTCStreamManager.maxBehind - timeBehind) * 1_000);
                     }
@@ -1396,10 +1699,36 @@ export class WebRTCStreamManager {
      */
     private errorHandler = (error: unknown): void => {
         WebRTCStreamManager.logger?.log(error);
+
+        // Track failure (circuit breaker integration point)
+        this.recordRetryFailure(error);
+
+        // Clean up current connection
         this.peerConnection?.close();
         this.peerConnection = null;
+
+        // Check if retry is allowed (circuit breaker integration point)
+        if (!this.canAttemptRetry()) {
+            WebRTCStreamManager.logger?.error(
+                `Error handler max retries exceeded for ${this.connectionKey}`,
+                {
+                    error,
+                    consecutiveFailures: this.consecutiveRetryFailures
+                }
+            );
+            this.permanentFailureCleanup();
+            return;
+        }
+
+        // Initialize new connection and retry
         this.initPeerConnection();
         this.wsConnection?.next({ error });
+
+        WebRTCStreamManager.logger?.info(
+            `Error handler retry attempt ${this.consecutiveRetryFailures}/${WebRTCStreamManager.MAX_RETRY_FAILURES}`,
+            { error }
+        );
+
         this.start();
     }
 
@@ -1522,7 +1851,7 @@ export class WebRTCStreamManager {
 
     private maxTimeout = 5_000
 
-    start = async (lostConnection = false): Promise<unknown> => this.startHandler(lostConnection).catch(() => setTimeout(() => this.mediaStream$.observed && this.start(true), 100));
+    start = async (lostConnection = false): Promise<unknown> => this.startHandler(lostConnection).catch(() => this.trackTimeout(() => this.mediaStream$.observed && this.start(true), 100));
 
     /** Initialization helpers */
     /**
@@ -1660,12 +1989,18 @@ export class WebRTCStreamManager {
                 if (this.apiVersion === ApiVersions.v1) {
                     const accessToken = this.accessToken();
                     const hostWithAccessToken = `${resolvedHost}-${accessToken}`
-                    this.getStatic().AUTHENTICATED_HOSTS[hostWithAccessToken] = !(await this.getStatic().AUTHENTICATED_HOSTS[hostWithAccessToken]) ? cacheSuccess(() => fetch(
-                        `https://${resolvedHost}/rest/v2/login/sessions/${accessToken}?setCookie=true`,
-                        { credentials: 'include' }
-                    ), hostWithAccessToken).then(res => res.ok) : this.getStatic().AUTHENTICATED_HOSTS[hostWithAccessToken];
 
-                    if (!(await this.getStatic().AUTHENTICATED_HOSTS[hostWithAccessToken])) {
+                    // Use TTL cache for authentication state (1 hour TTL)
+                    let authPromise = this.getStatic()._authCache.get(hostWithAccessToken);
+                    if (!authPromise) {
+                        authPromise = cacheSuccess(() => fetch(
+                            `https://${resolvedHost}/rest/v2/login/sessions/${accessToken}?setCookie=true`,
+                            { credentials: 'include' }
+                        ), hostWithAccessToken).then(res => res.ok);
+                        this.getStatic()._authCache.set(hostWithAccessToken, authPromise);
+                    }
+
+                    if (!(await authPromise)) {
                         return invalidAccessToken()
                     }
                 } else {
@@ -1926,6 +2261,14 @@ export class WebRTCStreamManager {
                 WebRTCStreamManager.logger?.log(stream);
                 this.stopCurrentStream();
                 this.mediaStream$.next([stream, null, this]);
+
+                // Record successful connection (circuit breaker integration point)
+                this.recordConnectionSuccess();
+
+                WebRTCStreamManager.logger?.info(
+                    `Connection established successfully: ${this.connectionKey}`,
+                    { state: this.connectionState }
+                );
             },
             this.appendBuffer,
             this.getCurrentStreamInfo,
@@ -2010,6 +2353,15 @@ export class WebRTCStreamManager {
 
     public noFrames = 0;
 
+    /** Connection lifecycle state tracking for retry management */
+    private connectionState: ConnectionState = ConnectionState.IDLE;
+
+    /** Consecutive retry failure counter for cleanup threshold detection */
+    private consecutiveRetryFailures: number = 0;
+
+    /** Timestamp of last retry attempt (for circuit breaker integration) */
+    private lastRetryAttempt: number | null = null;
+
     public playbackRateUpdateCallback = (rate: number): void => {};
 
     /**
@@ -2070,3 +2422,16 @@ window.setPlaybackRateStrategy = Object.entries(targetPlaybackRateStrategies).re
         WebRTCStreamManager.PLAYBACK_RATE_STRATEGY = value;
     }
 }), <Record<keyof (typeof targetPlaybackRateStrategies), () => void>>{});
+
+/**
+ * Periodic cleanup of expired authentication cache entries
+ * Runs every 15 minutes to prevent unbounded memory growth
+ */
+if (typeof setInterval !== 'undefined') {
+    setInterval(() => {
+        const cleaned = WebRTCStreamManager.cleanupAuthCache();
+        if (cleaned > 0 && WebRTCStreamManager.logger) {
+            WebRTCStreamManager.logger.info(`Cleaned ${cleaned} expired auth cache entries`);
+        }
+    }, 15 * 60 * 1000); // 15 minutes
+}

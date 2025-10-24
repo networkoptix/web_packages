@@ -102,6 +102,8 @@ export class ConnectionQueue {
 
             completed$.pipe(take(1)).subscribe(() => {
                 cancelTimedOut$.next('cancel');
+                cancelTimedOut$.complete();
+                completed$.complete();
                 setTimeout(resolve, 250)
                 this.#concurrencyUpdater$.next(-1);
             })
@@ -146,23 +148,136 @@ export const fetchWithRedirectAuthorization = async (input: string, init: Reques
 }
 
 
-const responseCache = new Map<string, Promise<Response>>();
+/**
+ * LRU Cache with TTL for HTTP Response caching
+ * Prevents unbounded memory growth by limiting cache size and entry lifetime
+ */
+class LRUResponseCache {
+    private cache = new Map<string, { response: Promise<Response>; timestamp: number }>();
+    private stats = {
+        hits: 0,
+        misses: 0,
+        evictions: 0,
+        expired: 0,
+        totalSize: 0,
+        maxSize: 0
+    };
 
-export const cacheSuccess = async (request: () => Promise<Response>, key: string): Promise<Response> => {
-    if (!responseCache.has(key)) {
-        responseCache.set(key, request().then(res => {
+    constructor(
+        private maxSize = 100,
+        private ttlMs = 5 * 60 * 1000 // 5 minutes default TTL
+    ) {}
+
+    /**
+     * Get cached response or execute request
+     */
+    async get(key: string, request: () => Promise<Response>): Promise<Response> {
+        const now = Date.now();
+        const entry = this.cache.get(key);
+
+        // Check if entry exists and is not expired
+        if (entry) {
+            const isExpired = now - entry.timestamp > this.ttlMs;
+            if (isExpired) {
+                this.cache.delete(key);
+                this.stats.expired++;
+            } else {
+                this.stats.hits++;
+                return (await entry.response).clone();
+            }
+        }
+
+        // Cache miss - execute request
+        this.stats.misses++;
+
+        // Evict oldest entry if cache is full
+        if (this.cache.size >= this.maxSize) {
+            const firstKey = this.cache.keys().next().value;
+            this.cache.delete(firstKey);
+            this.stats.evictions++;
+        }
+
+        // Store new entry with error handling
+        const responsePromise = request().then(res => {
             const cloned = res.clone();
 
             if (!res.ok) {
-                responseCache.delete(key);
+                // Remove failed responses from cache
+                this.cache.delete(key);
             }
 
             return cloned;
-        }));
+        });
+
+        this.cache.set(key, { response: responsePromise, timestamp: now });
+        this.stats.totalSize = this.cache.size;
+        this.stats.maxSize = Math.max(this.stats.maxSize, this.cache.size);
+
+        return (await responsePromise).clone();
     }
 
-    return (await responseCache.get(key)).clone();
+    /**
+     * Manually clear expired entries
+     */
+    cleanExpired(): number {
+        const now = Date.now();
+        let cleaned = 0;
+
+        for (const [key, entry] of this.cache.entries()) {
+            if (now - entry.timestamp > this.ttlMs) {
+                this.cache.delete(key);
+                cleaned++;
+                this.stats.expired++;
+            }
+        }
+
+        this.stats.totalSize = this.cache.size;
+        return cleaned;
+    }
+
+    /**
+     * Get cache statistics for monitoring
+     */
+    getStats() {
+        return {
+            ...this.stats,
+            currentSize: this.cache.size,
+            hitRate: this.stats.hits / (this.stats.hits + this.stats.misses) || 0
+        };
+    }
+
+    /**
+     * Clear all cache entries
+     */
+    clear(): void {
+        this.cache.clear();
+        this.stats.totalSize = 0;
+    }
+}
+
+// Create singleton instance with reasonable defaults
+// Max 100 entries, 5 minute TTL - prevents unbounded growth
+const responseCache = new LRUResponseCache(100, 5 * 60 * 1000);
+
+// Periodic cleanup of expired entries (every 2 minutes)
+if (typeof setInterval !== 'undefined') {
+    setInterval(() => responseCache.cleanExpired(), 2 * 60 * 1000);
+}
+
+export const cacheSuccess = async (request: () => Promise<Response>, key: string): Promise<Response> => {
+    return responseCache.get(key, request);
 };
+
+/**
+ * Get cache statistics for monitoring and debugging
+ * Useful for tracking cache effectiveness and memory usage
+ */
+export const getResponseCacheStats = () => responseCache.getStats();
+
+/**
+ * Clear response cache (useful for testing or manual cache invalidation)
+ */
+export const clearResponseCache = () => responseCache.clear();
 
 const extractContent = (source: string, delimiter: string, identifier: string): string => {
     const lines = source.split(delimiter);
@@ -266,6 +381,255 @@ export const acquireLock = <T extends { cooldownLock: ReturnType<typeof setTimeo
     target.cooldownLock = setTimeout(() => releaseLock(target), cooldownTime * 1000);
 
     return true;
+}
+
+/**
+ * LRU Cache for WebRTC Stream Manager connections
+ * Prevents unbounded memory growth by limiting maximum connections
+ * Evicts least recently used connections when limit is reached
+ */
+export class LRUConnectionCache<T> {
+    private cache = new Map<string, { value: T; timestamp: number }>();
+    private stats = {
+        hits: 0,
+        misses: 0,
+        evictions: 0,
+        totalSize: 0,
+        maxSize: 0
+    };
+
+    constructor(private maxSize = 100) {}
+
+    /**
+     * Get value from cache or return undefined
+     */
+    get(key: string): T | undefined {
+        const entry = this.cache.get(key);
+
+        if (entry) {
+            this.stats.hits++;
+            // Update timestamp to mark as recently used
+            entry.timestamp = Date.now();
+            // Move to end of map (most recent)
+            this.cache.delete(key);
+            this.cache.set(key, entry);
+            return entry.value;
+        }
+
+        this.stats.misses++;
+        return undefined;
+    }
+
+    /**
+     * Set value in cache, evicting LRU entry if at max size
+     */
+    set(key: string, value: T): void {
+        // If updating existing entry, remove it first (will re-add at end)
+        if (this.cache.has(key)) {
+            this.cache.delete(key);
+        } else if (this.cache.size >= this.maxSize) {
+            // Evict least recently used (first entry in map)
+            const firstKey = this.cache.keys().next().value;
+            this.cache.delete(firstKey);
+            this.stats.evictions++;
+        }
+
+        this.cache.set(key, { value, timestamp: Date.now() });
+        this.stats.totalSize = this.cache.size;
+        this.stats.maxSize = Math.max(this.stats.maxSize, this.cache.size);
+    }
+
+    /**
+     * Check if key exists in cache
+     */
+    has(key: string): boolean {
+        return this.cache.has(key);
+    }
+
+    /**
+     * Delete specific entry from cache
+     */
+    delete(key: string): boolean {
+        const deleted = this.cache.delete(key);
+        this.stats.totalSize = this.cache.size;
+        return deleted;
+    }
+
+    /**
+     * Get all keys in cache
+     */
+    keys(): string[] {
+        return Array.from(this.cache.keys());
+    }
+
+    /**
+     * Get all values in cache
+     */
+    values(): T[] {
+        return Array.from(this.cache.values()).map(entry => entry.value);
+    }
+
+    /**
+     * Get all entries as Record
+     */
+    toRecord(): Record<string, T> {
+        const record: Record<string, T> = {};
+        for (const [key, entry] of this.cache.entries()) {
+            record[key] = entry.value;
+        }
+        return record;
+    }
+
+    /**
+     * Get cache size
+     */
+    get size(): number {
+        return this.cache.size;
+    }
+
+    /**
+     * Get cache statistics for monitoring
+     */
+    getStats() {
+        return {
+            ...this.stats,
+            currentSize: this.cache.size,
+            hitRate: this.stats.hits / (this.stats.hits + this.stats.misses) || 0
+        };
+    }
+
+    /**
+     * Clear all cache entries
+     */
+    clear(): void {
+        this.cache.clear();
+        this.stats.totalSize = 0;
+    }
+}
+
+/**
+ * TTL Cache for authentication host tracking
+ * Entries automatically expire after TTL duration
+ * Prevents unbounded memory growth with automatic cleanup
+ */
+export class TTLCache<T> {
+    private cache = new Map<string, { value: T; expiresAt: number }>();
+    private stats = {
+        hits: 0,
+        misses: 0,
+        expired: 0,
+        totalSize: 0,
+        maxSize: 0
+    };
+
+    constructor(private ttlMs: number) {}
+
+    /**
+     * Get value from cache if not expired
+     */
+    get(key: string): T | undefined {
+        const now = Date.now();
+        const entry = this.cache.get(key);
+
+        if (entry) {
+            const isExpired = now >= entry.expiresAt;
+            if (isExpired) {
+                this.cache.delete(key);
+                this.stats.expired++;
+                this.stats.totalSize = this.cache.size;
+                this.stats.misses++;
+                return undefined;
+            }
+
+            this.stats.hits++;
+            return entry.value;
+        }
+
+        this.stats.misses++;
+        return undefined;
+    }
+
+    /**
+     * Set value in cache with TTL
+     */
+    set(key: string, value: T): void {
+        const expiresAt = Date.now() + this.ttlMs;
+        this.cache.set(key, { value, expiresAt });
+        this.stats.totalSize = this.cache.size;
+        this.stats.maxSize = Math.max(this.stats.maxSize, this.cache.size);
+    }
+
+    /**
+     * Check if key exists and is not expired
+     */
+    has(key: string): boolean {
+        const entry = this.cache.get(key);
+        if (!entry) return false;
+
+        const isExpired = Date.now() >= entry.expiresAt;
+        if (isExpired) {
+            this.cache.delete(key);
+            this.stats.expired++;
+            this.stats.totalSize = this.cache.size;
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Delete specific entry from cache
+     */
+    delete(key: string): boolean {
+        const deleted = this.cache.delete(key);
+        this.stats.totalSize = this.cache.size;
+        return deleted;
+    }
+
+    /**
+     * Manually clean expired entries
+     */
+    cleanExpired(): number {
+        const now = Date.now();
+        let cleaned = 0;
+
+        for (const [key, entry] of this.cache.entries()) {
+            if (now >= entry.expiresAt) {
+                this.cache.delete(key);
+                cleaned++;
+                this.stats.expired++;
+            }
+        }
+
+        this.stats.totalSize = this.cache.size;
+        return cleaned;
+    }
+
+    /**
+     * Get cache size
+     */
+    get size(): number {
+        return this.cache.size;
+    }
+
+    /**
+     * Get cache statistics for monitoring
+     */
+    getStats() {
+        return {
+            ...this.stats,
+            currentSize: this.cache.size,
+            hitRate: this.stats.hits / (this.stats.hits + this.stats.misses) || 0
+        };
+    }
+
+    /**
+     * Clear all cache entries
+     */
+    clear(): void {
+        this.cache.clear();
+        this.stats.totalSize = 0;
+    }
 }
 
 export const targetPlaybackRateStrategies = {
