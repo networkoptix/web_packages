@@ -493,14 +493,14 @@ export class WebRTCStreamManager {
         webRtcUrlFactory: WebRtcUrlFactory,
         videoElement?: HTMLVideoElement,
         targetStreams?: StreamsConfig,
-        accessToken?: string | (() => string),
+        accessToken?: string | (() => string | Promise<string>),
         allowTranscoding?: boolean,
     ): Observable<[MediaStream, ConnectionError, WebRTCStreamManager]>
     static connect(
         webRtcUrlFactoryOrConfig: WebRtcUrlFactoryOrConfig,
         videoElement?: HTMLVideoElement,
         targetStreams: StreamsConfig = null,
-        accessToken: string | (() => string) = null,
+        accessToken: string | (() => string | Promise<string>) = null,
         allowTranscoding: boolean = false,
     ): Observable<[MediaStream, ConnectionError, WebRTCStreamManager]> {
         const connectionKey = WebRTCStreamManager.createConnectionKey(webRtcUrlFactoryOrConfig);
@@ -1387,6 +1387,15 @@ export class WebRTCStreamManager {
 
     private handleFrozenStream = () => {
         this.restartHandleFrozenStream$.next(true);
+
+        // Use different monitoring strategy for MSE vs direct streaming
+        // MSE uses SourceBuffer events which are more reliable than frame callbacks
+        if (this.usingMse) {
+            this.handleMseFrozenStream();
+            return;
+        }
+
+        // Original frame callback monitoring for non-MSE streams
         const startToggle$ = this.mediaStream$.pipe(switchMap(async stream => stream?.[0] && firstValueFrom(this.frameTimes$)))
         const frameAccumulator$ = this.frameTimes$.pipe(
             bufferTime(1000),
@@ -1405,6 +1414,67 @@ export class WebRTCStreamManager {
         ).subscribe(() => {
             WebRTCStreamManager.logger?.info('frame check: no frames received in last 10 seconds');
             this.close(0.1);
+        });
+    }
+
+    /**
+     * MSE-specific frozen stream detection using SourceBuffer update events
+     * instead of requestVideoFrameCallback which doesn't work reliably with MSE.
+     *
+     * This monitors SourceBuffer 'updateend' events to detect when no new data
+     * is being appended, indicating a frozen stream. The 10-second timeout matches
+     * the frame-based detection for consistency.
+     */
+    private handleMseFrozenStream = () => {
+        if (!this.sourceBuffer) {
+            // SourceBuffer not ready yet, will be called again when initialized
+            WebRTCStreamManager.logger?.info('MSE frozen detection: SourceBuffer not ready, skipping');
+            return;
+        }
+
+        WebRTCStreamManager.logger?.info('MSE frozen detection: starting SourceBuffer monitoring');
+
+        // Track last buffer update time
+        const bufferUpdates$ = new Subject<number>();
+
+        const updateEndHandler = () => {
+            const now = Date.now();
+            WebRTCStreamManager.logger?.debug?.('MSE frozen detection: SourceBuffer update at', now);
+            bufferUpdates$.next(now);
+        };
+
+        // Monitor SourceBuffer updateend events
+        this.sourceBuffer.addEventListener('updateend', updateEndHandler);
+
+        // Check for no buffer updates in 10 seconds (matching frame-based timeout)
+        const noUpdatesCheck$ = bufferUpdates$.pipe(
+            startWith(Date.now()), // Start monitoring immediately
+            bufferTime(10000), // 10 second window
+            map(updates => updates.length),
+            filter(count => {
+                if (count === 0) {
+                    WebRTCStreamManager.logger?.info('MSE frozen detection: no SourceBuffer updates in 10 seconds');
+                    return true;
+                }
+                return false;
+            }),
+            take(1),
+            takeUntil(this.restartHandleFrozenStream$),
+            takeUntil(this.closeNotifier$)
+        );
+
+        noUpdatesCheck$.subscribe(() => {
+            WebRTCStreamManager.logger?.info('MSE frozen detection: triggering reconnection');
+            this.close(0.1);
+        });
+
+        // Cleanup handler
+        this.closeNotifier$.pipe(take(1)).subscribe(() => {
+            WebRTCStreamManager.logger?.info('MSE frozen detection: cleaning up');
+            if (this.sourceBuffer) {
+                this.sourceBuffer.removeEventListener('updateend', updateEndHandler);
+            }
+            bufferUpdates$.complete();
         });
     }
 
@@ -1757,9 +1827,10 @@ export class WebRTCStreamManager {
         const relayHost = new URL(this.webRtcUrlFactory({ position: 0 })).host;
         const endpoint = `https://${relayHost}/rest/v2/system/info?_with=version`;
         const fallback = { version: '5.1' }
+        const token = await Promise.resolve(this.accessToken());
         const version = await cacheSuccess(() => fetchWithRedirectAuthorization(
             endpoint,
-            { headers: { authorization: `Bearer ${this.accessToken()}` }}
+            { headers: { authorization: `Bearer ${token}` }}
         ), `${relayHost.split('.')[0]}-version`).then(
             response => response.json() as Promise<typeof fallback>
         ).catch(
@@ -1919,14 +1990,16 @@ export class WebRTCStreamManager {
         const streamInfoEndpoint =
             `https://${relayHost}/rest/v2/devices/${this.cameraId}${deviceParams}`;
 
+        const token = await Promise.resolve(this.accessToken());
+
         const fetchAllStreams = cacheSuccess(() => fetchWithRedirectAuthorization(
             allStreamsInfoEndpoint,
-            { headers: { authorization: `Bearer ${this.accessToken()}` }}
+            { headers: { authorization: `Bearer ${token}` }}
             ), `${systemId}-streams-${this.codecCheckKey}`).then(response => response.json() as Promise<typeof fallback[]>).catch(() => [] as typeof fallback[]);
 
         const fetchCurrentStream = () => cacheSuccess(() => fetchWithRedirectAuthorization(
             streamInfoEndpoint,
-            { headers: { authorization: `Bearer ${this.accessToken()}` }}
+            { headers: { authorization: `Bearer ${token}` }}
             ), `${this.connectionKey}-streams-${this.codecCheckKey}`).then(response => response.json() as Promise<typeof fallback>).catch(() => fallback)
 
         const fetchStreams = fetchAllStreams.then(devices => {
@@ -1971,23 +2044,24 @@ export class WebRTCStreamManager {
 
         let oneTimeToken = '';
 
-        const getOneTimeToken = (): Promise<string> => {
+        const getOneTimeToken = async (): Promise<string> => {
             let oneTimeTokenEndpoint = `https://${resolvedHost}/rest/v3/login/tickets`;
 
             if (directConnect) {
                 oneTimeTokenEndpoint += `?x-server-guid=${this.targetServerId}&`
             }
 
-            return fetchWithRedirectAuthorization(oneTimeTokenEndpoint, { headers: { authorization: `Bearer ${this.accessToken()}` }, method: 'POST'}).then(response => response.json()).then(res => {
+            const token = await Promise.resolve(this.accessToken());
+            return fetchWithRedirectAuthorization(oneTimeTokenEndpoint, { headers: { authorization: `Bearer ${token}` }, method: 'POST'}).then(response => response.json()).then(res => {
                 return res.token;
             })
         }
 
         if (resolvedHost) {
             webRtcUrl = webRtcUrl.replace(relayHost, resolvedHost);
-            if (this.accessToken()) {
+            const accessToken = await Promise.resolve(this.accessToken());
+            if (accessToken) {
                 if (this.apiVersion === ApiVersions.v1) {
-                    const accessToken = this.accessToken();
                     const hostWithAccessToken = `${resolvedHost}-${accessToken}`
 
                     // Use TTL cache for authentication state (1 hour TTL)
@@ -2027,16 +2101,40 @@ export class WebRTCStreamManager {
         const targetStream = streams.find(({ encoderIndex }) => encoderIndex === stream);
         const requiresTranscoding = Object.values(RequiresTranscoding).filter(isRequiresTranscoding);
 
-        const srtp = 'deliveryMethod=srtp';
+        /**
+         * PERFORMANCE OPTIMIZATION: Early codec detection to skip blind SRTP attempt
+         *
+         * For H265 (codec 173) and MJPEG (codec 7), we know upfront that SRTP won't work
+         * and MSE delivery is required. By detecting this early from the stream info response,
+         * we can skip the expensive SRTP connection attempt that would fail and require reconnection.
+         *
+         * This saves ~3-4 seconds for H265/MJPEG streams:
+         * - Old flow: SRTP attempt → transcoding error (1s) → reconnect with MSE (2-3s)
+         * - New flow: Direct MSE connection
+         *
+         * Edge case: For archive streams, codec info might be stale. The existing fallback
+         * at lines 1705-1719 handles this by retrying with MSE if server sends transcoding error.
+         */
+        const codecNeedsTranscoding = targetStream?.codec && requiresTranscoding.includes(targetStream.codec);
 
-        if ((this.usingMse || targetStream?.codec && requiresTranscoding.includes(targetStream.codec) ) && this.apiVersion !== ApiVersions.v1) {
-            const mse = 'deliveryMethod=mse';
-            if (webRtcUrl.includes(srtp)) {
-                webRtcUrl = webRtcUrl.replace(srtp, mse)
-            } else {
-                webRtcUrl += `${mse}&`
-            }
+        // Proactively set MSE mode for codecs that require transcoding (unless using v1 API)
+        if (codecNeedsTranscoding && this.apiVersion !== ApiVersions.v1 && !this.usingMse) {
+            WebRTCStreamManager.logger?.info(
+                `Early codec detection: codec ${targetStream.codec} requires MSE, skipping SRTP attempt`
+            );
             this.usingMse = true;
+        }
+
+        const srtp = 'deliveryMethod=srtp';
+        const mse = 'deliveryMethod=mse';
+
+        // Apply delivery method to URL based on MSE requirement
+        if (this.usingMse && this.apiVersion !== ApiVersions.v1) {
+            if (webRtcUrl.includes(srtp)) {
+                webRtcUrl = webRtcUrl.replace(srtp, mse);
+            } else {
+                webRtcUrl += `${mse}&`;
+            }
         } else if (!this.allowTranscoding && targetStream && requiresTranscoding.includes(targetStream.codec)) {
                 this.disableCurrentStream();
                 if (this.availableStreams.length) {
@@ -2372,7 +2470,7 @@ export class WebRTCStreamManager {
     private constructor(
         private webRtcUrlFactoryOrConfig: WebRtcUrlFactoryOrConfig,
         private _availableStreams: AvailableStreams[] = [AvailableStreams.PRIMARY, AvailableStreams.SECONDARY],
-        private accessToken = () => '',
+        private accessToken: () => string | Promise<string> = () => '',
         public allowTranscoding = false,
         public connectionKey = '',
     ) {

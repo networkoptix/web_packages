@@ -163,7 +163,7 @@ export interface WebRtcUrlConfigUnknown {
     systemId: string;
     cameraId: string;
     serverId?: string;
-    accessToken: string | (() => string);
+    accessToken: string | (() => string | Promise<string>);
     targetStream: TargetStream;
     position?:  number;
     speed?: 'unlimited' | number;
