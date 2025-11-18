@@ -5,7 +5,7 @@ import './style.css';
 import { description } from '../package.json';
 import { Subject, Subscription, takeUntil } from 'rxjs';
 import { WebRTCStreamManager } from './open_check_excluded';
-import { ApiVersions, TargetStream, fetchWithRedirectAuthorization } from '@networkoptix/webrtc-stream-manager';
+import { ApiVersions, TargetStream, AvailableStreams, fetchWithRedirectAuthorization } from '@networkoptix/webrtc-stream-manager';
 
 WebRTCStreamManager.logger = console;
 
@@ -138,12 +138,46 @@ const playbackSpeedSelect = document.querySelector<HTMLSelectElement>(
   '[name="selectedSpeed"]'
 );
 
+const streamQualitySelect = document.querySelector<HTMLSelectElement>(
+  '[name="streamQuality"]'
+);
+
 const videoElement = document.querySelector('video');
+const currentStreamSpan = document.querySelector<HTMLSpanElement>('#currentStream');
+const currentResolutionSpan = document.querySelector<HTMLSpanElement>('#currentResolution');
 
 const clean = (id: string): string => id.replace('{', '').replace('}', '');
 
+// Convert stream quality select value to AvailableStreams array
+const getAvailableStreamsFromQuality = (quality: string): AvailableStreams[] => {
+  switch (quality) {
+    case 'high':
+      return [AvailableStreams.PRIMARY];
+    case 'low':
+      return [AvailableStreams.SECONDARY];
+    case 'auto':
+    default:
+      return [AvailableStreams.PRIMARY, AvailableStreams.SECONDARY];
+  }
+};
+
+// Update current stream display
+const updateCurrentStreamDisplay = (stream: AvailableStreams | null) => {
+  if (stream === null) {
+    currentStreamSpan.textContent = 'Not Started';
+    currentStreamSpan.style.color = '#999';
+  } else if (stream === AvailableStreams.PRIMARY) {
+    currentStreamSpan.textContent = 'Stream 0 (High Quality)';
+    currentStreamSpan.style.color = '#4CAF50';
+  } else if (stream === AvailableStreams.SECONDARY) {
+    currentStreamSpan.textContent = 'Stream 1 (Low Quality)';
+    currentStreamSpan.style.color = '#2196F3';
+  }
+};
+
 let currentInstance: WebRTCStreamManager;
 let currentPositionSubscription: Subscription;
+let resolutionUpdateHandler: (() => void) | null = null;
 
 const setTimestamp = (timestamp = -1) => {
   const timestampElement = document.getElementById('timestamp');
@@ -172,13 +206,32 @@ const startStream = (systemId: string, cameraId: string, serverId: string, allow
   };
   currentInstance = null;
   setTimestamp();
+  updateCurrentStreamDisplay(null);
+
+  // Reset resolution display
+  currentResolutionSpan.textContent = '-';
+  currentResolutionSpan.style.color = '#999';
+
+  // Enable stop button when stream starts
+  const stopBtn = document.querySelector<HTMLButtonElement>('#stopStreamBtn');
+  if (stopBtn) stopBtn.disabled = false;
+
   WebRTCStreamManager.connect(webRtcUrlConfig, videoElement)
     .pipe(takeUntil(newStream$))
     .subscribe(([stream, error, instance]) => {
-      if (!currentInstance) {
-        currentInstance = instance
+      if (!currentInstance && instance) {
+        currentInstance = instance;
+
+        // Subscribe to position updates if available
         currentPositionSubscription?.unsubscribe();
-        currentPositionSubscription = instance.currentPosition$.pipe(takeUntil(newStream$)).subscribe(setTimestamp)
+        if (instance.currentPosition$) {
+          currentPositionSubscription = instance.currentPosition$.pipe(takeUntil(newStream$)).subscribe(setTimestamp);
+        }
+
+        // Set initial available streams based on quality selector
+        const availableStreams = getAvailableStreamsFromQuality(streamQualitySelect.value);
+        console.log('🎬 Setting initial available streams:', availableStreams);
+        instance.updateAvailableStreams(availableStreams);
       }
       if (stream) {
         videoElement.srcObject = stream;
@@ -186,6 +239,37 @@ const startStream = (systemId: string, cameraId: string, serverId: string, allow
         videoElement.autoplay = true;
 
         document.querySelector('h2').style.display = WebRTCStreamManager.getInstance({id: cameraId, systemId })?.allowTranscoding ? 'block' : 'none';
+
+        // Update display with actual current stream from WebRTCStreamManager
+        if (currentInstance) {
+          const actualCurrentStream = currentInstance.currentStream();
+          console.log('📺 Initial stream from WebRTCStreamManager:', actualCurrentStream === AvailableStreams.PRIMARY ? 'Stream 0 (High)' : 'Stream 1 (Low)');
+          updateCurrentStreamDisplay(actualCurrentStream);
+
+          // Remove old event listeners if they exist
+          if (resolutionUpdateHandler) {
+            videoElement.removeEventListener('loadedmetadata', resolutionUpdateHandler);
+            videoElement.removeEventListener('resize', resolutionUpdateHandler);
+          }
+
+          // Update resolution display when video metadata loads
+          resolutionUpdateHandler = () => {
+            if (videoElement.videoWidth && videoElement.videoHeight) {
+              currentResolutionSpan.textContent = `${videoElement.videoWidth}x${videoElement.videoHeight}`;
+              currentResolutionSpan.style.color = '#FF9800';
+              console.log('📐 Resolution updated:', `${videoElement.videoWidth}x${videoElement.videoHeight}`);
+            }
+          };
+
+          // Set initial resolution display if already available
+          resolutionUpdateHandler();
+
+          // Listen for metadata load to update resolution
+          videoElement.addEventListener('loadedmetadata', resolutionUpdateHandler);
+
+          // Also listen for resize events (for stream quality changes)
+          videoElement.addEventListener('resize', resolutionUpdateHandler);
+        }
       }
 
       if (error) {
@@ -302,6 +386,30 @@ const changeSpeedHandler = () => {
   return startStreamHandler()
 }
 
+// Handle stream quality changes - dynamically update available streams on running instance
+const changeStreamQualityHandler = () => {
+  if (!currentInstance) {
+    console.log('ℹ️ No active stream instance - quality will apply when stream starts');
+    return;
+  }
+
+  const selectedQuality = streamQualitySelect.value;
+  const availableStreams = getAvailableStreamsFromQuality(selectedQuality);
+
+  console.log(`🔄 Switching stream quality to: ${selectedQuality}`, {
+    availableStreams,
+    currentStream: currentInstance.currentStream(),
+    peerConnection: currentInstance['peerConnection'],
+    datachannel: currentInstance['peerConnection']?.remoteDataChannel,
+    datachannelState: currentInstance['peerConnection']?.remoteDataChannel?.readyState,
+    apiVersion: currentInstance['apiVersion']
+  });
+
+  // Update available streams on the running instance
+  // This will trigger seamless stream switching if needed
+  currentInstance.updateAvailableStreams(availableStreams);
+};
+
 instanceForm.addEventListener('submit', redirectOauth);
 systemSelect.addEventListener('change', systemSelected);
 cameraSelect.addEventListener('change', cameraSelected);
@@ -309,3 +417,106 @@ positionSelect.addEventListener('change', toggleSpeedSelectorDisabled);
 
 endpointForm.addEventListener('submit', startStreamHandler);
 playbackSpeedSelect.addEventListener('change', changeSpeedHandler);
+streamQualitySelect.addEventListener('change', changeStreamQualityHandler);
+
+// Stop & Cleanup Button
+const stopStreamBtn = document.querySelector<HTMLButtonElement>('#stopStreamBtn');
+const forceGCBtn = document.querySelector<HTMLButtonElement>('#forceGCBtn');
+const memoryInfoSpan = document.querySelector<HTMLSpanElement>('#memoryInfo');
+
+const stopAndCleanup = () => {
+  console.log('🛑 Stopping and cleaning up all WebRTC resources...');
+
+  // 1. Signal new stream to trigger takeUntil cleanup
+  newStream$.next();
+
+  // 2. Unsubscribe from all subscriptions
+  currentPositionSubscription?.unsubscribe();
+  currentPositionSubscription = null;
+
+  // 2.1 Remove event listeners
+  if (resolutionUpdateHandler) {
+    videoElement.removeEventListener('loadedmetadata', resolutionUpdateHandler);
+    videoElement.removeEventListener('resize', resolutionUpdateHandler);
+    resolutionUpdateHandler = null;
+  }
+
+  // 3. Stop all MediaStream tracks explicitly
+  if (videoElement.srcObject) {
+    const stream = videoElement.srcObject as MediaStream;
+    stream.getTracks().forEach(track => {
+      console.log(`  ⏹️  Stopping track: ${track.kind} (${track.id})`);
+      track.stop();
+    });
+    videoElement.srcObject = null;
+  }
+
+  // 4. Close all WebRTC connections
+  WebRTCStreamManager.closeAll();
+  currentInstance = null;
+
+  // DEFENSIVE FIX: Remove any orphaned video elements from body
+  // This is a safety net in case WebRTCStreamManager cleanup doesn't catch everything
+  // Only removes elements that are NOT the main #targetVideo element
+  const orphanVideos = document.querySelectorAll<HTMLVideoElement>('body > video');
+  let removedCount = 0;
+
+  orphanVideos.forEach(video => {
+    // Skip the main video element used for display
+    if (video.id !== 'targetVideo') {
+      console.warn('  ⚠️  Removing orphaned video element:', {
+        id: video.id || '(no id)',
+        className: video.className || '(no class)',
+        dimensions: `${video.clientWidth}x${video.clientHeight}`,
+        parent: video.parentElement?.tagName
+      });
+
+      // Clean up the video element
+      video.srcObject = null;
+      video.load();
+      video.remove();
+      removedCount++;
+    }
+  });
+
+  if (removedCount > 0) {
+    console.log(`  ✅ Removed ${removedCount} orphaned video element(s)`);
+  }
+
+  // 5. Reset UI
+  setTimestamp();
+  updateCurrentStreamDisplay(null);
+
+  // Reset resolution display
+  currentResolutionSpan.textContent = '-';
+  currentResolutionSpan.style.color = '#999';
+
+  stopStreamBtn.disabled = true;
+
+  console.log('✅ Cleanup complete');
+};
+
+stopStreamBtn.addEventListener('click', stopAndCleanup);
+
+forceGCBtn.addEventListener('click', () => {
+  if ((window as any).gc) {
+    console.log('🗑️  Forcing garbage collection...');
+    (window as any).gc();
+    console.log('✅ GC complete');
+  } else {
+    alert('GC not available. Run Chrome with --js-flags="--expose-gc"');
+  }
+});
+
+// Memory monitoring (if performance.memory is available)
+if ((performance as any).memory) {
+  setInterval(() => {
+    const mem = (performance as any).memory;
+    const used = (mem.usedJSHeapSize / 1048576).toFixed(2);
+    const total = (mem.totalJSHeapSize / 1048576).toFixed(2);
+    const limit = (mem.jsHeapSizeLimit / 1048576).toFixed(2);
+    memoryInfoSpan.textContent = `${used} / ${total} MB (Limit: ${limit} MB)`;
+  }, 1000);
+} else {
+  memoryInfoSpan.textContent = 'Enable with --enable-precise-memory-info';
+}

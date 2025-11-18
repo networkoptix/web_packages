@@ -57,13 +57,30 @@
                 <option value="unlimited">Max</option>
               </select>
             </div>
+            <div id="streamQuality">
+              <label for="streamQuality">Stream Quality</label>
+              <select name="streamQuality">
+                <option value="auto" selected>Auto (Both Streams)</option>
+                <option value="high">High Quality Only</option>
+                <option value="low">Low Quality Only</option>
+              </select>
+            </div>
           </fieldset>
           <button type="submit" disabled>Start WebRTC Connection</button>
+          <button type="button" id="stopStreamBtn" disabled style="background-color: #dc3545; margin-left: 10px;">
+            Stop & Cleanup Stream
+          </button>
         </form>
       </div>
       <div class="card">
         <h2>Non-H264 stream being transcoded</h2>
         <h3>Timestamp: <span id="timestamp">-1</span></h3>
+        <h3>Current Stream: <span id="currentStream" style="font-weight: bold; color: #4CAF50;">Not Started</span></h3>
+        <h3>Current Resolution: <span id="currentResolution" style="font-weight: bold; color: #FF9800;">-</span></h3>
+        <h4>Memory Debug:
+          <span id="memoryInfo">Not tracked</span>
+          <button type="button" id="forceGCBtn" style="margin-left: 10px;">Force GC (if enabled)</button>
+        </h4>
         <video id="targetVideo" autoplay muted></video>
       </div>
     </div>

@@ -1,6 +1,6 @@
 // Copyright 2018-present Network Optix, Inc. Licensed under MPL 2.0: www.mozilla.org/MPL/2.0/
 
-import { Observable, BehaviorSubject, timer, Subject, combineLatest, firstValueFrom, from, NEVER, interval, fromEvent, merge, of, defer, throwError, Observer } from 'rxjs';
+import { Observable, BehaviorSubject, timer, Subject, combineLatest, firstValueFrom, from, NEVER, interval, fromEvent, merge, of, defer, throwError, Observer, Subscription } from 'rxjs';
 import { filter, shareReplay, switchMap, take, map, delay, takeUntil, tap, distinctUntilChanged, debounceTime, bufferCount, timeout, bufferTime, skipWhile, startWith, scan, throttleTime } from 'rxjs/operators';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 import { FocusTracker, MosScoreTracker, BytesReceivedTracker } from './trackers';
@@ -49,6 +49,26 @@ export class WebRTCStreamManager {
      * Whether to use unreliable data channel.
      */
     static USE_UNRELIABLE_DATA_CHANNEL = true;
+
+    /**
+     * WeakSet tracking all video elements created by WebRTCStreamManager instances
+     * Used for comprehensive cleanup to prevent memory leaks from orphaned elements
+     * WeakSet allows automatic cleanup when elements are GC'd
+     */
+    private static createdVideoElements = new WeakSet<HTMLVideoElement>();
+
+    /**
+     * Static interval ID for auth cache cleanup
+     * Stored to ensure proper cleanup and prevent memory leaks
+     */
+    static authCacheCleanupInterval?: ReturnType<typeof setInterval>;
+
+    /**
+     * Static subscriptions for cleanup tracking
+     * Prevents memory leaks from static observables
+     */
+    private static statsSubscription?: Subscription;
+    private static suggestedStreamsSubscription?: Subscription;
 
     /**
      * Maximum consecutive retry failures before permanent cleanup
@@ -157,7 +177,7 @@ export class WebRTCStreamManager {
         tap(() => Object.values(WebRTCStreamManager.EXISTING_CONNECTIONS).forEach(connection => connection.updateTrackerMetrics(performance.now()))),
         delay(500),
         throttleByFrameRate(),
-        shareReplay({ refCount: false, bufferSize: 1 })
+        shareReplay({ refCount: true, bufferSize: 1 })
     );
 
     /** Current connections observable used gettings current metric values from trackers */
@@ -170,7 +190,7 @@ export class WebRTCStreamManager {
     static userInteracted$ = fromEvent(document, 'click').pipe(
         take(1),
         throttleByFrameRate(),
-        shareReplay({ bufferSize: 1, refCount: false }),
+        shareReplay({ bufferSize: 1, refCount: true }),
     );
 
     /** Whether to log current playback performance details */
@@ -578,15 +598,54 @@ export class WebRTCStreamManager {
     }
 
     static closeAll(): Promise<true> {
+        // Unsubscribe from static subscriptions to prevent memory leaks
+        if (this.statsSubscription) {
+            this.statsSubscription.unsubscribe();
+            this.statsSubscription = undefined;
+        }
+        if (this.suggestedStreamsSubscription) {
+            this.suggestedStreamsSubscription.unsubscribe();
+            this.suggestedStreamsSubscription = undefined;
+        }
+
+        // Clean up static interval to prevent memory leaks
+        if (WebRTCStreamManager.authCacheCleanupInterval) {
+            clearInterval(WebRTCStreamManager.authCacheCleanupInterval);
+            WebRTCStreamManager.authCacheCleanupInterval = undefined;
+        }
+
+        // Clean up PRIORITIZED subscription to prevent memory leaks
+        if (WebRTCStreamManager.PRIORITIZED && !WebRTCStreamManager.PRIORITIZED.closed) {
+            WebRTCStreamManager.PRIORITIZED.unsubscribe();
+        }
+
         return WebRTCStreamManager._connectionCache.values().reduce(
             async (promise, connection) => {
                 await promise;
                 await new Promise(resolve => setTimeout(resolve, 50));
                 await connection.close();
-                return true;
+                return true as const;
             },
             Promise.resolve(true as const)
-        );
+        ).then((result) => {
+            // Clean up any orphaned video elements tracked by WebRTCStreamManager
+            let cleanedCount = 0;
+            document.querySelectorAll('video').forEach((videoElement: HTMLVideoElement) => {
+                if (WebRTCStreamManager.createdVideoElements.has(videoElement) && videoElement.srcObject) {
+                    this.logger?.warn('Removing tracked orphaned video element from closeAll()');
+                    videoElement.srcObject = null;
+                    videoElement.load();
+                    videoElement.remove();
+                    cleanedCount++;
+                }
+            });
+
+            if (cleanedCount > 0) {
+                this.logger?.info(`Cleaned up ${cleanedCount} tracked orphaned video element(s)`);
+            }
+
+            return result;
+        });
     }
 
     /**
@@ -728,6 +787,15 @@ export class WebRTCStreamManager {
     /** Internal */
     private wsConnection: WebSocketSubject<SignalingMessage>;
     private videoElements: {element: HTMLVideoElement, observer: MutationObserver, frameCallbackHandle?: number }[] = [];
+
+    /**
+     * Flag to prevent lazy video getter from creating new elements during cleanup.
+     * Prevents memory leak from lazy getter creating new element post-cleanup
+     */
+    private _isClosing = false;
+
+    /** Instance subscription for parameter updates - needs cleanup to prevent leaks */
+    private _parameterSubscription?: Subscription;
 
     /** Public methods and properties */
     /** Updates whenever the mediasserver sends a new stream */
@@ -1076,6 +1144,10 @@ export class WebRTCStreamManager {
         this.playbackRate$.complete();
         this.confirmation$.complete();
 
+        // Explicitly unsubscribe parameter subscription to prevent memory leaks
+        this._parameterSubscription?.unsubscribe();
+        this._parameterSubscription = undefined;
+
         // Clear all tracked timeouts to prevent leaks
         this.clearAllTimeouts();
 
@@ -1262,11 +1334,41 @@ export class WebRTCStreamManager {
         let confirmed = !useDataChannelUpdate;
 
         if (useDataChannelUpdate) {
-            this.peerConnection?.remoteDataChannel?.send(JSON.stringify(this.getCurrentStreamInfo()));
-            confirmed = await this.getConfirmation(500);
+            // Improved retry logic: send stream info every 150ms until confirmed or 2s timeout
+            const streamInfo = JSON.stringify(this.getCurrentStreamInfo());
+            const retryInterval = 150; // ms
+            const totalTimeout = 4_000; // ms
+            const startTime = Date.now();
+            let retryHandle: ReturnType<typeof setInterval> | null = null;
+
+            try {
+                // Send initial request
+                this.peerConnection?.remoteDataChannel?.send(streamInfo);
+
+                // Set up retry interval
+                retryHandle = setInterval(() => {
+                    if (this.peerConnection?.remoteDataChannel?.readyState === 'open') {
+                        this.peerConnection.remoteDataChannel.send(streamInfo);
+                        WebRTCStreamManager.logger?.debug(`[DataChannel] Retrying stream switch request (${Date.now() - startTime}ms elapsed)`);
+                    }
+                }, retryInterval);
+
+                // Wait for confirmation with 2-second timeout
+                confirmed = await this.getConfirmation(totalTimeout);
+
+                if (confirmed) {
+                    WebRTCStreamManager.logger?.info(`[DataChannel] Stream switch confirmed via data channel (${Date.now() - startTime}ms)`);
+                }
+            } finally {
+                // Clean up retry interval
+                if (retryHandle !== null) {
+                    clearInterval(retryHandle);
+                }
+            }
         }
 
         if (!confirmed || !(await this.streamChanged())) {
+            WebRTCStreamManager.logger?.info('[DataChannel] Stream switch not confirmed or stream did not change, creating new connection');
             this.start();
         }
     }
@@ -2524,9 +2626,10 @@ window.setPlaybackRateStrategy = Object.entries(targetPlaybackRateStrategies).re
 /**
  * Periodic cleanup of expired authentication cache entries
  * Runs every 15 minutes to prevent unbounded memory growth
+ * Stored in static property to allow cleanup via closeAll()
  */
 if (typeof setInterval !== 'undefined') {
-    setInterval(() => {
+    WebRTCStreamManager.authCacheCleanupInterval = setInterval(() => {
         const cleaned = WebRTCStreamManager.cleanupAuthCache();
         if (cleaned > 0 && WebRTCStreamManager.logger) {
             WebRTCStreamManager.logger.info(`Cleaned ${cleaned} expired auth cache entries`);
