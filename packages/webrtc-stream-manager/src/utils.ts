@@ -1,7 +1,7 @@
 // Copyright 2018-present Network Optix, Inc. Licensed under MPL 2.0: www.mozilla.org/MPL/2.0/
 
 import { MonoTypeOperatorFunction, Observable, Subject, animationFrames, combineLatest, defer, exhaustMap, filter, firstValueFrom, map, mergeMap, pairwise, repeat, scan, share, shareReplay, skip, switchMap, take, tap, throttle, timer, toArray, windowTime } from "rxjs";
-import { IntRange } from "./types";
+import { AvailableStreams, IntRange, Stream } from "./types";
 
 /**
  * Get normalized focus value for a given element.
@@ -127,21 +127,60 @@ export function cleanId(id: unknown): string | undefined {
     return (id as string)?.replace(/{|}/g, '');
 }
 
+/**
+ * Adds a random prefix to a URL if the original URL had a prefix.
+ * Preserves the prefix pattern from the original request on redirected URLs.
+ */
+const addPrefixToUrl = (url: string, originalUrl: string): string => {
+    try {
+        // Only add prefix if original URL had one (contained ---)
+        const originalHost = new URL(originalUrl).host;
+        if (!originalHost.includes('---')) {
+            return url;
+        }
+
+        const urlObj = new URL(url);
+        // Check if redirect URL already has a prefix
+        if (urlObj.host.includes('---')) {
+            return url;
+        }
+
+        // Add a new random prefix to the redirected URL
+        const prefix = generateRandomString();
+        urlObj.host = `${prefix}---${urlObj.host}`;
+        return urlObj.toString();
+    } catch {
+        return url;
+    }
+};
+
 export const fetchWithRedirectAuthorization = async (input: string, init: RequestInit, retries = 10): Promise<Response> => {
     const response = await fetch(input, init);
     const unauthorized = response.status === 401;
     const unavailable = response.status === 503;
 
-    if (response.redirected && unauthorized || unavailable) {
+    // Fixed: Added parentheses to clarify operator precedence
+    // Handle: (redirected AND unauthorized) OR unavailable
+    if ((response.redirected && unauthorized) || unavailable) {
         /**
-         * If response is redirected and unauthorized that means that the origin isn't listed on the CSP
-         * and we need to try the redirected url with the same authorization headers.
+         * If response is redirected and unauthorized that means that the browser followed
+         * a cross-origin redirect and stripped the Authorization header (standard security behavior).
+         * We retry the final URL with the original auth headers.
          *
-         * If response is redirected and unavailable that means that there's an issue with the relay
+         * If response is unavailable (503) that means there's an issue with the relay
          * that was chosen so we retry the original url to get a redirect to a different relay.
          */
-        const urlToTry = unavailable ? input : response.url;
+        const baseUrl = unavailable ? input : response.url;
+        // Add prefix to retry URL if original had one (for connection multiplexing)
+        const urlToTry = addPrefixToUrl(baseUrl, input);
         return retries ? fetchWithRedirectAuthorization(urlToTry, init, retries - 1) : fetch(urlToTry, init)
+    }
+
+    // Also handle non-redirected 401 (direct auth failure) with retry
+    if (unauthorized && retries > 0) {
+        // Small delay before retry to allow for token refresh
+        await new Promise(resolve => setTimeout(resolve, 100));
+        return fetchWithRedirectAuthorization(input, init, retries - 1);
     }
 
     return response;
@@ -662,3 +701,58 @@ export const targetPlaybackRateStrategies = {
     },
     drainIt: (_currentPlaybackRate: number, _bufferedTime: number, _lastChunk: number) => 10
 } as const
+
+/**
+ * Determines actual available streams from camera mediaStreams data.
+ * This utility provides a unified way to detect stream availability,
+ * preventing attempts to connect to non-existent streams on single-stream cameras.
+ *
+ * @param mediaStreams - Array of Stream objects from camera parameters
+ * @returns Array of available streams, or undefined if detection should be delegated to API
+ *
+ * @example
+ * // In Angular component
+ * const streams = getActualAvailableStreams(camera?.parameters?.mediaStreams?.streams);
+ * if (streams) {
+ *   WebRTCStreamManager.connect({ availableStreams: streams, ... });
+ * }
+ *
+ * @example
+ * // In WebRTC manager for API-based detection
+ * const detected = getActualAvailableStreams(apiResponse.parameters?.mediaStreams?.streams);
+ * if (detected && detected.length < this._availableStreams.length) {
+ *   this._availableStreams = detected;
+ * }
+ */
+export function getActualAvailableStreams(mediaStreams: Stream[] | undefined | null): AvailableStreams[] | undefined {
+    if (!mediaStreams?.length) {
+        // No data available - delegate detection to API or use defaults
+        return undefined;
+    }
+
+    const streams: AvailableStreams[] = [];
+
+    // Check for PRIMARY (encoderIndex 0) and SECONDARY (encoderIndex 1) streams
+    const hasStream0 = mediaStreams.some(s => s.encoderIndex === AvailableStreams.PRIMARY);
+    const hasStream1 = mediaStreams.some(s => s.encoderIndex === AvailableStreams.SECONDARY);
+
+    if (hasStream0) streams.push(AvailableStreams.PRIMARY);
+    if (hasStream1) streams.push(AvailableStreams.SECONDARY);
+
+    // Ensure at least PRIMARY if streams data exists but no valid encoderIndex found
+    // This handles edge cases where API returns streams but with unexpected encoderIndex values
+    return streams.length > 0 ? streams : [AvailableStreams.PRIMARY];
+}
+
+/**
+ * Determines available streams with fallback for backward compatibility.
+ * Use this variant when you need a guaranteed non-undefined result.
+ *
+ * @param mediaStreams - Array of Stream objects from camera parameters
+ * @returns Array of available streams (defaults to both PRIMARY and SECONDARY if no data)
+ */
+export function getActualAvailableStreamsWithFallback(mediaStreams: Stream[] | undefined | null): AvailableStreams[] {
+    const detected = getActualAvailableStreams(mediaStreams);
+    // Fallback: assume both streams if no data available (backward compatibility)
+    return detected ?? [AvailableStreams.PRIMARY, AvailableStreams.SECONDARY];
+}

@@ -3,5 +3,5 @@
 export * from './types';
 export { WebRTCStreamManager } from './web-rtc-stream-manager';
 export * from './trackers';
-export { generateWebRtcUrlFactory, fetchWithRedirectAuthorization, WithSkip, framesPerSecondFactory, frameRateTracker$, setMaxFpsOnBootstrap, throttleByFrameRate } from './utils';
+export { generateWebRtcUrlFactory, fetchWithRedirectAuthorization, WithSkip, framesPerSecondFactory, frameRateTracker$, setMaxFpsOnBootstrap, throttleByFrameRate, getActualAvailableStreams, getActualAvailableStreamsWithFallback } from './utils';
 export { CircuitBreaker, CircuitState, CircuitBreakerPresets, createCircuitBreaker, type CircuitBreakerConfig, type CircuitBreakerStats } from './circuit-breaker';

@@ -139,7 +139,6 @@ export enum ApiVersions {
 }
 
 export enum RequiresTranscoding {
-    H265=173,
     MJPEG=7,
 }
 
@@ -159,6 +158,30 @@ export enum TargetStream {
     LOW = 'LOW',
 }
 
+/**
+ * Pre-resolved connection context. When provided, skips host resolution/ping request.
+ */
+export interface ConnectionContext {
+    /** The resolved host URL after following redirects from ping */
+    resolvedHost: string;
+    /** The moduleGuid returned from ping response (which server the relay connected to) */
+    moduleGuid?: string;
+}
+
+/**
+ * Pre-resolved API context. When provided, skips version detection request.
+ */
+export interface ApiContext {
+    /** API version to use for endpoint construction. Skips GET /rest/v2/system/info */
+    version: ApiVersions;
+    /**
+     * One-time token for V2 API WebSocket authentication.
+     * Can be a static string or a factory function (recommended for fresh tokens).
+     * Note: Tokens expire in ~10 seconds and are single-use - prefer factory function.
+     */
+    oneTimeToken?: string | (() => string | Promise<string>);
+}
+
 export interface WebRtcUrlConfigUnknown {
     systemId: string;
     cameraId: string;
@@ -167,6 +190,35 @@ export interface WebRtcUrlConfigUnknown {
     targetStream: TargetStream;
     position?:  number;
     speed?: 'unlimited' | number;
+    /** Available streams from camera mediaStreams data. If provided, skips API detection. */
+    availableStreams?: AvailableStreams[];
+    /** Full mediaStreams data from camera. If provided, skips device info API call. */
+    mediaStreams?: Stream[];
+
+    // === Pre-resolution context (NEW) ===
+
+    /**
+     * Pre-resolved connection context. When provided, skips ping/host resolution request.
+     * Use this when the caller has already determined the relay connection details.
+     */
+    connectionContext?: ConnectionContext;
+
+    /**
+     * Pre-resolved API context. When provided, skips version detection request.
+     * Use this when the system version is already known from NxSystemInfo.
+     */
+    apiContext?: ApiContext;
+
+    /**
+     * Explicit proxy mode override.
+     * - true: Force proxy mode (route through relay-connected server)
+     * - false: Force direct connection to target server
+     * - undefined: Auto-detect by comparing moduleGuid with serverId
+     *
+     * Note: Proxy is needed when target server is different from relay-connected server,
+     * to avoid unnecessary inter-server video traffic routing.
+     */
+    useProxy?: boolean;
 }
 
 export interface WebRtcUrlConfigV1 extends WebRtcUrlConfigUnknown {

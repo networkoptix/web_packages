@@ -5,7 +5,7 @@ import { filter, shareReplay, switchMap, take, map, delay, takeUntil, tap, disti
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 import { FocusTracker, MosScoreTracker, BytesReceivedTracker } from './trackers';
 import { MediaServerPeerConnection } from './media-server-peer-connection';
-import { SignalingMessage, PlaybackDetails, ConnectionError, SdpInit, IceInit, ErrorMsg, StreamQuality, IntRange, MimeInit, AvailableStreams, ApiVersions, Stream, RequiresTranscoding, isRequiresTranscoding, WebRtcUrlFactoryOrConfig, WebRtcUrlFactory, WebRtcUrlConfig, TargetStream, DataChannelMessage, isTimeStampMessage, isStreamChangeMessage, ConnectionType, isConfirmationMessage } from './types';
+import { SignalingMessage, PlaybackDetails, ConnectionError, SdpInit, IceInit, ErrorMsg, StreamQuality, IntRange, MimeInit, AvailableStreams, ApiVersions, Stream, RequiresTranscoding, isRequiresTranscoding, WebRtcUrlFactoryOrConfig, WebRtcUrlFactory, WebRtcUrlConfig, WebRtcUrlConfigUnknown, TargetStream, DataChannelMessage, isTimeStampMessage, isStreamChangeMessage, ConnectionType, isConfirmationMessage } from './types';
 import { BaseTracker } from './trackers/base-tracker';
 import { ConnectionQueue, WithSkip, getConnectionKey, createConnectionKey, cleanId, fetchWithRedirectAuthorization, cacheSuccess, streamSupported, frameRateTracker$, throttleByFrameRate, targetPlaybackRateStrategies, generateRandomString, acquireLock, releaseLock, LRUConnectionCache, TTLCache } from './utils';
 
@@ -524,7 +524,13 @@ export class WebRTCStreamManager {
         allowTranscoding: boolean = false,
     ): Observable<[MediaStream, ConnectionError, WebRTCStreamManager]> {
         const connectionKey = WebRTCStreamManager.createConnectionKey(webRtcUrlFactoryOrConfig);
-        if (!targetStreams && 'targetStream' in webRtcUrlFactoryOrConfig) {
+
+        // RTSP FIX: Prefer availableStreams from config (from camera mediaStreams data) over deriving from targetStream
+        // This avoids redundant API calls to re-detect stream availability
+        if (!targetStreams && 'availableStreams' in webRtcUrlFactoryOrConfig && webRtcUrlFactoryOrConfig.availableStreams?.length) {
+            targetStreams = webRtcUrlFactoryOrConfig.availableStreams;
+            WebRTCStreamManager.logger?.info('Using availableStreams from config:', targetStreams);
+        } else if (!targetStreams && 'targetStream' in webRtcUrlFactoryOrConfig) {
             const streams = webRtcUrlFactoryOrConfig.targetStream;
             targetStreams = streams === TargetStream.AUTO ? [AvailableStreams.PRIMARY, AvailableStreams.SECONDARY] : [streams === TargetStream.HIGH ? AvailableStreams.PRIMARY : AvailableStreams.SECONDARY]
         }
@@ -556,6 +562,9 @@ export class WebRTCStreamManager {
                 connectionKey,
             );
             WebRTCStreamManager._connectionCache.set(connectionKey, instance);
+        } else {
+            // Update accessToken for cached instances to prevent stale tokens
+            instance.accessToken = getAccessToken;
         }
 
         instance.registerElement(videoElement);
@@ -793,6 +802,35 @@ export class WebRTCStreamManager {
      * Prevents memory leak from lazy getter creating new element post-cleanup
      */
     private _isClosing = false;
+
+    /**
+     * Flag to prevent multiple concurrent connection attempts.
+     * Prevents race condition where multiple start() calls create duplicate WebSocket connections
+     */
+    private _isConnecting = false;
+    private _pendingStartPromise: Promise<unknown> | null = null;
+
+    /**
+     * Reconnection cooldown to prevent rapid-fire reconnection attempts.
+     * Minimum time in ms between reconnection attempts.
+     */
+    private static readonly RECONNECTION_COOLDOWN_MS = 10_000;
+    private _lastReconnectionTime: number | null = null;
+
+    /**
+     * Flag to prevent multiple concurrent WebSocket retry attempts.
+     * Set when a 1006 closeObserver retry is queued, cleared when connection succeeds or all retries exhausted.
+     */
+    private _wsRetryPending = false;
+
+    /**
+     * MSE buffer trimming configuration.
+     * Trims already-played data to prevent unbounded memory growth.
+     */
+    private static readonly BUFFER_TRIM_INTERVAL_MS = 30_000; // Trim every 30 seconds
+    private static readonly BUFFER_KEEP_BEHIND_S = 10; // Keep 10 seconds behind currentTime
+    private _lastBufferTrimTime: number = 0;
+    private _bufferTrimPending: boolean = false;
 
     /** Instance subscription for parameter updates - needs cleanup to prevent leaks */
     private _parameterSubscription?: Subscription;
@@ -1204,6 +1242,12 @@ export class WebRTCStreamManager {
         this.connectionState = ConnectionState.CONNECTED;
         this.lastRetryAttempt = null;
 
+        // Clear timeout failure tracking on successful connection
+        this.consecutiveTimeoutFailures.clear();
+
+        // Reset disabled streams on successful connection to allow retry
+        this.disabledStreams = [];
+
         // Future: Circuit breaker integration
         // if (this.connectionCircuitBreaker) {
         //     this.connectionCircuitBreaker.recordSuccess();
@@ -1220,7 +1264,7 @@ export class WebRTCStreamManager {
                     this.videoRefFrameCallbackHandle = undefined;
                 }
                 URL.revokeObjectURL(this.videoRef.src);
-                this.videoRef.src = null;
+                this.videoRef.src = '';
                 this.videoRef.srcObject = null;
             }
             if (this.mediaSource?.readyState === 'open') {
@@ -1287,6 +1331,9 @@ export class WebRTCStreamManager {
         }
         this.mediaSource = null;
         this.sourceBuffer = null;
+
+        // Clear pending buffers to prevent memory leak
+        this.buffers = [];
     };
 
     private disabledStreams: AvailableStreams[] = [];
@@ -1330,6 +1377,8 @@ export class WebRTCStreamManager {
         }
 
         const useDataChannelUpdate = this.apiVersion === ApiVersions.v2 && !!(this.peerConnection?.remoteDataChannel?.readyState === 'open');
+        // When data channel update is used, skip subscription (we handle confirmation below)
+        // When not using data channel, let subscription trigger start() for new connection
         this.stream$.next(new WithSkip(stream, useDataChannelUpdate));
         let confirmed = !useDataChannelUpdate;
 
@@ -1459,6 +1508,61 @@ export class WebRTCStreamManager {
         }
 
         this.appendFromBuffers();
+    }
+
+    /**
+     * Periodically trims old data from MSE SourceBuffer to prevent unbounded memory growth.
+     * Only trims when:
+     * - Enough time has passed since last trim (BUFFER_TRIM_INTERVAL_MS)
+     * - There's played data worth trimming (>= BUFFER_KEEP_BEHIND_S seconds behind currentTime)
+     * - SourceBuffer is not busy with another operation
+     */
+    private maybeTrimbuffer = (): void => {
+        if (!this.sourceBuffer || !this.video) {
+            return;
+        }
+
+        const now = performance.now();
+
+        // Throttle trim operations
+        if (now - this._lastBufferTrimTime < WebRTCStreamManager.BUFFER_TRIM_INTERVAL_MS) {
+            return;
+        }
+
+        // Don't trim if sourceBuffer is updating
+        if (this.sourceBuffer.updating) {
+            return;
+        }
+
+        try {
+            const buffered = this.sourceBuffer.buffered;
+            if (!buffered || buffered.length === 0) {
+                return;
+            }
+
+            const currentTime = this.video.currentTime;
+            const bufferStart = buffered.start(0);
+
+            // Calculate trim end point: keep BUFFER_KEEP_BEHIND_S seconds before currentTime
+            const trimEndPoint = currentTime - WebRTCStreamManager.BUFFER_KEEP_BEHIND_S;
+
+            // Only trim if there's meaningful old data (at least 1 second to trim)
+            if (trimEndPoint - bufferStart < 1) {
+                return;
+            }
+
+            WebRTCStreamManager.logger?.info(
+                `MSE buffer trimming: removing ${bufferStart.toFixed(1)}s to ${trimEndPoint.toFixed(1)}s ` +
+                `(${(trimEndPoint - bufferStart).toFixed(1)}s of old data, currentTime=${currentTime.toFixed(1)}s)`
+            );
+
+            this._bufferTrimPending = true;
+            this._lastBufferTrimTime = now;
+            this.sourceBuffer.remove(bufferStart, trimEndPoint);
+        } catch (e) {
+            this._bufferTrimPending = false;
+            WebRTCStreamManager.logger?.error('MSE buffer trim failed:', e);
+        }
     }
 
     private videoRef: HTMLVideoElement & { captureStream: () => MediaStream }
@@ -1608,7 +1712,7 @@ export class WebRTCStreamManager {
                 this.videoRef.cancelVideoFrameCallback(this.videoRefFrameCallbackHandle);
                 this.videoRefFrameCallbackHandle = undefined;
             }
-            this.videoRef.src = null;
+            this.videoRef.src = '';
             this.videoRef.remove();
         }
 
@@ -1667,6 +1771,28 @@ export class WebRTCStreamManager {
                 private streamCheckTimeout: ReturnType<typeof setTimeout>;
                 private chunks = 0;
                 private droppedChunks = 0;
+                /**
+                 * Tracks lag recovery attempts before resorting to reconnection.
+                 * 0 = no attempts yet, will try fast-forward
+                 * 1 = fast-forward attempted, will try datachannel seek
+                 * 2 = both attempted, will reconnect
+                 */
+                private lagRecoveryAttempts = 0;
+                /**
+                 * Timestamp when playback was last confirmed to be truly healthy.
+                 * Used to require sustained healthy playback before resetting recovery counter.
+                 */
+                private lastHealthyTimestamp = 0;
+                /**
+                 * Last recorded video.currentTime for detecting actual playback progress.
+                 * If currentTime doesn't advance, video is frozen even if metrics look OK.
+                 */
+                private lastRecordedCurrentTime = 0;
+                /**
+                 * Duration in ms that playback must remain healthy before resetting recovery counter.
+                 * Prevents premature reset when video is frozen but metrics temporarily look OK.
+                 */
+                private readonly SUSTAINED_HEALTHY_DURATION_MS = 10000;
                 private get duration() {
                     const sourceBuffer = webRtcStreamManager.sourceBuffer;
                     try {
@@ -1693,6 +1819,206 @@ export class WebRTCStreamManager {
                 get hasSecondary() {
                     return webRtcStreamManager.availableStreams.includes(AvailableStreams.SECONDARY) && webRtcStreamManager.currentStream() !== AvailableStreams.SECONDARY;
                 }
+                /**
+                 * Check if playback is truly healthy by verifying:
+                 * 1. timeBehind metric is below threshold
+                 * 2. video.currentTime is actually advancing (frames rendering)
+                 * 3. Has remained healthy for sustained duration
+                 *
+                 * Only resets lagRecoveryAttempts after sustained healthy playback
+                 * to prevent premature reset when video is frozen but metrics look OK.
+                 *
+                 * @param timeBehind - Current time behind value
+                 * @param playbackTime - Current video.currentTime
+                 * @returns true if recovery counter was reset
+                 */
+                private checkIfTrulyHealthy(timeBehind: number, playbackTime: number): boolean {
+                    if (this.lagRecoveryAttempts === 0) {
+                        // No recovery in progress, nothing to check
+                        this.lastRecordedCurrentTime = playbackTime;
+                        return false;
+                    }
+
+                    const now = performance.now();
+
+                    // Check if video.currentTime is actually advancing (threshold 0.5s to account for timing)
+                    const isPlaybackProgressing = playbackTime > this.lastRecordedCurrentTime + 0.5;
+                    this.lastRecordedCurrentTime = playbackTime;
+
+                    if (timeBehind < 5 && isPlaybackProgressing) {
+                        // Mark as currently healthy
+                        if (this.lastHealthyTimestamp === 0) {
+                            this.lastHealthyTimestamp = now;
+                            WebRTCStreamManager.logger?.info(`Lag recovery: Playback looks healthy, waiting for sustained recovery (${(this.SUSTAINED_HEALTHY_DURATION_MS / 1000).toFixed(0)}s required)`);
+                        }
+
+                        // Only reset counter after sustained healthy playback
+                        const healthyDuration = now - this.lastHealthyTimestamp;
+                        if (healthyDuration >= this.SUSTAINED_HEALTHY_DURATION_MS) {
+                            WebRTCStreamManager.logger?.info(`Lag recovery: Playback healthy for ${(healthyDuration / 1000).toFixed(1)}s, resetting recovery counter`);
+                            this.lagRecoveryAttempts = 0;
+                            this.lastHealthyTimestamp = 0;
+                            return true;
+                        }
+                    } else {
+                        // Not healthy - reset timestamp and log detailed diagnostics
+                        if (this.lastHealthyTimestamp > 0 || this.lagRecoveryAttempts > 0) {
+                            const video = webRtcStreamManager.video;
+                            const sourceBuffer = webRtcStreamManager.sourceBuffer;
+
+                            // Capture buffered ranges
+                            let bufferedRanges = 'none';
+                            try {
+                                const ranges: string[] = [];
+                                for (let i = 0; i < video.buffered.length; i++) {
+                                    ranges.push(`[${video.buffered.start(i).toFixed(2)}-${video.buffered.end(i).toFixed(2)}]`);
+                                }
+                                bufferedRanges = ranges.length ? ranges.join(', ') : 'empty';
+                            } catch (e) {
+                                bufferedRanges = 'error reading buffered';
+                            }
+
+                            // Capture SourceBuffer state
+                            let sbState = 'N/A';
+                            try {
+                                if (sourceBuffer) {
+                                    const sbRanges: string[] = [];
+                                    for (let i = 0; i < sourceBuffer.buffered.length; i++) {
+                                        sbRanges.push(`[${sourceBuffer.buffered.start(i).toFixed(2)}-${sourceBuffer.buffered.end(i).toFixed(2)}]`);
+                                    }
+                                    sbState = `updating=${sourceBuffer.updating}, mode=${sourceBuffer.mode}, ranges=${sbRanges.join(', ') || 'empty'}`;
+                                }
+                            } catch (e) {
+                                sbState = 'error reading sourceBuffer';
+                            }
+
+                            WebRTCStreamManager.logger?.info(`Lag recovery: Playback not healthy (timeBehind=${timeBehind.toFixed(1)}s, progressing=${isPlaybackProgressing})`);
+                            WebRTCStreamManager.logger?.info(`  Video state: currentTime=${playbackTime.toFixed(2)}, paused=${video.paused}, seeking=${video.seeking}, readyState=${video.readyState}, networkState=${video.networkState}, ended=${video.ended}`);
+                            WebRTCStreamManager.logger?.info(`  Video buffered: ${bufferedRanges}`);
+                            WebRTCStreamManager.logger?.info(`  SourceBuffer: ${sbState}`);
+                            WebRTCStreamManager.logger?.info(`  Pending buffers: ${webRtcStreamManager.buffers.length}`);
+                        }
+                        this.lastHealthyTimestamp = 0;
+                    }
+
+                    return false;
+                }
+                /**
+                 * Attempt to fast-forward video element to the latest buffered position.
+                 * This is the first recovery step when playback falls behind.
+                 */
+                private attemptFastForward(): boolean {
+                    try {
+                        const video = webRtcStreamManager.video;
+                        const buffered = video.buffered;
+
+                        // Log detailed state before fast-forward
+                        const ranges: string[] = [];
+                        for (let i = 0; i < buffered.length; i++) {
+                            ranges.push(`[${buffered.start(i).toFixed(2)}-${buffered.end(i).toFixed(2)}]`);
+                        }
+                        WebRTCStreamManager.logger?.info(`Lag recovery: Pre-FF state - currentTime=${video.currentTime.toFixed(2)}, paused=${video.paused}, readyState=${video.readyState}, buffered=${ranges.join(', ') || 'empty'}`);
+
+                        if (buffered.length > 0) {
+                            const currentPos = video.currentTime;
+                            const latestPosition = buffered.end(buffered.length - 1);
+                            // Only fast-forward if there's meaningful buffer ahead (need at least 3s of runway)
+                            if (latestPosition > currentPos + 3) {
+                                // Leave 2 seconds of runway to allow keyframe alignment and prevent immediate re-stall
+                                const targetPosition = latestPosition - 2;
+
+                                // Add one-time listener to capture state after seek completes
+                                const seekedHandler = () => {
+                                    video.removeEventListener('seeked', seekedHandler);
+                                    // Short delay to let browser settle
+                                    setTimeout(() => {
+                                        const newRanges: string[] = [];
+                                        try {
+                                            for (let i = 0; i < video.buffered.length; i++) {
+                                                newRanges.push(`[${video.buffered.start(i).toFixed(2)}-${video.buffered.end(i).toFixed(2)}]`);
+                                            }
+                                        } catch (e) { /* ignore */ }
+                                        WebRTCStreamManager.logger?.info(`Lag recovery: Post-FF state - currentTime=${video.currentTime.toFixed(2)}, paused=${video.paused}, readyState=${video.readyState}, seeking=${video.seeking}, buffered=${newRanges.join(', ') || 'empty'}`);
+                                    }, 100);
+                                };
+                                video.addEventListener('seeked', seekedHandler);
+
+                                WebRTCStreamManager.logger?.info(`Lag recovery: Fast-forward from ${currentPos.toFixed(2)}s to ${targetPosition.toFixed(2)}s`);
+                                video.currentTime = targetPosition;
+                                return true;
+                            } else {
+                                WebRTCStreamManager.logger?.info(`Lag recovery: Not enough buffer ahead for fast-forward (need 3s, have ${(latestPosition - currentPos).toFixed(2)}s: latestPosition=${latestPosition.toFixed(2)}, currentPos=${currentPos.toFixed(2)})`);
+                            }
+                        } else {
+                            WebRTCStreamManager.logger?.info('Lag recovery: No buffered ranges available');
+                        }
+                    } catch (e) {
+                        WebRTCStreamManager.logger?.error('Lag recovery: Fast-forward failed:', e);
+                    }
+                    return false;
+                }
+                /**
+                 * Check if datachannel seek is available for live streams.
+                 */
+                private canSeekViaDataChannel(): boolean {
+                    return webRtcStreamManager.apiVersion === ApiVersions.v2 &&
+                           webRtcStreamManager.peerConnection?.remoteDataChannel?.readyState === 'open' &&
+                           webRtcStreamManager.isLive;
+                }
+                /**
+                 * Send datachannel seek to live position.
+                 * For live streams, position=0 means "jump to live".
+                 */
+                private sendSeekToLive(): boolean {
+                    try {
+                        if (this.canSeekViaDataChannel()) {
+                            WebRTCStreamManager.logger?.info('Lag recovery: Sending datachannel seek to live position');
+                            webRtcStreamManager.peerConnection?.remoteDataChannel?.send(JSON.stringify({ seek: 0 }));
+                            return true;
+                        }
+                    } catch (e) {
+                        WebRTCStreamManager.logger?.error('Lag recovery: Datachannel seek failed:', e);
+                    }
+                    return false;
+                }
+                /**
+                 * Handle lag detection with progressive recovery before reconnection.
+                 * Returns true if recovery was attempted (should re-check), false if reconnection is needed.
+                 */
+                private handleLagDetected(): boolean {
+                    // Step 1: Try fast-forward to latest buffered position
+                    if (this.lagRecoveryAttempts === 0) {
+                        WebRTCStreamManager.logger?.info(`Lag recovery: Attempt ${this.lagRecoveryAttempts + 1} - trying fast-forward`);
+                        const fastForwardWorked = this.attemptFastForward();
+                        this.lagRecoveryAttempts++;
+
+                        if (fastForwardWorked) {
+                            this.startTime = 0; // Reset drift calculation
+                            return true;
+                        }
+                        // Fast-forward didn't work (not enough buffer), fall through to try datachannel seek
+                        WebRTCStreamManager.logger?.info('Lag recovery: Fast-forward unsuccessful, trying datachannel seek immediately');
+                    }
+
+                    // Step 2: Try datachannel seek to live (for live streams only)
+                    if (this.lagRecoveryAttempts <= 1) {
+                        this.lagRecoveryAttempts = 2; // Mark that we've tried datachannel seek
+                        WebRTCStreamManager.logger?.info(`Lag recovery: Attempt 2 - trying datachannel seek`);
+                        if (this.canSeekViaDataChannel()) {
+                            this.sendSeekToLive();
+                            this.startTime = 0; // Reset drift calculation
+                            return true;
+                        } else {
+                            WebRTCStreamManager.logger?.info('Lag recovery: Datachannel seek not available (not live or channel not open)');
+                            // Fall through to reconnect
+                        }
+                    }
+
+                    // Step 3: All recovery attempts exhausted, reconnect
+                    WebRTCStreamManager.logger?.info('Lag recovery: All attempts exhausted, reconnecting');
+                    this.lagRecoveryAttempts = 0; // Reset for next connection
+                    return false;
+                }
                 track() {
                     if (this.hasSecondary) {
                         this.trackChunks();
@@ -1711,7 +2037,19 @@ export class WebRTCStreamManager {
                     const timeSinceStart = currentTime - this.startTime;
                     const timeBehind = timeSinceStart - playbackTime;
 
+                    // Check if recovery in progress needs to be reset (requires sustained healthy playback)
+                    this.checkIfTrulyHealthy(timeBehind, playbackTime);
+
                     if (playbackTime && timeBehind > WebRTCStreamManager.maxBehind) {
+                        // Try progressive recovery before reconnection
+                        if (this.handleLagDetected()) {
+                            // Recovery attempted, schedule re-check
+                            this.streamCheckTimeout = webRtcStreamManager.trackTimeout(() => {
+                                this.clear();
+                                this.track();
+                            }, 2000); // Check again in 2 seconds
+                            return;
+                        }
                         WebRTCStreamManager.performanceIssueNotifier$.next()
                         return webRtcStreamManager.close(0.1);
                     }
@@ -1737,7 +2075,19 @@ export class WebRTCStreamManager {
                     this.startTime ||= currentTime - playbackTime;
                     const timeSinceStart = currentTime - this.startTime;
                     const timeBehind = timeSinceStart - playbackTime;
+
+                    // Check if recovery in progress needs to be reset (requires sustained healthy playback)
+                    this.checkIfTrulyHealthy(timeBehind, playbackTime);
+
                     if (timeBehind > WebRTCStreamManager.maxBehind) {
+                        // Try progressive recovery before reconnection
+                        if (this.handleLagDetected()) {
+                            // Recovery attempted, schedule re-check
+                            this.streamCheckTimeout = webRtcStreamManager.trackTimeout(() => {
+                                this.trackCurrentTime();
+                            }, 2000); // Check again in 2 seconds
+                            return;
+                        }
                         WebRTCStreamManager.performanceIssueNotifier$.next()
                         webRtcStreamManager.close(0.1);
                     } else {
@@ -1767,13 +2117,43 @@ export class WebRTCStreamManager {
                     }
 
                     webRtcStreamManager.sourceBuffer.onupdateend = function() {
+                        // Check if the manager is closing - prevent operations on cleaned up state
+                        if (webRtcStreamManager._isClosing) {
+                            return;
+                        }
+
+                        // Check if this updateend is from a buffer trim operation
+                        if (webRtcStreamManager._bufferTrimPending) {
+                            webRtcStreamManager._bufferTrimPending = false;
+                            WebRTCStreamManager.logger?.info('MSE buffer trim completed');
+                            // After trim, continue with any pending buffers
+                            if (webRtcStreamManager.buffers.length) {
+                                webRtcStreamManager.appendFromBuffers();
+                            }
+                            return;
+                        }
+
                         const bufferedTotal = webRtcStreamManager.getBufferedAheadTime(webRtcStreamManager.video);
                         const chunkDuration = bufferedTotal - beforeBufferedEnd;
                         webRtcStreamManager.chunkDuration$.next(chunkDuration);
                         webRtcStreamManager.bufferedDuration$.next(bufferedTotal);
                         if (WebRTCStreamManager.USE_UNRELIABLE_DATA_CHANNEL) {
-                            const maxPlaybackRate = 16;
-                            const playbackRate = Math.min(maxPlaybackRate, WebRTCStreamManager.PLAYBACK_RATE_STRATEGY(webRtcStreamManager.playbackRate$.value, bufferedTotal, chunkDuration))
+                            // For MSE mode (H.265/MJPEG transcoding), use conservative playback rate.
+                            // Server-side transcoding can't keep up with aggressive catch-up speeds.
+                            // Keep playback at 1x unless buffer grows past 3s, then allow gradual
+                            // speedup to prevent unbounded buffer growth.
+                            const maxPlaybackRateForMSE = 1.25; // Conservative max for transcoding
+                            const speedUpThreshold = 3; // Start speeding up when buffer exceeds this
+                            let playbackRate = 1;
+
+                            if (bufferedTotal > speedUpThreshold) {
+                                // Gradually speed up: 1.05x at 4s, 1.10x at 5s, etc.
+                                playbackRate = Math.min(maxPlaybackRateForMSE, 1 + (bufferedTotal - speedUpThreshold) * 0.05);
+                            } else if (bufferedTotal < 1) {
+                                // Slow down if buffer is critically low to let it fill
+                                playbackRate = 0.9;
+                            }
+
                             webRtcStreamManager.playbackRate$.next(playbackRate)
                             webRtcStreamManager.video.playbackRate = playbackRate;
                         }
@@ -1790,6 +2170,9 @@ export class WebRTCStreamManager {
 
                         if (webRtcStreamManager.buffers.length) {
                             webRtcStreamManager.appendFromBuffers();
+                        } else {
+                            // No pending buffers - check if we should trim old data
+                            webRtcStreamManager.maybeTrimbuffer();
                         }
                     }
                 }
@@ -1919,6 +2302,18 @@ export class WebRTCStreamManager {
     static cachedApiVersion: Record<string, ApiVersions> = {};
 
     private async getApiVersion(): Promise<ApiVersions> {
+        // Check if apiContext was provided in config - skip version detection if so
+        if (typeof this.webRtcUrlFactoryOrConfig !== 'function' &&
+            'apiContext' in this.webRtcUrlFactoryOrConfig &&
+            this.webRtcUrlFactoryOrConfig.apiContext?.version) {
+            const providedVersion = this.webRtcUrlFactoryOrConfig.apiContext.version;
+            WebRTCStreamManager.logger?.info('Using apiContext.version from config, skipping version detection:', providedVersion);
+            this.apiVersion = providedVersion;
+            // V1 always has proxy disabled, V2 depends on actual server version (assume enabled for V2)
+            this.proxyDisabled = providedVersion === ApiVersions.v1;
+            return providedVersion;
+        }
+
         const systemId = new URL(this.webRtcUrlFactory()).host.split('.').shift();
         const cached = WebRTCStreamManager.cachedApiVersion[systemId]
         if (cached) {
@@ -2024,7 +2419,53 @@ export class WebRTCStreamManager {
 
     private maxTimeout = 5_000
 
-    start = async (lostConnection = false): Promise<unknown> => this.startHandler(lostConnection).catch(() => this.trackTimeout(() => this.mediaStream$.observed && this.start(true), 100));
+    /**
+     * Track consecutive timeout failures per stream for automatic stream disabling
+     * Key: stream index (0 = PRIMARY, 1 = SECONDARY), Value: consecutive failure count
+     */
+    private consecutiveTimeoutFailures: Map<number, number> = new Map();
+
+    start = async (lostConnection = false): Promise<unknown> => {
+        // Prevent multiple concurrent connection attempts
+        if (this._isConnecting && this._pendingStartPromise && !lostConnection) {
+            WebRTCStreamManager.logger?.info('start() called while already connecting, returning pending promise');
+            return this._pendingStartPromise;
+        }
+
+        // Reconnection cooldown: prevent rapid-fire reconnections when stream is active
+        // Only apply cooldown for non-lostConnection calls (MOS-triggered reconnections)
+        // lostConnection calls are critical recovery attempts and should proceed immediately
+        if (!lostConnection && this.mediaStream$.value?.[0] && this._lastReconnectionTime) {
+            const timeSinceLastReconnection = Date.now() - this._lastReconnectionTime;
+            if (timeSinceLastReconnection < WebRTCStreamManager.RECONNECTION_COOLDOWN_MS) {
+                WebRTCStreamManager.logger?.info(
+                    `Reconnection cooldown active (${Math.round((WebRTCStreamManager.RECONNECTION_COOLDOWN_MS - timeSinceLastReconnection) / 1000)}s remaining), skipping reconnection`
+                );
+                return Promise.resolve();
+            }
+        }
+
+        // Track reconnection time for cooldown
+        this._lastReconnectionTime = Date.now();
+
+        // Reset WebSocket retry flag for fresh connection attempt
+        this._wsRetryPending = false;
+
+        // If this is a lostConnection call, close existing connection first
+        if (lostConnection) {
+            this.closeWsConnection();
+        }
+
+        this._isConnecting = true;
+        this._pendingStartPromise = this.startHandler(lostConnection)
+            .catch(() => this.trackTimeout(() => this.mediaStream$.observed && this.start(true), 100))
+            .finally(() => {
+                this._isConnecting = false;
+                this._pendingStartPromise = null;
+            });
+
+        return this._pendingStartPromise;
+    };
 
     /** Initialization helpers */
     /**
@@ -2062,7 +2503,11 @@ export class WebRTCStreamManager {
         }
 
         if (lostConnection) {
-            this.updateStream(AvailableStreams.SECONDARY);
+            // Switch to PRIMARY (usually more reliable) instead of SECONDARY for recovery
+            const fallbackStream = this.availableStreams.includes(AvailableStreams.PRIMARY)
+                ? AvailableStreams.PRIMARY
+                : this.availableStreams[0];
+            this.updateStream(fallbackStream);
             acquireLock(this, 60, true);
             this.mediaStream$.next([null, ConnectionError.lostConnection, this]);
             return this.close(3, this.apiVersion === ApiVersions.v1);
@@ -2072,6 +2517,8 @@ export class WebRTCStreamManager {
         const speed = !position ? Infinity : this.speed$.value.value || 1;
         const stream = this.currentStream();
         let webRtcUrl = this.webRtcUrlFactory({ position, speed: speed === Infinity ? 'unlimited' : speed, stream });
+
+        WebRTCStreamManager.logger?.info('startHandler - webRtcUrl generated:', webRtcUrl);
 
         if (!webRtcUrl.endsWith('&')) {
             webRtcUrl += '&';
@@ -2087,34 +2534,61 @@ export class WebRTCStreamManager {
         this.targetServerId = this.serverId;
 
         const fallback = ({ parameters: { mediaStreams: { streams: [] as Stream[] } }, serverId: this.targetServerId, id: this.cameraId }) as const;
-        const deviceParams = '?_keepDefault=true&_with=parameters.mediaStreams.streams.codec,parameters.mediaStreams.streams.encoderIndex,serverId,id'
-        const allStreamsInfoEndpoint = `https://${relayHost}/rest/v2/devices${deviceParams}`
-        const streamInfoEndpoint =
-            `https://${relayHost}/rest/v2/devices/${this.cameraId}${deviceParams}`;
 
-        const token = await Promise.resolve(this.accessToken());
+        // RTSP FIX: Check if mediaStreams was provided in config to skip device info API call
+        const configMediaStreams = typeof this.webRtcUrlFactoryOrConfig !== 'function' &&
+            'mediaStreams' in this.webRtcUrlFactoryOrConfig &&
+            this.webRtcUrlFactoryOrConfig.mediaStreams?.length
+                ? this.webRtcUrlFactoryOrConfig.mediaStreams
+                : null;
 
-        const fetchAllStreams = cacheSuccess(() => fetchWithRedirectAuthorization(
-            allStreamsInfoEndpoint,
-            { headers: { authorization: `Bearer ${token}` }}
-            ), `${systemId}-streams-${this.codecCheckKey}`).then(response => response.json() as Promise<typeof fallback[]>).catch(() => [] as typeof fallback[]);
+        let fetchStreams: Promise<typeof fallback>;
 
-        const fetchCurrentStream = () => cacheSuccess(() => fetchWithRedirectAuthorization(
-            streamInfoEndpoint,
-            { headers: { authorization: `Bearer ${token}` }}
-            ), `${this.connectionKey}-streams-${this.codecCheckKey}`).then(response => response.json() as Promise<typeof fallback>).catch(() => fallback)
+        if (configMediaStreams) {
+            // Use mediaStreams from config - skip API call
+            WebRTCStreamManager.logger?.info('Using mediaStreams from config, skipping device info fetch');
+            fetchStreams = Promise.resolve({
+                parameters: { mediaStreams: { streams: configMediaStreams } },
+                serverId: this.targetServerId,
+                id: this.cameraId
+            });
+        } else {
+            // Fallback: fetch device info from API
+            const deviceParams = '?_keepDefault=true&_with=parameters.mediaStreams.streams.codec,parameters.mediaStreams.streams.encoderIndex,serverId,id'
+            const allStreamsInfoEndpoint = `https://${relayHost}/rest/v2/devices${deviceParams}`
+            const streamInfoEndpoint =
+                `https://${relayHost}/rest/v2/devices/${this.cameraId}${deviceParams}`;
 
-        const fetchStreams = fetchAllStreams.then(devices => {
-            const device = devices.find(({ id }) => cleanId(id) === this.cameraId);
+            const token = await Promise.resolve(this.accessToken());
 
-            if (this.codecChanged === this.codecCheckKey && device) {
-                return device;
-            }
+            const fetchAllStreams = cacheSuccess(() => fetchWithRedirectAuthorization(
+                allStreamsInfoEndpoint,
+                { headers: { authorization: `Bearer ${token}` }}
+                ), `${systemId}-streams-${this.codecCheckKey}`).then(response => response.json() as Promise<typeof fallback[]>).catch(err => {
+                    WebRTCStreamManager.logger?.warn('fetchAllStreams failed (likely 401 auth issue):', err?.message || err);
+                    return [] as typeof fallback[];
+                });
 
-            this.codecCheckKey = this.codecChanged;
+            const fetchCurrentStream = () => cacheSuccess(() => fetchWithRedirectAuthorization(
+                streamInfoEndpoint,
+                { headers: { authorization: `Bearer ${token}` }}
+                ), `${this.connectionKey}-streams-${this.codecCheckKey}`).then(response => response.json() as Promise<typeof fallback>).catch(err => {
+                    WebRTCStreamManager.logger?.warn('fetchCurrentStream failed:', err?.message || err);
+                    return fallback;
+                })
 
-            return fetchCurrentStream();
-        });
+            fetchStreams = fetchAllStreams.then(devices => {
+                const device = devices.find(({ id }) => cleanId(id) === this.cameraId);
+
+                if (this.codecChanged === this.codecCheckKey && device) {
+                    return device;
+                }
+
+                this.codecCheckKey = this.codecChanged;
+
+                return fetchCurrentStream();
+            });
+        }
 
         this.serverId ||= cleanId((await fetchStreams).serverId)
 
@@ -2134,10 +2608,72 @@ export class WebRTCStreamManager {
         }
 
 
-        const resolvedHost = await fetch(`https://${relayHost.replace(this.prefix, generateRandomString())}/api/ping?${directConnect && this.serverId ? `x-server-guid=${this.serverId}` : ''}`).then(async response => {
-            this.useProxy = cleanId((await response.json())?.reply?.moduleGuid || '') !== this.serverId;
-            return !(this.useProxy && this.proxyDisabled) && new URL(response.url).host
-        }).catch(() => false as const);
+        // Check if connectionContext was provided in config - skip ping if so
+        const hasConnectionContext = typeof this.webRtcUrlFactoryOrConfig !== 'function' &&
+            'connectionContext' in this.webRtcUrlFactoryOrConfig &&
+            !!this.webRtcUrlFactoryOrConfig.connectionContext?.resolvedHost;
+
+        // Check if useProxy was explicitly set in config
+        const hasExplicitUseProxy = typeof this.webRtcUrlFactoryOrConfig !== 'function' &&
+            'useProxy' in this.webRtcUrlFactoryOrConfig &&
+            this.webRtcUrlFactoryOrConfig.useProxy !== undefined;
+
+        let resolvedHost: string | false;
+
+        if (hasConnectionContext) {
+            // Use pre-resolved connection context - skip ping request
+            // Cast is safe here - hasConnectionContext already verified it's a config object with connectionContext
+            const config = this.webRtcUrlFactoryOrConfig as WebRtcUrlConfig;
+            const ctx = config.connectionContext!;
+            WebRTCStreamManager.logger?.info('Using connectionContext from config, skipping ping:', ctx);
+
+            resolvedHost = ctx.resolvedHost;
+
+            // Set useProxy from config or compute from moduleGuid
+            if (hasExplicitUseProxy) {
+                const proxyValue = (config as WebRtcUrlConfigUnknown).useProxy;
+                if (proxyValue !== undefined) {
+                    this.useProxy = proxyValue;
+                }
+            } else if (ctx.moduleGuid) {
+                this.useProxy = cleanId(ctx.moduleGuid) !== this.serverId;
+            }
+            // else: useProxy stays as default (false)
+
+            // Check if proxy is disabled but required
+            if (this.useProxy && this.proxyDisabled) {
+                resolvedHost = false;
+            }
+        } else {
+            // Fallback: perform ping request to resolve host and determine proxy
+            const pingUrl = `https://${relayHost.replace(this.prefix, generateRandomString())}/api/ping?${directConnect && this.serverId ? `x-server-guid=${this.serverId}` : ''}`;
+            WebRTCStreamManager.logger?.info('Ping request:', { pingUrl, relayHost, prefix: this.prefix });
+
+            resolvedHost = await fetch(pingUrl).then(async response => {
+                WebRTCStreamManager.logger?.info('Ping response:', {
+                    status: response.status,
+                    redirected: response.redirected,
+                    url: response.url
+                });
+                const json = await response.json();
+
+                // Set useProxy from config if provided, otherwise compute from moduleGuid
+                if (hasExplicitUseProxy) {
+                    // Cast is safe - hasExplicitUseProxy already verified it's a config object
+                    const proxyValue = (this.webRtcUrlFactoryOrConfig as WebRtcUrlConfigUnknown).useProxy;
+                    if (proxyValue !== undefined) {
+                        this.useProxy = proxyValue;
+                    }
+                } else {
+                    this.useProxy = cleanId(json?.reply?.moduleGuid || '') !== this.serverId;
+                }
+
+                return !(this.useProxy && this.proxyDisabled) && new URL(response.url).host
+            }).catch(err => {
+                WebRTCStreamManager.logger?.warn('Ping request failed:', err?.message || err);
+                return false as const;
+            });
+        }
 
         const invalidAccessToken = () => {
             this.mediaStream$.next([null, ConnectionError.invalidAccessToken, this]);
@@ -2147,6 +2683,19 @@ export class WebRTCStreamManager {
         let oneTimeToken = '';
 
         const getOneTimeToken = async (): Promise<string> => {
+            // Check if oneTimeToken was provided in apiContext (static string or factory function)
+            if (typeof this.webRtcUrlFactoryOrConfig !== 'function' &&
+                'apiContext' in this.webRtcUrlFactoryOrConfig &&
+                this.webRtcUrlFactoryOrConfig.apiContext?.oneTimeToken !== undefined) {
+                const tokenOrFactory = this.webRtcUrlFactoryOrConfig.apiContext.oneTimeToken;
+                WebRTCStreamManager.logger?.info('Using oneTimeToken from apiContext');
+                // Resolve token from factory function or use static string
+                return typeof tokenOrFactory === 'function'
+                    ? Promise.resolve(tokenOrFactory())
+                    : tokenOrFactory;
+            }
+
+            // Fallback: fetch one-time token from API
             let oneTimeTokenEndpoint = `https://${resolvedHost}/rest/v3/login/tickets`;
 
             if (directConnect) {
@@ -2160,7 +2709,25 @@ export class WebRTCStreamManager {
         }
 
         if (resolvedHost) {
-            webRtcUrl = webRtcUrl.replace(relayHost, resolvedHost);
+            // CRITICAL: Add prefix to resolved host for WebSocket connection multiplexing
+            // The resolved host from redirect doesn't have the prefix, but we need it
+            // to bypass browser's 6 TCP connection limit per host
+            const prefixedResolvedHost = WebRTCStreamManager.USE_RELAY_PREFIX
+                ? `${this.prefix}---${resolvedHost}`
+                : resolvedHost;
+
+            WebRTCStreamManager.logger?.info('URL resolution debug:', {
+                originalRelayHost: relayHost,
+                resolvedHost,
+                prefixedResolvedHost,
+                USE_RELAY_PREFIX: WebRTCStreamManager.USE_RELAY_PREFIX,
+                prefix: this.prefix,
+                webRtcUrlBefore: webRtcUrl
+            });
+
+            webRtcUrl = webRtcUrl.replace(relayHost, prefixedResolvedHost);
+
+            WebRTCStreamManager.logger?.info('URL after prefix fix:', webRtcUrl);
             const accessToken = await Promise.resolve(this.accessToken());
             if (accessToken) {
                 if (this.apiVersion === ApiVersions.v1) {
@@ -2189,7 +2756,8 @@ export class WebRTCStreamManager {
         } else {
             this.useProxy = true;
             this.targetServerId = null;
-            return this.start();
+            // Call startHandler directly to avoid connection guard deadlock
+            return this.startHandler();
         }
 
         if (this.peerConnection) {
@@ -2201,6 +2769,62 @@ export class WebRTCStreamManager {
         const streams = streamsRes?.parameters?.mediaStreams?.streams || fallback.parameters.mediaStreams.streams;
 
         const targetStream = streams.find(({ encoderIndex }) => encoderIndex === stream);
+
+        // DIAGNOSTIC: Log stream detection data to understand why fix may not trigger
+        WebRTCStreamManager.logger?.info('Stream detection debug', {
+            streamsCount: streams?.length,
+            streamsData: streams?.slice(0, 5).map(s => ({ encoderIndex: s.encoderIndex, codec: s.codec })),
+            currentAvailable: this._availableStreams,
+            targetStream: stream
+        });
+
+        // If streams is empty, log that the device fetch likely failed
+        if (!streams || streams.length === 0) {
+            WebRTCStreamManager.logger?.warn('Stream detection: No streams data available (device fetch may have failed with 401). Using defaults.');
+        }
+
+        // RTSP FIX: Early stream availability detection to prevent timeout cascade on single-stream cameras
+        // Uses already-fetched API data to update available streams before connection attempt
+        if (streams && streams.length > 0) {
+            const detectedStreams = streams
+                .filter(s => s.encoderIndex === AvailableStreams.PRIMARY || s.encoderIndex === AvailableStreams.SECONDARY)
+                .map(s => s.encoderIndex as AvailableStreams);
+
+            // If no valid streams detected but we got API response, assume PRIMARY only
+            if (detectedStreams.length === 0 && streams && streams.length > 0) {
+                WebRTCStreamManager.logger?.warn('Streams found but no valid encoderIndex values, defaulting to PRIMARY only', {
+                    rawStreamsCount: streams.length
+                });
+                this._availableStreams = [AvailableStreams.PRIMARY];
+
+                // If target was SECONDARY and it doesn't exist, switch to PRIMARY
+                if (stream === AvailableStreams.SECONDARY) {
+                    WebRTCStreamManager.logger?.info('Switching from unavailable SECONDARY to PRIMARY');
+                    // Use skip: true to prevent duplicate start() from subscription
+                    this.stream$.next({ value: AvailableStreams.PRIMARY, skip: true });
+                    // Call startHandler directly to avoid connection guard deadlock
+                    return this.startHandler();
+                }
+            }
+
+            if (detectedStreams.length > 0 && detectedStreams.length < this._availableStreams.length) {
+                WebRTCStreamManager.logger?.info(
+                    `Stream availability detected from API: [${detectedStreams.join(', ')}] (was: [${this._availableStreams.join(', ')}])`
+                );
+                this._availableStreams = detectedStreams;
+
+                // If current target stream doesn't exist, switch to available stream
+                if (!detectedStreams.includes(stream)) {
+                    const newStream = detectedStreams[0];
+                    WebRTCStreamManager.logger?.info(`Switching from unavailable stream ${stream} to available stream ${newStream}`);
+                    // Use skip: true to prevent duplicate start() from subscription
+                    this.stream$.next({ value: newStream, skip: true });
+                    // Call startHandler directly to avoid connection guard deadlock
+                    return this.startHandler();
+                }
+            }
+        }
+
         const requiresTranscoding = Object.values(RequiresTranscoding).filter(isRequiresTranscoding);
 
         /**
@@ -2262,17 +2886,35 @@ export class WebRTCStreamManager {
                     closeObserver: {
                         /**
                          * Handles reconnecting if there's some low level error with the websocket connection.
+                         * Only retries on code 1006 (abnormal closure) when no media stream is established yet.
                          */
                         next: async _close => {
                             if (_close.code !== 1006 || webRtcStreamManager.mediaStream$.value?.[0]) {
+                                // Clear retry flag on successful connection (mediaStream exists)
+                                if (webRtcStreamManager.mediaStream$.value?.[0]) {
+                                    webRtcStreamManager._wsRetryPending = false;
+                                }
                                 return;
                             }
+                            // Prevent multiple concurrent retry attempts
+                            if (webRtcStreamManager._wsRetryPending) {
+                                WebRTCStreamManager.logger?.info('WebSocket retry already pending, skipping duplicate retry');
+                                return;
+                            }
+
+                            // Close existing connection before retry to prevent multiple open WebSockets
+                            webRtcStreamManager.closeWsConnection();
+
                             if (--retries) {
+                                webRtcStreamManager._wsRetryPending = true;
                                 ConnectionQueue.runTask(async resolve => {
+                                    // Reset flag BEFORE creating new WS to allow sequential retries
+                                    webRtcStreamManager._wsRetryPending = false;
                                     await openConnection(observer, retries);
                                     resolve();
-                                }, `connect-${webRtcStreamManager.connectionKey.split('_').shift()}`, 4);
+                                }, `connect-${webRtcStreamManager.connectionKey.split('_').shift()}`, 1);
                             } else {
+                                webRtcStreamManager._wsRetryPending = false;
                                 webRtcStreamManager.start()
                             }
                         }
@@ -2295,10 +2937,35 @@ export class WebRTCStreamManager {
                 next: this.gotMessageFromServer,
                 error: async (err: Error) => {
                     if (err.message === 'timeout') {
-                        await new Promise(resolve => setTimeout(resolve, this.maxTimeout));
+                        // RTSP FIX: Track consecutive timeout failures per stream
+                        const currentStreamValue = webRtcStreamManager.currentStream();
+                        const failures = (webRtcStreamManager.consecutiveTimeoutFailures.get(currentStreamValue) || 0) + 1;
+                        webRtcStreamManager.consecutiveTimeoutFailures.set(currentStreamValue, failures);
+
+                        WebRTCStreamManager.logger?.info(`Timeout on stream ${currentStreamValue}, failure count: ${failures}`);
+
+                        // After 2 consecutive timeout failures on same stream, disable it and try other
+                        if (failures >= 2 && webRtcStreamManager.availableStreams.length > 1) {
+                            WebRTCStreamManager.logger?.info(`Disabling stream ${currentStreamValue} after ${failures} consecutive timeouts`);
+                            webRtcStreamManager.disableCurrentStream();
+                            webRtcStreamManager.consecutiveTimeoutFailures.clear();
+                            return webRtcStreamManager.start();
+                        }
+
+                        // RTSP FIX: Faster fallback for single-stream cameras
+                        const isSingleStream = webRtcStreamManager._availableStreams.length === 1;
+                        const reducedWait = isSingleStream ? Math.min(webRtcStreamManager.maxTimeout, 2_500) : webRtcStreamManager.maxTimeout;
+
+                        await new Promise(resolve => setTimeout(resolve, reducedWait));
+
                         if (webRtcStreamManager.maxTimeout <= 20_000) {
-                            webRtcStreamManager.maxTimeout += 2_500;
-                            if (webRtcStreamManager.maxTimeout === 12_500) {
+                            // Smaller increment when single stream detected to reduce total wait time
+                            const increment = isSingleStream ? 1_500 : 2_500;
+                            webRtcStreamManager.maxTimeout += increment;
+
+                            // Trigger lost connection earlier for single-stream cameras
+                            const lostConnectionThreshold = isSingleStream ? 10_000 : 12_500;
+                            if (webRtcStreamManager.maxTimeout >= lostConnectionThreshold) {
                                 webRtcStreamManager.mediaStream$.next([null, ConnectionError.lostConnection, this])
                             }
                         } else {
@@ -2504,9 +3171,21 @@ export class WebRTCStreamManager {
         const cameraId = cleanId(config.cameraId);
         const serverId = cleanId(config.serverId);
 
+        WebRTCStreamManager.logger?.info('generateWebRtcUrl - config:', {
+            systemId,
+            USE_RELAY_PREFIX: WebRTCStreamManager.USE_RELAY_PREFIX,
+            prefix: this.prefix,
+            RELAY_URL: WebRTCStreamManager.RELAY_URL
+        });
+
         const subDomain = WebRTCStreamManager.USE_RELAY_PREFIX ? `${this.prefix}---${systemId}` : systemId;
 
         const host = WebRTCStreamManager.RELAY_URL.replace('{systemId}', subDomain);
+
+        WebRTCStreamManager.logger?.info('generateWebRtcUrl - URL construction:', {
+            subDomain,
+            host
+        });
         const useV2 = this.apiVersion === ApiVersions.v2;
         const endpoint = useV2 ? `/rest/v3/devices/${cameraId}/webrtc?` : `/webrtc-tracker/?camera_id=${cameraId}&`
 
@@ -2544,11 +3223,20 @@ export class WebRTCStreamManager {
     }
 
     private webRtcUrlFactory: WebRtcUrlFactory = (params: Record<string, unknown>) => {
+        WebRTCStreamManager.logger?.info('webRtcUrlFactory called:', {
+            isFunction: typeof this.webRtcUrlFactoryOrConfig === 'function',
+            params
+        });
+
         if (typeof this.webRtcUrlFactoryOrConfig === 'function') {
-            return this.webRtcUrlFactoryOrConfig(params);
+            const url = this.webRtcUrlFactoryOrConfig(params);
+            WebRTCStreamManager.logger?.info('webRtcUrlFactory - using custom function, URL:', url);
+            return url;
         }
 
-        return this.generateWebRtcUrl(this.webRtcUrlFactoryOrConfig)(params);
+        const url = this.generateWebRtcUrl(this.webRtcUrlFactoryOrConfig)(params);
+        WebRTCStreamManager.logger?.info('webRtcUrlFactory - using generateWebRtcUrl, URL:', url);
+        return url;
     }
 
     public noFrames = 0;

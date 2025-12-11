@@ -121,12 +121,18 @@ export class MediaServerPeerConnection extends RTCPeerConnection {
         channel.binaryType = 'arraybuffer';
         this.logger?.info('datachannel created', { ordered: channel.ordered, maxPacketLifeTime: channel.maxPacketLifeTime, maxRetransmits: channel.maxRetransmits, protocol: channel.protocol });
 
+        // Counters for diagnostic logging
+        let binaryMessageCount = 0;
+        let stringMessageCount = 0;
+        let lastBinaryLogTime = Date.now();
+
         // Store message handler reference for cleanup
         this.dataChannelMessageHandler = ({ data }: MessageEvent<string | ArrayBuffer | { status: number }>) => {
             if (!this.handleDataChannelMessage || !this.bufferHandler) {
                 return this.close();
             }
             if (typeof(data) === 'string') {
+                stringMessageCount++;
                 this.handleDataChannelMessage(data)
             } else if ('status' in data) {
                 this.logger?.log('dc status: ' + data.status);
@@ -135,6 +141,13 @@ export class MediaServerPeerConnection extends RTCPeerConnection {
                 //     restartMse();
                 //   }
             } else {
+                binaryMessageCount++;
+                // Log binary data stats every 5 seconds
+                const now = Date.now();
+                if (now - lastBinaryLogTime > 5000) {
+                    this.logger?.info(`DC message stats: binary=${binaryMessageCount}, string=${stringMessageCount}, lastBinarySize=${(data as ArrayBuffer).byteLength}`);
+                    lastBinaryLogTime = now;
+                }
                 this.bufferHandler(data);
             }
         };
