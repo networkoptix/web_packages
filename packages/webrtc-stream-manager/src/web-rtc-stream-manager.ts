@@ -147,6 +147,18 @@ export class WebRTCStreamManager {
 
     private static _INITIAL_STREAM = AvailableStreams.SECONDARY;
 
+    /**
+     * Static flag to track global pause state across all connections
+     */
+    private static _globalPauseState = false;
+
+    /**
+     * Check if globally paused
+     */
+    static get isGloballyPaused(): boolean {
+        return this._globalPauseState;
+    }
+
     static MAX_HIGH = 4;
 
     /** Default Stream for new streams. Dependent on MOS score. */
@@ -690,6 +702,11 @@ export class WebRTCStreamManager {
      * @param position - position in ms
      */
     static updatePosition(position = 0): void {
+        // Skip position updates while globally paused to prevent resuming streams
+        if (WebRTCStreamManager._globalPauseState) {
+            WebRTCStreamManager.logger?.debug?.('Skipping position update while globally paused');
+            return;
+        }
         WebRTCStreamManager.position = Math.round(position);
         WebRTCStreamManager._connectionCache.values().forEach(connection => {
             if (connection.getPlayerCount()) {
@@ -699,6 +716,12 @@ export class WebRTCStreamManager {
     }
 
     static updateCameraPosition(cameraId: { id: string, systemId: string }, position = 0, withinChunk = false): Observable<number> {
+        // Skip position updates while globally paused to prevent resuming streams
+        if (WebRTCStreamManager._globalPauseState) {
+            WebRTCStreamManager.logger?.debug?.('Skipping camera position update while globally paused');
+            return NEVER;
+        }
+
         const connection = WebRTCStreamManager.getInstance(cameraId);
 
         if (!connection) {
@@ -736,6 +759,30 @@ export class WebRTCStreamManager {
     private position$ = new BehaviorSubject(new WithSkip(0));
     private speed$ = new BehaviorSubject(new WithSkip(0));
     private stream$ = new BehaviorSubject(new WithSkip(AvailableStreams.PRIMARY));
+
+    /**
+     * Observable for pause state changes
+     */
+    private isPaused$ = new BehaviorSubject<boolean>(false);
+
+    /**
+     * Get current pause state
+     */
+    public get isPaused(): boolean {
+        return this.isPaused$.value;
+    }
+
+    /**
+     * Position (in ms) where playback was paused (only used when data channel not available)
+     */
+    private _pausedAtPosition: number | null = null;
+
+    /**
+     * Pending recovery parameters when close() is called during global pause.
+     * Stored so recovery can be processed when play() is called.
+     */
+    private _pendingRecovery?: { retryAfterSeconds: number; checkCodec: boolean };
+
     public apiVersion: ApiVersions;
     private initialPositionSent = false;
 
@@ -875,19 +922,199 @@ export class WebRTCStreamManager {
         );
     }
 
+    /**
+     * Toggle playing state with proper data channel commands
+     */
     public togglePlaying(play: boolean): void {
-        this.videoElements.forEach(({ element }) => {
-            if (play) {
-                element.play();
+        const hasDataChannel = !!this.peerConnection?.remoteDataChannel;
+        
+        if (play) {
+            // Resume playback
+            if (hasDataChannel) {
+                this.sendResume();
             } else {
+                // Without data channel: seek to paused position if we have one
+                if (this._pausedAtPosition !== null) {
+                    WebRTCStreamManager.logger?.info(
+                        `Resuming ${this.connectionKey} from paused position: ${this._pausedAtPosition}ms (no data channel, using seek)`,
+                    );
+                    this.updatePosition(this._pausedAtPosition, true);
+                    this._pausedAtPosition = null;
+                }
+                this.isPaused$.next(false);
+            }
+            this.videoElements.forEach(({ element }) => {
+                element.play().catch(() => {});
+            });
+        } else {
+            // Pause playback
+            if (hasDataChannel) {
+                this.sendPause();
+            } else {
+                // Without data channel: store current position for resume
+                const currentPos = this.currentPosition / 1000; // Convert from microseconds to ms
+                this._pausedAtPosition = currentPos > 0 ? currentPos : null;
+                
+                WebRTCStreamManager.logger?.info(
+                    `Pausing ${this.connectionKey} at position: ${this._pausedAtPosition}ms (no data channel, will seek on resume)`,
+                );
+                
+                this.isPaused$.next(true);
+            }
+            this.videoElements.forEach(({ element }) => {
                 element.pause();
+            });
+        }
+    }
+
+    /**
+     * Send pause command to server via data channel
+     */
+    public sendPause(): boolean {
+        if (!this.peerConnection?.remoteDataChannel) {
+            WebRTCStreamManager.logger?.warn(
+                `Cannot pause via data channel for ${this.connectionKey}: data channel not available (API ${this.apiVersion})`,
+            );
+            return false;
+        }
+
+        try {
+            const message = JSON.stringify({ pause: true });
+            this.peerConnection.remoteDataChannel.send(message);
+            this.isPaused$.next(true);
+            WebRTCStreamManager.logger?.info(
+                `Sent pause command to server for ${this.connectionKey}`,
+            );
+            return true;
+        } catch (error) {
+            WebRTCStreamManager.logger?.error(
+                `Failed to send pause command for ${this.connectionKey}:`,
+                error,
+            );
+            return false;
+        }
+    }
+
+    /**
+     * Send resume command to server via data channel
+     */
+    public sendResume(): boolean {
+        if (!this.peerConnection?.remoteDataChannel) {
+            WebRTCStreamManager.logger?.warn(
+                `Cannot resume via data channel for ${this.connectionKey}: data channel not available (API ${this.apiVersion})`,
+            );
+            return false;
+        }
+
+        try {
+            const message = JSON.stringify({ resume: true });
+            this.peerConnection.remoteDataChannel.send(message);
+            this.isPaused$.next(false);
+            WebRTCStreamManager.logger?.info(
+                `Sent resume command to server for ${this.connectionKey}`,
+            );
+            return true;
+        } catch (error) {
+            WebRTCStreamManager.logger?.error(
+                `Failed to send resume command for ${this.connectionKey}:`,
+                error,
+            );
+            return false;
+        }
+    }
+
+    /**
+     * Send nextFrame command to server (only works when paused)
+     */
+    public sendNextFrame(): boolean {
+        if (!this.isPaused$.value) {
+            WebRTCStreamManager.logger?.warn(
+                `Cannot advance frame for ${this.connectionKey}: stream is not paused`,
+            );
+            return false;
+        }
+
+        if (!this.peerConnection?.remoteDataChannel) {
+            WebRTCStreamManager.logger?.warn(
+                `Cannot advance frame for ${this.connectionKey}: data channel not available`,
+            );
+            return false;
+        }
+
+        try {
+            const message = JSON.stringify({ nextFrame: true });
+            this.peerConnection.remoteDataChannel.send(message);
+            WebRTCStreamManager.logger?.info(
+                `Sent nextFrame command to server for ${this.connectionKey}`,
+            );
+            return true;
+        } catch (error) {
+            WebRTCStreamManager.logger?.error(
+                `Failed to send nextFrame command for ${this.connectionKey}:`,
+                error,
+            );
+            return false;
+        }
+    }
+
+    /**
+     * Static method to toggle playing across all connections
+     */
+    static togglePlaying(play?: boolean): void {
+        play = typeof play === 'boolean' ? play : !this.getPlaying();
+        this._globalPauseState = !play;
+        
+        const connections = Object.values(WebRTCStreamManager.EXISTING_CONNECTIONS);
+        const action = play ? 'play' : 'pause';
+        
+        WebRTCStreamManager.logger?.info(
+            `Toggling ${action} for ${connections.length} connection(s)`,
+        );
+        
+        connections.forEach(connection => {
+            try {
+                connection.togglePlaying(play as boolean);
+            } catch (error) {
+                WebRTCStreamManager.logger?.error(
+                    `Failed to toggle playing for connection ${connection.connectionKey}:`,
+                    error,
+                );
             }
         });
     }
 
-    static togglePlaying(play?: boolean): void {
-        play = typeof play === 'boolean' ? play : !this.getPlaying();
-        Object.values(WebRTCStreamManager.EXISTING_CONNECTIONS).forEach(connection => connection.togglePlaying(play)
+    /**
+     * Static pause method
+     */
+    static pause(): void {
+        this.togglePlaying(false);
+    }
+
+    /**
+     * Static play/resume method
+     */
+    static play(): void {
+        this.togglePlaying(true);
+        
+        // Process any queued recoveries from connections that disconnected during pause
+        this._connectionCache.values().forEach(conn => {
+            if (conn._pendingRecovery) {
+                const { retryAfterSeconds, checkCodec } = conn._pendingRecovery;
+                conn._pendingRecovery = undefined;
+                WebRTCStreamManager.logger?.info(
+                    `Processing queued recovery for ${conn.connectionKey}`,
+                );
+                conn.close(retryAfterSeconds, checkCodec);
+            }
+        });
+    }
+
+    /**
+     * Advance all paused streams by one frame
+     */
+    static nextFrame(): void {
+        Object.values(WebRTCStreamManager.EXISTING_CONNECTIONS).forEach(
+            connection => connection.sendNextFrame(),
         );
     }
 
@@ -1090,6 +1317,17 @@ export class WebRTCStreamManager {
      * Handles cleaning up connections when no longer in use.
      */
     public close = (retryAfterSeconds: false | number = false, checkCodec = false): Promise<boolean> => {
+        // Reset pause state on close
+        this.isPaused$.next(false);
+        this._pausedAtPosition = null;
+        
+        // If we're paused globally and this is an auto-recovery attempt, queue it for later
+        if (WebRTCStreamManager._globalPauseState && typeof retryAfterSeconds === 'number') {
+            WebRTCStreamManager.logger?.info('Queueing auto-recovery for after resume');
+            this._pendingRecovery = { retryAfterSeconds, checkCodec };
+            return Promise.resolve(true);
+        }
+        
         if (checkCodec) {
             this.codecChanged = generateRandomString();
             this.usingMse = false;
@@ -1572,7 +1810,10 @@ export class WebRTCStreamManager {
 
     private registerFrameNotifier = (video: HTMLVideoElement): number => {
         const handleFrameNotification = (time: number) => {
-            this.frameTimes$.next(time);
+            // Only emit frame times when not paused
+            if (!this.isPaused$.value) {
+                this.frameTimes$.next(time);
+            }
             if (video === this.video || this.videoElements.some(({ element }) => element === video)) {
                 const handle = video.requestVideoFrameCallback(handleFrameNotification);
                 // Update the stored handle for this video element
@@ -1611,6 +1852,8 @@ export class WebRTCStreamManager {
         );
         startToggle$.pipe(
             switchMap(playing => playing ? frameAccumulator$ : NEVER),
+            // Don't even log frame checks if intentionally paused
+            filter(() => !this.isPaused$.value),
             tap(times => WebRTCStreamManager.logger?.info('frame check: frames received in last 5 seconds', times.length)),
             bufferCount(2),
             filter(([prev, current]) => !prev.length && !current.length),
@@ -1664,6 +1907,8 @@ export class WebRTCStreamManager {
                 }
                 return false;
             }),
+            // Don't trigger recovery if intentionally paused
+            filter(() => !this.isPaused$.value),
             take(1),
             takeUntil(this.restartHandleFrozenStream$),
             takeUntil(this.closeNotifier$)
