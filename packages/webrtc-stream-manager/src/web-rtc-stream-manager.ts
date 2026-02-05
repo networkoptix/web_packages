@@ -85,14 +85,14 @@ export class WebRTCStreamManager {
     static readonly H265_CODEC = 173;
 
     /**
-     * Whether the browser supports H265/HEVC via WebRTC.
+     * Whether the browser supports H265/HEVC via WebRTC SRTP delivery.
      * Chrome 107+ added H265 WebRTC support, but it requires hardware decode support
-     * which varies by platform. This detection allows proactive MSE fallback when
-     * native H265 WebRTC is not available.
+     * which varies by platform. Note: this does NOT guarantee the mediaserver can send
+     * H265 over SRTP without transcoding — that is version-dependent.
      *
      * @see https://chromestatus.com/feature/5186511939567616
      */
-    static readonly h265Supported: boolean = (() => {
+    static readonly h265WebRtcSupported: boolean = (() => {
         // Check if RTCRtpReceiver is available (WebRTC API)
         if (typeof RTCRtpReceiver === 'undefined' || !RTCRtpReceiver.getCapabilities) {
             return false;
@@ -107,6 +107,33 @@ export class WebRTCStreamManager {
             codec.mimeType.toLowerCase().includes('hevc')
         );
     })();
+
+    /**
+     * Check whether the browser supports a given codec via MSE (MediaSource Extensions).
+     * When the server delivers streams via DataChannel + MSE, the browser's MediaSource
+     * stack must be able to decode the codec. This is independent of WebRTC SRTP support.
+     */
+    static isMseCodecSupported(mimeType: string): boolean {
+        if (typeof MediaSource === 'undefined' || !MediaSource.isTypeSupported) {
+            return false;
+        }
+        return MediaSource.isTypeSupported(mimeType);
+    }
+
+    /**
+     * Whether the browser supports H265/HEVC via MSE delivery.
+     * Checks both hvc1 and hev1 codec strings since different encoders use different identifiers.
+     */
+    static readonly h265MseSupported: boolean =
+        WebRTCStreamManager.isMseCodecSupported('video/mp4; codecs="hvc1.1.6.L93.B0"') ||
+        WebRTCStreamManager.isMseCodecSupported('video/mp4; codecs="hev1.1.6.L93.B0"');
+
+    /**
+     * Combined H265 support flag: true if the browser can play H265 via either
+     * WebRTC SRTP or MSE delivery. When false, H265 streams cannot be played
+     * without server-side transcoding.
+     */
+    static readonly h265Supported: boolean = WebRTCStreamManager.h265WebRtcSupported || WebRTCStreamManager.h265MseSupported;
 
     /**
      * LRU Cache for tracking existing connections
@@ -1386,6 +1413,14 @@ export class WebRTCStreamManager {
         // This prevents accumulation of retry timeouts from multiple close() calls
         this.clearAllTimeouts();
 
+        // Reset connection state so the scheduled retry's start() call is not blocked
+        // by the _isConnecting guard. When close() is called from within a signal handler
+        // (e.g. gotMessageFromServer during startHandler), _isConnecting is still true
+        // and the .finally() hasn't fired yet. Without this reset, the retry would hit
+        // "start() called while already connecting" and silently fail.
+        this._isConnecting = false;
+        this._pendingStartPromise = null;
+
         if (retryAfterSeconds) {
             // Track retry state and failure
             this.connectionState = ConnectionState.RETRYING;
@@ -1644,7 +1679,15 @@ export class WebRTCStreamManager {
             return;
         }
 
-        const useDataChannelUpdate = this.apiVersion === ApiVersions.v2 && !!(this.peerConnection?.remoteDataChannel?.readyState === 'open');
+        // Skip data channel stream switch for cameras that transitioned from SRTP→MSE
+        // (i.e. where the server's initial SRTP attempt triggered transcoding).
+        // The server may persist its transcoding state for the session, so switching
+        // streams via data channel can deliver a transcoded primary stream (e.g. 853x480).
+        // A full reconnection with deliveryMethod=mse ensures a fresh server-side session.
+        const mseNeedsFullReconnect = this.usingMse && WebRTCStreamManager.camerasNeedingMse.has(this.connectionKey);
+        const useDataChannelUpdate = this.apiVersion === ApiVersions.v2
+            && !!(this.peerConnection?.remoteDataChannel?.readyState === 'open')
+            && !mseNeedsFullReconnect;
         // When data channel update is used, skip subscription (we handle confirmation below)
         // When not using data channel, let subscription trigger start() for new connection
         this.stream$.next(new WithSkip(stream, useDataChannelUpdate));
@@ -2462,6 +2505,30 @@ export class WebRTCStreamManager {
      */
     private gotMessageFromServer = (signal: SdpInit | IceInit | ErrorMsg | MimeInit | { transcoding: { audio: boolean; video: boolean }}): void => {
         this.initPeerConnection();
+        // When server indicates video transcoding over SRTP, prefer MSE delivery to avoid
+        // wasting server resources — but only if the browser can play H265 via MSE.
+        // If MSE can't handle H265, fall through to let the transcoded SRTP stream play
+        // (when allowTranscoding is true) or show "not supported" (when false).
+        if ('transcoding' in signal && signal.transcoding.video
+            && this.apiVersion !== ApiVersions.v1 && !this.usingMse) {
+            if (WebRTCStreamManager.h265MseSupported) {
+                WebRTCStreamManager.logger?.info(
+                    'Server transcoding over SRTP — switching to MSE delivery to avoid transcoding (MSE H265 supported)'
+                );
+                WebRTCStreamManager.camerasNeedingMse.add(this.connectionKey);
+                this.usingMse = true;
+                this._wsRetryPending = true;
+                this.close(0.1);
+                return;
+            }
+            WebRTCStreamManager.logger?.info(
+                `Server transcoding over SRTP but MSE H265 not supported — ${this.allowTranscoding ? 'allowing transcoded stream' : 'transcoding not allowed'}`
+            );
+            // MSE can't play H265, so switching to MSE won't help.
+            // Fall through: if allowTranscoding, the transcoded SRTP stream will play.
+            // If !allowTranscoding, the block below will handle it.
+        }
+
         if ('transcoding' in signal && signal.transcoding.video && !this.allowTranscoding) {
             WebRTCStreamManager.logger?.info(
                 `Received transcoding signal: video=${signal.transcoding.video}, usingMse=${this.usingMse}, apiVersion=${this.apiVersion}, availableStreams=${this.availableStreams.length}, hasSdp=${'sdp' in signal}`
@@ -2518,18 +2585,24 @@ export class WebRTCStreamManager {
             if (this.usingMse) {
                 this.initializeMse(signal.mime);
             }
-            // Mime is a standalone signal — must return to prevent fall-through
-            // to the sdp/ice/else chain, which would trigger close(0.1) on mime-only messages.
-            return;
+            // If the signal also contains sdp, fall through to SDP processing.
+            // The server may send a combined mime+sdp signal for MSE connections
+            // (e.g. {mime, transcoding, sdp} all in one message).
+            if (!('sdp' in signal)) {
+                return;
+            }
         }
 
         if ('sdp' in signal) {
-            const remote = new RTCSessionDescription(signal.sdp)
+            // Cast needed: server may send combined signals (e.g. mime+sdp+transcoding)
+            // that don't match any single type in the union, but sdp is always RTCSessionDescriptionInit.
+            const sdp = (signal as { sdp: RTCSessionDescriptionInit }).sdp;
+            const remote = new RTCSessionDescription(sdp)
             this.peerConnection
                 ?.setRemoteDescription(remote)
                 .then(() => {
                     // Only create answers in response to offers
-                    if (signal.sdp.type === 'offer') {
+                    if (sdp.type === 'offer') {
                         this.peerConnection
                             .createAnswer()
                             .then(this.createdDescription)
@@ -2703,6 +2776,13 @@ export class WebRTCStreamManager {
     private targetServerId: string;
 
     static cameraRequiresTranscoding = new Set<string>();
+
+    /**
+     * Tracks cameras where SRTP triggered server-side transcoding (e.g. H265→VP8)
+     * and MSE delivery was used instead. On subsequent connections to the same camera,
+     * proactively use MSE to avoid the ~1-3s penalty of the initial SRTP attempt.
+     */
+    static readonly camerasNeedingMse = new Set<string>();
 
     private get requiresTranscodingError() {
         return WebRTCStreamManager.cameraRequiresTranscoding.has(this.connectionKey);
@@ -3144,41 +3224,61 @@ export class WebRTCStreamManager {
          *
          * MJPEG (codec 7) always requires transcoding/MSE.
          *
-         * H265 (codec 173) requires MSE when browser doesn't support H265 via WebRTC.
-         * Chrome 107+ added H265 WebRTC support, but it requires hardware decode support
-         * which varies by platform. When H265 is not natively supported, we proactively
-         * use MSE delivery to avoid the expensive SRTP connection attempt that would fail.
+         * H265 (codec 173) handling depends on browser capabilities:
+         * - If browser WebRTC supports H265: try SRTP first (newer mediaservers handle it
+         *   natively). If SRTP triggers transcoding, the transcoding signal handler will
+         *   switch to MSE if available.
+         * - If browser WebRTC doesn't support H265 but MSE does: proactively use MSE
+         *   to skip the doomed SRTP attempt.
+         * - If neither WebRTC nor MSE supports H265: only server-side transcoding can
+         *   play this stream. If allowTranscoding is false, show "not supported".
          */
         const requiresTranscoding: number[] = Object.values(RequiresTranscoding).filter(isRequiresTranscoding);
 
-        // Add H265 to requiresTranscoding when browser doesn't support it natively
-        if (!WebRTCStreamManager.h265Supported) {
-            requiresTranscoding.push(WebRTCStreamManager.H265_CODEC);
-            WebRTCStreamManager.logger?.info(
-                'H265 WebRTC not supported by browser, will use MSE delivery for H265 streams'
-            );
+        // When WebRTC can't decode H265, check if MSE can before adding to requiresTranscoding.
+        // If MSE supports H265, we use MSE delivery (proactive skip of SRTP).
+        // If neither supports H265, it goes into requiresTranscoding so the "not supported"
+        // path triggers when allowTranscoding is false.
+        const isH265Stream = targetStream?.codec === WebRTCStreamManager.H265_CODEC;
+        if (!WebRTCStreamManager.h265WebRtcSupported && isH265Stream) {
+            if (WebRTCStreamManager.h265MseSupported) {
+                WebRTCStreamManager.logger?.info(
+                    'H265 WebRTC not supported but MSE H265 is supported — will use MSE delivery'
+                );
+            } else {
+                requiresTranscoding.push(WebRTCStreamManager.H265_CODEC);
+                WebRTCStreamManager.logger?.info(
+                    'H265 not supported by WebRTC or MSE — server-side transcoding required'
+                );
+            }
         }
 
         /**
          * PERFORMANCE OPTIMIZATION: Early codec detection to skip blind SRTP attempt
          *
-         * For codecs in requiresTranscoding, we know upfront that SRTP won't work
-         * and MSE delivery is required. By detecting this early from the stream info response,
-         * we can skip the expensive SRTP connection attempt that would fail and require reconnection.
+         * For codecs in requiresTranscoding (MJPEG, or H265 when neither WebRTC nor MSE
+         * supports it), we know upfront that SRTP won't work without transcoding.
          *
-         * This saves ~3-4 seconds for H265/MJPEG streams:
-         * - Old flow: SRTP attempt → transcoding error (1s) → reconnect with MSE (2-3s)
-         * - New flow: Direct MSE connection
+         * For H265 specifically:
+         * - WebRTC H265 supported: try SRTP (version-dependent, may work on newer servers)
+         * - WebRTC H265 unsupported, MSE H265 supported: proactive MSE delivery
+         * - Neither supported: requires transcoding or "not supported"
          *
-         * Edge case: For archive streams, codec info might be stale. The existing fallback
-         * at lines 1705-1719 handles this by retrying with MSE if server sends transcoding error.
+         * The camerasNeedingMse cache remembers cameras where SRTP previously triggered
+         * transcoding, so subsequent connections skip the SRTP attempt.
          */
         const codecNeedsTranscoding = targetStream?.codec && requiresTranscoding.includes(targetStream.codec);
+        const codecNeedsMse = isH265Stream && !WebRTCStreamManager.h265WebRtcSupported && WebRTCStreamManager.h265MseSupported;
+        const cameraPrefersMse = WebRTCStreamManager.camerasNeedingMse.has(this.connectionKey);
 
-        // Proactively set MSE mode for codecs that require transcoding (unless using v1 API)
-        if (codecNeedsTranscoding && this.apiVersion !== ApiVersions.v1 && !this.usingMse) {
+        // Proactively set MSE mode for:
+        // 1. H265 streams when WebRTC can't decode but MSE can (skip doomed SRTP attempt)
+        // 2. Cameras where a previous SRTP attempt triggered server-side transcoding
+        if ((codecNeedsMse || cameraPrefersMse) && this.apiVersion !== ApiVersions.v1 && !this.usingMse) {
             WebRTCStreamManager.logger?.info(
-                `Early codec detection: codec ${targetStream.codec} requires MSE, skipping SRTP attempt`
+                codecNeedsMse
+                    ? `Early codec detection: H265 not decodable via WebRTC, using MSE delivery`
+                    : `Camera previously needed MSE (SRTP triggered transcoding), skipping SRTP attempt`
             );
             this.usingMse = true;
         }
@@ -3186,7 +3286,6 @@ export class WebRTCStreamManager {
         const srtp = 'deliveryMethod=srtp';
         const mse = 'deliveryMethod=mse';
 
-        // Apply delivery method to URL based on MSE requirement
         if (this.usingMse && this.apiVersion !== ApiVersions.v1) {
             if (webRtcUrl.includes(srtp)) {
                 webRtcUrl = webRtcUrl.replace(srtp, mse);
