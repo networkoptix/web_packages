@@ -892,6 +892,10 @@ export class WebRTCStreamManager {
             this.peerConnection?.remoteDataChannel?.send(JSON.stringify({ seek: position }));
         }
 
+        if (!useDataChannelUpdate) {
+            this._positionChanged = true;
+        }
+
         this.initialPositionSent = true;
         this.position$.next(new WithSkip(position, useDataChannelUpdate));
         return !!this.peerConnection?.remoteDataChannel;
@@ -920,6 +924,8 @@ export class WebRTCStreamManager {
      */
     private static readonly RECONNECTION_COOLDOWN_MS = 10_000;
     private _lastReconnectionTime: number | null = null;
+    private _positionChanged = false;
+    private _needsRestart = false;
 
     /**
      * Flag to prevent multiple concurrent WebSocket retry attempts.
@@ -2822,14 +2828,18 @@ export class WebRTCStreamManager {
     start = async (lostConnection = false): Promise<unknown> => {
         // Prevent multiple concurrent connection attempts
         if (this._isConnecting && this._pendingStartPromise && !lostConnection) {
+            if (this._positionChanged) {
+                // Position changed while connecting — queue restart after current attempt completes
+                this._needsRestart = true;
+            }
             WebRTCStreamManager.logger?.info('start() called while already connecting, returning pending promise');
             return this._pendingStartPromise;
         }
 
         // Reconnection cooldown: prevent rapid-fire reconnections when stream is active
-        // Only apply cooldown for non-lostConnection calls (MOS-triggered reconnections)
-        // lostConnection calls are critical recovery attempts and should proceed immediately
-        if (!lostConnection && this.mediaStream$.value?.[0] && this._lastReconnectionTime) {
+        // Only apply cooldown for non-lostConnection, non-position-change calls (MOS-triggered reconnections)
+        // lostConnection calls and position changes should proceed immediately
+        if (!lostConnection && !this._positionChanged && this.mediaStream$.value?.[0] && this._lastReconnectionTime) {
             const timeSinceLastReconnection = Date.now() - this._lastReconnectionTime;
             if (timeSinceLastReconnection < WebRTCStreamManager.RECONNECTION_COOLDOWN_MS) {
                 WebRTCStreamManager.logger?.info(
@@ -2837,6 +2847,12 @@ export class WebRTCStreamManager {
                 );
                 return Promise.resolve();
             }
+        }
+
+        // Only consume the position-change flag for non-lostConnection starts,
+        // since startHandler(true) just closes — it doesn't reconnect with the new position.
+        if (!lostConnection) {
+            this._positionChanged = false;
         }
 
         // Track reconnection time for cooldown
@@ -2852,10 +2868,14 @@ export class WebRTCStreamManager {
 
         this._isConnecting = true;
         this._pendingStartPromise = this.startHandler(lostConnection)
-            .catch(() => this.trackTimeout(() => this.mediaStream$.observed && this.start(true), 100))
+            .catch(() => this.trackTimeout(() => this.mediaStream$.observed && !this._isConnecting && this.start(true), 100))
             .finally(() => {
                 this._isConnecting = false;
                 this._pendingStartPromise = null;
+                if (this._needsRestart) {
+                    this._needsRestart = false;
+                    this.start();
+                }
             });
 
         return this._pendingStartPromise;
