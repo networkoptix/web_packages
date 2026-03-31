@@ -178,9 +178,15 @@ export class MediaServerPeerConnection extends RTCPeerConnection {
         });
 
         this.ontrack = (event: RTCTrackEvent): void => {
-            this.clearTracks();
             if (event.track.kind === 'video') {
-                trackHandler(event.streams[0])
+                this.clearTracks();
+                trackHandler(event.streams[0]);
+            } else if (event.track.kind === 'audio') {
+                // AAC audio tracks on mediaserver 6.1+ arrive in separate ontrack events.
+                // event.streams[0] is the same MediaStream shared by both tracks,
+                // so the video handler already forwarded it — the audio track is
+                // automatically part of that stream. We just need to avoid clearing it.
+                this.logger?.log('audio track received, streams:', event.streams.length);
             }
         };
 
