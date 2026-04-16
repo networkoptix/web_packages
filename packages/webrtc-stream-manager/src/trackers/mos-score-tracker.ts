@@ -59,7 +59,7 @@ export class MosScoreTracker extends BaseTracker<number> {
         return this.getMetric();
     };
 
-    public updateConnection(connection: MediaServerPeerConnection) {
+    public override updateConnection(connection: MediaServerPeerConnection) {
         this.destroy?.();
         this.connection = connection;
         this.destroy = WebRTCIssueDetectorWithState.track(

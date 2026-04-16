@@ -16,7 +16,7 @@ export class MediaServerPeerConnection extends RTCPeerConnection {
     // Store data channel event handlers for cleanup
     private dataChannelMessageHandler: ((event: MessageEvent<string | ArrayBuffer | { status: number }>) => void) | null = null;
     private dataChannelOpenHandler: (() => void) | null = null;
-    onicecandidate = (event: RTCPeerConnectionIceEvent): void => {
+    override onicecandidate = (event: RTCPeerConnectionIceEvent): void => {
         if (this.closed) {
             return;
         }
@@ -25,7 +25,7 @@ export class MediaServerPeerConnection extends RTCPeerConnection {
         }
     };
 
-    oniceconnectionstatechange = (): void => {
+    override oniceconnectionstatechange = (): void => {
         if (this.closed) {
             return;
         }
@@ -91,7 +91,7 @@ export class MediaServerPeerConnection extends RTCPeerConnection {
         return () => updater$.next();
     })();
 
-    close() {
+    override close() {
         this.closed = true;
         this.removeEventListener('datachannel', this.initDataChannel);
         this.clearDataChannel();

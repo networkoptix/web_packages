@@ -17,7 +17,7 @@ export class BytesReceivedTracker extends BaseConnectionTracker<CandidatePairRep
         return report?.bytesReceived ?? (this.connection?.connectionState === 'connected' ? 0 : 1000)
     }
 
-    protected getAverage() {
+    protected override getAverage() {
         const bytes = this.metricValues.slice(Math.max(this.metricValues.length - 5, 0))
             .map(({ value }, index) => index ? value - this.metricValues[index - 1].value : value)
         return bytes.length < 3 ? 1 : bytes.reduce((acc, cur) => acc + cur, 0) / bytes.length;

@@ -759,11 +759,6 @@ export class WebRTCStreamManager {
      * @param position - position in ms
      */
     static updatePosition(position = 0): void {
-        // Skip position updates while globally paused to prevent resuming streams
-        if (WebRTCStreamManager._globalPauseState) {
-            WebRTCStreamManager.logger?.debug?.('Skipping position update while globally paused');
-            return;
-        }
         WebRTCStreamManager.position = Math.round(position);
         WebRTCStreamManager._connectionCache.values().forEach(connection => {
             if (connection.getPlayerCount()) {
@@ -772,13 +767,7 @@ export class WebRTCStreamManager {
         });
     }
 
-    static updateCameraPosition(cameraId: { id: string, systemId: string }, position = 0, withinChunk = false): Observable<number> {
-        // Skip position updates while globally paused to prevent resuming streams
-        if (WebRTCStreamManager._globalPauseState) {
-            WebRTCStreamManager.logger?.debug?.('Skipping camera position update while globally paused');
-            return NEVER;
-        }
-
+    static updateCameraPosition(cameraId: { id: string, systemId: string }, position = 0): Observable<number> {
         const connection = WebRTCStreamManager.getInstance(cameraId);
 
         if (!connection) {
@@ -788,17 +777,13 @@ export class WebRTCStreamManager {
         const currentPosition = connection.currentPosition / 1000;
 
         if (currentPosition !== position) {
-            const connected = connection.updatePosition(position);
-
-            if (withinChunk && !connected) {
-                connection.start();
-            }
-
+            connection.updatePosition(position);
         }
 
         return connection.currentPosition$;
 
     }
+
 
         /**
      * Updates the speed for stream for all WebRtcStreamManager instances.
@@ -881,15 +866,25 @@ export class WebRTCStreamManager {
      * @param position - position in ms
      * @param clearStream - stop current stream immediately
      */
-    updatePosition(position: number, clearStream = false, withinChunk = false): boolean {
+    updatePosition(position: number, clearStream = false): boolean {
         if (clearStream) {
             this.stopCurrentStream();
             this.mediaStream$.next([null, null, this]);
         }
-        const useDataChannelUpdate = withinChunk && this.apiVersion === ApiVersions.v2 && !!this.peerConnection?.remoteDataChannel && this.initialPositionSent;
+        // Transitions between live (position=0) and archive require a full reconnection
+        // because the speed semantics change (live=unlimited, archive=user rate) and
+        // DataChannel has no speed command.
+        const liveArchiveTransition = (position === 0) !== this.isLive;
+        const useDataChannelUpdate = !liveArchiveTransition
+            && this.apiVersion === ApiVersions.v2
+            && this.peerConnection?.remoteDataChannel?.readyState === 'open'
+            && this.initialPositionSent;
 
         if (useDataChannelUpdate) {
-            this.peerConnection?.remoteDataChannel?.send(JSON.stringify({ seek: position }));
+            // Workaround: VMS webrtc_streamer.cpp checks IsDouble() but not IsInt64().
+            // Ensure the seek value always has a decimal point so RapidJSON classifies it as Double.
+            const seekValue = Number.isInteger(position) ? `${position}.0` : `${position}`;
+            this.peerConnection?.remoteDataChannel?.send(`{"seek":${seekValue}}`);
         }
 
         if (!useDataChannelUpdate) {
@@ -990,7 +985,7 @@ export class WebRTCStreamManager {
      */
     public togglePlaying(play: boolean): void {
         const hasDataChannel = !!this.peerConnection?.remoteDataChannel;
-        
+
         if (play) {
             // Resume playback
             if (hasDataChannel) {
@@ -1042,7 +1037,9 @@ export class WebRTCStreamManager {
         }
 
         try {
-            const message = JSON.stringify({ pause: true });
+            // Workaround: VMS expects the value to be a string (device ID), not a boolean.
+            // {"pause":true} is rejected; {"pause":""} works.
+            const message = JSON.stringify({ pause: '' });
             this.peerConnection.remoteDataChannel.send(message);
             this.isPaused$.next(true);
             WebRTCStreamManager.logger?.info(
@@ -1070,7 +1067,7 @@ export class WebRTCStreamManager {
         }
 
         try {
-            const message = JSON.stringify({ resume: true });
+            const message = JSON.stringify({ resume: '' });
             this.peerConnection.remoteDataChannel.send(message);
             this.isPaused$.next(false);
             WebRTCStreamManager.logger?.info(
@@ -1126,10 +1123,10 @@ export class WebRTCStreamManager {
     static togglePlaying(play?: boolean): void {
         play = typeof play === 'boolean' ? play : !this.getPlaying();
         this._globalPauseState = !play;
-        
+
         const connections = Object.values(WebRTCStreamManager.EXISTING_CONNECTIONS);
         const action = play ? 'play' : 'pause';
-        
+
         WebRTCStreamManager.logger?.info(
             `Toggling ${action} for ${connections.length} connection(s)`,
         );
@@ -2297,7 +2294,7 @@ export class WebRTCStreamManager {
                     try {
                         if (this.canSeekViaDataChannel()) {
                             WebRTCStreamManager.logger?.info('Lag recovery: Sending datachannel seek to live position');
-                            webRtcStreamManager.peerConnection?.remoteDataChannel?.send(JSON.stringify({ seek: 0 }));
+                            webRtcStreamManager.peerConnection?.remoteDataChannel?.send('{"seek":0.0}');
                             return true;
                         }
                     } catch (e) {
