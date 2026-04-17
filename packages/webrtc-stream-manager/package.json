@@ -1,10 +1,32 @@
 {
   "name": "@networkoptix/webrtc-stream-manager",
   "version": "0.1.29",
+  "description": "WebRTC stream manager for Nx Meta VMS cameras",
   "author": "Network Optix",
+  "license": "MPL-2.0",
+  "type": "module",
+  "sideEffects": false,
   "main": "dist/lib/index.js",
   "types": "dist/types/index.d.ts",
-  "license": "MPL-2.0",
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/lib/index.js"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/networkoptix/nx_open_integrations",
+    "directory": "open/packages/webrtc-stream-manager"
+  },
+  "homepage": "https://github.com/networkoptix/nx_open_integrations/tree/master/open/packages/webrtc-stream-manager",
+  "bugs": {
+    "url": "https://github.com/networkoptix/nx_open_integrations/issues"
+  },
+  "keywords": ["networkoptix", "nx-meta", "webrtc", "streaming", "vms", "video"],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "tsc --outDir dist/lib --declarationDir dist/types",
     "ci:check": "echo 'Additional CI checks can be added here'"

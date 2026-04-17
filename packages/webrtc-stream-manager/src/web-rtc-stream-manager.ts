@@ -1012,11 +1012,11 @@ export class WebRTCStreamManager {
                 // Without data channel: store current position for resume
                 const currentPos = this.currentPosition / 1000; // Convert from microseconds to ms
                 this._pausedAtPosition = currentPos > 0 ? currentPos : null;
-                
+
                 WebRTCStreamManager.logger?.info(
                     `Pausing ${this.connectionKey} at position: ${this._pausedAtPosition}ms (no data channel, will seek on resume)`,
                 );
-                
+
                 this.isPaused$.next(true);
             }
             this.videoElements.forEach(({ element }) => {
@@ -1130,7 +1130,7 @@ export class WebRTCStreamManager {
         WebRTCStreamManager.logger?.info(
             `Toggling ${action} for ${connections.length} connection(s)`,
         );
-        
+
         connections.forEach(connection => {
             try {
                 connection.togglePlaying(play as boolean);
@@ -1155,7 +1155,7 @@ export class WebRTCStreamManager {
      */
     static play(): void {
         this.togglePlaying(true);
-        
+
         // Process any queued recoveries from connections that disconnected during pause
         this._connectionCache.values().forEach(conn => {
             if (conn._pendingRecovery) {
@@ -1380,14 +1380,14 @@ export class WebRTCStreamManager {
         // Reset pause state on close
         this.isPaused$.next(false);
         this._pausedAtPosition = null;
-        
+
         // If we're paused globally and this is an auto-recovery attempt, queue it for later
         if (WebRTCStreamManager._globalPauseState && typeof retryAfterSeconds === 'number') {
             WebRTCStreamManager.logger?.info('Queueing auto-recovery for after resume');
             this._pendingRecovery = { retryAfterSeconds, checkCodec };
             return Promise.resolve(true);
         }
-        
+
         if (checkCodec) {
             this.codecChanged = generateRandomString();
             this.usingMse = false;
@@ -1606,9 +1606,11 @@ export class WebRTCStreamManager {
                         this.sourceBuffer = null;
                     }
 
-                    this.mediaSource.removeSourceBuffer(buffer);
+                    // abort() must come BEFORE removeSourceBuffer() — once
+                    // removed, the buffer is detached and abort() throws
+                    // InvalidStateError.
                     buffer.abort();
-                    buffer.remove(0, buffer.buffered.end(0));
+                    this.mediaSource.removeSourceBuffer(buffer);
                 } catch(e) {
                     WebRTCStreamManager.logger?.error(e);
                 }
@@ -1629,8 +1631,11 @@ export class WebRTCStreamManager {
                 this.sourceBuffer.onerror = null;
                 this.sourceBuffer.onabort = null;
 
-                this.sourceBuffer.abort();
-                this.sourceBuffer.remove(0, this.sourceBuffer.buffered.end(0));
+                // Only abort if the MediaSource is still open (abort throws
+                // InvalidStateError on a detached or ended MediaSource).
+                if (this.mediaSource?.readyState === 'open') {
+                    this.sourceBuffer.abort();
+                }
             } catch(e) {
                 WebRTCStreamManager.logger?.error(e);
             }
@@ -1801,7 +1806,11 @@ export class WebRTCStreamManager {
                 this.sourceBuffer.appendBuffer(nextBuffer);
             }
         } catch(e) {
-            if (!WebRTCStreamManager.USE_UNRELIABLE_DATA_CHANNEL) {
+            // Re-queue the buffer on error if the DC is reliable (frames arrive in order
+            // and won't be replaced by newer data), so we don't lose video data.
+            const dcReliable = !WebRTCStreamManager.USE_UNRELIABLE_DATA_CHANNEL
+                || this.peerConnection?.remoteDataChannel?.ordered !== false;
+            if (dcReliable) {
                 this.buffers.push(nextBuffer);
             }
             if (e !== bufferUpdatingError) {
@@ -1811,7 +1820,12 @@ export class WebRTCStreamManager {
     }
 
     private appendBuffer = (buffer: BufferSource) => {
-        if (WebRTCStreamManager.USE_UNRELIABLE_DATA_CHANNEL) {
+        // Only drop old frames if the data channel is actually unreliable/unordered.
+        // USE_UNRELIABLE_DATA_CHANNEL requests an unreliable DC from the server,
+        // but the server may ignore it — check the real DC properties.
+        const dcUnreliable = WebRTCStreamManager.USE_UNRELIABLE_DATA_CHANNEL
+            && this.peerConnection?.remoteDataChannel?.ordered === false;
+        if (dcUnreliable) {
             this.buffers = [buffer]
         } else {
             this.buffers.unshift(buffer);
@@ -3330,7 +3344,7 @@ export class WebRTCStreamManager {
             defer(async () => {
                 const prefixed = url.replace(this.prefix, generateRandomString());
                 this.wsConnection = new WebSocketSubject({
-                    url: this.apiVersion === ApiVersions.v1 ? prefixed : `${prefixed}&_ticket=${await getOneTimeToken()}${WebRTCStreamManager.USE_UNRELIABLE_DATA_CHANNEL ? '&unreliableTransport=true': ''}&_ignore=${generateRandomString()}}`,
+                    url: this.apiVersion === ApiVersions.v1 ? prefixed : `${prefixed}&_ticket=${await getOneTimeToken()}${WebRTCStreamManager.USE_UNRELIABLE_DATA_CHANNEL ? '&unreliableTransport=true': ''}&_ignore=${generateRandomString()}`,
                     closeObserver: {
                         /**
                          * Handles reconnecting if there's some low level error with the websocket connection.

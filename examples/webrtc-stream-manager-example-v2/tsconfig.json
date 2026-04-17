@@ -1,0 +1,10 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "skipLibCheck": true,
+    "typeRoots": ["../../node_modules/@types", "../../node_modules"],
+    "types": ["@webgpu/types"],
+    "lib": ["es2020", "dom", "DOM.Iterable", "esnext.disposable"]
+  },
+  "include": ["src"]
+}

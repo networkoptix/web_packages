@@ -1,0 +1,242 @@
+<!-- Copyright 2018-present Network Optix, Inc. Licensed under MPL 2.0: www.mozilla.org/MPL/2.0/ -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WebRTC Open Libraries</title>
+    <link rel="preconnect" href="https://fonts.bunny.net" />
+    <link href="https://fonts.bunny.net/css2?family=Outfit:wght@200;300;400;500;600;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+
+  <body>
+    <!-- SVG chromatic aberration filter for glitch effect -->
+    <svg xmlns="http://www.w3.org/2000/svg" style="position:absolute;width:0;height:0" aria-hidden="true">
+      <defs>
+        <filter id="glitch-aberration" x="-5%" y="-5%" width="110%" height="110%" color-interpolation-filters="sRGB">
+          <feOffset in="SourceGraphic" dx="0" dy="0" result="red-shift" />
+          <feOffset in="SourceGraphic" dx="0" dy="0" result="blue-shift" />
+          <feColorMatrix in="red-shift" type="matrix" result="red-only"
+            values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" />
+          <feColorMatrix in="SourceGraphic" type="matrix" result="green-only"
+            values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" />
+          <feColorMatrix in="blue-shift" type="matrix" result="blue-only"
+            values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" />
+          <feBlend in="red-only" in2="green-only" mode="screen" result="rg" />
+          <feBlend in="rg" in2="blue-only" mode="screen" />
+        </filter>
+      </defs>
+    </svg>
+
+    <div class="landing-page" id="authOverlay">
+      <!-- Particle canvas background -->
+      <canvas id="particleField" class="particle-field"></canvas>
+      <!-- Ambient glow -->
+      <div class="ambient-glow"></div>
+
+      <!-- Content -->
+      <div class="landing-content">
+        <!-- Hero Brand -->
+        <div class="hero-brand landing-stagger-1">
+          <span class="hero-brand-primary">NX</span>
+          <span class="hero-brand-secondary">WebRTC</span>
+        </div>
+
+        <!-- Tagline -->
+        <p class="landing-tagline landing-stagger-2">
+          Open Source Video Playback and Metadata Platform
+        </p>
+
+        <!-- Glitch Text -->
+        <div id="glitchContainer" class="glitch-container landing-stagger-3">
+          <p id="glitchTarget" class="glitch-text">Sub Second Latency</p>
+        </div>
+
+        <!-- Scan Line Divider -->
+        <div class="landing-stagger-4" style="display:flex;justify-content:center;padding:3rem 0">
+          <div class="scan-divider"></div>
+        </div>
+
+        <!-- CTA Area -->
+        <div id="neuralCtaWrapper" class="landing-stagger-4">
+          <!-- Cloud Instance URL (hidden input, pre-filled from env/localStorage) -->
+          <form name="cloud-data" id="cloudForm" style="display:none">
+            <input type="url" name="cloudInstance" id="cloudInstance" value="" />
+          </form>
+
+          <!-- CTA button (content set dynamically by JS based on auth state) -->
+          <a href="#" id="ctaButton" class="terminal-cta">
+            <span id="ctaText"></span><span class="cta-cursor"></span>
+          </a>
+          <a href="#" id="switchUserLink" class="switch-user-link" hidden>
+            Login as another user
+          </a>
+          <p class="session-info" id="sessionInfo"></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="app-layout">
+      <aside class="sidebar" id="sidebar">
+        <form name="endpoint-data">
+          <div class="form-group" id="customizationGroup" hidden>
+            <label for="selectedCustomization">Customization</label>
+            <select name="selectedCustomization" id="selectedCustomization"></select>
+          </div>
+
+          <div class="form-group">
+            <label for="selectedSystem">Site</label>
+            <select name="selectedSystem" id="selectedSystem">
+              <option value="loading">Loading Sites...</option>
+            </select>
+          </div>
+
+          <div class="form-group" id="cameraGroup">
+            <label for="selectedCamera">Camera</label>
+            <div class="filter-bar" id="cameraFilterBar"></div>
+            <select name="selectedCamera" id="selectedCamera">
+              <option value="loading">Loading Cameras...</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="selectedPosition">Position (ms, 0 = Live)</label>
+            <input type="number" name="selectedPosition" id="selectedPosition" step="1" value="0" />
+          </div>
+
+          <div class="form-group">
+            <label for="selectedSpeed">Speed</label>
+            <select name="selectedSpeed" id="selectedSpeed" disabled>
+              <option value="0.25">0.25x</option>
+              <option value="0.5">0.5x</option>
+              <option value="1" selected>1x</option>
+              <option value="2">2x</option>
+              <option value="4">4x</option>
+              <option value="unlimited">Max</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="streamQuality">Quality</label>
+            <select name="streamQuality" id="streamQuality">
+              <option value="auto" selected>Auto (Both Streams)</option>
+              <option value="high">High Quality Only</option>
+              <option value="low">Low Quality Only</option>
+            </select>
+          </div>
+          <div class="form-group" id="activityPollGroup" hidden>
+            <label for="activityPollInterval">Activity Poll</label>
+            <select name="activityPollInterval" id="activityPollInterval">
+              <option value="5000">5s</option>
+              <option value="15000" selected>15s</option>
+              <option value="30000">30s</option>
+              <option value="60000">60s</option>
+            </select>
+          </div>
+        </form>
+
+        <div class="dewarp-controls" id="dewarpControls" hidden>
+          <div class="dewarp-controls-header">Dewarping Controls</div>
+          <div class="dewarp-slider-group">
+            <label for="dewarpPan">Pan <span class="dewarp-slider-value" id="dewarpPanValue">0°</span></label>
+            <input type="range" id="dewarpPan" min="-180" max="180" value="0" step="1" />
+          </div>
+          <div class="dewarp-slider-group">
+            <label for="dewarpTilt">Tilt <span class="dewarp-slider-value" id="dewarpTiltValue">0°</span></label>
+            <input type="range" id="dewarpTilt" min="-90" max="90" value="0" step="1" />
+          </div>
+          <div class="dewarp-slider-group">
+            <label for="dewarpZoom">Zoom <span class="dewarp-slider-value" id="dewarpZoomValue">70°</span></label>
+            <input type="range" id="dewarpZoom" min="10" max="130" value="70" step="1" />
+          </div>
+          <div class="dewarp-slider-group">
+            <label for="dewarpRotation">Rotation <span class="dewarp-slider-value" id="dewarpRotationValue">0°</span></label>
+            <input type="range" id="dewarpRotation" min="-180" max="180" value="0" step="1" />
+          </div>
+          <button type="button" class="btn btn-dewarp-reset" id="dewarpReset">Reset View</button>
+        </div>
+
+        <div class="sidebar-footer" id="sidebarFooter" hidden>
+          <button class="btn btn-logout" id="logoutBtn" type="button">Logout</button>
+        </div>
+      </aside>
+
+      <button class="sidebar-toggle" id="sidebarToggle" title="Toggle sidebar">&laquo;</button>
+
+      <main class="viewport">
+        <div id="zoomContainer">
+          <div id="zoomTransformTarget">
+            <video id="targetVideo" autoplay muted playsinline></video>
+            <canvas id="dewarpCanvas" hidden></canvas>
+            <canvas id="analyticsOverlay" class="analytics-overlay-canvas"></canvas>
+            <div id="analyticsHtmlOverlay" class="analytics-html-overlay">
+              <div id="analyticsOverlayInner" class="analytics-overlay-inner"></div>
+            </div>
+          </div>
+        </div>
+        <div class="minimap-container" id="minimapContainer" hidden>
+          <canvas id="dewarpMinimap" width="180" height="180"></canvas>
+        </div>
+        <div class="status-bar">
+          <div class="status-item">
+            <span class="status-label">Stream</span>
+            <span id="currentStream" class="status-value">Not Started</span>
+          </div>
+          <div class="status-item">
+            <span class="status-label">Resolution</span>
+            <span id="currentResolution" class="status-value">--</span>
+          </div>
+          <div class="status-item">
+            <span class="status-label">Codec</span>
+            <span id="currentCodec" class="status-value">--</span>
+          </div>
+          <div class="status-item">
+            <span class="status-label">Transport</span>
+            <span id="currentTransport" class="status-value">--</span>
+          </div>
+          <div class="status-item">
+            <span class="status-label">Connection</span>
+            <span id="connectionState" class="status-value state-idle">Idle</span>
+          </div>
+          <div class="status-item status-item--dewarp" id="dewarpToggleItem" hidden>
+            <button type="button" class="dewarp-toggle" id="dewarpToggle" aria-pressed="false">
+              <span class="status-label">Dewarp</span>
+              <span class="dewarp-toggle-state" id="dewarpState">Off</span>
+            </button>
+          </div>
+          <div class="status-item status-item--analytics" id="analyticsToggleItem">
+            <button type="button" class="analytics-toggle" id="analyticsToggle" aria-pressed="false">
+              <span class="status-label">Analytics</span>
+              <span class="analytics-toggle-state" id="analyticsState">Off</span>
+            </button>
+          </div>
+        </div>
+      </main>
+
+      <button class="analytics-panel-toggle" id="analyticsPanelToggle" title="Toggle analytics panel">&raquo;</button>
+      <aside class="analytics-panel" id="analyticsPanel" hidden>
+        <div class="analytics-panel-header">
+          <span class="analytics-panel-title">Analytics Events</span>
+          <div class="analytics-panel-controls">
+            <div class="analytics-overlay-modes" id="overlayModes">
+              <button type="button" class="overlay-mode-btn" data-mode="none">None</button>
+              <button type="button" class="overlay-mode-btn active" data-mode="outline">Outline</button>
+            </div>
+            <button type="button" class="analytics-clear-btn" id="analyticsClear">Clear</button>
+          </div>
+        </div>
+        <div class="analytics-log" id="analyticsLog"></div>
+        <div class="analytics-activity" id="analyticsActivity">
+          <div class="analytics-activity-header">
+            <span class="analytics-activity-title">Live Activity</span>
+          </div>
+          <div class="analytics-activity-list" id="analyticsActivityList"></div>
+        </div>
+      </aside>
+    </div>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

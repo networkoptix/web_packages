@@ -1,6 +1,11 @@
 {
-  "baseUrl": "",
   "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "fisheye-dewarp": ["../open_candidate/packages/fisheye-dewarp/src/index.ts"],
+      "@networkoptix/object-tracking-overlay": ["../open_candidate/packages/object-tracking-overlay/src/index.ts"],
+      "@networkoptix/overlay-shared": ["../open_candidate/packages/overlay-shared/src/index.ts"]
+    },
     "moduleResolution": "node",
     "target": "es6",
     "module": "es6",

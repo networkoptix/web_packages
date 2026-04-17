@@ -1,0 +1,30 @@
+{
+  "name": "webrtc-stream-manager-example-v2",
+  "description": "WebRTC Stream Manager v2 Example — Legacy Facade & Native API",
+  "private": true,
+  "includeInDemo": true,
+  "version": "0.0.0",
+  "license": "MPL-2.0",
+  "type": "module",
+  "scripts": {
+    "start": "nx run webrtc-stream-manager-example-v2:serve",
+    "serve": "vite",
+    "build:demo": "tsc --outDir ../dist/webrtc-stream-manager-example-v2 && vite build --outDir ../dist/webrtc-stream-manager-example-v2 --emptyOutDir --base ./ && cp ./package.json ../dist/webrtc-stream-manager-example-v2/package.json && cp -r ./netlify ../dist/webrtc-stream-manager-example-v2/netlify",
+    "zipSource": "pushd \"$(git rev-parse --show-toplevel)\" && git archive --output ./open/examples/dist/webrtc-stream-manager-example-v2/source.zip HEAD open && popd",
+    "deploy:demo": "npm run build:demo && npm run zipSource && pushd ../dist/webrtc-stream-manager-example-v2 && netlify deploy --prod && popd",
+    "ci:check": "echo 'Additional CI checks can be added here'"
+  },
+  "dependencies": {
+    "@netlify/functions": "^1.6.0",
+    "@networkoptix/object-tracking-overlay": "file:../../../open_candidate/packages/object-tracking-overlay",
+    "@networkoptix/overlay-shared": "file:../../../open_candidate/packages/overlay-shared",
+    "@networkoptix/webrtc-stream-manager-v2": "*",
+    "fisheye-dewarp": "file:../../../open_candidate/packages/fisheye-dewarp"
+  },
+  "devDependencies": {
+    "@types/node": "^14.18.54",
+    "@webgpu/types": "^0.1.69",
+    "typescript": "^5.0.2",
+    "vite": "^4.2.0"
+  }
+}
