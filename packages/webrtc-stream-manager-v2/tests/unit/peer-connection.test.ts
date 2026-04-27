@@ -718,7 +718,7 @@ describe('PeerConnectionWrapper', () => {
 
   // ── sendSeek ──────────────────────────────────────────────────────────
 
-  it('sendSeek sends JSON over datachannel', () => {
+  it('sendSeek sends a "seek" DC message the VMS server recognizes', () => {
     const wrapper = new PeerConnectionWrapper(TEST_CONFIG);
     const pc = getPC();
     const channel = new MockDataChannel();
@@ -727,7 +727,21 @@ describe('PeerConnectionWrapper', () => {
     wrapper.sendSeek(12345);
 
     expect(channel.send).toHaveBeenCalledOnce();
-    expect(JSON.parse(channel.sent[0])).toEqual({ position: 12345 });
+    // Integer values must be serialized with a decimal so the VMS
+    // RapidJSON IsDouble() check accepts them (webrtc_streamer.cpp:65).
+    expect(channel.sent[0]).toBe('{"seek":12345.0}');
+    expect(JSON.parse(channel.sent[0])).toEqual({ seek: 12345 });
+  });
+
+  it('sendSeek preserves non-integer seek values verbatim', () => {
+    const wrapper = new PeerConnectionWrapper(TEST_CONFIG);
+    const pc = getPC();
+    const channel = new MockDataChannel();
+    pc.simulateDataChannel(channel);
+
+    wrapper.sendSeek(12345.5);
+
+    expect(channel.sent[0]).toBe('{"seek":12345.5}');
   });
 
   it('sendSeek does nothing when datachannel is not open', () => {

@@ -8,7 +8,7 @@ import {
   ConnectionError,
   PeerState,
   fetchWithRedirectAuthorization,
-} from '@networkoptix/webrtc-stream-manager-v2';
+} from '@networkoptix/webrtc-stream-manager';
 import type {
   TrackEventDetail,
   StateChangeEventDetail,
@@ -16,7 +16,7 @@ import type {
   Stream,
   MetadataEventDetail,
   ObjectMetadataPacket,
-} from '@networkoptix/webrtc-stream-manager-v2';
+} from '@networkoptix/webrtc-stream-manager';
 
 import {
   DewarpingRenderer,

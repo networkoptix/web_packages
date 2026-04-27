@@ -53,5 +53,51 @@ export {
 } from './utils/frame-rate';
 export type { FrameRateSnapshot } from './utils/frame-rate';
 
+// ──────────────────────────────────────────────────────────────
+// Legacy compatibility surface (ported from v1 for 0.1.x drop-in)
+// Scheduled for removal in 0.2.0. See facade/legacy-adapter.ts
+// and compat/tracker-types.ts for the full compat contract.
+// ──────────────────────────────────────────────────────────────
+
+// CircuitBreaker module (verbatim copy from v1)
+export {
+  CircuitBreaker,
+  CircuitState,
+  CircuitBreakerPresets,
+  createCircuitBreaker,
+  type CircuitBreakerConfig,
+  type CircuitBreakerStats,
+} from './circuit-breaker';
+
+// Net-new v1 utilities not already in v2's src/utils/
+export {
+  generateWebRtcUrlFactory,
+  WithSkip,
+  framesPerSecondFactory,
+} from './utils/legacy-compat';
+
+// Tracker types (TypeScript type-only — no runtime classes ship)
+export type {
+  BaseTracker,
+  BaseConnectionTracker,
+  BytesReceivedTracker,
+  MosScoreTracker,
+  FocusTracker,
+  WebRTCIssueDetectorWithState,
+  IssuePayload,
+  IssueDetector,
+  IssueDetectorResult,
+  NetworkScores,
+  StatsParsingFinishedPayload,
+  WebRTCStatsParsed,
+} from './compat/tracker-types';
+
+// Runtime enums (value + type) pass-through from webrtc-issue-detector
+export {
+  IssueType,
+  IssueReason,
+  EventType,
+} from './compat/tracker-types';
+
 // Legacy facade for zero-change migration from v1
 export { WebRTCStreamManager } from './facade/legacy-adapter';

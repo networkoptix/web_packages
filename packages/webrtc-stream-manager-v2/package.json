@@ -1,7 +1,7 @@
 {
-  "name": "@networkoptix/webrtc-stream-manager-v2",
-  "version": "0.1.0",
-  "description": "WebRTC stream manager v2 for Nx Meta VMS cameras with improved lifecycle management",
+  "name": "@networkoptix/webrtc-stream-manager",
+  "version": "0.1.29",
+  "description": "WebRTC stream manager for Nx Meta VMS cameras",
   "author": "Network Optix",
   "license": "MPL-2.0",
   "type": "module",
@@ -16,25 +16,28 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/networkoptix/nx_open_integrations",
-    "directory": "open/packages/webrtc-stream-manager-v2"
+    "url": "https://github.com/networkoptix/web_packages",
+    "directory": "packages/webrtc-stream-manager-v2"
   },
-  "homepage": "https://github.com/networkoptix/nx_open_integrations/tree/master/open/packages/webrtc-stream-manager-v2",
+  "homepage": "https://github.com/networkoptix/web_packages/tree/master/packages/webrtc-stream-manager-v2",
   "bugs": {
-    "url": "https://github.com/networkoptix/nx_open_integrations/issues"
+    "url": "https://github.com/networkoptix/web_packages/issues"
   },
-  "keywords": ["networkoptix", "nx-meta", "webrtc", "streaming", "vms", "video", "lifecycle"],
+  "keywords": ["networkoptix", "nx-meta", "webrtc", "streaming", "vms", "video"],
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
+    "clean": "rm -rf dist",
     "build": "tsc --outDir dist/lib --declarationDir dist/types --declaration",
     "test": "vitest run",
     "test:watch": "vitest",
-    "ci:check": "vitest run"
+    "ci:check": "vitest run",
+    "prepublishOnly": "npm run clean && npm run build"
   },
   "dependencies": {
-    "rxjs": "7.8.1"
+    "rxjs": "7.8.1",
+    "webrtc-issue-detector": "1.10.0"
   },
   "devDependencies": {
     "vitest": "^2.1.0",

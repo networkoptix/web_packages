@@ -2,3 +2,6 @@ tests/
 vitest.config.ts
 tsconfig.json
 src/
+
+# claudedocs/ is gitignored but .gitignore is not consulted during npm pack
+claudedocs/

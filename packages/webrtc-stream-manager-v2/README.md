@@ -1,17 +1,23 @@
-# @networkoptix/webrtc-stream-manager-v2
+# @networkoptix/webrtc-stream-manager
 
 WebRTC streaming library for connecting to Nx Meta VMS cameras with automatic quality management, retry logic, and MSE fallback.
 
 ## Installation
 
 ```bash
-npm install @networkoptix/webrtc-stream-manager-v2
+npm install @networkoptix/webrtc-stream-manager
 ```
+
+> **Note (0.1.29 release):** This is the first release under the v2 architecture.
+> During the soak period it is published under the `next` npm tag. Install via
+> `npm install @networkoptix/webrtc-stream-manager@next` to opt in; do not commit
+> lockfile updates that pin the `@next` tag. Once 0.1.29 promotes to `latest`,
+> caret-range consumers will upgrade automatically.
 
 ## Quick Start
 
 ```typescript
-import { StreamManager } from '@networkoptix/webrtc-stream-manager-v2';
+import { StreamManager } from '@networkoptix/webrtc-stream-manager';
 
 // 1. Configure the singleton (once at app startup)
 StreamManager.configure({
@@ -166,7 +172,7 @@ When `enableMetadata` is active, the data channel delivers `ObjectMetadataPacket
 For projects using the v1 `WebRTCStreamManager` API, a drop-in legacy adapter is provided:
 
 ```typescript
-import { WebRTCStreamManager } from '@networkoptix/webrtc-stream-manager-v2';
+import { WebRTCStreamManager } from '@networkoptix/webrtc-stream-manager';
 
 // Same API as v1 — uses v2 internals
 WebRTCStreamManager.RELAY_URL = '{systemId}.relay.vmsproxy.com';
@@ -179,9 +185,29 @@ WebRTCStreamManager.connect(webRtcConfig, videoElement).subscribe(([stream, erro
 
 The legacy adapter wraps the v2 `StreamManager` singleton and bridges its event-based API to the RxJS Observable contract expected by v1 consumers. No code changes are needed for migration.
 
+## Migrating from 0.1.x (v1)
+
+Starting at version `0.1.29`, this package ships the v2 architecture with
+full drop-in compatibility for v1 consumers. See
+[`docs/migrating-from-v1.md`](docs/migrating-from-v1.md) for the detailed
+breakdown of what's preserved, what's narrowed to type-only, and the 0.2.0
+timeline.
+
 ## Examples
 
-See the [`webrtc-stream-manager-example-v2`](../../examples/webrtc-stream-manager-example-v2/) directory for a working demo application.
+<!-- Absolute URL intentional: examples/ is not included in the npm tarball, so a relative link would 404 on npmjs.com. -->
+See the [`webrtc-stream-manager-example-v2`](https://github.com/networkoptix/web_packages/tree/master/examples/webrtc-stream-manager-example-v2/) directory for a working demo application.
+
+## For AI Coding Agents
+
+Structured entry points live in [`docs/SUMMARY.md`](docs/SUMMARY.md):
+- [`docs/recipes.md`](docs/recipes.md) — copy-pasteable snippets for common tasks
+- [`docs/architecture.md`](docs/architecture.md) — how the pieces fit together
+- [`docs/migrating-from-v1.md`](docs/migrating-from-v1.md) — full v1 → v2 migration
+
+Type declarations (`dist/types/*.d.ts`) carry JSDoc on every public class,
+method, and config option; tooltips and completions surface the full API
+without reading this README.
 
 ## License
 

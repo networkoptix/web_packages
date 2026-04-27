@@ -305,7 +305,11 @@ export class PeerConnectionWrapper extends Disposable {
    */
   sendSeek(positionMs: number): void {
     if (!this.dataChannel || this.dataChannel.readyState !== 'open') return;
-    this.dataChannel.send(JSON.stringify({ position: positionMs }));
+    // VMS webrtc_streamer.cpp only matches the "seek" key and parses the value
+    // with RapidJSON's IsDouble() (not IsInt64()), so integer seek values must
+    // be serialized with a decimal point to be accepted.
+    const seekValue = Number.isInteger(positionMs) ? `${positionMs}.0` : `${positionMs}`;
+    this.dataChannel.send(`{"seek":${seekValue}}`);
   }
 
   /** Send a pause command via the data channel. */

@@ -30,8 +30,8 @@ appropriate package manager.
 
 | Package | Description |
 |---|---|
-| [`@networkoptix/webrtc-stream-manager`](../packages/webrtc-stream-manager/) | WebRTC streaming library for Nx Meta VMS cameras (v1). Provides an RxJS Observable-based API for establishing and managing WebRTC connections. |
-| [`@networkoptix/webrtc-stream-manager-v2`](../packages/webrtc-stream-manager-v2/) | WebRTC streaming library for Nx Meta VMS cameras (v2). Improved lifecycle management with automatic quality optimization, MSE fallback, LRU-based connection caching, and analytics metadata support. Includes a legacy adapter for zero-change migration from v1. |
+| [`@networkoptix/webrtc-stream-manager-v1-legacy`](../packages/webrtc-stream-manager/) | WebRTC streaming library for Nx Meta VMS cameras (v1 — legacy, not published). Provides an RxJS Observable-based API for establishing and managing WebRTC connections. Superseded by the canonical `@networkoptix/webrtc-stream-manager` package (v2 source directory). |
+| [`@networkoptix/webrtc-stream-manager`](../packages/webrtc-stream-manager-v2/) | WebRTC streaming library for Nx Meta VMS cameras (v2). Improved lifecycle management with automatic quality optimization, MSE fallback, LRU-based connection caching, and analytics metadata support. Includes a legacy adapter for zero-change migration from v1. |
 | [`@networkoptix/object-tracking-overlay`](../packages/object-tracking-overlay/) | Canvas/DOM overlay for visualizing tracked objects with bounding boxes, hover-to-expand detail views, and physics-based layout for expanded nodes. |
 | [`@networkoptix/overlay-shared`](../packages/overlay-shared/) | Shared types, utilities, and base classes for overlay packages. Provides `AnimationLoop`, `Renderer` interface, spatial/lerp utilities, and SVG layer helpers. |
 

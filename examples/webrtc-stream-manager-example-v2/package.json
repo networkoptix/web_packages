@@ -18,7 +18,7 @@
     "@netlify/functions": "^1.6.0",
     "@networkoptix/object-tracking-overlay": "file:../../../open_candidate/packages/object-tracking-overlay",
     "@networkoptix/overlay-shared": "file:../../../open_candidate/packages/overlay-shared",
-    "@networkoptix/webrtc-stream-manager-v2": "*",
+    "@networkoptix/webrtc-stream-manager": "*",
     "fisheye-dewarp": "file:../../../open_candidate/packages/fisheye-dewarp"
   },
   "devDependencies": {

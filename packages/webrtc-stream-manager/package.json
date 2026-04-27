@@ -1,6 +1,7 @@
 {
-  "name": "@networkoptix/webrtc-stream-manager",
+  "name": "@networkoptix/webrtc-stream-manager-v1-legacy",
   "version": "0.1.29",
+  "private": true,
   "description": "WebRTC stream manager for Nx Meta VMS cameras",
   "author": "Network Optix",
   "license": "MPL-2.0",
@@ -16,12 +17,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/networkoptix/nx_open_integrations",
-    "directory": "open/packages/webrtc-stream-manager"
+    "url": "https://github.com/networkoptix/web_packages",
+    "directory": "packages/webrtc-stream-manager"
   },
-  "homepage": "https://github.com/networkoptix/nx_open_integrations/tree/master/open/packages/webrtc-stream-manager",
+  "homepage": "https://github.com/networkoptix/web_packages/tree/master/packages/webrtc-stream-manager",
   "bugs": {
-    "url": "https://github.com/networkoptix/nx_open_integrations/issues"
+    "url": "https://github.com/networkoptix/web_packages/issues"
   },
   "keywords": ["networkoptix", "nx-meta", "webrtc", "streaming", "vms", "video"],
   "publishConfig": {
