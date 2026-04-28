@@ -1,1 +1,1 @@
-export { WebRTCStreamManager, generateWebRtcUrlFactory } from '@networkoptix/webrtc-stream-manager';
+export { WebRTCStreamManager, generateWebRtcUrlFactory } from '@networkoptix/webrtc-stream-manager-v1-legacy';

@@ -5,7 +5,7 @@ import './style.css';
 import { description } from '../package.json';
 import { Subject, Subscription, takeUntil } from 'rxjs';
 import { WebRTCStreamManager } from './open_check_excluded';
-import { ApiVersions, TargetStream, AvailableStreams, fetchWithRedirectAuthorization } from '@networkoptix/webrtc-stream-manager';
+import { ApiVersions, TargetStream, AvailableStreams, fetchWithRedirectAuthorization } from '@networkoptix/webrtc-stream-manager-v1-legacy';
 
 WebRTCStreamManager.logger = console;
 
