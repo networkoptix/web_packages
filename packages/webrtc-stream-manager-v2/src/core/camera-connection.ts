@@ -458,7 +458,8 @@ export class CameraConnection extends Disposable {
 
   /** Advance by one frame (only meaningful when paused). */
   sendNextFrame(): boolean {
-    return this.activePc?.sendNextFrame() ?? false;
+    const cameraId = this.connectionKey.split(':')[1];
+    return this.activePc?.sendNextFrame(cameraId) ?? false;
   }
 
   /**

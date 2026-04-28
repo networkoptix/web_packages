@@ -315,21 +315,23 @@ export class PeerConnectionWrapper extends Disposable {
   /** Send a pause command via the data channel. */
   sendPause(): boolean {
     if (!this.dataChannel || this.dataChannel.readyState !== 'open') return false;
-    this.dataChannel.send(JSON.stringify({ pause: true }));
+    // VMS expects a string value, not a boolean: {"pause":true} is rejected, {"pause":""} works.
+    this.dataChannel.send(JSON.stringify({ pause: '' }));
     return true;
   }
 
   /** Send a resume command via the data channel. */
   sendResume(): boolean {
     if (!this.dataChannel || this.dataChannel.readyState !== 'open') return false;
-    this.dataChannel.send(JSON.stringify({ resume: true }));
+    // VMS expects a string value, not a boolean: {"resume":true} is rejected, {"resume":""} works.
+    this.dataChannel.send(JSON.stringify({ resume: '' }));
     return true;
   }
 
   /** Advance by one frame (only meaningful when paused). */
-  sendNextFrame(): boolean {
+  sendNextFrame(cameraId: string): boolean {
     if (!this.dataChannel || this.dataChannel.readyState !== 'open') return false;
-    this.dataChannel.send(JSON.stringify({ nextFrame: true }));
+    this.dataChannel.send(JSON.stringify({ nextFrame: cameraId }));
     return true;
   }
 

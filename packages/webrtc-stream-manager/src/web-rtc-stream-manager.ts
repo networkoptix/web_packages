@@ -1102,7 +1102,7 @@ export class WebRTCStreamManager {
         }
 
         try {
-            const message = JSON.stringify({ nextFrame: true });
+            const message = JSON.stringify({ nextFrame: this.cameraId });
             this.peerConnection.remoteDataChannel.send(message);
             WebRTCStreamManager.logger?.info(
                 `Sent nextFrame command to server for ${this.connectionKey}`,
