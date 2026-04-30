@@ -515,28 +515,116 @@ describe('CameraConnection', () => {
     expect(trackListener).toHaveBeenCalledOnce();
   });
 
-  // ── 9. updatePosition forwards to active connection ────────────────
+  // ── 9. updatePosition / live↔archive boundary ──────────────────────
 
-  it('updatePosition() forwards to active connection sendSeek', async () => {
+  it('updatePosition() triggers a reconnect on the live→archive boundary', async () => {
     const { cc, lowPcw } = await setupWithLowConnected();
+    // Default config — currentPosition starts at 0 (live).
 
     cc.updatePosition(5000);
 
-    expect(lowPcw.sendSeek).toHaveBeenCalledWith(5000);
+    // Crossing live→archive forces a fresh signaling handshake because the
+    // server bakes positionMs into the SDP at handshake time. No DC seek.
+    expect(lowPcw.sendSeek).not.toHaveBeenCalled();
+    expect(lowPcw.disposed).toBe(true);
+    expect(cc.state).toBe(PeerState.connecting);
+
+    // A new PCW is created for the archive reconnect.
+    await vi.advanceTimersByTimeAsync(0);
+    expect(mockState.instances.length).toBeGreaterThanOrEqual(2);
   });
 
-  // ── 10. updateSpeed stores speed and sends stream request ──────────
+  it('updatePosition() triggers a reconnect on the archive→live boundary', async () => {
+    const { cc, lowPcw } = await setupWithLowConnected({
+      ...TEST_CONFIG,
+      initialPosition: 5000, // start in archive mode
+    });
 
-  it('updateSpeed() stores speed and sends stream request', async () => {
+    cc.updatePosition(0); // back to live
+
+    expect(lowPcw.sendSeek).not.toHaveBeenCalled();
+    expect(lowPcw.disposed).toBe(true);
+    expect(cc.state).toBe(PeerState.connecting);
+
+    await vi.advanceTimersByTimeAsync(0);
+    expect(mockState.instances.length).toBeGreaterThanOrEqual(2);
+  });
+
+  it('updatePosition() archive→archive uses the DC sendSeek fast path (no reconnect)', async () => {
+    const { cc, lowPcw } = await setupWithLowConnected({
+      ...TEST_CONFIG,
+      initialPosition: 5000, // start in archive mode (no live↔archive flip on first seek)
+    });
+
+    cc.updatePosition(6000);
+
+    // Still archive — DC seek, no reconnect.
+    expect(lowPcw.sendSeek).toHaveBeenCalledWith(6000);
+    expect(lowPcw.disposed).toBe(false);
+    expect(mockState.instances).toHaveLength(1);
+    expect(cc.state).toBe(PeerState.connected);
+  });
+
+  it('initialPosition seeds tracking — matching first updatePosition does not spuriously reconnect', async () => {
+    // StreamManager passes its `_currentPosition` as `initialPosition`. If the
+    // first updatePosition call from StreamManager echoes that seed, we must
+    // not interpret it as a boundary flip.
+    const { cc, lowPcw } = await setupWithLowConnected({
+      ...TEST_CONFIG,
+      initialPosition: 5000,
+    });
+
+    cc.updatePosition(5000);
+
+    expect(lowPcw.disposed).toBe(false);
+    expect(mockState.instances).toHaveLength(1);
+    expect(cc.state).toBe(PeerState.connected);
+  });
+
+  // ── 10. updateSpeed live↔archive behavior ──────────────────────────
+
+  it('updateSpeed() in live mode stores the value but does not reconnect', async () => {
     const { cc, lowPcw } = await setupWithLowConnected();
+    // Live mode — currentPosition=0.
 
     cc.updateSpeed(2);
 
-    expect(lowPcw.sendStreamRequest).toHaveBeenCalledWith(
-      AvailableStreams.SECONDARY, // low-res stream
-      0, // currentPosition default
-      2,
-    );
+    // Live wire is always unlimited; the new speed is stored for the next
+    // archive reconnect to pick up via the URL closure.
+    expect(lowPcw.disposed).toBe(false);
+    expect(mockState.instances).toHaveLength(1);
+    expect(cc.state).toBe(PeerState.connected);
+  });
+
+  it('updateSpeed() in archive mode triggers a reconnect', async () => {
+    const { cc, lowPcw } = await setupWithLowConnected({
+      ...TEST_CONFIG,
+      initialPosition: 5000, // archive
+    });
+
+    cc.updateSpeed(2);
+
+    // Server bakes speed into SDP at handshake time, so an archive speed
+    // change requires a full reconnect.
+    expect(lowPcw.disposed).toBe(true);
+    expect(cc.state).toBe(PeerState.connecting);
+
+    await vi.advanceTimersByTimeAsync(0);
+    expect(mockState.instances.length).toBeGreaterThanOrEqual(2);
+  });
+
+  it('initialSpeed seeds tracking — matching first updateSpeed is a no-op', async () => {
+    const { cc, lowPcw } = await setupWithLowConnected({
+      ...TEST_CONFIG,
+      initialPosition: 5000,
+      initialSpeed: 2,
+    });
+
+    cc.updateSpeed(2);
+
+    expect(lowPcw.disposed).toBe(false);
+    expect(mockState.instances).toHaveLength(1);
+    expect(cc.state).toBe(PeerState.connected);
   });
 
   // ── 11. qualitySnapshot delegates to QualityMonitor ────────────────
@@ -763,10 +851,15 @@ describe('CameraConnection', () => {
     expect(mockState.instances).toHaveLength(2);
   });
 
-  // ── 22. updateSpeed forwards to high-res when active ───────────────
+  // ── 22. updateSpeed in archive mode tears down both base and upgrade ─
 
-  it('updateSpeed() forwards to high-res connection when active', async () => {
-    const { cc } = await setupWithLowConnected();
+  it('updateSpeed() in archive mode reconnects both base and upgrade when high-res is active', async () => {
+    // Start in archive mode so updateSpeed actually triggers a reconnect.
+    const { cc } = await setupWithLowConnected({
+      ...TEST_CONFIG,
+      initialPosition: 5000,
+    });
+    const lowPcw = getMock(0);
 
     // Activate high-res.
     cc.requestHighRes();
@@ -776,14 +869,16 @@ describe('CameraConnection', () => {
     await vi.advanceTimersByTimeAsync(0);
     const highMock = makeMockStream('high');
     highPcw.simulateTrack(highMock.track, [highMock.stream]);
+    expect(cc.isHighRes).toBe(true);
 
     cc.updateSpeed('unlimited');
 
-    expect(highPcw.sendStreamRequest).toHaveBeenCalledWith(
-      AvailableStreams.PRIMARY,
-      0,
-      'unlimited',
-    );
+    // Both connections are torn down so each comes back up with the new
+    // speed baked into its SDP at handshake time.
+    expect(lowPcw.disposed).toBe(true);
+    expect(highPcw.disposed).toBe(true);
+    expect(cc.isHighRes).toBe(false);
+    expect(cc.state).toBe(PeerState.connecting);
   });
 
   // ── 23. MSE fallback: transcoding signal triggers reconnect ──────────

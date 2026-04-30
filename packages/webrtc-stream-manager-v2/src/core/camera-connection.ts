@@ -75,6 +75,14 @@ export interface CameraConnectionConfig {
   lowResRetry?: Partial<RetryConfig>;
   /** Override the default retry config for the on-demand high-res upgrade connection. */
   highResRetry?: Partial<RetryConfig>;
+  /**
+   * Initial playback position (ms). 0/undefined = live. Used to seed the
+   * connection's tracking state so the first {@link updatePosition} call from
+   * StreamManager doesn't spuriously detect a live↔archive flip and reconnect.
+   */
+  initialPosition?: number;
+  /** Initial playback speed. Default: 1. See {@link initialPosition}. */
+  initialSpeed?: number | 'unlimited';
 }
 
 // ─── Event types ────────────────────────────────────────────────────────────
@@ -187,11 +195,13 @@ export class CameraConnection extends Disposable {
   private _isPaused = false;
 
   // ── Playback state (forwarded to the active data channel) ─────────────
-  private currentPosition = 0;
-  private currentSpeed: number | 'unlimited' = 1;
+  private currentPosition: number;
+  private currentSpeed: number | 'unlimited';
 
   constructor(config: CameraConnectionConfig) {
     super();
+    this.currentPosition = config.initialPosition ?? 0;
+    this.currentSpeed = config.initialSpeed ?? 1;
     config.logger?.info?.(`[WEBRTC-DIAG] [${config.connectionKey}] CameraConnection constructor`, { initialStream: config.initialStream, availableStreams: config.availableStreams, canAutoUpgrade: config.canAutoUpgrade, needsMse: config.needsMse, t: performance.now() });
 
     this.config = config;
@@ -431,9 +441,20 @@ export class CameraConnection extends Disposable {
     }
   }
 
-  /** Seek to a playback position (forwarded to the active data channel). */
+  /**
+   * Seek to a playback position. Within archive (or live→live), forwards a
+   * `seek` over the data channel. On a live↔archive boundary flip, performs
+   * a full reconnect because the server bakes `positionMs` into the SDP at
+   * handshake time and cannot switch modes mid-stream.
+   */
   updatePosition(positionMs: number): void {
+    const wasLive = !this.currentPosition;
+    const willBeLive = !positionMs;
     this.currentPosition = positionMs;
+    if (wasLive !== willBeLive) {
+      this.reconnectForPlaybackChange();
+      return;
+    }
     this.activePc?.sendSeek(positionMs);
   }
 
@@ -463,17 +484,16 @@ export class CameraConnection extends Disposable {
   }
 
   /**
-   * Update playback speed (forwarded to the active data channel).
-   * Also sends a stream request with the current position.
+   * Update playback speed. The server bakes `speed` into the SDP at handshake
+   * time, so an archive speed change requires a full reconnect. In live mode
+   * the wire is always unlimited, so the value is just stored for the next
+   * archive reconnect to pick up.
    */
   updateSpeed(speed: number | 'unlimited'): void {
+    if (speed === this.currentSpeed) return;
     this.currentSpeed = speed;
-    const stream = this._isUpgraded ? this.upgradeStream : this.baseStream;
-    this.activePc?.sendStreamRequest(
-      stream as 0 | 1,
-      this.currentPosition,
-      speed,
-    );
+    if (!this.currentPosition) return;
+    this.reconnectForPlaybackChange();
   }
 
   /** Enable analytics metadata on the data channel. Reconnects the base connection. */
@@ -1095,6 +1115,30 @@ export class CameraConnection extends Disposable {
     // Only reconnect upgrade if it carries SECONDARY (the metadata stream).
     const upgradeNeedsReconnect =
       this._isUpgraded && this.upgradeStream === AvailableStreams.SECONDARY;
+    if (upgradeNeedsReconnect) {
+      this.disposeUpgradeInternal();
+    }
+
+    this.disposeBaseInternal();
+    this.updateState(PeerState.connecting);
+    this.connectBase();
+
+    if (upgradeNeedsReconnect) {
+      this.connectUpgrade();
+    }
+  }
+
+  /**
+   * Reconnect base (and upgrade if active) when URL-baked playback params
+   * change — i.e. a live↔archive boundary flip or an archive speed change.
+   * The server bakes `positionMs` and `speed` into the SDP at handshake time
+   * and cannot switch them mid-stream.
+   */
+  private reconnectForPlaybackChange(): void {
+    if (this.disposed) return;
+
+    const upgradeNeedsReconnect =
+      this._isUpgraded || this.upgradeRetryAc !== null;
     if (upgradeNeedsReconnect) {
       this.disposeUpgradeInternal();
     }

@@ -74,6 +74,8 @@ const { mockState, MockCameraConnection } = vi.hoisted(() => {
     signalingUrlFn: ((stream: number, deliveryMethod?: string) => string) | null = null;
     needsMse: boolean;
     mediaStreams: any[] | undefined;
+    initialPosition: number | undefined;
+    initialSpeed: number | 'unlimited' | undefined;
 
     private _emitter = new EventTarget();
 
@@ -89,6 +91,8 @@ const { mockState, MockCameraConnection } = vi.hoisted(() => {
       logger?: Console;
       mediaStreams?: any[];
       needsMse?: boolean;
+      initialPosition?: number;
+      initialSpeed?: number | 'unlimited';
     }) {
       this.connectionKey = config.connectionKey;
       this._targetStream = config.targetStream ?? 'AUTO';
@@ -96,6 +100,8 @@ const { mockState, MockCameraConnection } = vi.hoisted(() => {
       this.signalingUrlFn = config.signalingUrl;
       this.needsMse = config.needsMse ?? false;
       this.mediaStreams = config.mediaStreams;
+      this.initialPosition = config.initialPosition;
+      this.initialSpeed = config.initialSpeed;
 
       if (config.parentSignal) {
         config.parentSignal.addEventListener('abort', () => this.dispose(), {
@@ -511,9 +517,9 @@ describe('StreamManager', () => {
     expect(mockState.instances).toHaveLength(3);
   });
 
-  // ── 20. connect() applies current global position to new connection ───
+  // ── 20. connect() seeds new connections with stored position and speed ─
 
-  it('connect() applies stored position and speed to new connections', () => {
+  it('connect() seeds new connections with stored position and speed via initialPosition/initialSpeed config', () => {
     StreamManager.configure(TEST_CONFIG);
     const sm = StreamManager.getInstance();
 
@@ -521,11 +527,22 @@ describe('StreamManager', () => {
     sm.updatePosition(7000);
     sm.updateSpeed(2);
 
-    // Now connect a camera — it should receive the current state.
+    // Now connect a camera — its constructor must see the stored state.
+    // Per the bookmark-regression fix, StreamManager seeds via config rather
+    // than by calling updatePosition/updateSpeed post-construction. Seeding
+    // is correct here because the live↔archive boundary detector needs to
+    // know its starting state to avoid spuriously reconnecting on the first
+    // updatePosition call.
     sm.connect(makeUrlConfig('sys1', 'cam1'));
 
-    expect(getMock(0).updatePosition).toHaveBeenCalledWith(7000);
-    expect(getMock(0).updateSpeed).toHaveBeenCalledWith(2);
+    const cc = getMock(0);
+    expect(cc.initialPosition).toBe(7000);
+    expect(cc.initialSpeed).toBe(2);
+    // No post-construction calls — that pattern was removed because it
+    // conflicted with per-camera flows like bookmark mode where global
+    // state can diverge from the connection's own state.
+    expect(cc.updatePosition).not.toHaveBeenCalled();
+    expect(cc.updateSpeed).not.toHaveBeenCalled();
   });
 
   // ── 21. disconnect() is a no-op for unknown key ───────────────────────

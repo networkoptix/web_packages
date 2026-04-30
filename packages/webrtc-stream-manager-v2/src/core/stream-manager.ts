@@ -296,6 +296,8 @@ export class StreamManager extends Disposable {
       mediaStreams: urlConfig.mediaStreams,
       needsMse,
       enableMetadata: true,
+      initialPosition: this._currentPosition,
+      initialSpeed: this._currentSpeed,
     };
 
     // Start diagnostic tracking for this camera.
@@ -319,14 +321,6 @@ export class StreamManager extends Disposable {
 
     if (videoElement) {
       connection.setVideoElement(videoElement);
-    }
-
-    // Apply current global state to the new connection.
-    if (this._currentPosition !== undefined) {
-      connection.updatePosition(this._currentPosition);
-    }
-    if (this._currentSpeed !== 1) {
-      connection.updateSpeed(this._currentSpeed);
     }
 
     return connection;
@@ -378,16 +372,17 @@ export class StreamManager extends Disposable {
 
   /**
    * Update playback position for all connections.
-   * @param positionMs - Playback position in milliseconds. If undefined, clears stored position.
+   * @param positionMs - Playback position in milliseconds. Undefined or 0
+   *   means live; both propagate to connections as 0 so they can detect a
+   *   live↔archive boundary flip and reconnect when needed.
    */
   updatePosition(positionMs?: number): void {
     this.throwIfDisposed();
     this._currentPosition = positionMs;
-    if (positionMs !== undefined) {
-      this.forEachConnection((connection) => {
-        connection.updatePosition(positionMs);
-      });
-    }
+    const perConnection = positionMs ?? 0;
+    this.forEachConnection((connection) => {
+      connection.updatePosition(perConnection);
+    });
   }
 
   /**
