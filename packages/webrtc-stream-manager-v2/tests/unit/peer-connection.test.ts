@@ -64,11 +64,13 @@ class MockDataChannel extends EventTarget {
 
 class MockRTCPeerConnection extends EventTarget {
   iceConnectionState: RTCIceConnectionState = 'new';
+  connectionState: RTCPeerConnectionState = 'new';
   signalingState: RTCSignalingState = 'stable';
   localDescription: RTCSessionDescription | null = null;
 
   onicecandidate: ((event: RTCPeerConnectionIceEvent) => void) | null = null;
   oniceconnectionstatechange: (() => void) | null = null;
+  onconnectionstatechange: (() => void) | null = null;
   ontrack: ((event: RTCTrackEvent) => void) | null = null;
   ondatachannel: ((event: RTCDataChannelEvent) => void) | null = null;
 
@@ -114,6 +116,11 @@ class MockRTCPeerConnection extends EventTarget {
   simulateIceStateChange(state: RTCIceConnectionState): void {
     this.iceConnectionState = state;
     this.oniceconnectionstatechange?.();
+  }
+
+  simulateConnectionStateChange(state: RTCPeerConnectionState): void {
+    this.connectionState = state;
+    this.onconnectionstatechange?.();
   }
 
   simulateTrack(track: MediaStreamTrack, streams: MediaStream[]): void {
@@ -341,7 +348,7 @@ describe('PeerConnectionWrapper', () => {
     expect(wrapper.state).toBe(PeerState.failed);
   });
 
-  it('emits statechange with failed for disconnected ICE state', () => {
+  it('does not emit failed for disconnected ICE state (paused playback would otherwise look broken)', () => {
     const wrapper = new PeerConnectionWrapper(TEST_CONFIG);
     const pc = getPC();
 
@@ -349,6 +356,34 @@ describe('PeerConnectionWrapper', () => {
     wrapper.on('statechange', listener);
 
     pc.simulateIceStateChange('disconnected');
+
+    expect(listener).not.toHaveBeenCalled();
+    expect(wrapper.state).toBe(PeerState.connecting);
+  });
+
+  it('emits statechange with failed when connectionState flips to failed', () => {
+    const wrapper = new PeerConnectionWrapper(TEST_CONFIG);
+    const pc = getPC();
+
+    const listener = vi.fn();
+    wrapper.on('statechange', listener);
+
+    pc.simulateConnectionStateChange('failed');
+
+    expect(listener).toHaveBeenCalledWith({
+      state: PeerState.failed,
+      previousState: PeerState.connecting,
+    });
+  });
+
+  it('emits statechange with failed when connectionState flips to closed', () => {
+    const wrapper = new PeerConnectionWrapper(TEST_CONFIG);
+    const pc = getPC();
+
+    const listener = vi.fn();
+    wrapper.on('statechange', listener);
+
+    pc.simulateConnectionStateChange('closed');
 
     expect(listener).toHaveBeenCalledWith({
       state: PeerState.failed,
@@ -754,6 +789,86 @@ describe('PeerConnectionWrapper', () => {
     wrapper.sendSeek(5000);
 
     expect(channel.send).not.toHaveBeenCalled();
+  });
+
+  // ── sendPause / sendResume / sendNextFrame wire format ─────────────────
+  // The VMS server only accepts string-typed values for pause/resume —
+  // {"pause":true} (boolean) is rejected by the RapidJSON parser, but
+  // {"pause":""} (empty string) is accepted. A future "fix" to a boolean
+  // would silently break server-side parsing while every consumer-level
+  // test still passes (mocks return true regardless of payload).
+
+  it('sendPause sends {"pause":""} (string value — VMS rejects boolean)', () => {
+    const wrapper = new PeerConnectionWrapper(TEST_CONFIG);
+    const pc = getPC();
+    const channel = new MockDataChannel();
+    pc.simulateDataChannel(channel);
+
+    expect(wrapper.sendPause()).toBe(true);
+    expect(channel.send).toHaveBeenCalledOnce();
+    expect(channel.sent[0]).toBe('{"pause":""}');
+    expect(JSON.parse(channel.sent[0])).toEqual({ pause: '' });
+  });
+
+  it('sendResume sends {"resume":""} (string value — VMS rejects boolean)', () => {
+    const wrapper = new PeerConnectionWrapper(TEST_CONFIG);
+    const pc = getPC();
+    const channel = new MockDataChannel();
+    pc.simulateDataChannel(channel);
+
+    expect(wrapper.sendResume()).toBe(true);
+    expect(channel.send).toHaveBeenCalledOnce();
+    expect(channel.sent[0]).toBe('{"resume":""}');
+    expect(JSON.parse(channel.sent[0])).toEqual({ resume: '' });
+  });
+
+  it('sendNextFrame sends {"nextFrame":<cameraId>}', () => {
+    const wrapper = new PeerConnectionWrapper(TEST_CONFIG);
+    const pc = getPC();
+    const channel = new MockDataChannel();
+    pc.simulateDataChannel(channel);
+
+    expect(wrapper.sendNextFrame('cam-uuid-42')).toBe(true);
+    expect(channel.send).toHaveBeenCalledOnce();
+    expect(JSON.parse(channel.sent[0])).toEqual({ nextFrame: 'cam-uuid-42' });
+  });
+
+  it('sendPause returns false and does not send when datachannel is not open', () => {
+    const wrapper = new PeerConnectionWrapper(TEST_CONFIG);
+    const pc = getPC();
+    const channel = new MockDataChannel();
+    channel.readyState = 'connecting';
+    pc.simulateDataChannel(channel);
+
+    expect(wrapper.sendPause()).toBe(false);
+    expect(channel.send).not.toHaveBeenCalled();
+  });
+
+  it('sendResume returns false and does not send when datachannel is not open', () => {
+    const wrapper = new PeerConnectionWrapper(TEST_CONFIG);
+    const pc = getPC();
+    const channel = new MockDataChannel();
+    channel.readyState = 'closing';
+    pc.simulateDataChannel(channel);
+
+    expect(wrapper.sendResume()).toBe(false);
+    expect(channel.send).not.toHaveBeenCalled();
+  });
+
+  it('sendNextFrame returns false and does not send when datachannel is not open', () => {
+    const wrapper = new PeerConnectionWrapper(TEST_CONFIG);
+    const pc = getPC();
+    const channel = new MockDataChannel();
+    channel.readyState = 'connecting';
+    pc.simulateDataChannel(channel);
+
+    expect(wrapper.sendNextFrame('cam-1')).toBe(false);
+    expect(channel.send).not.toHaveBeenCalled();
+  });
+
+  it('sendPause returns false when no datachannel exists', () => {
+    const wrapper = new PeerConnectionWrapper(TEST_CONFIG);
+    expect(wrapper.sendPause()).toBe(false);
   });
 
   // ── Listener unsubscribe ──────────────────────────────────────────────

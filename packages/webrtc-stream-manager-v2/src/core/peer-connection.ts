@@ -61,6 +61,8 @@ interface PeerConnectionEventMap {
   metadata: MetadataEventDetail;
   /** Raw data channel message (string or ArrayBuffer). Fired for every message. */
   datachannel: string | ArrayBuffer;
+  /** Fires once the data channel is open and ready for `send`. */
+  dcopen: undefined;
 }
 
 type PeerConnectionEvent = keyof PeerConnectionEventMap;
@@ -97,6 +99,11 @@ export class PeerConnectionWrapper extends Disposable {
   /** Current peer connection lifecycle state. */
   get state(): PeerState {
     return this._state;
+  }
+
+  /** Whether the data channel is open and ready for `send`. */
+  get dataChannelOpen(): boolean {
+    return this.dataChannel?.readyState === 'open';
   }
 
   /**
@@ -182,6 +189,9 @@ export class PeerConnectionWrapper extends Disposable {
     // 5. Map ICE connection state changes to PeerState
     this.pc.oniceconnectionstatechange = () => this.handleIceStateChange();
 
+    // Aggregate connectionState catches hard failures the ICE handler alone may miss.
+    this.pc.onconnectionstatechange = () => this.handleConnectionStateChange();
+
     // 6. Re-emit remote tracks and store the active stream
     this.pc.ontrack = (event) => {
       this.logger?.info?.(`${this._diagLabel} ontrack received`, { kind: event.track.kind, trackId: event.track.id, elapsed: (performance.now() - this._diagStart).toFixed(1) + 'ms' });
@@ -262,6 +272,7 @@ export class PeerConnectionWrapper extends Disposable {
     event: 'datachannel',
     listener: (data: string | ArrayBuffer) => void,
   ): () => void;
+  on(event: 'dcopen', listener: () => void): () => void;
   on(
     event: PeerConnectionEvent,
     listener: (...args: never[]) => void,
@@ -451,11 +462,20 @@ export class PeerConnectionWrapper extends Disposable {
       if (!this.signaling.disposed) {
         this.signaling.dispose();
       }
-    } else if (
-      iceState === 'failed' ||
-      iceState === 'disconnected' ||
-      iceState === 'closed'
-    ) {
+    } else if (iceState === 'failed' || iceState === 'closed') {
+      // 'disconnected' is excluded: paused playback stops media → consent timeout flips ICE to 'disconnected'.
+      this.updateState(PeerState.failed);
+    }
+  }
+
+  private handleConnectionStateChange(): void {
+    if (this.disposed) return;
+    const cs = this.pc.connectionState;
+    this.logger?.info?.(`${this._diagLabel} connectionState change: ${cs}`, {
+      iceConnectionState: this.pc.iceConnectionState,
+      elapsed: (performance.now() - this._diagStart).toFixed(1) + 'ms',
+    });
+    if (cs === 'failed' || cs === 'closed') {
       this.updateState(PeerState.failed);
     }
   }
@@ -472,6 +492,13 @@ export class PeerConnectionWrapper extends Disposable {
     this.dataChannelMessageHandler = (event: MessageEvent) =>
       this.handleDataChannelMessage(event);
     channel.addEventListener('message', this.dataChannelMessageHandler);
+
+    // DC open lags ICE 'connected' on its own SCTP timeline; consumers wanting send-readiness watch this.
+    if (channel.readyState === 'open') {
+      this.emit('dcopen', undefined);
+    } else {
+      channel.addEventListener('open', () => this.emit('dcopen', undefined), { once: true });
+    }
   }
 
   private handleDataChannelMessage(event: MessageEvent): void {

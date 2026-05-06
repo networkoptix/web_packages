@@ -212,6 +212,12 @@ export class WebRTCStreamManager {
     }
   }
 
+  /** Whether the manager is currently in a playing state. */
+  static get isPlaying(): boolean {
+    if (!WebRTCStreamManager._configured) return true;
+    return StreamManager.getInstance().playing;
+  }
+
   // ── Instance API (per-connection wrapper) ────────────────────────────
 
   private readonly _close$ = new Subject<void>();

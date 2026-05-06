@@ -308,6 +308,12 @@ export class StreamManager extends Disposable {
 
     const connection = new CameraConnection(connectionConfig);
 
+    // Flip _isPaused synchronously; dcopen-resync replays it when the new
+    // PC's DC opens. Without this, a connection added during global pause plays.
+    if (!this._playing) {
+      connection.sendPause();
+    }
+
     // Cache cameras that need MSE so reconnects skip SRTP.
     connection.on('msefallback', () => {
       this.camerasNeedingMse.add(connectionKey);
@@ -415,17 +421,24 @@ export class StreamManager extends Disposable {
 
   /**
    * Toggle the playing state. When paused, the quality optimizer stops
-   * upgrading connections to high-res (but does not downgrade existing ones).
+   * upgrading connections to high-res (but does not downgrade existing ones),
+   * and a DC pause command is dispatched to every connection.
    */
   togglePlaying(): void {
-    this.throwIfDisposed();
-    this._playing = !this._playing;
+    this.setPlaying(!this._playing);
   }
 
   /** Explicitly set the playing state (used by pause/play facade methods). */
   setPlaying(playing: boolean): void {
     this.throwIfDisposed();
     this._playing = playing;
+    this.forEachConnection((connection) => {
+      if (playing) {
+        connection.sendResume();
+      } else {
+        connection.sendPause();
+      }
+    });
   }
 
   /**

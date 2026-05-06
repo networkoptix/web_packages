@@ -34,10 +34,15 @@ const { mockState, MockPCW } = vi.hoisted(() => {
 
     sendStreamRequest = vi.fn();
     sendSeek = vi.fn();
+    sendPause = vi.fn().mockReturnValue(true);
+    sendResume = vi.fn().mockReturnValue(true);
+    sendNextFrame = vi.fn().mockReturnValue(true);
     getStats = vi.fn().mockResolvedValue(new Map());
 
     private _deliveryMethodDetail: any = null;
     private _transcodingDetail: any = null;
+    private _activeStream: MediaStream | null = null;
+    private _dataChannelOpen = false;
 
     get deliveryMethod() {
       return this._deliveryMethodDetail;
@@ -45,6 +50,14 @@ const { mockState, MockPCW } = vi.hoisted(() => {
 
     get transcoding() {
       return this._transcodingDetail;
+    }
+
+    get activeStream(): MediaStream | null {
+      return this._activeStream;
+    }
+
+    get dataChannelOpen(): boolean {
+      return this._dataChannelOpen;
     }
 
     constructor(config: {
@@ -136,6 +149,18 @@ const { mockState, MockPCW } = vi.hoisted(() => {
       this._emitter.dispatchEvent(
         new CustomEvent('deliverymethod', { detail }),
       );
+    }
+
+    /** Flip the DC-open flag and fire 'dcopen', mirroring what real PCW does after SCTP open. */
+    simulateDcOpen(): void {
+      if (this.disposed) return;
+      this._dataChannelOpen = true;
+      this._emitter.dispatchEvent(new CustomEvent('dcopen'));
+    }
+
+    /** Set the dcopen flag without firing the event (for the synchronous-replay path inside setBasePc/setUpgradePc). */
+    setDataChannelOpen(open: boolean): void {
+      this._dataChannelOpen = open;
     }
   }
 
@@ -248,7 +273,12 @@ function getMock(index: number): MockInstance {
 
 /** Create a mock MediaStream with a single video track. */
 function makeMockStream(id: string) {
-  const track = { kind: 'video', id: `track-${id}` } as MediaStreamTrack;
+  const trackTarget = new EventTarget();
+  const track = Object.assign(trackTarget, {
+    kind: 'video',
+    id: `track-${id}`,
+    readyState: 'live' as MediaStreamTrackState,
+  }) as unknown as MediaStreamTrack;
   const stream = {
     id,
     getVideoTracks: () => [track],
@@ -1105,7 +1135,556 @@ describe('CameraConnection', () => {
     );
   });
 
-  // ── 32. pollQuality stats collection ───────────────────────────────
+  // ── 33. sendPause/sendResume broadcast to BOTH base and upgrade PCs ──
+
+  it('sendPause forwards to both base and upgrade PCs while upgrade is active', async () => {
+    const { cc, lowPcw } = await setupWithLowConnected();
+
+    // Activate upgrade with a real track so it becomes the active PC.
+    cc.requestHighRes();
+    await vi.advanceTimersByTimeAsync(0);
+    const highPcw = getMock(1);
+    highPcw.simulateStateChange(PeerState.connected);
+    await vi.advanceTimersByTimeAsync(0);
+    const highMock = makeMockStream('high');
+    highPcw.simulateTrack(highMock.track, [highMock.stream]);
+    expect(cc.isHighRes).toBe(true);
+
+    cc.sendPause();
+
+    // Both PCs must receive pause — pause/resume during a quality swap window
+    // would otherwise leave one half running.
+    expect(lowPcw.sendPause).toHaveBeenCalledOnce();
+    expect(highPcw.sendPause).toHaveBeenCalledOnce();
+  });
+
+  it('sendResume forwards to both base and upgrade PCs while upgrade is active', async () => {
+    const { cc, lowPcw } = await setupWithLowConnected();
+    cc.requestHighRes();
+    await vi.advanceTimersByTimeAsync(0);
+    const highPcw = getMock(1);
+    highPcw.simulateStateChange(PeerState.connected);
+    await vi.advanceTimersByTimeAsync(0);
+    const highMock = makeMockStream('high');
+    highPcw.simulateTrack(highMock.track, [highMock.stream]);
+
+    cc.sendPause();
+    lowPcw.sendPause.mockClear();
+    highPcw.sendPause.mockClear();
+
+    cc.sendResume();
+
+    expect(lowPcw.sendResume).toHaveBeenCalledOnce();
+    expect(highPcw.sendResume).toHaveBeenCalledOnce();
+  });
+
+  it('sendNextFrame forwards cameraId to both base and upgrade PCs', async () => {
+    const { cc, lowPcw } = await setupWithLowConnected();
+    cc.requestHighRes();
+    await vi.advanceTimersByTimeAsync(0);
+    const highPcw = getMock(1);
+    highPcw.simulateStateChange(PeerState.connected);
+    await vi.advanceTimersByTimeAsync(0);
+    const highMock = makeMockStream('high');
+    highPcw.simulateTrack(highMock.track, [highMock.stream]);
+
+    cc.sendNextFrame();
+
+    // cameraId is the second segment of the connection key (sys1:cam1 → cam1).
+    expect(lowPcw.sendNextFrame).toHaveBeenCalledWith('cam1');
+    expect(highPcw.sendNextFrame).toHaveBeenCalledWith('cam1');
+  });
+
+  // ── 34. _isPaused tracks user intent regardless of PC acceptance ─────
+
+  it('sendPause flips _isPaused even when no PC accepts the command (DC not yet open)', async () => {
+    const { cc, lowPcw } = await setupWithLowConnected();
+    // Simulate the DC not being open yet — sendPause returns false from the wrapper.
+    lowPcw.sendPause.mockReturnValue(false);
+
+    expect(cc.sendPause()).toBe(false);
+    // _isPaused MUST track user intent; otherwise dcopen-resync on the next
+    // PC won't know to replay pause, and pause-survives-reconnect breaks.
+    expect(cc.isPaused).toBe(true);
+  });
+
+  it('sendResume flips _isPaused back even when no PC accepts the command', async () => {
+    const { cc, lowPcw } = await setupWithLowConnected();
+    cc.sendPause();
+    expect(cc.isPaused).toBe(true);
+
+    lowPcw.sendResume.mockReturnValue(false);
+    expect(cc.sendResume()).toBe(false);
+    expect(cc.isPaused).toBe(false);
+  });
+
+  // ── 35. dcopen-resync replays paused state and position on a fresh PC ─
+
+  it('dcopen on the initial base PCW replays pause and seeks to current archive position when paused-before-connect', async () => {
+    // Scenario: connection added during global pause. StreamManager calls
+    // sendPause() on the connection BEFORE the first PCW finishes connecting.
+    const cc = new CameraConnection({
+      ...TEST_CONFIG,
+      initialPosition: 5000,
+    });
+    cc.sendPause();
+    await vi.advanceTimersByTimeAsync(0);
+
+    const pcw = getMock(0);
+    pcw.simulateStateChange(PeerState.connected);
+    await vi.advanceTimersByTimeAsync(0);
+
+    pcw.simulateDcOpen();
+
+    expect(pcw.sendPause).toHaveBeenCalled();
+    expect(pcw.sendSeek).toHaveBeenCalledWith(5000);
+  });
+
+  it('rebuild on resume creates a fresh PC after a pause-induced base failure', async () => {
+    const { cc, lowPcw } = await setupWithLowConnected({
+      ...TEST_CONFIG,
+      initialPosition: 5000,
+    });
+
+    cc.sendPause();
+
+    // Server tears down media after pause. handleBaseFailure must defer.
+    lowPcw.simulateStateChange(PeerState.failed);
+    await vi.advanceTimersByTimeAsync(0);
+    expect(mockState.instances.length).toBe(1);
+
+    cc.sendResume();
+    await vi.advanceTimersByTimeAsync(0);
+
+    expect(mockState.instances.length).toBe(2);
+    const newPcw = getMock(1);
+    newPcw.simulateStateChange(PeerState.connected);
+    await vi.advanceTimersByTimeAsync(0);
+    newPcw.simulateDcOpen();
+
+    // _isPaused is false after resume, so resync must NOT replay pause.
+    // Position is baked into signalingUrl on reconnect, so dcopen-resync
+    // also skips seek when no fresh server timestamp has been observed.
+    expect(newPcw.sendPause).not.toHaveBeenCalled();
+    expect(newPcw.sendSeek).not.toHaveBeenCalled();
+  });
+
+  it('rebuild on resume seeks to latestServerTimestampMs when one was observed before pause', async () => {
+    const { cc, lowPcw } = await setupWithLowConnected({
+      ...TEST_CONFIG,
+      initialPosition: 5000,
+    });
+
+    // Server emits a fresher live frame timestamp before pause.
+    lowPcw.simulateTimestamp({ timestampMs: 7777, rtpTimestamp: 0 });
+
+    cc.sendPause();
+
+    lowPcw.simulateStateChange(PeerState.failed);
+    await vi.advanceTimersByTimeAsync(0);
+
+    cc.sendResume();
+    await vi.advanceTimersByTimeAsync(0);
+    const newPcw = getMock(1);
+    newPcw.simulateStateChange(PeerState.connected);
+    await vi.advanceTimersByTimeAsync(0);
+    newPcw.simulateDcOpen();
+
+    // Use the most recent server timestamp, not the stale config seed.
+    expect(newPcw.sendSeek).toHaveBeenCalledWith(7777);
+  });
+
+  it('base failure during pause defers rebuild — no new PCW until resume', async () => {
+    const { cc, lowPcw } = await setupWithLowConnected();
+    cc.sendPause();
+
+    lowPcw.simulateStateChange(PeerState.failed);
+    await vi.advanceTimersByTimeAsync(0);
+
+    // Reconnect must be deferred while paused.
+    expect(mockState.instances.length).toBe(1);
+  });
+
+  it('base track ended during pause defers rebuild — no new PCW until resume', async () => {
+    const { cc, lowPcw } = await setupWithLowConnected();
+    cc.sendPause();
+
+    const { track, stream } = makeMockStream('low');
+    lowPcw.simulateTrack(track, [stream]);
+    (track as unknown as EventTarget).dispatchEvent(new Event('ended'));
+    await vi.advanceTimersByTimeAsync(0);
+
+    expect(mockState.instances.length).toBe(1);
+  });
+
+  it('upgrade failure during pause defers rebuild — no fallback-to-base reconnect storm', async () => {
+    const { cc } = await setupWithLowConnected({
+      ...TEST_CONFIG,
+      initialPosition: 5000,
+    });
+    cc.requestHighRes();
+    await vi.advanceTimersByTimeAsync(0);
+    const highPcw = getMock(1);
+    highPcw.simulateStateChange(PeerState.connected);
+    await vi.advanceTimersByTimeAsync(0);
+
+    cc.sendPause();
+    const instancesBefore = mockState.instances.length;
+
+    highPcw.simulateStateChange(PeerState.failed);
+    await vi.advanceTimersByTimeAsync(0);
+
+    // No fallback / new PC creation during pause.
+    expect(mockState.instances.length).toBe(instancesBefore);
+  });
+
+  it('post-resume rebuild failure uses the short rearm cooldown, not the full 30s', async () => {
+    const setTimeoutSpy = vi.spyOn(globalThis, 'setTimeout');
+    let signalingShouldFail = false;
+    const config = {
+      ...TEST_CONFIG,
+      // Reject with a non-retryable error so withRetry exhausts on the first attempt.
+      signalingUrl: (stream: AvailableStreams) =>
+        signalingShouldFail
+          ? Promise.reject(ConnectionError.authorization)
+          : `wss://example.com/webrtc?stream=${stream}`,
+    };
+    const { cc, lowPcw } = await setupWithLowConnected(config);
+
+    // Pause → simulate failure → defer rebuild via the _isPaused branch.
+    cc.sendPause();
+    lowPcw.simulateStateChange(PeerState.failed);
+    await vi.advanceTimersByTimeAsync(0);
+
+    signalingShouldFail = true;
+    setTimeoutSpy.mockClear();
+
+    cc.sendResume();
+    // One rejection is enough — non-retryable error exhausts withRetry instantly.
+    await vi.advanceTimersByTimeAsync(0);
+
+    // Verify scheduleBaseRearm used the post-resume short cooldown (3s),
+    // not the long 30s default.
+    const rearmDelays = setTimeoutSpy.mock.calls
+      .map((c) => c[1])
+      .filter((d): d is number => d === 3_000 || d === 30_000);
+    expect(rearmDelays).toContain(3_000);
+    expect(rearmDelays).not.toContain(30_000);
+  });
+
+  it('dcopen-resync skips both pause and seek when at live and not paused', async () => {
+    // Live (currentPosition=0), not paused. resyncPausedState must early-return.
+    const { lowPcw } = await setupWithLowConnected();
+
+    lowPcw.simulateStateChange(PeerState.failed);
+    await vi.advanceTimersByTimeAsync(0);
+    const newPcw = getMock(mockState.instances.length - 1);
+    newPcw.simulateStateChange(PeerState.connected);
+    await vi.advanceTimersByTimeAsync(0);
+
+    newPcw.simulateDcOpen();
+
+    expect(newPcw.sendPause).not.toHaveBeenCalled();
+    expect(newPcw.sendSeek).not.toHaveBeenCalled();
+  });
+
+  it('upgrade PC also resyncs paused state when its DC opens', async () => {
+    // Archive playback + paused, then activate upgrade — upgrade dcopen must resync.
+    const { cc } = await setupWithLowConnected({
+      ...TEST_CONFIG,
+      initialPosition: 5000,
+    });
+    cc.sendPause();
+
+    cc.requestHighRes();
+    await vi.advanceTimersByTimeAsync(0);
+    const highPcw = getMock(1);
+    highPcw.simulateStateChange(PeerState.connected);
+    await vi.advanceTimersByTimeAsync(0);
+
+    highPcw.simulateDcOpen();
+
+    expect(highPcw.sendPause).toHaveBeenCalled();
+    expect(highPcw.sendSeek).toHaveBeenCalledWith(5000);
+  });
+
+  // ── 36. track.ended triggers handleBaseFailure ──────────────────────
+
+  it('emits handleBaseFailure when an active base track ends (server SRTP teardown)', async () => {
+    const { lowPcw } = await setupWithLowConnected();
+
+    const { track, stream } = makeMockStream('low');
+    lowPcw.simulateTrack(track, [stream]);
+
+    // Simulate VMS teardown: track ends without ICE flipping.
+    (track as unknown as { readyState: string }).readyState = 'ended';
+    track.dispatchEvent(new Event('ended'));
+    await vi.advanceTimersByTimeAsync(0);
+
+    // Recovery: original PCW disposed, a fresh one created.
+    expect(lowPcw.disposed).toBe(true);
+    expect(mockState.instances.length).toBeGreaterThanOrEqual(2);
+  });
+
+  it('detects a track that was already ended at subscription time (initial-track race)', async () => {
+    // Pre-end the track BEFORE the PCW reaches connected, so the 'ended' event
+    // never fires — the queueMicrotask path inside attachBaseTrackEndedListener
+    // is the only thing that catches it.
+    new CameraConnection(TEST_CONFIG);
+    await vi.advanceTimersByTimeAsync(0);
+    const firstPcw = getMock(0);
+
+    const { track, stream } = makeMockStream('low');
+    (track as unknown as { readyState: string }).readyState = 'ended';
+
+    // Make the PCW emit a track AFTER it connects (simulating the replay path).
+    // Because the track is already ended, only queueMicrotask(onEnded) recovers.
+    firstPcw.simulateStateChange(PeerState.connected);
+    await vi.advanceTimersByTimeAsync(0);
+    firstPcw.simulateTrack(track, [stream]);
+
+    // Flush microtasks.
+    await vi.advanceTimersByTimeAsync(0);
+
+    // Recovery should have started: firstPcw disposed, a new PCW created.
+    expect(firstPcw.disposed).toBe(true);
+    expect(mockState.instances.length).toBeGreaterThanOrEqual(2);
+  });
+
+  it('attached upgrade-track ending triggers fallback to base', async () => {
+    const { cc, lowPcw } = await setupWithLowConnected();
+
+    const lowMock = makeMockStream('low');
+    lowPcw.simulateTrack(lowMock.track, [lowMock.stream]);
+
+    cc.requestHighRes();
+    await vi.advanceTimersByTimeAsync(0);
+    const highPcw = getMock(1);
+    highPcw.simulateStateChange(PeerState.connected);
+    await vi.advanceTimersByTimeAsync(0);
+    const highMock = makeMockStream('high');
+    highPcw.simulateTrack(highMock.track, [highMock.stream]);
+    expect(cc.isHighRes).toBe(true);
+
+    // Server tears down the upgrade track.
+    (highMock.track as unknown as { readyState: string }).readyState = 'ended';
+    highMock.track.dispatchEvent(new Event('ended'));
+    await vi.advanceTimersByTimeAsync(0);
+
+    expect(highPcw.disposed).toBe(true);
+    expect(cc.isHighRes).toBe(false);
+  });
+
+  // ── 37. lostConnection placeholder suppression ──────────────────────
+
+  it('does not emit lostConnection while upgrade PC has a live track', async () => {
+    // Use a tight retry config so we can exhaust quickly.
+    const { cc, lowPcw } = await setupWithLowConnected({
+      ...TEST_CONFIG,
+      lowResRetry: { maxAttempts: 1, baseDelayMs: 0, maxDelayMs: 0 },
+    });
+
+    // Activate upgrade with a real live track.
+    cc.requestHighRes();
+    await vi.advanceTimersByTimeAsync(0);
+    const highPcw = getMock(1);
+    highPcw.simulateStateChange(PeerState.connected);
+    await vi.advanceTimersByTimeAsync(0);
+    const highMock = makeMockStream('high');
+    highPcw.simulateTrack(highMock.track, [highMock.stream]);
+    expect(cc.isHighRes).toBe(true);
+
+    const errListener = vi.fn();
+    cc.on('error', errListener);
+
+    // Permanently kill base. With maxAttempts=1, exhaustion fires after one fail.
+    lowPcw.simulateStateChange(PeerState.failed);
+    await vi.advanceTimersByTimeAsync(0);
+    // After handleBaseFailure → connectBase, a new PCW is created. Fail it too.
+    const retryPcw = getMock(2);
+    retryPcw.simulateStateChange(PeerState.failed);
+    await vi.advanceTimersByTimeAsync(50);
+
+    // Suppression must hold: upgrade is still rendering live frames.
+    expect(errListener).not.toHaveBeenCalled();
+  });
+
+  it('emits lostConnection when base fails and upgrade is not live', async () => {
+    const { cc, lowPcw } = await setupWithLowConnected({
+      ...TEST_CONFIG,
+      lowResRetry: { maxAttempts: 1, baseDelayMs: 0, maxDelayMs: 0 },
+    });
+
+    const errListener = vi.fn();
+    cc.on('error', errListener);
+
+    // Base permanently fails; no upgrade present.
+    lowPcw.simulateStateChange(PeerState.failed);
+    await vi.advanceTimersByTimeAsync(0);
+    const retryPcw = getMock(mockState.instances.length - 1);
+    retryPcw.simulateStateChange(PeerState.failed);
+    await vi.advanceTimersByTimeAsync(50);
+
+    expect(errListener).toHaveBeenCalledWith(ConnectionError.lostConnection);
+  });
+
+  // ── 38. releaseHighRes proactive base rebuild ───────────────────────
+
+  it('releaseHighRes rebuilds base when no live base track exists and no retry is in flight', async () => {
+    const { cc, lowPcw } = await setupWithLowConnected({
+      ...TEST_CONFIG,
+      lowResRetry: { maxAttempts: 1, baseDelayMs: 0, maxDelayMs: 0 },
+    });
+
+    // Activate upgrade with a real live track (so isHighRes=true).
+    cc.requestHighRes();
+    await vi.advanceTimersByTimeAsync(0);
+    const highPcw = getMock(1);
+    highPcw.simulateStateChange(PeerState.connected);
+    await vi.advanceTimersByTimeAsync(0);
+    const highMock = makeMockStream('high');
+    highPcw.simulateTrack(highMock.track, [highMock.stream]);
+    expect(cc.isHighRes).toBe(true);
+
+    // Permanently kill the base behind the upgrade so baseMediaStream stays empty
+    // (no live track) and baseRetryAc settles to null after exhaustion.
+    lowPcw.simulateStateChange(PeerState.failed);
+    await vi.advanceTimersByTimeAsync(0);
+    const retryPcw = getMock(2);
+    retryPcw.simulateStateChange(PeerState.failed);
+    await vi.advanceTimersByTimeAsync(50);
+
+    const instancesBeforeRelease = mockState.instances.length;
+
+    cc.releaseHighRes();
+    // releaseHighRes calls connectBase synchronously when no live base is present
+    // and no retry is in flight, so the new PCW is created in a microtask.
+    await vi.advanceTimersByTimeAsync(0);
+
+    // Proactive rebuild: a fresh base PCW must be spun up rather than wait for
+    // consumer timeout.
+    expect(mockState.instances.length).toBeGreaterThan(instancesBeforeRelease);
+  });
+
+  it('releaseHighRes does not rebuild base when a base retry is already in flight', async () => {
+    const { cc, lowPcw } = await setupWithLowConnected();
+
+    // Activate upgrade with a real live track.
+    cc.requestHighRes();
+    await vi.advanceTimersByTimeAsync(0);
+    const highPcw = getMock(1);
+    highPcw.simulateStateChange(PeerState.connected);
+    await vi.advanceTimersByTimeAsync(0);
+    const highMock = makeMockStream('high');
+    highPcw.simulateTrack(highMock.track, [highMock.stream]);
+    expect(cc.isHighRes).toBe(true);
+
+    // Trigger one base failure — connectBase is now retrying (baseRetryAc is set,
+    // not yet exhausted because default LOW_RES_RETRY has many attempts).
+    lowPcw.simulateStateChange(PeerState.failed);
+    await vi.advanceTimersByTimeAsync(0);
+    const instancesAfterFailure = mockState.instances.length;
+
+    cc.releaseHighRes();
+    await vi.advanceTimersByTimeAsync(0);
+
+    // No additional PCW beyond the retry already in flight — releaseHighRes
+    // must not double-trigger connectBase.
+    expect(mockState.instances.length).toBe(instancesAfterFailure);
+  });
+
+  // ── 39. latestServerTimestampMs cleared on playback-mode flip ───────
+
+  it('clears latestServerTimestampMs on live→archive boundary so dcopen-resync does not seek to a stale live ts', async () => {
+    const { cc, lowPcw } = await setupWithLowConnected();
+    // Live mode: server emits a wallclock timestamp.
+    lowPcw.simulateTimestamp({ timestampMs: 1_700_000_000_000, rtpTimestamp: 0 });
+
+    // Crossing live→archive: the field must be cleared so the new PCW does
+    // not seek to a wallclock value when the user wants an archive position.
+    cc.updatePosition(5000);
+    await vi.advanceTimersByTimeAsync(0);
+    const newPcw = getMock(mockState.instances.length - 1);
+    newPcw.simulateStateChange(PeerState.connected);
+    await vi.advanceTimersByTimeAsync(0);
+
+    // Not paused, latestServerTimestampMs should be undefined → no sendSeek.
+    newPcw.simulateDcOpen();
+    expect(newPcw.sendSeek).not.toHaveBeenCalled();
+  });
+
+  it('clears latestServerTimestampMs on archive→live boundary too', async () => {
+    const { cc, lowPcw } = await setupWithLowConnected({
+      ...TEST_CONFIG,
+      initialPosition: 5000,
+    });
+    lowPcw.simulateTimestamp({ timestampMs: 5500, rtpTimestamp: 0 });
+
+    cc.updatePosition(0); // archive→live
+    await vi.advanceTimersByTimeAsync(0);
+    const newPcw = getMock(mockState.instances.length - 1);
+    newPcw.simulateStateChange(PeerState.connected);
+    await vi.advanceTimersByTimeAsync(0);
+
+    newPcw.simulateDcOpen();
+    // Live + not paused: resyncPausedState early-returns on !currentPosition.
+    expect(newPcw.sendSeek).not.toHaveBeenCalled();
+  });
+
+  it('clears latestServerTimestampMs on archive→archive seek so user intent wins on resync', async () => {
+    const { cc, lowPcw } = await setupWithLowConnected({
+      ...TEST_CONFIG,
+      initialPosition: 5000,
+    });
+    lowPcw.simulateTimestamp({ timestampMs: 7777, rtpTimestamp: 0 });
+
+    // Pause so dcopen-resync will replay sendSeek against the new PCW.
+    cc.sendPause();
+
+    // archive→archive: DC sendSeek fast path; user's seek must override the
+    // cached server timestamp so the next dcopen-resync lands on user intent.
+    cc.updatePosition(8000);
+    expect(lowPcw.sendSeek).toHaveBeenCalledWith(8000);
+    lowPcw.sendSeek.mockClear();
+
+    // Bring up an upgrade PCW; its dcopen-resync should use the new
+    // currentPosition (8000), not the stale latestServerTimestampMs (7777).
+    cc.requestHighRes();
+    await vi.advanceTimersByTimeAsync(0);
+    const highPcw = getMock(mockState.instances.length - 1);
+    highPcw.simulateStateChange(PeerState.connected);
+    await vi.advanceTimersByTimeAsync(0);
+    highPcw.simulateDcOpen();
+
+    expect(highPcw.sendSeek).toHaveBeenCalledWith(8000);
+    expect(highPcw.sendSeek).not.toHaveBeenCalledWith(7777);
+  });
+
+  // ── 40. Circuit-breaker rearm dispose-cancellation ──────────────────
+
+  it('disposing during a scheduled rearm cancels the timer (no zombie reconnects)', async () => {
+    // Tight retry budget so connectBase exhausts on a single failure → schedules rearm.
+    const cc = new CameraConnection({
+      ...TEST_CONFIG,
+      lowResRetry: { maxAttempts: 1, baseDelayMs: 0, maxDelayMs: 0 },
+    });
+    await vi.advanceTimersByTimeAsync(0);
+    const firstPcw = getMock(0);
+    firstPcw.simulateStateChange(PeerState.failed);
+    await vi.advanceTimersByTimeAsync(50);
+    // connectBase has now exhausted; rearm timer should be queued for ~30s.
+
+    const instancesAtRearmTime = mockState.instances.length;
+
+    await cc.dispose();
+
+    // Advance well past the rearm cooldown — no new PCW must be created.
+    await vi.advanceTimersByTimeAsync(60_000);
+
+    expect(mockState.instances.length).toBe(instancesAtRearmTime);
+  });
+
+  // ── 41. pollQuality stats collection ────────────────────────────────
 
   describe('pollQuality stats collection', () => {
     it('feeds RTCStats into qualityMonitor.updateStats()', async () => {

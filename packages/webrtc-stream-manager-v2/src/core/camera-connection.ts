@@ -191,12 +191,26 @@ export class CameraConnection extends Disposable {
   private _consecutiveConnectFailures = 0;
   private static readonly MAX_CONSECUTIVE_CONNECT_FAILURES = 3;
 
+  private rearmTimer: ReturnType<typeof globalThis.setTimeout> | null = null;
+  private static readonly BASE_REARM_COOLDOWN_MS = 30_000;
+  /** Shorter cooldown for the first failure right after pause→resume; the
+   *  server's previous SRTP session for this camera may still be cleaning up,
+   *  and 30s of UNAVAILABLE for a known-transient case is too long. */
+  private static readonly POST_RESUME_REARM_COOLDOWN_MS = 3_000;
+
   // ── Pause state ────────────────────────────────────────────────────
   private _isPaused = false;
+  /** PC died while paused (server tore down media). Rebuild on next resume. */
+  private _needsBaseRebuild = false;
+  private _needsUpgradeRebuild = false;
+  /** Set when sendResume kicks off a base rebuild; consumed on next rearm or success. */
+  private _postResumeRebuildPending = false;
 
   // ── Playback state (forwarded to the active data channel) ─────────────
   private currentPosition: number;
   private currentSpeed: number | 'unlimited';
+  /** Live frame timestamp (ms); used to align a fresh PC to actual playback, since `currentPosition` can be seconds stale. */
+  private latestServerTimestampMs: number | undefined;
 
   constructor(config: CameraConnectionConfig) {
     super();
@@ -417,12 +431,10 @@ export class CameraConnection extends Disposable {
 
     const wasUpgraded = this._isUpgraded;
 
-    // Swap the base track onto the managed stream BEFORE disposing the
-    // upgrade PC.  Disposing first would end the upgrade track, leaving the
-    // managed stream momentarily without an active video track — causing the
-    // video element (and any requestVideoFrameCallback loop) to stall.
+    // Swap base onto the managed stream BEFORE disposing upgrade — otherwise the element stalls between tracks.
+    // Only a `live` track is a usable fallback; an `ended` one would leave the consumer on a dead stream.
     const baseTrack = wasUpgraded && this.baseMediaStream
-      ? this.baseMediaStream.getVideoTracks()[0]
+      ? this.baseMediaStream.getVideoTracks().find((t) => t.readyState === 'live')
       : undefined;
     if (baseTrack) {
       this.swapManagedTrack(baseTrack);
@@ -436,9 +448,18 @@ export class CameraConnection extends Disposable {
           track: baseTrack,
           streams: [this.managedStream],
         } as TrackEventDetail);
+      } else if (!this.baseRetryAc) {
+        // No live base track and no retry in flight: rebuild base now rather than wait for consumer timeout.
+        this.disposeBaseInternal();
+        this.connectBase();
       }
       this.updateState(this.basePc?.state ?? PeerState.connecting);
     }
+  }
+
+  private forEachPc(callback: (pcw: PeerConnectionWrapper) => void): void {
+    if (this.basePc) callback(this.basePc);
+    if (this.upgradePc) callback(this.upgradePc);
   }
 
   /**
@@ -451,11 +472,13 @@ export class CameraConnection extends Disposable {
     const wasLive = !this.currentPosition;
     const willBeLive = !positionMs;
     this.currentPosition = positionMs;
+    // User's seek is authoritative; clear so dcopen-resync doesn't override it.
+    this.latestServerTimestampMs = undefined;
     if (wasLive !== willBeLive) {
       this.reconnectForPlaybackChange();
       return;
     }
-    this.activePc?.sendSeek(positionMs);
+    this.forEachPc((pcw) => pcw.sendSeek(positionMs));
   }
 
   /** Whether this connection is currently paused. */
@@ -463,24 +486,39 @@ export class CameraConnection extends Disposable {
     return this._isPaused;
   }
 
-  /** Send a pause command to the server via the active data channel. */
+  /** _isPaused is set unconditionally so dcopen-resync can match state on a fresh PC mid-reconnect. */
   sendPause(): boolean {
-    const sent = this.activePc?.sendPause() ?? false;
-    if (sent) this._isPaused = true;
+    this._isPaused = true;
+    let sent = false;
+    this.forEachPc((pcw) => { if (pcw.sendPause()) sent = true; });
     return sent;
   }
 
-  /** Send a resume command to the server via the active data channel. */
   sendResume(): boolean {
-    const sent = this.activePc?.sendResume() ?? false;
-    if (sent) this._isPaused = false;
+    this._isPaused = false;
+    if (this._needsBaseRebuild) {
+      this._needsBaseRebuild = false;
+      if (!this.basePc && !this.baseRetryAc) {
+        this._postResumeRebuildPending = true;
+        this.connectBase();
+      }
+    }
+    if (this._needsUpgradeRebuild) {
+      this._needsUpgradeRebuild = false;
+      if (!this.upgradePc && !this.upgradeRetryAc) {
+        this.connectUpgrade();
+      }
+    }
+    let sent = false;
+    this.forEachPc((pcw) => { if (pcw.sendResume()) sent = true; });
     return sent;
   }
 
-  /** Advance by one frame (only meaningful when paused). */
   sendNextFrame(): boolean {
     const cameraId = this.connectionKey.split(':')[1];
-    return this.activePc?.sendNextFrame(cameraId) ?? false;
+    let sent = false;
+    this.forEachPc((pcw) => { if (pcw.sendNextFrame(cameraId)) sent = true; });
+    return sent;
   }
 
   /**
@@ -609,6 +647,13 @@ export class CameraConnection extends Disposable {
     } catch {
       this.config.logger?.info?.(`[WEBRTC-DIAG] [${this.connectionKey}] connectBase withRetry FAILED (all retries exhausted)`, { elapsed: (performance.now() - _diagStart).toFixed(1) + 'ms' });
       if (!this.disposed && this.baseRetryAc === retryAc) {
+        // Let releaseHighRes detect "no retry running" and force-rebuild base.
+        this.baseRetryAc = null;
+        if (this._isPaused) {
+          // Pause caused server to drop the SRTP session; defer until resume.
+          this._needsBaseRebuild = true;
+          return;
+        }
         const dt = diagTracker.get(this.connectionKey);
         if (dt) {
           dt.errors.push('base_retries_exhausted');
@@ -617,8 +662,8 @@ export class CameraConnection extends Disposable {
         this.config.logger?.error?.(
           `[${this.connectionKey}] Base connection (stream=${this.baseStream}) failed after all retries`,
         );
-        this.emit('error', ConnectionError.lostConnection);
-        this.updateState(PeerState.failed);
+        this.emitLostConnectionIfNoFallback();
+        this.scheduleBaseRearm();
       }
     }
   }
@@ -638,11 +683,11 @@ export class CameraConnection extends Disposable {
     this.baseCleanups.push(
       pcw.on('track', (detail) => {
         this.baseMediaStream = detail.streams[0] ?? null;
-        // In MSE mode the RTP track is a placeholder that never receives
-        // media data (video arrives via DataChannel → MseRenderer).
-        // Skip forwarding it — the real track comes from MseRenderer's
-        // captureStream() and is handled in initMseRenderer()'s 'stream' listener.
+        // MSE delivers via DataChannel → MseRenderer; the RTP track is a
+        // placeholder. Skip forwarding AND the ended listener — its end would
+        // tear down a healthy MseRenderer. Replay path below is already gated.
         if (!this._isUpgraded && this._deliveryMethod !== 'mse') {
+          this.attachBaseTrackEndedListener(detail.track, pcw);
           this.swapManagedTrack(detail.track);
           this.emit('track', {
             track: detail.track,
@@ -652,6 +697,9 @@ export class CameraConnection extends Disposable {
       }),
       pcw.on('timestamp', (detail) => {
         if (!this._isUpgraded) {
+          if (typeof detail.timestampMs === 'number') {
+            this.latestServerTimestampMs = detail.timestampMs;
+          }
           this.emit('timestamp', detail);
         }
       }),
@@ -667,6 +715,7 @@ export class CameraConnection extends Disposable {
       pcw.on('statechange', (detail) => {
         if (detail.state === PeerState.connected) {
           this.baseFailureCycles = 0;
+          this._postResumeRebuildPending = false;
         }
         if (!this._isUpgraded) {
           this.updateState(detail.state);
@@ -675,6 +724,7 @@ export class CameraConnection extends Disposable {
           this.handleBaseFailure();
         }
       }),
+      pcw.on('dcopen', () => this.resyncPausedState(pcw)),
       pcw.on('metadata', (detail) => {
         // Metadata is UNCONDITIONAL — always forwarded from base,
         // regardless of whether the upgrade connection is active.
@@ -721,6 +771,7 @@ export class CameraConnection extends Disposable {
       this.baseMediaStream = pcw.activeStream;
       const track = pcw.activeStream.getVideoTracks()[0];
       if (track) {
+        this.attachBaseTrackEndedListener(track, pcw);
         this.swapManagedTrack(track);
         this.emit('track', {
           track,
@@ -729,18 +780,98 @@ export class CameraConnection extends Disposable {
       }
     }
 
-    // Sync our state with the (already connected) PCW.
+    if (pcw.state === PeerState.connected) {
+      this.baseFailureCycles = 0;
+      this._postResumeRebuildPending = false;
+    }
+    if (pcw.dataChannelOpen) {
+      this.resyncPausedState(pcw);
+    }
     if (!this._isUpgraded) {
       this.updateState(pcw.state);
     }
   }
 
+  /** Align a fresh PCW to current playback. Pause is replayed in any mode; seek only applies in archive. */
+  private resyncPausedState(pcw: PeerConnectionWrapper): void {
+    if (this._isPaused) {
+      pcw.sendPause();
+    }
+    if (!this.currentPosition) return;
+    if (this._isPaused || this.latestServerTimestampMs !== undefined) {
+      pcw.sendSeek(this.latestServerTimestampMs ?? this.currentPosition);
+    }
+  }
+
+  /**
+   * After the circuit breaker trips, sit out a cooldown then re-enter
+   * `connectBase` once. Recovers from transient outages (network blip,
+   * server overload) without hammering. The connection's lifetime
+   * AbortController auto-clears the timer on dispose.
+   */
+  private scheduleBaseRearm(): void {
+    if (this.disposed) return;
+    if (this.rearmTimer !== null) return;
+    if (this.basePc || this.baseRetryAc) return;
+
+    const cooldownMs = this._postResumeRebuildPending
+      ? CameraConnection.POST_RESUME_REARM_COOLDOWN_MS
+      : CameraConnection.BASE_REARM_COOLDOWN_MS;
+    this._postResumeRebuildPending = false;
+
+    this.config.logger?.info?.(
+      `[WEBRTC-DIAG] [${this.connectionKey}] scheduling base rearm in ${cooldownMs}ms`,
+    );
+    this.rearmTimer = this.setTimeout(() => {
+      this.rearmTimer = null;
+      if (this.disposed || this.basePc || this.baseRetryAc) {
+        this.config.logger?.info?.(
+          `[WEBRTC-DIAG] [${this.connectionKey}] base rearm skipped (disposed=${this.disposed} basePc=${!!this.basePc} retryAc=${!!this.baseRetryAc})`,
+        );
+        return;
+      }
+      if (this._isPaused) {
+        this.config.logger?.info?.(
+          `[WEBRTC-DIAG] [${this.connectionKey}] base rearm deferred (paused)`,
+        );
+        this._needsBaseRebuild = true;
+        return;
+      }
+      this.config.logger?.info?.(
+        `[WEBRTC-DIAG] [${this.connectionKey}] base rearm firing, retrying connectBase`,
+      );
+      this._consecutiveConnectFailures = 0;
+      this.baseFailureCycles = 0;
+      this.connectBase();
+    }, cooldownMs);
+  }
+
+  /** Suppress the error if upgrade is still delivering live frames — the user is watching working video. */
+  private emitLostConnectionIfNoFallback(): void {
+    const upgradeIsLive = this._isUpgraded
+      && !!this.upgradeMediaStream
+      && this.upgradeMediaStream.getVideoTracks().some((t) => t.readyState === 'live');
+    if (upgradeIsLive) return;
+    this.emit('error', ConnectionError.lostConnection);
+    this.updateState(PeerState.failed);
+  }
+
   /**
    * Called when an established base connection fails. Tears down the
    * old connection and starts a fresh retry cycle.
+   *
+   * While paused, server stops media → ICE consent times out and/or the
+   * server ends the SRTP track. That's expected pause behavior, not a
+   * fault: defer rebuild until {@link sendResume}.
    */
   private handleBaseFailure(): void {
     if (this.disposed) return;
+    if (this._isPaused) {
+      this.config.logger?.info?.(`[WEBRTC-DIAG] [${this.connectionKey}] handleBaseFailure deferred (paused)`);
+      this._needsBaseRebuild = true;
+      this.disposeBaseInternal();
+      return;
+    }
     this.config.logger?.info?.(`[WEBRTC-DIAG] [${this.connectionKey}] handleBaseFailure`, { cycle: this.baseFailureCycles + 1, maxCycles: CameraConnection.MAX_BASE_FAILURE_CYCLES, t: performance.now() });
 
     this.baseFailureCycles++;
@@ -753,8 +884,11 @@ export class CameraConnection extends Disposable {
       this.config.logger?.error?.(
         `[${this.connectionKey}] Base connection exceeded ${CameraConnection.MAX_BASE_FAILURE_CYCLES} reconnect cycles, giving up`,
       );
-      this.emit('error', ConnectionError.lostConnection);
-      this.updateState(PeerState.failed);
+      // Without disposeBaseInternal here, scheduleBaseRearm bails on its
+      // `if (this.basePc) return` guard. Defensive — unreachable today.
+      this.disposeBaseInternal();
+      this.emitLostConnectionIfNoFallback();
+      this.scheduleBaseRearm();
       return;
     }
 
@@ -835,6 +969,7 @@ export class CameraConnection extends Disposable {
     this.upgradeCleanups.push(
       pcw.on('track', (detail) => {
         this.upgradeMediaStream = detail.streams[0] ?? null;
+        this.attachUpgradeTrackEndedListener(detail.track, pcw);
         // Activate upgrade on first track (smooth swap from base).
         this._isUpgraded = true;
         this.swapManagedTrack(detail.track);
@@ -845,6 +980,9 @@ export class CameraConnection extends Disposable {
       }),
       pcw.on('timestamp', (detail) => {
         if (this._isUpgraded) {
+          if (typeof detail.timestampMs === 'number') {
+            this.latestServerTimestampMs = detail.timestampMs;
+          }
           this.emit('timestamp', detail);
         }
       }),
@@ -863,6 +1001,7 @@ export class CameraConnection extends Disposable {
           this.updateState(detail.state);
         }
       }),
+      pcw.on('dcopen', () => this.resyncPausedState(pcw)),
       pcw.on('metadata', (detail) => {
         // Metadata from upgrade (HIGH stream) — the server only delivers
         // metadata on the high-quality stream, so this is the primary source.
@@ -879,6 +1018,7 @@ export class CameraConnection extends Disposable {
       this._isUpgraded = true;
       const track = pcw.activeStream.getVideoTracks()[0];
       if (track) {
+        this.attachUpgradeTrackEndedListener(track, pcw);
         this.swapManagedTrack(track);
         this.emit('track', {
           track,
@@ -886,11 +1026,21 @@ export class CameraConnection extends Disposable {
         } as TrackEventDetail);
       }
     }
+
+    if (pcw.dataChannelOpen) {
+      this.resyncPausedState(pcw);
+    }
   }
 
   /** Upgrade failed — fall back to base via {@link releaseHighRes}. */
   private handleUpgradeFailure(): void {
     if (this.disposed) return;
+    if (this._isPaused) {
+      this.config.logger?.info?.(`[WEBRTC-DIAG] [${this.connectionKey}] handleUpgradeFailure deferred (paused)`);
+      this._needsUpgradeRebuild = true;
+      this.disposeUpgradeInternal();
+      return;
+    }
     this.releaseHighRes();
   }
 
@@ -1000,6 +1150,48 @@ export class CameraConnection extends Disposable {
 
   // ── Private: cleanup helpers ──────────────────────────────────────────
 
+  /** Server-side SRTP teardown can end the track without flipping ICE/connection state, so 'ended' is the trigger. */
+  private attachBaseTrackEndedListener(
+    track: MediaStreamTrack,
+    pcw: PeerConnectionWrapper,
+  ): void {
+    const onEnded = () => {
+      if (!this.disposed && this.basePc === pcw) {
+        this.handleBaseFailure();
+      }
+    };
+    track.addEventListener('ended', onEnded, { once: true });
+    this.baseCleanups.push(() =>
+      track.removeEventListener('ended', onEnded),
+    );
+    // Track may already have ended between signaling (when the track event
+    // fired) and ICE-connected (when setBasePc subscribes), so the 'ended'
+    // event is gone. Check readyState and schedule a microtask so recovery
+    // doesn't reenter disposeBaseInternal mid-setBasePc.
+    if (track.readyState === 'ended') {
+      queueMicrotask(onEnded);
+    }
+  }
+
+  /** Symmetric upgrade-side helper, routed to handleUpgradeFailure. */
+  private attachUpgradeTrackEndedListener(
+    track: MediaStreamTrack,
+    pcw: PeerConnectionWrapper,
+  ): void {
+    const onEnded = () => {
+      if (!this.disposed && this.upgradePc === pcw) {
+        this.handleUpgradeFailure();
+      }
+    };
+    track.addEventListener('ended', onEnded, { once: true });
+    this.upgradeCleanups.push(() =>
+      track.removeEventListener('ended', onEnded),
+    );
+    if (track.readyState === 'ended') {
+      queueMicrotask(onEnded);
+    }
+  }
+
   /** Remove event listeners and dispose the base PCW (if present). */
   private cleanupBasePc(): void {
     for (const cleanup of this.baseCleanups) cleanup();
@@ -1016,6 +1208,10 @@ export class CameraConnection extends Disposable {
     this.baseRetryAc = null;
     this.swapAbort?.abort();
     this.swapAbort = null;
+    if (this.rearmTimer !== null) {
+      clearTimeout(this.rearmTimer);
+      this.rearmTimer = null;
+    }
     this.cleanupBasePc();
     this.baseMediaStream = null;
     if (this.mseRenderer && !this.mseRenderer.disposed) {
@@ -1136,6 +1332,9 @@ export class CameraConnection extends Disposable {
    */
   private reconnectForPlaybackChange(): void {
     if (this.disposed) return;
+
+    // Stale timestamp would override user intent on the new PCW's resync.
+    this.latestServerTimestampMs = undefined;
 
     const upgradeNeedsReconnect =
       this._isUpgraded || this.upgradeRetryAc !== null;

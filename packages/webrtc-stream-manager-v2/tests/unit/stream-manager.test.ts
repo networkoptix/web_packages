@@ -33,6 +33,8 @@ const { mockState, MockCameraConnection } = vi.hoisted(() => {
     releaseHighRes = vi.fn();
     updatePosition = vi.fn();
     updateSpeed = vi.fn();
+    sendPause = vi.fn();
+    sendResume = vi.fn();
     setVideoElement = vi.fn();
     dispose = vi.fn().mockImplementation(() => {
       this._ac.abort();
@@ -362,6 +364,81 @@ describe('StreamManager', () => {
 
     sm.togglePlaying();
     expect(sm.playing).toBe(true);
+  });
+
+  // ── 11a. setPlaying broadcasts pause/resume — original CLOUD-17834 fix ─
+  // The literal regression test for the ticket: setPlaying must dispatch DC
+  // commands to every active connection. Reverting the forEachConnection
+  // block in setPlaying() must fail these tests.
+
+  it('setPlaying(false) sends pause to every active connection', () => {
+    StreamManager.configure(TEST_CONFIG);
+    const sm = StreamManager.getInstance();
+
+    sm.connect(makeUrlConfig('sys1', 'cam1'));
+    sm.connect(makeUrlConfig('sys1', 'cam2'));
+
+    sm.setPlaying(false);
+
+    expect(getMock(0).sendPause).toHaveBeenCalledOnce();
+    expect(getMock(1).sendPause).toHaveBeenCalledOnce();
+    expect(getMock(0).sendResume).not.toHaveBeenCalled();
+    expect(getMock(1).sendResume).not.toHaveBeenCalled();
+  });
+
+  it('setPlaying(true) sends resume to every active connection', () => {
+    StreamManager.configure(TEST_CONFIG);
+    const sm = StreamManager.getInstance();
+
+    sm.connect(makeUrlConfig('sys1', 'cam1'));
+    sm.connect(makeUrlConfig('sys1', 'cam2'));
+
+    // First pause to flip the manager out of the default-playing state.
+    sm.setPlaying(false);
+    getMock(0).sendPause.mockClear();
+    getMock(1).sendPause.mockClear();
+
+    sm.setPlaying(true);
+
+    expect(getMock(0).sendResume).toHaveBeenCalledOnce();
+    expect(getMock(1).sendResume).toHaveBeenCalledOnce();
+    expect(getMock(0).sendPause).not.toHaveBeenCalled();
+    expect(getMock(1).sendPause).not.toHaveBeenCalled();
+  });
+
+  it('togglePlaying() routes through setPlaying() and dispatches DC commands', () => {
+    StreamManager.configure(TEST_CONFIG);
+    const sm = StreamManager.getInstance();
+
+    sm.connect(makeUrlConfig('sys1', 'cam1'));
+
+    // playing: true → false
+    sm.togglePlaying();
+    expect(getMock(0).sendPause).toHaveBeenCalledOnce();
+    expect(getMock(0).sendResume).not.toHaveBeenCalled();
+
+    getMock(0).sendPause.mockClear();
+
+    // playing: false → true
+    sm.togglePlaying();
+    expect(getMock(0).sendResume).toHaveBeenCalledOnce();
+    expect(getMock(0).sendPause).not.toHaveBeenCalled();
+  });
+
+  it('setPlaying does not skip any connection in a multi-camera grid', () => {
+    StreamManager.configure(TEST_CONFIG);
+    const sm = StreamManager.getInstance();
+
+    // 5-camera layout — every connection must receive the pause command.
+    for (let i = 1; i <= 5; i++) {
+      sm.connect(makeUrlConfig('sys1', `cam${i}`));
+    }
+
+    sm.setPlaying(false);
+
+    for (let i = 0; i < 5; i++) {
+      expect(getMock(i).sendPause).toHaveBeenCalledOnce();
+    }
   });
 
   // ── 12. closeAll() disposes all connections ───────────────────────────
