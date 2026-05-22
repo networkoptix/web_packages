@@ -257,6 +257,21 @@ export class WebRTCStreamManager {
   private constructor(private readonly _connection: CameraConnection) {
     this.currentPosition$ = new BehaviorSubject<number>(0);
 
+    // Routed eagerly (not inside the cold _mediaStream$ callback) because
+    // getInstance() and connect() return different wrapper instances and only
+    // connect's wrapper gets a _mediaStream$ subscriber.
+    const unsubTimestamp = _connection.on(
+      'timestamp',
+      (detail: TimestampEventDetail) => {
+        if (detail.timestampMs !== undefined) {
+          this.currentPosition$.next(detail.timestampMs);
+        } else if (detail.timestamp !== undefined) {
+          this.currentPosition$.next(detail.timestamp * 1000);
+        }
+      },
+    );
+    this._close$.subscribe({ complete: () => unsubTimestamp() });
+
     // Bridge the event-based CameraConnection API to an RxJS Observable.
     //
     // Every track event from the CameraConnection is forwarded so that
@@ -278,21 +293,9 @@ export class WebRTCStreamManager {
         subscriber.next(tuple);
       });
 
-      const unsubTimestamp = _connection.on(
-        'timestamp',
-        (detail: TimestampEventDetail) => {
-          if (detail.timestampMs !== undefined) {
-            this.currentPosition$.next(detail.timestampMs);
-          } else if (detail.timestamp !== undefined) {
-            this.currentPosition$.next(detail.timestamp * 1000);
-          }
-        },
-      );
-
       return () => {
         unsubTrack();
         unsubError();
-        unsubTimestamp();
         this._close$.next();
         this._close$.complete();
       };
@@ -319,6 +322,11 @@ export class WebRTCStreamManager {
   updatePosition(position: number): boolean {
     this._connection.updatePosition(position);
     return true;
+  }
+
+  /** Full PC teardown + rebuild. Use to recover silent stalls (DC seek won't help). */
+  reconnect(): void {
+    this._connection.reconnect();
   }
 
   /** Pause this camera's server-side stream via the data channel. */

@@ -534,6 +534,11 @@ export class CameraConnection extends Disposable {
     this.reconnectForPlaybackChange();
   }
 
+  /** Full PC teardown + rebuild; same as updateSpeed's reconnect, no params changed. */
+  reconnect(): void {
+    this.reconnectForPlaybackChange();
+  }
+
   /** Enable analytics metadata on the data channel. Reconnects the base connection. */
   enableMetadata(): void {
     if (this.disposed || this._metadataEnabled) return;
