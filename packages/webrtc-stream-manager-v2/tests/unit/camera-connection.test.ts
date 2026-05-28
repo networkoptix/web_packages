@@ -1721,4 +1721,41 @@ describe('CameraConnection', () => {
       });
     });
   });
+
+  // ── 42. reconnect() only fires when the PC is in a connected state ──
+
+  it('reconnect() is a no-op while connecting', async () => {
+    const { cc, lowPcw } = await setupWithLowConnected();
+
+    // connected → reconnect() takes effect: dispose + rebuild.
+    cc.reconnect();
+    await vi.advanceTimersByTimeAsync(0);
+    expect(lowPcw.disposed).toBe(true);
+    expect(cc.state).toBe(PeerState.connecting);
+    expect(mockState.instances).toHaveLength(2);
+
+    // connecting → no-op: tearing down the in-flight rebuild is the storm bug.
+    cc.reconnect();
+    await vi.advanceTimersByTimeAsync(0);
+    expect(mockState.instances).toHaveLength(2);
+  });
+
+  it('reconnect() is a no-op while failed', async () => {
+    // Tight retry budget so a single failure exhausts withRetry → state = failed.
+    const cc = new CameraConnection({
+      ...TEST_CONFIG,
+      lowResRetry: { maxAttempts: 1, baseDelayMs: 0, maxDelayMs: 0 },
+    });
+    await vi.advanceTimersByTimeAsync(0);
+    const firstPcw = getMock(0);
+    firstPcw.simulateStateChange(PeerState.failed);
+    await vi.advanceTimersByTimeAsync(50);
+    expect(cc.state).toBe(PeerState.failed);
+
+    // failed → no-op: a rebuild here would short-circuit the scheduled rearm cooldown.
+    const instancesAtFailure = mockState.instances.length;
+    cc.reconnect();
+    await vi.advanceTimersByTimeAsync(0);
+    expect(mockState.instances.length).toBe(instancesAtFailure);
+  });
 });

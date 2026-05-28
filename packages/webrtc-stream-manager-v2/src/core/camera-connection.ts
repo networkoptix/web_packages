@@ -536,6 +536,9 @@ export class CameraConnection extends Disposable {
 
   /** Full PC teardown + rebuild; same as updateSpeed's reconnect, no params changed. */
   reconnect(): void {
+    if (this.disposed) return;
+    // Only recover a live-but-stalled PC; other states are owned by connectBase's retry/rearm.
+    if (this._state !== PeerState.connected) return;
     this.reconnectForPlaybackChange();
   }
 
