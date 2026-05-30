@@ -1758,4 +1758,41 @@ describe('CameraConnection', () => {
     await vi.advanceTimersByTimeAsync(0);
     expect(mockState.instances.length).toBe(instancesAtFailure);
   });
+
+  it('recovery reconnect() resumes at the latest server timestamp, not the stale seek', async () => {
+    // The rebuilt SDP bakes the stale last-seek position, so the dcopen-resync must seek forward to the current playback position.
+    const { cc, lowPcw } = await setupWithLowConnected({
+      ...TEST_CONFIG,
+      initialPosition: 5000, // archive; original user seek
+    });
+
+    // Playback has advanced; the server has reported a fresher frame timestamp.
+    lowPcw.simulateTimestamp({ timestampMs: 113000, rtpTimestamp: 0 });
+
+    cc.reconnect();
+    await vi.advanceTimersByTimeAsync(0);
+    const newPcw = getMock(1);
+    newPcw.simulateStateChange(PeerState.connected);
+    await vi.advanceTimersByTimeAsync(0);
+    newPcw.simulateDcOpen();
+
+    expect(newPcw.sendSeek).toHaveBeenCalledWith(113000);
+  });
+
+  it('recovery reconnect() without a prior server timestamp does not seek', async () => {
+    // No fresh timestamp observed yet → nothing to correct toward, so resync must not emit a spurious seek.
+    const { cc } = await setupWithLowConnected({
+      ...TEST_CONFIG,
+      initialPosition: 5000,
+    });
+
+    cc.reconnect();
+    await vi.advanceTimersByTimeAsync(0);
+    const newPcw = getMock(1);
+    newPcw.simulateStateChange(PeerState.connected);
+    await vi.advanceTimersByTimeAsync(0);
+    newPcw.simulateDcOpen();
+
+    expect(newPcw.sendSeek).not.toHaveBeenCalled();
+  });
 });

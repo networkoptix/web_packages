@@ -534,12 +534,13 @@ export class CameraConnection extends Disposable {
     this.reconnectForPlaybackChange();
   }
 
-  /** Full PC teardown + rebuild; same as updateSpeed's reconnect, no params changed. */
+  /** Full PC teardown + rebuild for recovery; keeps the last server timestamp so playback resumes where it was, not at the stale seek. */
   reconnect(): void {
     if (this.disposed) return;
-    // Only recover a live-but-stalled PC; other states are owned by connectBase's retry/rearm.
+    // Only recover a connected-but-stalled PC; other states are owned by connectBase's retry/rearm.
     if (this._state !== PeerState.connected) return;
-    this.reconnectForPlaybackChange();
+    // Recovery, not a user action: keep the last server timestamp so the rebuilt PC resumes at the current playback position, not the stale seek.
+    this.reconnectForPlaybackChange(true);
   }
 
   /** Enable analytics metadata on the data channel. Reconnects the base connection. */
@@ -1338,11 +1339,13 @@ export class CameraConnection extends Disposable {
    * The server bakes `positionMs` and `speed` into the SDP at handshake time
    * and cannot switch them mid-stream.
    */
-  private reconnectForPlaybackChange(): void {
+  private reconnectForPlaybackChange(preserveServerTimestamp = false): void {
     if (this.disposed) return;
 
-    // Stale timestamp would override user intent on the new PCW's resync.
-    this.latestServerTimestampMs = undefined;
+    // A user seek/speed change supersedes the prior server timestamp; clear it so the resync honors the new intent.
+    if (!preserveServerTimestamp) {
+      this.latestServerTimestampMs = undefined;
+    }
 
     const upgradeNeedsReconnect =
       this._isUpgraded || this.upgradeRetryAc !== null;
