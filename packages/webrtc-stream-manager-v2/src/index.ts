@@ -10,12 +10,45 @@ export { Disposable } from './core/disposable';
 export { SignalingChannel } from './core/signaling';
 export { PeerConnectionWrapper } from './core/peer-connection';
 export { CameraConnection } from './core/camera-connection';
+export { MediaFetchSession } from './core/media-fetch-session';
 export { MseRenderer, MseRecoveryError } from './core/mse-renderer';
 export { StreamManager } from './core/stream-manager';
 
 // Core config interfaces (re-exported for consumer convenience)
-export type { StreamManagerConfig } from './core/stream-manager';
+export type { StreamManagerConfig, FetchSessionOptions } from './core/stream-manager';
 export type { CameraConnectionConfig } from './core/camera-connection';
+export type { MediaFetchSessionConfig } from './core/media-fetch-session';
+
+// Prev-frame stepping pipeline
+export { Fmp4Parser } from './stepping/fmp4-parser';
+export type {
+  Fmp4InitSegment,
+  Fmp4ParserEvent,
+  Fmp4Sample,
+  Fmp4TrackInfo,
+  Fmp4VideoFragment,
+} from './stepping/fmp4-parser';
+export { SampleStore } from './stepping/sample-store';
+export type {
+  AnchorPair,
+  CoverageInterval,
+  InsertResult,
+  StoreSample,
+} from './stepping/sample-store';
+export { GopDecoder } from './stepping/gop-decoder';
+export type { DecodeRun, GopDecoderConfig } from './stepping/gop-decoder';
+export { BackfillFetcher } from './stepping/backfill-fetcher';
+export type {
+  BackfillFetcherConfig,
+  BackfillFetcherState,
+} from './stepping/backfill-fetcher';
+export { FrameStepper } from './stepping/frame-stepper';
+export type {
+  FrameStepperConfig,
+  FrameStepperState,
+} from './stepping/frame-stepper';
+export { createStepperOpenSession } from './stepping/open-session-adapter';
+export type { StepperSessionOptions } from './stepping/open-session-adapter';
 export type { PeerConnectionConfig } from './core/peer-connection';
 export type { MseRendererConfig } from './core/mse-renderer';
 export type { QualitySnapshot, MosInput } from './strategies/quality-monitor';

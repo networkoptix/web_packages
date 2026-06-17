@@ -41,6 +41,12 @@ export interface PeerConnectionConfig {
   iceServers?: RTCIceServer[];
   parentSignal?: AbortSignal;
   /**
+   * Diag-tracker key override. Defaults to a key derived from the signaling
+   * URL, which collides with the pooled camera entry — companion sessions
+   * pass their own key to keep their timeline separate.
+   */
+  diagConnectionKey?: string;
+  /**
    * Optional logger for diagnostic lifecycle traces (`info`) and protocol
    * errors. When omitted, all diagnostic output is suppressed — pass
    * `console` (or any {@link Logger}) from the consumer to enable.
@@ -63,6 +69,12 @@ interface PeerConnectionEventMap {
   datachannel: string | ArrayBuffer;
   /** Fires once the data channel is open and ready for `send`. */
   dcopen: undefined;
+  /**
+   * Server closed the data channel while the PC is still up. Data-only
+   * consumers treat this as connection loss — they have no media track whose
+   * `ended` event would otherwise surface it.
+   */
+  dcclose: undefined;
 }
 
 type PeerConnectionEvent = keyof PeerConnectionEventMap;
@@ -89,6 +101,7 @@ export class PeerConnectionWrapper extends Disposable {
   private dataChannelMessageHandler:
     | ((event: MessageEvent) => void)
     | null = null;
+  private dataChannelCloseHandler: (() => void) | null = null;
 
   private _state: PeerState = PeerState.connecting;
   private lastRequestedStream: AvailableStreams = AvailableStreams.PRIMARY;
@@ -149,7 +162,8 @@ export class PeerConnectionWrapper extends Disposable {
     // Extract a short identifier from the signaling URL (camera ID portion)
     const _diagUrlShort = config.signalingUrl.replace(/.*\/devices\//, '').replace(/\/webrtc.*/, '').slice(0, 12);
     this._diagLabel = `[WEBRTC-DIAG] [pc:${_diagUrlShort}]`;
-    this._diagConnectionKey = this.extractConnectionKey(config.signalingUrl);
+    this._diagConnectionKey =
+      config.diagConnectionKey ?? this.extractConnectionKey(config.signalingUrl);
     this.logger?.info?.(`${this._diagLabel} PeerConnectionWrapper constructor`, { signalingUrl: config.signalingUrl, t: this._diagStart });
 
     // 1. Create RTCPeerConnection
@@ -273,6 +287,7 @@ export class PeerConnectionWrapper extends Disposable {
     listener: (data: string | ArrayBuffer) => void,
   ): () => void;
   on(event: 'dcopen', listener: () => void): () => void;
+  on(event: 'dcclose', listener: () => void): () => void;
   on(
     event: PeerConnectionEvent,
     listener: (...args: never[]) => void,
@@ -493,6 +508,14 @@ export class PeerConnectionWrapper extends Disposable {
       this.handleDataChannelMessage(event);
     channel.addEventListener('message', this.dataChannelMessageHandler);
 
+    // Only fires for remote closes — our own cleanup removes this listener
+    // before calling close().
+    this.dataChannelCloseHandler = () => {
+      if (this.disposed) return;
+      this.emit('dcclose', undefined);
+    };
+    channel.addEventListener('close', this.dataChannelCloseHandler);
+
     // DC open lags ICE 'connected' on its own SCTP timeline; consumers wanting send-readiness watch this.
     if (channel.readyState === 'open') {
       this.emit('dcopen', undefined);
@@ -571,6 +594,13 @@ export class PeerConnectionWrapper extends Disposable {
           this.dataChannelMessageHandler,
         );
         this.dataChannelMessageHandler = null;
+      }
+      if (this.dataChannelCloseHandler) {
+        this.dataChannel.removeEventListener(
+          'close',
+          this.dataChannelCloseHandler,
+        );
+        this.dataChannelCloseHandler = null;
       }
       this.dataChannel.close();
       this.dataChannel = null;

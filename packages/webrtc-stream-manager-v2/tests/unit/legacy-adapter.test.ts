@@ -515,15 +515,6 @@ describe('WebRTCStreamManager (legacy facade)', () => {
       // We need to subscribe to activate the Observable pipeline.
       const sub = obs.subscribe();
 
-      // Get the instance via getInstance to inspect currentPosition$.
-      const instance = WebRTCStreamManager.getInstance({ id: 'cam1', systemId: 'sys1' })!;
-
-      // The instance returned by getInstance is a different wrapper.
-      // The currentPosition$ on it will be a fresh BehaviorSubject.
-      // The one that matters is attached to the connect() instance.
-      // Let's capture it from the Observable emissions instead.
-
-      // Actually, we need to emit via the mock connection.
       const mockConnection = mockState.connections.get('sys1:cam1')!;
       mockConnection._emit('timestamp', {
         timestampMs: 42000,
@@ -607,6 +598,101 @@ describe('WebRTCStreamManager (legacy facade)', () => {
       const facade = emissions[0][2] as WebRTCStreamManager;
       expect(facade.currentPosition$.getValue()).toBe(0);
 
+      sub.unsubscribe();
+    });
+  });
+
+  // ── 10b. Instance: displayedEpochMs (rVFC↔DC-pair binding) ───────────
+
+  describe('instance displayedEpochMs()', () => {
+    /** Connects + returns the facade wrapper and its mock connection. */
+    function setupInstance() {
+      const urlConfig = makeUrlConfig('sys1', 'cam1');
+      const obs = WebRTCStreamManager.connect(urlConfig);
+      const emissions: any[] = [];
+      const sub = obs.subscribe((value) => emissions.push(value));
+      const mockConnection = mockState.connections.get('sys1:cam1')!;
+      mockConnection._emit('track', {
+        track: {} as MediaStreamTrack,
+        streams: [{ id: 'stream-1' } as unknown as MediaStream],
+      });
+      const facade = emissions[0][2] as WebRTCStreamManager;
+      return { facade, mockConnection, sub };
+    }
+
+    it('returns null before any DC pair arrives', () => {
+      const { facade, sub } = setupInstance();
+      expect(facade.displayedEpochMs(90_000)).toBeNull();
+      sub.unsubscribe();
+    });
+
+    it('interpolates forward and backward from a DC pair at 90 ticks/ms', () => {
+      const { facade, mockConnection, sub } = setupInstance();
+      mockConnection._emit('timestamp', { timestampMs: 1_000_000, rtpTimestamp: 900_000 });
+      // +90 ticks = +1 ms; −180 ticks = −2 ms.
+      expect(facade.displayedEpochMs(900_090)).toBe(1_000_001);
+      expect(facade.displayedEpochMs(899_820)).toBe(999_998);
+      sub.unsubscribe();
+    });
+
+    it('binds seconds-based timestamp events too', () => {
+      const { facade, mockConnection, sub } = setupInstance();
+      mockConnection._emit('timestamp', { timestamp: 42, rtpTimestamp: 9_000 });
+      expect(facade.displayedEpochMs(9_090)).toBe(42_001);
+      sub.unsubscribe();
+    });
+
+    it('uses the nearest pair, not the last (unreliable DC can reorder)', () => {
+      const { facade, mockConnection, sub } = setupInstance();
+      mockConnection._emit('timestamp', { timestampMs: 1_000_000, rtpTimestamp: 900_000 });
+      mockConnection._emit('timestamp', { timestampMs: 1_001_000, rtpTimestamp: 990_000 });
+      // 900_090 is 90 ticks from the first pair, 89_910 from the second.
+      expect(facade.displayedEpochMs(900_090)).toBe(1_000_001);
+      sub.unsubscribe();
+    });
+
+    it('returns null when the rtp gap exceeds the 30 s binding window', () => {
+      const { facade, mockConnection, sub } = setupInstance();
+      mockConnection._emit('timestamp', { timestampMs: 1_000_000, rtpTimestamp: 900_000 });
+      // 31 s away in ticks.
+      expect(facade.displayedEpochMs(900_000 + 31_000 * 90)).toBeNull();
+      sub.unsubscribe();
+    });
+
+    it('discards pre-reset pairs when the RTP timeline restarts near 0', () => {
+      const { facade, mockConnection, sub } = setupInstance();
+      mockConnection._emit('timestamp', { timestampMs: 1_000_000, rtpTimestamp: 500_000_000 });
+      // Reconnect: the RTP clock restarts near 0 — a huge backwards step.
+      mockConnection._emit('timestamp', { timestampMs: 2_000_000, rtpTimestamp: 9_000 });
+      // Pre-reset rtp no longer binds (its pair was discarded)…
+      expect(facade.displayedEpochMs(500_000_090)).toBeNull();
+      // …while the post-reset timeline binds against the fresh pair.
+      expect(facade.displayedEpochMs(9_090)).toBe(2_000_001);
+      sub.unsubscribe();
+    });
+
+    it('tolerates small backwards rtp jitter without resetting', () => {
+      const { facade, mockConnection, sub } = setupInstance();
+      mockConnection._emit('timestamp', { timestampMs: 1_000_000, rtpTimestamp: 900_000 });
+      // 1 s backwards: reordered delivery, not a reset — both pairs usable.
+      mockConnection._emit('timestamp', { timestampMs: 999_000, rtpTimestamp: 810_000 });
+      expect(facade.displayedEpochMs(900_090)).toBe(1_000_001);
+      expect(facade.displayedEpochMs(810_090)).toBe(999_001);
+      sub.unsubscribe();
+    });
+
+    it('keeps only a bounded rolling window of pairs', () => {
+      const { facade, mockConnection, sub } = setupInstance();
+      // A deviant first pair: if the window cap drops it, the (consistent)
+      // survivors interpolate 1_000_000 for its rtp; if not, it wins at gap 0.
+      mockConnection._emit('timestamp', { timestampMs: 5_000_000, rtpTimestamp: 900_000 });
+      for (let i = 1; i < 10; i++) {
+        mockConnection._emit('timestamp', {
+          timestampMs: 1_000_000 + i * 1_000,
+          rtpTimestamp: 900_000 + i * 90_000,
+        });
+      }
+      expect(facade.displayedEpochMs(900_000)).toBe(1_000_000);
       sub.unsubscribe();
     });
   });

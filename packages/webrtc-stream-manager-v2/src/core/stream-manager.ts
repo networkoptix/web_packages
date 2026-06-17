@@ -5,6 +5,8 @@ import {
   CameraConnection,
   type CameraConnectionConfig,
 } from './camera-connection';
+import { MediaFetchSession } from './media-fetch-session';
+import type { RetryConfig } from '../strategies/retry-policy';
 import { LRUCache } from '../utils/lru-cache';
 import { TTLCache } from '../utils/ttl-cache';
 import { fetchWithRedirectAuthorization } from '../utils/relay-fetch';
@@ -43,10 +45,30 @@ export interface StreamManagerConfig {
   radassConfig?: Partial<RadassConfig>;
 }
 
+/** Options for {@link StreamManager.createFetchSession}. */
+export interface FetchSessionOptions {
+  /** Archive position (epoch ms) baked into the URL. Nonzero; archive-only. */
+  positionMs: number;
+  /** Default 1. */
+  speed?: number | 'unlimited';
+  /** Default PRIMARY. */
+  stream?: AvailableStreams;
+  /** Default 'mse'. */
+  deliveryMethod?: DeliveryMethod;
+  retry?: Partial<RetryConfig>;
+}
+
 // ─── Defaults ───────────────────────────────────────────────────────────────
 
 const DEFAULT_LRU_CAPACITY = 100;
 const RELAY_HOST_CACHE_TTL_MS = 5 * 60 * 1_000; // 5 min
+
+/**
+ * Min spacing between per-camera fetch-session opens (delays, never rejects).
+ * Caps a re-anchor feedback loop that re-opened sessions ~1 Hz and degraded
+ * the camera; a real pause→step→resume cycle is at most delayed by this.
+ */
+const FETCH_SESSION_MIN_OPEN_INTERVAL_MS = 2_000;
 
 /** Default STUN servers used when no iceServers are provided.
  *  Required so the browser generates SRFLX candidates — the mediaserver's
@@ -126,6 +148,12 @@ export class StreamManager extends Disposable {
   private _playing = true;
   private _currentPosition: number | undefined;
   private _currentSpeed: number | 'unlimited' = 1;
+  /** Live fetch sessions — the per-camera budget ledger (newest-wins). */
+  private readonly fetchSessions = new Map<string, MediaFetchSession>();
+  /** Per-camera earliest next fetch-session open, in performance.now() time. */
+  private readonly fetchOpenNotBefore = new Map<string, number>();
+  /** Monotonic suffix keeping fetch-session diag timelines distinct. */
+  private fetchSessionSeq = 0;
 
   /**
    * Create a new StreamManager instance.
@@ -203,6 +231,9 @@ export class StreamManager extends Disposable {
       this.radassController.dispose();
       this.disposeAllConnections();
       this.relayHostCache.clear();
+      // Fetch sessions cascade-dispose via parentSignal; just drop the ledger.
+      this.fetchSessions.clear();
+      this.fetchOpenNotBefore.clear();
       // Only clear the singleton reference if this is still the current instance.
       // When configure() replaces the instance, the old one is disposed but the
       // new one should not be cleared.
@@ -374,6 +405,77 @@ export class StreamManager extends Disposable {
     return null;
   }
 
+  /**
+   * Create a dedicated, **unpooled** data-only session for a camera: no LRU
+   * caching, no quality optimizer, no global position/speed/pause broadcasts
+   * — playback params come from `options`, baked into the URL.
+   *
+   * The caller owns the session and must dispose it (disposing the manager
+   * cascades). Each session is a real server session on the relay budget, so:
+   * at most one per camera (a new one supersedes the previous, newest-wins)
+   * and opens are paced per {@link FETCH_SESSION_MIN_OPEN_INTERVAL_MS}.
+   */
+  createFetchSession(
+    urlConfig: WebRtcUrlConfig,
+    options: FetchSessionOptions,
+  ): MediaFetchSession {
+    this.throwIfDisposed();
+    if (!options.positionMs) {
+      throw new Error(
+        'createFetchSession requires a nonzero archive positionMs',
+      );
+    }
+
+    const connectionKey = this.buildConnectionKey(urlConfig);
+
+    const previous = this.fetchSessions.get(connectionKey);
+    if (previous) {
+      this._config.logger?.warn?.(
+        `[${connectionKey}] fetch-session budget: superseding ${previous.sessionKey} (newest-wins)`,
+      );
+      previous.dispose();
+    }
+
+    // Aborts a pending rate-limit delay if the session dies first, so a dead
+    // session never claims its open slot.
+    const openAbort = new AbortController();
+
+    const session = new MediaFetchSession({
+      sessionKey: `${connectionKey}:fetch#${++this.fetchSessionSeq}`,
+      signalingUrl: async () => {
+        await this.waitForFetchOpenSlot(connectionKey, openAbort.signal);
+        return this.buildSignalingUrl(
+          urlConfig,
+          options.stream ?? AvailableStreams.PRIMARY,
+          options.deliveryMethod ?? 'mse',
+          false,
+          {
+            positionMs: options.positionMs,
+            speed: options.speed ?? 1,
+          },
+        );
+      },
+      iceServers: this._config.iceServers,
+      parentSignal: this.signal,
+      logger: this._config.logger,
+      retry: options.retry,
+    });
+
+    this.fetchSessions.set(connectionKey, session);
+    session.signal.addEventListener(
+      'abort',
+      () => {
+        openAbort.abort();
+        if (this.fetchSessions.get(connectionKey) === session) {
+          this.fetchSessions.delete(connectionKey);
+        }
+      },
+      { once: true },
+    );
+
+    return session;
+  }
+
   // ── Global controls ─────────────────────────────────────────────────────
 
   /**
@@ -488,6 +590,47 @@ export class StreamManager extends Disposable {
    */
   private buildConnectionKey(urlConfig: WebRtcUrlConfig): string {
     return `${urlConfig.systemId}:${urlConfig.cameraId}`;
+  }
+
+  /**
+   * Delay until the camera's fetch-open slot is free, then claim it. Each
+   * connect attempt (retries included) claims a slot; an aborted wait does
+   * not, so a dead session leaves the slot for the next opener.
+   */
+  private async waitForFetchOpenSlot(
+    connectionKey: string,
+    signal: AbortSignal,
+  ): Promise<void> {
+    if (signal.aborted) {
+      throw new DOMException('aborted', 'AbortError');
+    }
+    const waitMs =
+      (this.fetchOpenNotBefore.get(connectionKey) ?? 0) - performance.now();
+    if (waitMs > 0) {
+      this._config.logger?.warn?.(
+        `[${connectionKey}] fetch-session open rate-limited — delaying ${Math.ceil(waitMs)}ms`,
+      );
+      await new Promise<void>((resolve, reject) => {
+        const id = globalThis.setTimeout(() => {
+          signal.removeEventListener('abort', onAbort);
+          resolve();
+        }, waitMs);
+
+        function onAbort(): void {
+          globalThis.clearTimeout(id);
+          reject(new DOMException('aborted', 'AbortError'));
+        }
+
+        signal.addEventListener('abort', onAbort, { once: true });
+      });
+    }
+    if (signal.aborted) {
+      throw new DOMException('aborted', 'AbortError');
+    }
+    this.fetchOpenNotBefore.set(
+      connectionKey,
+      performance.now() + FETCH_SESSION_MIN_OPEN_INTERVAL_MS,
+    );
   }
 
   /**
@@ -611,6 +754,7 @@ export class StreamManager extends Disposable {
     stream: AvailableStreams,
     deliveryMethod: DeliveryMethod = 'srtp',
     enableMetadata?: boolean,
+    playback?: { positionMs: number; speed: number | 'unlimited' },
   ): Promise<string> {
     const _diagStart = performance.now();
     const _diagKey = `${urlConfig.systemId}:${urlConfig.cameraId}`;
@@ -631,14 +775,16 @@ export class StreamManager extends Disposable {
       params.push(`x-server-guid=${urlConfig.serverId}`);
     }
 
-    if (this._currentPosition) {
-      params.push(`positionMs=${this._currentPosition}`);
+    // Companion sessions inject their own playback params; pooled
+    // connections use the manager's shared position/speed state.
+    const positionMs = playback ? playback.positionMs : this._currentPosition;
+    if (positionMs) {
+      params.push(`positionMs=${positionMs}`);
     }
 
-    if (this._currentSpeed !== 1) {
-      const speed =
-        this._currentSpeed === 'unlimited' ? 0 : this._currentSpeed;
-      params.push(`speed=${speed}`);
+    const speed = playback ? playback.speed : this._currentSpeed;
+    if (speed !== 1) {
+      params.push(`speed=${speed === 'unlimited' ? 0 : speed}`);
     }
 
     params.push(`stream=${stream}`);
@@ -661,7 +807,9 @@ export class StreamManager extends Disposable {
     this._config.logger?.info?.(`[WEBRTC-DIAG] [${_diagKey}] one-time ticket fetched`, { ticketFetchMs: (performance.now() - _diagTicketStart).toFixed(1) + 'ms', elapsed: (performance.now() - _diagStart).toFixed(1) + 'ms' });
     params.push(`_ticket=${ticket}`);
 
-    if (this._config.useUnreliableDataChannel) {
+    // Fetch sessions force a reliable channel regardless of config: the
+    // encoded-sample pipeline's no-loss guarantee needs ordered SCTP.
+    if (this._config.useUnreliableDataChannel && !playback) {
       params.push('unreliableTransport=true');
     }
 

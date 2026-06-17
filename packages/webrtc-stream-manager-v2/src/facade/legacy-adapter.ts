@@ -13,6 +13,71 @@ import {
   TargetStream,
 } from '../types';
 
+/** A DC `timestamp` event: the epoch-ms and RTP readings of one instant. */
+export interface DcTimestampPair {
+  timestampMs: number;
+  rtpTimestamp: number;
+}
+
+/** 90 kHz SRTP video clock ticks per millisecond. */
+const RTP_TICKS_PER_MS = 90;
+
+/**
+ * RTP stepping back further than this means a timeline reset (reconnect
+ * restarts the clock near 0; a u32 wrap is indistinguishable), not the
+ * reordering jitter of an unreliable data channel.
+ */
+const RTP_RESET_BACKWARD_TICKS = 30_000 * RTP_TICKS_PER_MS;
+
+/** Beyond this gap from the nearest pair, the binding is stale — return null
+ *  so the caller falls back to its own anchor. */
+const MAX_BINDING_GAP_MS = 30_000;
+
+/**
+ * Maps a frame's rVFC `metadata.rtpTimestamp` to the epoch-ms displayed,
+ * interpolating from a rolling window of DC pairs (DC events and the SRTP
+ * track share one 90 kHz clock):
+ * `epochMs = pair.timestampMs + (rvfcRtp − pair.rtpTimestamp) / 90`
+ */
+export class RtpEpochBinder {
+  private static readonly MAX_PAIRS = 8;
+
+  private readonly pairs: DcTimestampPair[] = [];
+
+  push(pair: DcTimestampPair): void {
+    const newest = this.pairs[this.pairs.length - 1];
+    if (newest && pair.rtpTimestamp < newest.rtpTimestamp - RTP_RESET_BACKWARD_TICKS) {
+      // Timeline reset: pre-reset pairs would bind the new clock to old epochs.
+      this.pairs.length = 0;
+    }
+    this.pairs.push(pair);
+    if (this.pairs.length > RtpEpochBinder.MAX_PAIRS) {
+      this.pairs.shift();
+    }
+  }
+
+  /**
+   * Epoch-ms for an RTP timestamp, interpolated from the nearest DC pair
+   * (nearest, not last: the unreliable data channel can reorder events).
+   * Null when no pair is within {@link MAX_BINDING_GAP_MS}.
+   */
+  epochMsFor(rtpTimestamp: number): number | null {
+    let best: DcTimestampPair | undefined;
+    let bestGapTicks = Infinity;
+    for (const pair of this.pairs) {
+      const gapTicks = Math.abs(rtpTimestamp - pair.rtpTimestamp);
+      if (gapTicks < bestGapTicks) {
+        bestGapTicks = gapTicks;
+        best = pair;
+      }
+    }
+    if (!best || bestGapTicks > MAX_BINDING_GAP_MS * RTP_TICKS_PER_MS) {
+      return null;
+    }
+    return best.timestampMs + (rtpTimestamp - best.rtpTimestamp) / RTP_TICKS_PER_MS;
+  }
+}
+
 /**
  * Legacy facade that provides backward-compatible API matching the v1
  * WebRTCStreamManager. Wraps the v2 StreamManager singleton.
@@ -254,6 +319,9 @@ export class WebRTCStreamManager {
     return this._connection.connectionKey;
   }
 
+  /** Rolling DC-pair binding for {@link displayedEpochMs}. */
+  private readonly _rtpEpochBinder = new RtpEpochBinder();
+
   private constructor(private readonly _connection: CameraConnection) {
     this.currentPosition$ = new BehaviorSubject<number>(0);
 
@@ -263,10 +331,18 @@ export class WebRTCStreamManager {
     const unsubTimestamp = _connection.on(
       'timestamp',
       (detail: TimestampEventDetail) => {
-        if (detail.timestampMs !== undefined) {
-          this.currentPosition$.next(detail.timestampMs);
-        } else if (detail.timestamp !== undefined) {
-          this.currentPosition$.next(detail.timestamp * 1000);
+        const epochMs =
+          detail.timestampMs !== undefined
+            ? detail.timestampMs
+            : detail.timestamp !== undefined
+              ? detail.timestamp * 1000
+              : undefined;
+        if (epochMs === undefined) {
+          return;
+        }
+        this.currentPosition$.next(epochMs);
+        if (typeof detail.rtpTimestamp === 'number') {
+          this._rtpEpochBinder.push({ timestampMs: epochMs, rtpTimestamp: detail.rtpTimestamp });
         }
       },
     );
@@ -308,6 +384,15 @@ export class WebRTCStreamManager {
    */
   get currentPosition(): number {
     return this.currentPosition$.value;
+  }
+
+  /**
+   * Epoch-ms of the frame with the given rVFC `metadata.rtpTimestamp`. Null
+   * when no usable binding exists (no DC pairs, or reset/stale timeline) —
+   * callers then fall back to `currentPosition`.
+   */
+  displayedEpochMs(rvfcRtpTimestamp: number): number | null {
+    return this._rtpEpochBinder.epochMsFor(rvfcRtpTimestamp);
   }
 
   /** Whether this connection's server-side stream is paused. */

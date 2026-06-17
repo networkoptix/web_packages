@@ -140,6 +140,67 @@ vi.mock('../../src/core/camera-connection', () => ({
   CameraConnection: MockCameraConnection,
 }));
 
+// ─── Mock MediaFetchSession ─────────────────────────────────────────────────
+// Captures the config that StreamManager.createFetchSession builds so tests
+// can inspect the signaling URL factory and lifecycle wiring.
+
+const { fetchState, MockMediaFetchSession } = vi.hoisted(() => {
+  const fetchState = { instances: [] as any[] };
+
+  class MockMediaFetchSession {
+    config: {
+      sessionKey: string;
+      signalingUrl: () => string | Promise<string>;
+      iceServers?: unknown;
+      parentSignal?: AbortSignal;
+      logger?: unknown;
+      retry?: unknown;
+    };
+
+    private _ac = new AbortController();
+
+    // Real MediaFetchSession surface — spies so tests can assert that
+    // StreamManager's global controls never reach a fetch session. If a
+    // regression ever pooled sessions in the LRU, the broadcasts would call
+    // CameraConnection methods these mocks don't have and throw.
+    dispose = vi.fn().mockImplementation(() => {
+      this._ac.abort();
+    });
+    connect = vi.fn();
+    seek = vi.fn();
+    pause = vi.fn();
+    resume = vi.fn();
+
+    constructor(config: any) {
+      this.config = config;
+      if (config.parentSignal) {
+        config.parentSignal.addEventListener('abort', () => this.dispose(), {
+          signal: this._ac.signal,
+        });
+      }
+      fetchState.instances.push(this);
+    }
+
+    get sessionKey() {
+      return this.config.sessionKey;
+    }
+
+    get signal() {
+      return this._ac.signal;
+    }
+
+    get disposed() {
+      return this._ac.signal.aborted;
+    }
+  }
+
+  return { fetchState, MockMediaFetchSession };
+});
+
+vi.mock('../../src/core/media-fetch-session', () => ({
+  MediaFetchSession: MockMediaFetchSession,
+}));
+
 // ─── Imports (after mock setup) ─────────────────────────────────────────────
 
 import {
@@ -997,5 +1058,381 @@ describe('StreamManager', () => {
     // New connection should NOT have needsMse (cache was cleared).
     const conn = getMock(1);
     expect(conn.needsMse).toBe(false);
+  });
+});
+
+// ─── createFetchSession ─────────────────────────────────────────────────────
+
+describe('StreamManager.createFetchSession', () => {
+  beforeEach(() => {
+    vi.useFakeTimers({ toFake: ['setInterval', 'clearInterval', 'setTimeout', 'clearTimeout', 'performance'] });
+    mockState.instances = [];
+    fetchState.instances = [];
+    StreamManager.reset();
+  });
+
+  afterEach(() => {
+    StreamManager.reset();
+    vi.useRealTimers();
+  });
+
+  type FetchMock = InstanceType<typeof MockMediaFetchSession>;
+
+  function getFetchMock(index: number): FetchMock {
+    const inst = fetchState.instances[index];
+    if (!inst) {
+      throw new Error(
+        `No MockMediaFetchSession at index ${index} (have ${fetchState.instances.length})`,
+      );
+    }
+    return inst;
+  }
+
+  /** urlConfig with a oneTimeToken so URL building skips the real ticket fetch. */
+  function makeFetchUrlConfig(cameraId = 'cam1'): WebRtcUrlConfig {
+    return makeUrlConfig('sys1', cameraId, {
+      apiContext: { version: 'v2' as any, oneTimeToken: 'test-ticket' },
+    });
+  }
+
+  it('creates a session keyed off the connection key, linked to the manager', () => {
+    StreamManager.configure(TEST_CONFIG);
+    const sm = StreamManager.getInstance();
+
+    const session = sm.createFetchSession(makeFetchUrlConfig(), {
+      positionMs: 1_748_900_000_000,
+    });
+
+    expect(session).toBe(getFetchMock(0));
+    const config = getFetchMock(0).config;
+    expect(config.sessionKey).toBe('sys1:cam1:fetch#1');
+    expect(config.parentSignal).toBe(sm.signal);
+    expect(config.iceServers).toBeDefined();
+    expect(config.logger).toBe(TEST_CONFIG.logger);
+  });
+
+  it('passes the retry override through to the session', () => {
+    StreamManager.configure(TEST_CONFIG);
+    const sm = StreamManager.getInstance();
+
+    const retry = { maxAttempts: 1 };
+    sm.createFetchSession(makeFetchUrlConfig(), {
+      positionMs: 1_748_900_000_000,
+      retry,
+    });
+
+    expect(getFetchMock(0).config.retry).toBe(retry);
+  });
+
+  it('does NOT pool the session in the LRU cache', () => {
+    StreamManager.configure(TEST_CONFIG);
+    const sm = StreamManager.getInstance();
+
+    sm.createFetchSession(makeFetchUrlConfig(), {
+      positionMs: 1_748_900_000_000,
+    });
+
+    expect(sm.getConnection('sys1:cam1')).toBeNull();
+    expect(sm.getConnection('sys1:cam1:fetch')).toBeNull();
+  });
+
+  it('global position/speed/pause broadcasts never reach the session', () => {
+    StreamManager.configure(TEST_CONFIG);
+    const sm = StreamManager.getInstance();
+
+    sm.createFetchSession(makeFetchUrlConfig(), {
+      positionMs: 1_748_900_000_000,
+    });
+    const session = getFetchMock(0);
+
+    // Broadcasts iterate only the LRU pool. If a fetch session ever
+    // entered it, these calls would invoke CameraConnection methods the
+    // mock lacks (updatePosition/sendPause/...) and throw — and the
+    // real-surface spies below would have to stay uncalled regardless.
+    sm.updatePosition(123_456);
+    sm.updateCameraPosition({ id: 'cam1', systemId: 'sys1' }, 123_456);
+    sm.updateSpeed(4);
+    sm.setPlaying(false);
+    sm.setPlaying(true);
+    sm.nextFrame();
+
+    expect(session.seek).not.toHaveBeenCalled();
+    expect(session.pause).not.toHaveBeenCalled();
+    expect(session.resume).not.toHaveBeenCalled();
+    expect(session.dispose).not.toHaveBeenCalled();
+  });
+
+  it('bakes the explicit positionMs into the URL, ignoring shared manager state', async () => {
+    StreamManager.configure(TEST_CONFIG);
+    const sm = StreamManager.getInstance();
+
+    // Pollute the shared state that pooled connections use.
+    sm.updatePosition(99_999);
+    sm.updateSpeed(4);
+
+    sm.createFetchSession(makeFetchUrlConfig(), {
+      positionMs: 55_555,
+    });
+
+    const url = await getFetchMock(0).config.signalingUrl();
+    expect(url).toContain('wss://relay.example.com/rest/v3/devices/cam1/webrtc');
+    expect(url).toContain('positionMs=55555');
+    expect(url).not.toContain('positionMs=99999');
+    // Default speed 1 → no speed param (shared speed=4 must not leak in).
+    expect(url).not.toContain('speed=');
+    expect(url).toContain('deliveryMethod=mse');
+    expect(url).toContain('stream=0');
+    expect(url).toContain('_ticket=test-ticket');
+    // Fetch sessions never request analytics metadata.
+    expect(url).not.toContain('enableMetadata');
+  });
+
+  it('does not disturb the shared state used by pooled connections', async () => {
+    StreamManager.configure(TEST_CONFIG);
+    const sm = StreamManager.getInstance();
+
+    sm.updatePosition(99_999);
+    sm.updateSpeed(4);
+    sm.createFetchSession(makeFetchUrlConfig(), { positionMs: 55_555 });
+    await getFetchMock(0).config.signalingUrl();
+
+    // A pooled connection built afterwards still sees the shared state.
+    sm.connect(makeFetchUrlConfig());
+    const pooledUrl = await getMock(0).signalingUrlFn!(
+      AvailableStreams.SECONDARY,
+      'srtp',
+    );
+    expect(pooledUrl).toContain('positionMs=99999');
+    expect(pooledUrl).toContain('speed=4');
+  });
+
+  it('honors speed, stream, and deliveryMethod options', async () => {
+    StreamManager.configure(TEST_CONFIG);
+    const sm = StreamManager.getInstance();
+
+    sm.createFetchSession(makeFetchUrlConfig(), {
+      positionMs: 55_555,
+      speed: 2,
+      stream: AvailableStreams.SECONDARY,
+      deliveryMethod: 'srtp',
+    });
+    const url = await getFetchMock(0).config.signalingUrl();
+    expect(url).toContain('speed=2');
+    expect(url).toContain('stream=1');
+    expect(url).toContain('deliveryMethod=srtp');
+
+    // Different camera — its open slot is independent of cam1's.
+    sm.createFetchSession(makeFetchUrlConfig('cam2'), {
+      positionMs: 55_555,
+      speed: 'unlimited',
+    });
+    const unlimitedUrl = await getFetchMock(1).config.signalingUrl();
+    expect(unlimitedUrl).toContain('speed=0');
+  });
+
+  it('throws on a falsy positionMs (fetch sessions are archive-only)', () => {
+    StreamManager.configure(TEST_CONFIG);
+    const sm = StreamManager.getInstance();
+
+    expect(() =>
+      sm.createFetchSession(makeFetchUrlConfig(), { positionMs: 0 }),
+    ).toThrow('nonzero archive positionMs');
+  });
+
+  it('throws after the manager is disposed', () => {
+    StreamManager.configure(TEST_CONFIG);
+    const sm = StreamManager.getInstance();
+    sm.dispose();
+
+    expect(() =>
+      sm.createFetchSession(makeFetchUrlConfig(), {
+        positionMs: 1_748_900_000_000,
+      }),
+    ).toThrow('disposed');
+  });
+
+  // ── Per-camera session budget (newest-wins) ────────────────────────────
+
+  it('enforces the per-camera budget: a new session disposes the previous (newest-wins)', () => {
+    StreamManager.configure(TEST_CONFIG);
+    const sm = StreamManager.getInstance();
+
+    sm.createFetchSession(makeFetchUrlConfig(), { positionMs: 1_000 });
+    sm.createFetchSession(makeFetchUrlConfig(), { positionMs: 2_000 });
+
+    expect(getFetchMock(0).dispose).toHaveBeenCalledOnce();
+    expect(getFetchMock(1).dispose).not.toHaveBeenCalled();
+
+    sm.createFetchSession(makeFetchUrlConfig(), { positionMs: 3_000 });
+
+    expect(getFetchMock(1).dispose).toHaveBeenCalledOnce();
+    expect(getFetchMock(2).dispose).not.toHaveBeenCalled();
+  });
+
+  it('budget is per camera — sessions for different cameras coexist', () => {
+    StreamManager.configure(TEST_CONFIG);
+    const sm = StreamManager.getInstance();
+
+    sm.createFetchSession(makeFetchUrlConfig('cam1'), { positionMs: 1_000 });
+    sm.createFetchSession(makeFetchUrlConfig('cam2'), { positionMs: 1_000 });
+
+    expect(getFetchMock(0).dispose).not.toHaveBeenCalled();
+    expect(getFetchMock(1).dispose).not.toHaveBeenCalled();
+  });
+
+  it('deregisters on dispose — a disposed session is not re-disposed by the next create', () => {
+    const logger = { info: vi.fn(), warn: vi.fn(), error: vi.fn(), debug: vi.fn() };
+    StreamManager.configure({ ...TEST_CONFIG, logger });
+    const sm = StreamManager.getInstance();
+
+    const first = sm.createFetchSession(makeFetchUrlConfig(), {
+      positionMs: 1_000,
+    });
+    first.dispose();
+    expect(getFetchMock(0).dispose).toHaveBeenCalledOnce();
+
+    sm.createFetchSession(makeFetchUrlConfig(), { positionMs: 2_000 });
+
+    expect(getFetchMock(0).dispose).toHaveBeenCalledOnce();
+    expect(logger.warn).not.toHaveBeenCalled();
+  });
+
+  it('warns when superseding a live session', () => {
+    const logger = { info: vi.fn(), warn: vi.fn(), error: vi.fn(), debug: vi.fn() };
+    StreamManager.configure({ ...TEST_CONFIG, logger });
+    const sm = StreamManager.getInstance();
+
+    sm.createFetchSession(makeFetchUrlConfig(), { positionMs: 1_000 });
+    expect(logger.warn).not.toHaveBeenCalled();
+
+    sm.createFetchSession(makeFetchUrlConfig(), { positionMs: 2_000 });
+    expect(logger.warn).toHaveBeenCalledOnce();
+    expect(logger.warn).toHaveBeenCalledWith(
+      expect.stringContaining('sys1:cam1:fetch#1'),
+    );
+  });
+
+  it('gives each session a unique diag sessionKey', () => {
+    StreamManager.configure(TEST_CONFIG);
+    const sm = StreamManager.getInstance();
+
+    sm.createFetchSession(makeFetchUrlConfig(), { positionMs: 1_000 });
+    sm.createFetchSession(makeFetchUrlConfig(), { positionMs: 2_000 });
+
+    expect(getFetchMock(0).config.sessionKey).toBe('sys1:cam1:fetch#1');
+    expect(getFetchMock(1).config.sessionKey).toBe('sys1:cam1:fetch#2');
+  });
+
+  it('manager dispose cascades to live fetch sessions via parentSignal', () => {
+    StreamManager.configure(TEST_CONFIG);
+    const sm = StreamManager.getInstance();
+
+    sm.createFetchSession(makeFetchUrlConfig(), { positionMs: 1_000 });
+    sm.dispose();
+
+    expect(getFetchMock(0).dispose).toHaveBeenCalled();
+  });
+
+  // ── Per-camera open-rate limit ─────────────────────────────────────────
+
+  it('first open proceeds immediately; a re-open within the interval is delayed', async () => {
+    StreamManager.configure(TEST_CONFIG);
+    const sm = StreamManager.getInstance();
+
+    sm.createFetchSession(makeFetchUrlConfig(), { positionMs: 1_000 });
+    const firstUrl = await getFetchMock(0).config.signalingUrl();
+    expect(firstUrl).toContain('positionMs=1000');
+
+    sm.createFetchSession(makeFetchUrlConfig(), { positionMs: 2_000 });
+    let resolvedUrl: string | null = null;
+    const pending = Promise.resolve(getFetchMock(1).config.signalingUrl()).then(
+      (url) => {
+        resolvedUrl = url;
+        return url;
+      },
+    );
+
+    await vi.advanceTimersByTimeAsync(0);
+    expect(resolvedUrl).toBeNull();
+
+    await vi.advanceTimersByTimeAsync(2_000);
+    await pending;
+    expect(resolvedUrl).toContain('positionMs=2000');
+  });
+
+  it('the open-rate limit is per camera', async () => {
+    StreamManager.configure(TEST_CONFIG);
+    const sm = StreamManager.getInstance();
+
+    sm.createFetchSession(makeFetchUrlConfig('cam1'), { positionMs: 1_000 });
+    await getFetchMock(0).config.signalingUrl();
+
+    sm.createFetchSession(makeFetchUrlConfig('cam2'), { positionMs: 1_000 });
+    let resolved = false;
+    const pending = Promise.resolve(getFetchMock(1).config.signalingUrl()).then(
+      (url) => {
+        resolved = true;
+        return url;
+      },
+    );
+
+    await vi.advanceTimersByTimeAsync(0);
+    expect(resolved).toBe(true);
+    expect(await pending).toContain('positionMs=1000');
+  });
+
+  it('disposing a delayed session aborts its pending open', async () => {
+    StreamManager.configure(TEST_CONFIG);
+    const sm = StreamManager.getInstance();
+
+    sm.createFetchSession(makeFetchUrlConfig(), { positionMs: 1_000 });
+    await getFetchMock(0).config.signalingUrl();
+
+    const delayed = sm.createFetchSession(makeFetchUrlConfig(), {
+      positionMs: 2_000,
+    });
+    const rejected = vi.fn();
+    const pending = Promise.resolve(
+      getFetchMock(1).config.signalingUrl(),
+    ).catch(rejected);
+
+    delayed.dispose();
+    await vi.advanceTimersByTimeAsync(0);
+    await pending;
+
+    expect(rejected).toHaveBeenCalledWith(
+      expect.objectContaining({ name: 'AbortError' }),
+    );
+  });
+
+  it('an aborted waiter does not claim the open slot', async () => {
+    StreamManager.configure(TEST_CONFIG);
+    const sm = StreamManager.getInstance();
+
+    // First open claims the slot until t+interval.
+    sm.createFetchSession(makeFetchUrlConfig(), { positionMs: 1_000 });
+    await getFetchMock(0).config.signalingUrl();
+
+    // Second session starts waiting, then is superseded mid-wait.
+    sm.createFetchSession(makeFetchUrlConfig(), { positionMs: 2_000 });
+    const abortedWait = Promise.resolve(
+      getFetchMock(1).config.signalingUrl(),
+    ).catch(() => undefined);
+
+    sm.createFetchSession(makeFetchUrlConfig(), { positionMs: 3_000 });
+    let resolved = false;
+    const pending = Promise.resolve(getFetchMock(2).config.signalingUrl()).then(
+      (url) => {
+        resolved = true;
+        return url;
+      },
+    );
+
+    // The survivor opens at the ORIGINAL slot (one interval after the
+    // first open), not one interval per superseded predecessor.
+    await vi.advanceTimersByTimeAsync(2_000);
+    await abortedWait;
+    await pending;
+    expect(resolved).toBe(true);
   });
 });
