@@ -437,7 +437,9 @@ export class CameraConnection extends Disposable {
       ? this.baseMediaStream.getVideoTracks().find((t) => t.readyState === 'live')
       : undefined;
     if (baseTrack) {
-      this.swapManagedTrack(baseTrack);
+      // Existing base track — already paused/frozen when paused, not a fresh
+      // stream — so reveal it immediately as the inter-track fallback.
+      this.doSwapManagedTrack(baseTrack);
     }
 
     this.disposeUpgradeInternal();
@@ -496,6 +498,8 @@ export class CameraConnection extends Disposable {
 
   sendResume(): boolean {
     this._isPaused = false;
+    // CLOUD-17616: reveal any track deferred while paused — playing is fine now.
+    this.revealPendingVisibleTrack();
     if (this._needsBaseRebuild) {
       this._needsBaseRebuild = false;
       if (!this.basePc && !this.baseRetryAc) {
@@ -697,7 +701,7 @@ export class CameraConnection extends Disposable {
         // tear down a healthy MseRenderer. Replay path below is already gated.
         if (!this._isUpgraded && this._deliveryMethod !== 'mse') {
           this.attachBaseTrackEndedListener(detail.track, pcw);
-          this.swapManagedTrack(detail.track);
+          this.swapManagedTrack(detail.track, pcw);
           this.emit('track', {
             track: detail.track,
             streams: [this.managedStream],
@@ -781,7 +785,7 @@ export class CameraConnection extends Disposable {
       const track = pcw.activeStream.getVideoTracks()[0];
       if (track) {
         this.attachBaseTrackEndedListener(track, pcw);
-        this.swapManagedTrack(track);
+        this.swapManagedTrack(track, pcw);
         this.emit('track', {
           track,
           streams: [this.managedStream],
@@ -806,9 +810,17 @@ export class CameraConnection extends Disposable {
     if (this._isPaused) {
       pcw.sendPause();
     }
-    if (!this.currentPosition) return;
-    if (this._isPaused || this.latestServerTimestampMs !== undefined) {
+    // Seek only applies in archive (a position is set).
+    if (
+      this.currentPosition &&
+      (this._isPaused || this.latestServerTimestampMs !== undefined)
+    ) {
       pcw.sendSeek(this.latestServerTimestampMs ?? this.currentPosition);
+    }
+    // CLOUD-17616: pause has now been (re)applied to this PC, so a track this PC
+    // deferred while paused will show a frozen frame, not live-playing video.
+    if (this._isPaused) {
+      this.revealPendingVisibleTrack(pcw);
     }
   }
 
@@ -981,7 +993,7 @@ export class CameraConnection extends Disposable {
         this.attachUpgradeTrackEndedListener(detail.track, pcw);
         // Activate upgrade on first track (smooth swap from base).
         this._isUpgraded = true;
-        this.swapManagedTrack(detail.track);
+        this.swapManagedTrack(detail.track, pcw);
         this.emit('track', {
           track: detail.track,
           streams: [this.managedStream],
@@ -1028,7 +1040,7 @@ export class CameraConnection extends Disposable {
       const track = pcw.activeStream.getVideoTracks()[0];
       if (track) {
         this.attachUpgradeTrackEndedListener(track, pcw);
-        this.swapManagedTrack(track);
+        this.swapManagedTrack(track, pcw);
         this.emit('track', {
           track,
           streams: [this.managedStream],
@@ -1117,6 +1129,62 @@ export class CameraConnection extends Disposable {
   // ── Private: managed stream ──────────────────────────────────────────
 
   /**
+   * Track deferred by {@link swapManagedTrack} because the connection was paused
+   * when it arrived, together with the PC it came from. Revealed once that PC has
+   * been paused server-side ({@link resyncPausedState}) or on resume
+   * ({@link sendResume}). CLOUD-17616.
+   */
+  private _pendingVisibleTrack: MediaStreamTrack | null = null;
+  private _pendingVisiblePcw: PeerConnectionWrapper | null = null;
+
+  /**
+   * Make `newTrack` the visible track in the managed stream.
+   *
+   * CLOUD-17616: a freshly (re)connected or quality-upgraded PC streams from its
+   * SDP-baked position and plays on-screen until its dcopen-resync pauses it (see
+   * {@link resyncPausedState}). While paused that would show live-playing video even
+   * though the UI is paused. So when the connection is paused and the source PC has
+   * not been paused yet — its data channel is not open, so neither resyncPausedState
+   * nor sendPause has reached it — hold the current frozen frame and defer the swap.
+   * The deferred track is revealed once the PC is paused or playback resumes. The
+   * deferral is skipped when there is no current track to fall back on (avoids a
+   * blank tile), and for callers that pass no `pcw` (existing-base fallbacks, which
+   * are already frozen when paused).
+   */
+  private swapManagedTrack(
+    newTrack: MediaStreamTrack,
+    pcw?: PeerConnectionWrapper,
+  ): void {
+    const pcAlreadyPaused = pcw?.dataChannelOpen ?? false;
+    if (
+      this._isPaused &&
+      !pcAlreadyPaused &&
+      this.managedStream.getVideoTracks().length > 0
+    ) {
+      this._pendingVisibleTrack = newTrack;
+      this._pendingVisiblePcw = pcw ?? null;
+      return;
+    }
+    this.doSwapManagedTrack(newTrack);
+  }
+
+  /**
+   * Reveal a track deferred by {@link swapManagedTrack}. When triggered by a
+   * specific PC's resync, only reveal that PC's track — another PC's stream may
+   * still be playing. With no PC (resume), reveal unconditionally.
+   */
+  private revealPendingVisibleTrack(pcw?: PeerConnectionWrapper): void {
+    if (!this._pendingVisibleTrack) return;
+    if (pcw && this._pendingVisiblePcw && this._pendingVisiblePcw !== pcw) return;
+    const track = this._pendingVisibleTrack;
+    this.doSwapManagedTrack(track);
+    this.emit('track', {
+      track,
+      streams: [this.managedStream],
+    } as TrackEventDetail);
+  }
+
+  /**
    * Replace the video track on the managed stream so consumers keeping a
    * reference to it (via `srcObject`) see a seamless switch with no flash.
    *
@@ -1126,7 +1194,10 @@ export class CameraConnection extends Disposable {
    * guaranteeing zero black-frame gaps. A generation counter ensures that
    * stale deferred removals (from a previous call) are silently discarded.
    */
-  private swapManagedTrack(newTrack: MediaStreamTrack): void {
+  private doSwapManagedTrack(newTrack: MediaStreamTrack): void {
+    // A real swap supersedes any deferred one.
+    this._pendingVisibleTrack = null;
+    this._pendingVisiblePcw = null;
     const gen = ++this._swapGeneration;
 
     // Cancel any pending 'unmute' listener from a previous swap call.
@@ -1397,7 +1468,7 @@ export class CameraConnection extends Disposable {
       if (!this._isUpgraded) {
         const track = stream.getVideoTracks()[0];
         if (track) {
-          this.swapManagedTrack(track);
+          this.swapManagedTrack(track, this.basePc ?? undefined);
           this.emit('track', {
             track,
             streams: [this.managedStream],

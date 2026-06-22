@@ -1795,4 +1795,94 @@ describe('CameraConnection', () => {
 
     expect(newPcw.sendSeek).not.toHaveBeenCalled();
   });
+
+  // ── CLOUD-17616: pause-aware visible-track swap ──────────────────────
+  //
+  // A freshly (re)connected PC streams from its SDP-baked position and plays
+  // on-screen until its dcopen-resync pauses it (server `seek` === `play()`).
+  // While paused that track must NOT become the visible one until the PC has
+  // been paused, otherwise the camera keeps playing while the UI shows paused.
+
+  it('defers a fresh reconnect track while paused, then reveals it once the PC is paused on dcopen', async () => {
+    const { cc, lowPcw } = await setupWithLowConnected();
+
+    // A frame is on screen.
+    const first = makeMockStream('first');
+    lowPcw.simulateTrack(first.track, [first.stream]);
+    expect(cc.activeStream!.getVideoTracks()).toContain(first.track);
+
+    // User pauses.
+    cc.sendPause();
+
+    // A base reconnect (e.g. the live→archive seek from [Previous Chunk]) brings
+    // up a fresh PC whose data channel is not open yet.
+    cc.reconnect();
+    await vi.advanceTimersByTimeAsync(0);
+    const freshPcw = getMock(1);
+    freshPcw.simulateStateChange(PeerState.connected);
+    await vi.advanceTimersByTimeAsync(0);
+
+    // The fresh (playing) track is NOT shown — the frozen frame stays — and the
+    // fresh PC has not been paused yet.
+    const freshStream = makeMockStream('fresh');
+    freshPcw.simulateTrack(freshStream.track, [freshStream.stream]);
+    expect(cc.activeStream!.getVideoTracks()).toContain(first.track);
+    expect(cc.activeStream!.getVideoTracks()).not.toContain(freshStream.track);
+    expect(freshPcw.sendPause).not.toHaveBeenCalled();
+
+    // DC opens → resync pauses the fresh PC, then the deferred track is revealed.
+    freshPcw.simulateDcOpen();
+    expect(freshPcw.sendPause).toHaveBeenCalled();
+    expect(cc.activeStream!.getVideoTracks()).toContain(freshStream.track);
+    expect(cc.activeStream!.getVideoTracks()).not.toContain(first.track);
+  });
+
+  it('reveals a track deferred while paused when playback resumes', async () => {
+    const { cc, lowPcw } = await setupWithLowConnected();
+
+    const first = makeMockStream('first');
+    lowPcw.simulateTrack(first.track, [first.stream]);
+
+    cc.sendPause();
+
+    cc.reconnect();
+    await vi.advanceTimersByTimeAsync(0);
+    const freshPcw = getMock(1);
+    freshPcw.simulateStateChange(PeerState.connected);
+    await vi.advanceTimersByTimeAsync(0);
+    const fresh = makeMockStream('fresh');
+    freshPcw.simulateTrack(fresh.track, [fresh.stream]);
+
+    // Still deferred while paused (DC not open).
+    expect(cc.activeStream!.getVideoTracks()).not.toContain(fresh.track);
+
+    // Resume reveals it — playing is fine now.
+    cc.sendResume();
+    expect(cc.activeStream!.getVideoTracks()).toContain(fresh.track);
+  });
+
+  it('swaps immediately when the fresh PC is already paused (DC already open before the track)', async () => {
+    const { cc, lowPcw } = await setupWithLowConnected();
+
+    const first = makeMockStream('first');
+    lowPcw.simulateTrack(first.track, [first.stream]);
+
+    cc.sendPause();
+
+    cc.reconnect();
+    await vi.advanceTimersByTimeAsync(0);
+    const freshPcw = getMock(1);
+    freshPcw.simulateStateChange(PeerState.connected);
+    await vi.advanceTimersByTimeAsync(0);
+
+    // DC opens before the track arrives → resync already paused this PC.
+    freshPcw.simulateDcOpen();
+    expect(freshPcw.sendPause).toHaveBeenCalled();
+
+    const fresh = makeMockStream('fresh');
+    freshPcw.simulateTrack(fresh.track, [fresh.stream]);
+
+    // Already paused → no deferral; the (frozen) fresh track shows immediately.
+    expect(cc.activeStream!.getVideoTracks()).toContain(fresh.track);
+  });
 });
