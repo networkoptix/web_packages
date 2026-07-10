@@ -59,6 +59,7 @@ class MockFetcher {
   state = 'paused';
   stitchConflicts = 0;
   probing = false;
+  currentAskMs: number | null = null;
 
   openWindow = vi.fn().mockResolvedValue(undefined);
   openAtAnchor = vi.fn().mockResolvedValue(undefined);
@@ -235,6 +236,78 @@ describe('FrameStepper', () => {
 
     fetcher.emit('windowcomplete');
     expect(fetcher.extendBack).toHaveBeenCalled();
+  });
+
+  it('aims at the cursor, not the distant floor, when the cursor sits below all coverage', async () => {
+    const { stepper, fetcher } = makeStepper();
+    stepper.enterStepping(T0);
+
+    // Scrub-while-paused far below the covered region; the new anchor's
+    // entry GOP has not landed, so the store still holds only the T0 island.
+    stepper.reanchor(T0 - 60_000);
+    fetcher.openAtAnchor.mockClear();
+
+    stepper.stepPrev();
+    await flush();
+
+    // Extending would only march the T0 island backward one window per pass
+    // (superseding the entry aim each time) — the step must re-aim instead.
+    expect(fetcher.extendBack).not.toHaveBeenCalled();
+    expect(fetcher.openAtAnchor).toHaveBeenCalledTimes(1);
+    const aimedMs = fetcher.openAtAnchor.mock.calls[0][0] as number;
+    expect(Math.abs(aimedMs - (T0 - 60_000))).toBeLessThan(1);
+  });
+
+  it('waits for an in-flight aim at the cursor instead of superseding it, then replays the step', async () => {
+    const { stepper, fetcher, events } = makeStepper();
+    const store = fetcher.store!;
+    stepper.enterStepping(T0);
+
+    stepper.reanchor(T0 - 60_000);
+    fetcher.openAtAnchor.mockClear();
+    // The re-anchor's entry aim is still collecting toward the new cursor.
+    fetcher.state = 'collecting';
+    fetcher.currentAskMs = T0 - 60_000;
+
+    stepper.stepPrev();
+    await flush();
+
+    // Superseding the live aim would drop its delivery; a paused re-seek to
+    // the held position may draw nothing fresh — the step must wait.
+    expect(fetcher.openAtAnchor).not.toHaveBeenCalled();
+    expect(fetcher.extendBack).not.toHaveBeenCalled();
+
+    // The entry GOP lands and the aim completes: the queued step replays.
+    const spanMs = (5 * 512 * 1000) / TIMESCALE;
+    store.insertFragment(
+      {
+        seq: 3, trackId: 1, baseDts: 50 * 512,
+        samples: Array.from({ length: 5 }, (_, i) => ({
+          dts: 50 * 512 + i * 512, pts: 50 * 512 + i * 512,
+          duration: 512, key: i === 0, bytes: new Uint8Array(100),
+        })),
+      },
+      { timestampMs: T0 - 60_000 - spanMs, rtpTimestamp: 50 * 512 },
+      0,
+    );
+    fetcher.state = 'paused';
+    fetcher.currentAskMs = null;
+    fetcher.emit('windowcomplete');
+    await flush();
+
+    expect(events.frame).toHaveLength(1);
+    const painted = events.frame[0] as { epochMs: number };
+    expect(painted.epochMs).toBeLessThan(T0 - 60_000);
+    expect(painted.epochMs).toBeGreaterThan(T0 - 60_000 - spanMs - 1);
+  });
+
+  it('stands proactive maintenance down while the cursor sits below all coverage', () => {
+    const { stepper, fetcher } = makeStepper();
+    stepper.enterStepping(T0 - 60_000);
+
+    fetcher.emit('windowcomplete');
+
+    expect(fetcher.extendBack).not.toHaveBeenCalled();
   });
 
   it('stepPrev paints the actual previous sample and walks backward', async () => {

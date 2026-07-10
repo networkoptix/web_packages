@@ -256,6 +256,20 @@ export class BackfillFetcher extends Disposable {
     return this.probeAim && this._state === 'collecting';
   }
 
+  /**
+   * The position (epoch ms) the in-flight aim is collecting toward, or null
+   * when nothing is in flight. Lets an owner about to aim at the same target
+   * wait for the live aim instead of superseding it — a re-aim's generation
+   * bump drops the delivery already under way, and a paused re-seek to the
+   * position the session already holds may draw no fresh delivery at all.
+   */
+  get currentAskMs(): number | null {
+    if (this._state !== 'opening' && this._state !== 'collecting') {
+      return null;
+    }
+    return this.window?.toMs ?? null;
+  }
+
   /** mfhd discontinuities observed within delivery runs (diagnostic). */
   get seqGaps(): number {
     return this._seqGaps;
@@ -366,17 +380,19 @@ export class BackfillFetcher extends Disposable {
   }
 
   /**
-   * Extend coverage backward from the oldest covered position, overlapping
-   * existing coverage so the windows stitch.
+   * Extend coverage backward, overlapping existing coverage so the windows
+   * stitch. Defaults to the oldest covered position; a caller working a
+   * specific coverage island (the cursor's, when older detached islands
+   * exist) passes that island's floor instead.
    */
-  async extendBack(): Promise<void> {
+  async extendBack(floorMs?: number): Promise<void> {
     this.throwIfDisposed();
     const store = this._store;
     const coverage = store?.coverage() ?? [];
     if (!store || coverage.length === 0) {
       throw new Error('extendBack before any coverage');
     }
-    const oldestMs = store.ticksToEpochMs(coverage[0].startTicks);
+    const oldestMs = floorMs ?? store.ticksToEpochMs(coverage[0].startTicks);
     await this.openWindow(oldestMs + this.config.overlapMs);
   }
 

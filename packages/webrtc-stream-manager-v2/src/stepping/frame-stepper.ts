@@ -372,7 +372,27 @@ export class FrameStepper {
         return;
       }
       this.beginLoading(direction);
-      this.userExtendFloorTicks = store.coverage()[0]?.startTicks ?? null;
+      const floorTicks = store.coverage()[0]?.startTicks ?? null;
+      if (floorTicks !== null && floorTicks > this.cursorTicks) {
+        // Cursor below ALL coverage (a re-anchor whose entry GOP hasn't
+        // landed yet): extending the floor would march a distant island
+        // toward the cursor one window at a time — and supersede the entry
+        // aim on every pass. Aim at the cursor itself instead.
+        const cursorMs = store.ticksToEpochMs(this.cursorTicks);
+        const askMs = this.fetcher.currentAskMs;
+        if (askMs !== null && Math.abs(askMs - cursorMs) <= 1) {
+          // The entry aim for this exact target is already in flight —
+          // superseding it drops its delivery, and a paused re-seek to the
+          // position the session already holds may draw nothing fresh. The
+          // queued step replays when the aim completes (or stalls out).
+          return;
+        }
+        void this.fetcher.openAtAnchor(cursorMs).catch(() => {
+          this.disable('cannot aim fetch window');
+        });
+        return;
+      }
+      this.userExtendFloorTicks = floorTicks;
       void this.fetcher.extendBack().catch(() => {
         void this.fetcher.openWindow(store.ticksToEpochMs(this.cursorTicks)).catch(() => {
           this.disable('cannot aim fetch window');
@@ -524,6 +544,12 @@ export class FrameStepper {
       && coverage[0].startTicks >= this.noOlderDataFloorTicks) {
       return;
     }
+    // No island at or below the cursor (a re-anchor whose entry hasn't
+    // landed): there is no runway to maintain — the step path aims at the
+    // cursor on demand.
+    if (coverage[0].startTicks > this.cursorTicks) {
+      return;
+    }
     // Headroom within the cursor's own interval: a detached older island
     // must not masquerade as runway.
     let interval = coverage[0];
@@ -540,11 +566,13 @@ export class FrameStepper {
     }
     // No backward growth since the last proactive extend (archive start or
     // starved aim) — re-aiming would only drop in-flight delivery again.
-    if (this.lastExtendFloorTicks !== null && coverage[0].startTicks >= this.lastExtendFloorTicks) {
+    if (this.lastExtendFloorTicks !== null && interval.startTicks >= this.lastExtendFloorTicks) {
       return;
     }
-    this.lastExtendFloorTicks = coverage[0].startTicks;
-    void this.fetcher.extendBack().catch(() => {
+    this.lastExtendFloorTicks = interval.startTicks;
+    // Grow the cursor's own island: the default (global-oldest) floor belongs
+    // to a detached older island whose growth never improves this runway.
+    void this.fetcher.extendBack(store.ticksToEpochMs(interval.startTicks)).catch(() => {
       // Out of runway without a session is the next step's honest loading.
     });
   }
