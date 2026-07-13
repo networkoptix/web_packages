@@ -595,6 +595,23 @@ describe('CameraConnection', () => {
     expect(cc.state).toBe(PeerState.connected);
   });
 
+  it('updatePosition(0) while live sends no DC seek (CLOUD-18232)', async () => {
+    // A recreated consumer (e.g. the layouts timeline remounting across a
+    // fullscreen transition) fans out updatePosition(0) as its initial state.
+    // The server parses {"seek":0} as an absolute epoch-0 archive position —
+    // NOT live — flipping every provider to archive-at-1970 and silently
+    // halting the stream. Live→live must therefore send nothing.
+    const { cc, lowPcw } = await setupWithLowConnected();
+    // Default config — currentPosition starts at 0 (live).
+
+    cc.updatePosition(0);
+
+    expect(lowPcw.sendSeek).not.toHaveBeenCalled();
+    expect(lowPcw.disposed).toBe(false);
+    expect(mockState.instances).toHaveLength(1);
+    expect(cc.state).toBe(PeerState.connected);
+  });
+
   it('initialPosition seeds tracking — matching first updatePosition does not spuriously reconnect', async () => {
     // StreamManager passes its `_currentPosition` as `initialPosition`. If the
     // first updatePosition call from StreamManager echoes that seed, we must

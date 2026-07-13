@@ -480,6 +480,11 @@ export class CameraConnection extends Disposable {
       this.reconnectForPlaybackChange();
       return;
     }
+    // Live→live: nothing to seek. The server parses {"seek":0} as an absolute
+    // epoch-0 archive position (only negative values map to DATETIME_NOW), so
+    // sending it would silently flip every provider to archive-at-1970 and
+    // halt the stream (CLOUD-18232).
+    if (willBeLive) return;
     this.forEachPc((pcw) => pcw.sendSeek(positionMs));
   }
 

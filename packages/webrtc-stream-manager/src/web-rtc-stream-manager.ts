@@ -867,6 +867,14 @@ export class WebRTCStreamManager {
      * @param clearStream - stop current stream immediately
      */
     updatePosition(position: number, clearStream = false): boolean {
+        // Live→live is a no-op: there is nothing to seek. The server parses
+        // {"seek":0} as an absolute epoch-0 archive position (only negative
+        // values map to DATETIME_NOW), which flips the provider to
+        // archive-at-1970 and silently halts the stream (CLOUD-18232).
+        // clearStream callers explicitly want a restart, so they bypass this.
+        if (position === 0 && this.isLive && !clearStream) {
+            return !!this.peerConnection?.remoteDataChannel;
+        }
         if (clearStream) {
             this.stopCurrentStream();
             this.mediaStream$.next([null, null, this]);
