@@ -58,6 +58,8 @@ const { mockState, MockStreamManager, MockCameraConnection } = vi.hoisted(() => 
 
     updatePosition = vi.fn();
     updateSpeed = vi.fn();
+    activeStreamIndex = 1;
+    getPlayingCodec = vi.fn().mockResolvedValue('video/H265');
     setVideoElement = vi.fn();
     dispose = vi.fn().mockResolvedValue(undefined);
   }
@@ -757,6 +759,31 @@ describe('WebRTCStreamManager (legacy facade)', () => {
       const instance = WebRTCStreamManager.getInstance({ id: 'cam1', systemId: 'sys1' })!;
 
       expect(instance.cameraId).toBe('sys1:cam1');
+    });
+  });
+
+  // ── Playing stream identity & codec (delegation) ─────────────────────
+
+  describe('instance currentStream() / getPlayingCodec()', () => {
+    it('currentStream() returns the connection activeStreamIndex', () => {
+      WebRTCStreamManager.connect(makeUrlConfig('sys1', 'cam1'));
+      const instance = WebRTCStreamManager.getInstance({ id: 'cam1', systemId: 'sys1' })!;
+
+      expect(instance.currentStream()).toBe(1);
+
+      const connection = mockState.connections.get('sys1:cam1');
+      connection.activeStreamIndex = 0;
+      expect(instance.currentStream()).toBe(0);
+    });
+
+    it('getPlayingCodec() delegates to the connection', async () => {
+      WebRTCStreamManager.connect(makeUrlConfig('sys1', 'cam1'));
+      const instance = WebRTCStreamManager.getInstance({ id: 'cam1', systemId: 'sys1' })!;
+
+      await expect(instance.getPlayingCodec()).resolves.toBe('video/H265');
+
+      const connection = mockState.connections.get('sys1:cam1');
+      expect(connection.getPlayingCodec).toHaveBeenCalled();
     });
   });
 });

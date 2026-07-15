@@ -7,6 +7,7 @@ import {
   isMseSupported,
   browserSupportsH265WebRTC,
   _resetH265Cache,
+  extractPlayingCodecMime,
 } from '../../src/utils/codecs';
 import { KnownCodec } from '../../src/types';
 
@@ -143,5 +144,50 @@ describe('codecRequiresMse', () => {
     expect(codecRequiresMse(1)).toBe(false);
     expect(codecRequiresMse(172)).toBe(false);
     expect(codecRequiresMse(174)).toBe(false);
+  });
+});
+
+describe('extractPlayingCodecMime', () => {
+  const statsMap = (reports: Record<string, unknown>[]): Map<string, unknown> =>
+    new Map(reports.map((report, i) => {
+      const id = (report as { id?: string }).id ?? `report-${i}`;
+      return [id, { id, ...report }];
+    }));
+
+  it('resolves the video codec mime via the inbound-rtp codecId', () => {
+    const stats = statsMap([
+      { type: 'codec', id: 'codec-audio', mimeType: 'audio/opus' },
+      { type: 'codec', id: 'codec-video', mimeType: 'video/H264' },
+      { type: 'inbound-rtp', kind: 'video', codecId: 'codec-video' },
+      { type: 'inbound-rtp', kind: 'audio', codecId: 'codec-audio' },
+    ]);
+    expect(extractPlayingCodecMime(stats as unknown as RTCStatsReport)).toBe('video/H264');
+  });
+
+  it('reports H265 when the delivered track is H265', () => {
+    const stats = statsMap([
+      { type: 'codec', id: 'codec-video', mimeType: 'video/H265' },
+      { type: 'inbound-rtp', kind: 'video', codecId: 'codec-video' },
+    ]);
+    expect(extractPlayingCodecMime(stats as unknown as RTCStatsReport)).toBe('video/H265');
+  });
+
+  it('returns empty string when there is no inbound video report', () => {
+    const stats = statsMap([
+      { type: 'codec', id: 'codec-audio', mimeType: 'audio/opus' },
+      { type: 'inbound-rtp', kind: 'audio', codecId: 'codec-audio' },
+    ]);
+    expect(extractPlayingCodecMime(stats as unknown as RTCStatsReport)).toBe('');
+  });
+
+  it('returns empty string when the codec report is missing', () => {
+    const stats = statsMap([
+      { type: 'inbound-rtp', kind: 'video', codecId: 'codec-video' },
+    ]);
+    expect(extractPlayingCodecMime(stats as unknown as RTCStatsReport)).toBe('');
+  });
+
+  it('returns empty string for empty stats', () => {
+    expect(extractPlayingCodecMime(new Map() as unknown as RTCStatsReport)).toBe('');
   });
 });

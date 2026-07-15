@@ -83,3 +83,29 @@ export function browserSupportsH265WebRTC(): boolean {
 export function _resetH265Cache(): void {
   _h265WebRTCSupport = undefined;
 }
+
+/**
+ * Extract the mime type of the video codec actually being delivered from an
+ * RTCStatsReport: the `inbound-rtp` video report's `codecId` points at the
+ * `codec` report holding the negotiated mime (e.g. `video/H264`).
+ *
+ * Unlike the camera's mediaStreams config this reflects the played media, so
+ * it stays correct for archive chunks recorded with a different codec.
+ *
+ * @returns The codec mime type, or `''` when it cannot be determined.
+ */
+export function extractPlayingCodecMime(stats: RTCStatsReport): string {
+  let codecId = '';
+  const codecMimes = new Map<string, string>();
+
+  stats.forEach((report) => {
+    if (report.type === 'inbound-rtp' && (report as { kind?: string }).kind === 'video') {
+      codecId = (report as { codecId?: string }).codecId ?? '';
+    }
+    if (report.type === 'codec') {
+      codecMimes.set(report.id, (report as { mimeType?: string }).mimeType ?? '');
+    }
+  });
+
+  return (codecId && codecMimes.get(codecId)) || '';
+}

@@ -971,6 +971,41 @@ export class WebRTCStreamManager {
     }
 
     /**
+     * Returns the codec mime of the video actually being delivered: the MSE
+     * mime when in MSE mode, otherwise the negotiated video codec from the
+     * peer connection's stats (`inbound-rtp` → `codecId` → codec report).
+     *
+     * Unlike the camera's mediaStreams config this reflects the played media,
+     * so it stays correct for archive chunks recorded with a different codec.
+     *
+     * @returns Promise<string> - codec mime, or '' when unknown
+     */
+    public async getPlayingCodec(): Promise<string> {
+        if (this.usingMse && this.mimeType) {
+            return this.mimeType;
+        }
+        if (!this.peerConnection?.getStats) {
+            return '';
+        }
+        try {
+            const stats = await this.peerConnection.getStats();
+            let codecId = '';
+            const codecMimes = new Map<string, string>();
+            stats.forEach(report => {
+                if (report.type === 'inbound-rtp' && (report as { kind?: string }).kind === 'video') {
+                    codecId = (report as { codecId?: string }).codecId ?? '';
+                }
+                if (report.type === 'codec') {
+                    codecMimes.set(report.id, (report as { mimeType?: string }).mimeType ?? '');
+                }
+            });
+            return (codecId && codecMimes.get(codecId)) || '';
+        } catch {
+            return '';
+        }
+    }
+
+    /**
      * Checks if any players connected to an WebRtcStreamManager instance are currently playing.
      * @returns boolean
      */

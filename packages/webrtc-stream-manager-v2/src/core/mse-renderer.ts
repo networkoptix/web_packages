@@ -113,6 +113,11 @@ export class MseRenderer extends Disposable {
     return this._stream;
   }
 
+  /** The mime type this renderer decodes (i.e. the codec actually playing). */
+  get mimeType(): string {
+    return this.mime;
+  }
+
   // ── Public API ──────────────────────────────────────────────────────────
 
   /**

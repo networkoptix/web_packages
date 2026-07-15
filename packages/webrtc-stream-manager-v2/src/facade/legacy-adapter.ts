@@ -401,6 +401,22 @@ export class WebRTCStreamManager {
   }
 
   /**
+   * Encoder index of the stream currently being played (v1-compatible).
+   * 0 = primary, 1 = secondary.
+   */
+  currentStream(): 0 | 1 {
+    return this._connection.activeStreamIndex as 0 | 1;
+  }
+
+  /**
+   * Codec mime of the video actually being delivered (MSE mime or the
+   * negotiated codec from PC stats). Resolves to `''` when unknown.
+   */
+  getPlayingCodec(): Promise<string> {
+    return this._connection.getPlayingCodec();
+  }
+
+  /**
    * Update playback position for this specific camera.
    * Returns true if the data channel was used.
    */

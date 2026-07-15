@@ -9,7 +9,7 @@ import {
 } from '../strategies/quality-monitor';
 import { withRetry, classifyError, type RetryConfig } from '../strategies/retry-policy';
 import { linkSignal } from '../utils/abort-helpers';
-import { isMseSupported } from '../utils/codecs';
+import { extractPlayingCodecMime, isMseSupported } from '../utils/codecs';
 import { diagTracker } from '../utils/diag-tracker';
 import {
   AvailableStreams,
@@ -290,6 +290,34 @@ export class CameraConnection extends Disposable {
   /** Whether the upgrade connection is currently the active stream. */
   get isHighRes(): boolean {
     return this._isUpgraded;
+  }
+
+  /**
+   * Encoder index of the stream currently being played: the base stream until
+   * the upgrade track becomes active, then the upgrade stream.
+   */
+  get activeStreamIndex(): AvailableStreams {
+    return this._isUpgraded ? this.upgradeStream : this.baseStream;
+  }
+
+  /**
+   * Codec mime of the video actually being delivered: the MSE mime when in
+   * MSE mode, otherwise the negotiated codec from the active peer connection's
+   * stats. Resolves to `''` when it cannot be determined (e.g. no connection
+   * or stats not ready yet).
+   */
+  async getPlayingCodec(): Promise<string> {
+    if (this.mseRenderer && !this.mseRenderer.disposed) {
+      return this.mseRenderer.mimeType;
+    }
+    const pc = this.activePc;
+    if (!pc) return '';
+    try {
+      return extractPlayingCodecMime(await pc.getStats());
+    } catch {
+      // getStats can fail while the PC is closing — report unknown.
+      return '';
+    }
   }
 
   /** The user's target stream preference for this connection. */

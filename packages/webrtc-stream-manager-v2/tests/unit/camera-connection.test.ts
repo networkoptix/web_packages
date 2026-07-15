@@ -224,8 +224,12 @@ const { mockMseState, MockMseRenderer } = vi.hoisted(() => {
       );
     }
 
-    constructor(_config: { mime: string }) {
+    constructor(private readonly _config: { mime: string }) {
       mockMseState.instances.push(this);
+    }
+
+    get mimeType(): string {
+      return this._config.mime;
     }
   }
 
@@ -240,7 +244,8 @@ vi.mock('../../src/core/mse-renderer', () => ({
 
 const mockIsMseSupported = vi.fn().mockReturnValue(true);
 
-vi.mock('../../src/utils/codecs', () => ({
+vi.mock('../../src/utils/codecs', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('../../src/utils/codecs')>()),
   isMseSupported: () => mockIsMseSupported(),
 }));
 
@@ -1901,5 +1906,67 @@ describe('CameraConnection', () => {
 
     // Already paused → no deferral; the (frozen) fresh track shows immediately.
     expect(cc.activeStream!.getVideoTracks()).toContain(fresh.track);
+  });
+
+  // ── Playing stream identity & codec ──────────────────────────────────
+
+  it('activeStreamIndex reports the base stream before any upgrade', async () => {
+    const { cc } = await setupWithLowConnected();
+    expect(cc.activeStreamIndex).toBe(AvailableStreams.SECONDARY);
+  });
+
+  it('activeStreamIndex reports PRIMARY when constructed with initialStream PRIMARY', async () => {
+    const cc = new CameraConnection({
+      ...TEST_CONFIG,
+      initialStream: AvailableStreams.PRIMARY,
+    });
+    await vi.advanceTimersByTimeAsync(0);
+    expect(cc.activeStreamIndex).toBe(AvailableStreams.PRIMARY);
+  });
+
+  it('activeStreamIndex follows the upgrade once its track is active', async () => {
+    const { cc, lowPcw } = await setupWithLowConnected();
+    const lowMock = makeMockStream('low');
+    lowPcw.simulateTrack(lowMock.track, [lowMock.stream]);
+
+    cc.requestHighRes();
+    await vi.advanceTimersByTimeAsync(0);
+    const highPcw = getMock(1);
+    highPcw.simulateStateChange(PeerState.connected);
+    await vi.advanceTimersByTimeAsync(0);
+
+    expect(cc.activeStreamIndex).toBe(AvailableStreams.SECONDARY);
+
+    const highMock = makeMockStream('high');
+    highPcw.simulateTrack(highMock.track, [highMock.stream]);
+
+    expect(cc.activeStreamIndex).toBe(AvailableStreams.PRIMARY);
+  });
+
+  it('getPlayingCodec resolves the delivered codec mime from active PC stats', async () => {
+    const { cc, lowPcw } = await setupWithLowConnected();
+    lowPcw.getStats.mockResolvedValue(
+      new Map<string, unknown>([
+        ['codec-video', { id: 'codec-video', type: 'codec', mimeType: 'video/H264' }],
+        ['rtp-video', { id: 'rtp-video', type: 'inbound-rtp', kind: 'video', codecId: 'codec-video' }],
+      ]),
+    );
+    await expect(cc.getPlayingCodec()).resolves.toBe('video/H264');
+  });
+
+  it('getPlayingCodec returns the MSE mime when delivering via MSE', async () => {
+    const cc = new CameraConnection({ ...TEST_CONFIG, needsMse: true });
+    await vi.advanceTimersByTimeAsync(0);
+    const basePcw = getMock(0);
+    basePcw.simulateStateChange(PeerState.connected);
+    await vi.advanceTimersByTimeAsync(0);
+    basePcw.simulateDeliveryMethod({ method: 'mse', mime: 'video/mp4; codecs="hev1.1.6.L93.B0"' });
+
+    await expect(cc.getPlayingCodec()).resolves.toBe('video/mp4; codecs="hev1.1.6.L93.B0"');
+  });
+
+  it('getPlayingCodec resolves empty when stats hold no video codec', async () => {
+    const { cc } = await setupWithLowConnected();
+    await expect(cc.getPlayingCodec()).resolves.toBe('');
   });
 });
