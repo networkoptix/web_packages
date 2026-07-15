@@ -40,12 +40,15 @@ describe('RadassController', () => {
   let cameras: Map<string, MockCamera>;
   let directives: Map<string, 'high' | 'low'>;
   let config: RadassConfig;
+  /** Controls the host's isPlaying(); default true. Flip to false to test pause. */
+  let playing: boolean;
 
   beforeEach(() => {
     vi.useFakeTimers({ toFake: ['setInterval', 'clearInterval', 'setTimeout', 'clearTimeout', 'performance'] });
     cameras = new Map();
     directives = new Map();
     config = { ...DEFAULT_RADASS_CONFIG };
+    playing = true;
 
     controller = new RadassController(config, {
       getCameraInfo: (key) => {
@@ -64,6 +67,7 @@ describe('RadassController', () => {
       applyDirective: (key, quality) => {
         directives.set(key, quality);
       },
+      isPlaying: () => playing,
     });
   });
 
@@ -524,6 +528,7 @@ describe('RadassController', () => {
           };
         },
         applyDirective: (key, quality) => { directives.set(key, quality); },
+        isPlaying: () => true,
       });
 
       // 3 cameras, all HQ — only 2 should remain
@@ -1221,6 +1226,7 @@ describe('RadassController', () => {
       controller = new RadassController(config, {
         getCameraInfo: getCameraInfoSpy,
         applyDirective: (key, quality) => { directives.set(key, quality); },
+        isPlaying: () => true,
       });
 
       // Register 8 cameras (enough to trigger cap enforcement path)
@@ -1242,6 +1248,361 @@ describe('RadassController', () => {
 
       // Assert getCameraInfo was called exactly 8 times (once per camera in the pre-fetch)
       expect(getCameraInfoSpy).toHaveBeenCalledTimes(8);
+    });
+  });
+
+  describe('CLOUD-18038: resume auto evaluation after manual LOW → AUTO', () => {
+    it('promotes a large healthy camera back to HQ after the user returns it from LOW to AUTO', () => {
+      const cam = makeMockCamera({
+        connectionKey: 'cam-1',
+        elementHeight: 400, // well above hysteresis threshold (230)
+        viewportAreaFraction: 0.15, // below the forced-HQ viewport fraction
+      });
+      cameras.set('cam-1', cam);
+      controller.registerCamera('cam-1');
+      controller.getState('cam-1')!.registeredAt = 0;
+
+      // Auto: the large camera is promoted to HQ on its first post-grace tick.
+      vi.advanceTimersByTime(config.recentlyAddedDelayMs);
+      const state = controller.getState('cam-1')!;
+      expect(state.currentQuality).toBe('high');
+
+      // User right-clicks → Set resolution to Low.
+      cam.targetStream = TargetStream.LOW;
+      tick();
+      expect(state.currentQuality).toBe('low');
+      expect(state.lqReason).toBe(LqReason.Manual);
+
+      // User sets resolution back to Auto.
+      cam.targetStream = TargetStream.AUTO;
+      tick();
+
+      // RADASS must resume: the large, healthy camera returns to HQ.
+      expect(state.currentQuality).toBe('high');
+      expect(state.lqReason).toBe(LqReason.None);
+    });
+
+    it('leaves a small camera in LQ (without a stale Manual reason) after LOW → AUTO', () => {
+      const cam = makeMockCamera({
+        connectionKey: 'cam-1',
+        elementHeight: 120, // below small-item threshold (171) → should stay LQ in AUTO
+        viewportAreaFraction: 0.05,
+      });
+      cameras.set('cam-1', cam);
+      controller.registerCamera('cam-1');
+      controller.getState('cam-1')!.registeredAt = 0;
+
+      // Manual LOW.
+      cam.targetStream = TargetStream.LOW;
+      vi.advanceTimersByTime(config.recentlyAddedDelayMs);
+      tick();
+      const state = controller.getState('cam-1')!;
+      expect(state.currentQuality).toBe('low');
+      expect(state.lqReason).toBe(LqReason.Manual);
+
+      // Back to AUTO: small camera correctly stays LQ, but the Manual reason
+      // must be cleared so it's a normal size-driven decision, not a stuck lock.
+      cam.targetStream = TargetStream.AUTO;
+      tick();
+      expect(state.currentQuality).toBe('low');
+      expect(state.lqReason).not.toBe(LqReason.Manual);
+    });
+  });
+
+  describe('CLOUD-18327: no spurious HQ re-promotion during sustained bad MOS', () => {
+    it('keeps a healthy-MOS AUTO camera in LQ (no HQ oscillation, no anti-thrash lock) while another camera has sustained bad MOS, then promotes it once MOS recovers', () => {
+      // cam-bad: the struggling connection. Forced HQ (fullscreen / viewport > 50%)
+      // so Pass 1 never demotes it and it never competes for the promotion slot; its
+      // MOS stays bad for the whole struggle window → the system is "struggling".
+      const camBad = makeMockCamera({
+        connectionKey: 'cam-bad',
+        elementHeight: 600,
+        elementArea: 1000 * 600,
+        viewportAreaFraction: 0.6, // > forceHighViewportFraction (0.50) → forced HQ
+        snapshot: { mos: 2.0, focus: 3, stalled: false }, // sustained bad MOS
+      });
+      // cam-good: normal AUTO camera, its OWN MOS healthy the entire time, tall
+      // enough (> hysteresis 230) to be promotable, and the smallest HQ so Pass 1
+      // demotes it first when the system struggles.
+      const camGood = makeMockCamera({
+        connectionKey: 'cam-good',
+        elementHeight: 300,
+        elementArea: 400 * 300,
+        viewportAreaFraction: 0.15,
+        snapshot: { mos: 5.0, focus: 3, stalled: false }, // healthy throughout
+      });
+
+      cameras.set('cam-bad', camBad);
+      cameras.set('cam-good', camGood);
+      controller.registerCamera('cam-bad');
+      controller.registerCamera('cam-good');
+
+      vi.advanceTimersByTime(config.switchCooldownMs + config.recentlyAddedDelayMs);
+      const badState = controller.getState('cam-bad')!;
+      const goodState = controller.getState('cam-good')!;
+      badState.currentQuality = 'high';
+      goodState.currentQuality = 'high';
+      badState.registeredAt = 0;
+      goodState.registeredAt = 0;
+      badState.lastSwitchTime = 0;
+      goodState.lastSwitchTime = 0;
+
+      // System struggles → cam-good (smallest AUTO HQ) is demoted for performance.
+      tick();
+      expect(goodState.currentQuality).toBe('low');
+      expect(goodState.lqReason).toBe(LqReason.Performance);
+
+      // Sustained bad MOS: cam-good must NOT be re-promoted. That spurious HQ is the
+      // bug — the promote→demote oscillation trips anti-thrash and locks the camera
+      // out of HQ for antiThrashRetryMs (10 min) even after MOS recovers.
+      for (let i = 0; i < 5; i++) {
+        goodState.lastSwitchTime = 0; // eligible to switch if the code wanted to
+        tick();
+        expect(goodState.currentQuality).toBe('low');
+        expect(goodState.antiThrash).toBe(false);
+      }
+
+      // MOS recovers system-wide → cam-good promotes immediately, with no anti-thrash
+      // penalty.
+      camBad.snapshot = { mos: 5.0, focus: 3, stalled: false };
+      goodState.lastSwitchTime = 0;
+      tick();
+      expect(goodState.currentQuality).toBe('high');
+      expect(goodState.lqReason).toBe(LqReason.None);
+    });
+  });
+
+  describe('CLOUD-18235: pause freezes RADASS (no demotions or promotions while paused)', () => {
+    it('does NOT demote a HQ AUTO camera that becomes small while paused, then demotes on resume', () => {
+      const cam = makeMockCamera({ connectionKey: 'cam-1', elementHeight: 400 });
+      cameras.set('cam-1', cam);
+      controller.registerCamera('cam-1');
+
+      // Promote to HQ while playing.
+      vi.advanceTimersByTime(config.recentlyAddedDelayMs);
+      tick();
+      const state = controller.getState('cam-1')!;
+      state.currentQuality = 'high';
+      state.lqReason = LqReason.None;
+      state.registeredAt = 0;
+      state.lastSwitchTime = 0;
+
+      // Pause, then shrink the tile below the small threshold.
+      playing = false;
+      cam.elementHeight = 150; // <= smallItemHeightPx (171)
+      directives.clear();
+      // Well beyond smallItemDelayMs: still no demotion, and no directive at all.
+      vi.advanceTimersByTime(config.smallItemDelayMs + config.tickIntervalMs);
+      tick(5);
+      expect(state.currentQuality).toBe('high');
+      expect(state.lqReason).toBe(LqReason.None);
+      expect(directives.has('cam-1')).toBe(false);
+
+      // Resume → the small tile is now demoted for size.
+      playing = true;
+      tick(); // sets smallSince
+      vi.advanceTimersByTime(config.smallItemDelayMs);
+      tick();
+      expect(state.currentQuality).toBe('low');
+      expect(state.lqReason).toBe(LqReason.SmallItem);
+    });
+
+    it('does NOT demote an existing HQ camera when a new camera is added while paused, then enforces the cap on resume', () => {
+      config.maxConcurrentHighRes = 2;
+      // Two HQ cameras exactly at the cap.
+      for (let i = 0; i < 2; i++) {
+        const cam = makeMockCamera({ connectionKey: `cam-${i}`, elementHeight: 400, elementArea: (i + 1) * 100_000 });
+        cameras.set(`cam-${i}`, cam);
+        controller.registerCamera(`cam-${i}`);
+        const s = controller.getState(`cam-${i}`)!;
+        s.currentQuality = 'high'; s.lqReason = LqReason.None; s.registeredAt = 0; s.lastSwitchTime = 0;
+      }
+      tick();
+      expect(controller.getState('cam-0')!.currentQuality).toBe('high');
+      expect(controller.getState('cam-1')!.currentQuality).toBe('high');
+
+      // Pause, then add a 3rd camera (the CLOUD-18235 repro-2 trigger).
+      playing = false;
+      const cam2 = makeMockCamera({ connectionKey: 'cam-2', elementHeight: 400, elementArea: 300_000 });
+      cameras.set('cam-2', cam2);
+      controller.registerCamera('cam-2');
+      controller.getState('cam-2')!.registeredAt = 0;
+
+      directives.clear();
+      vi.advanceTimersByTime(config.recentlyAddedDelayMs + config.switchCooldownMs);
+      tick(5);
+
+      // While paused: new camera is not promoted, cap is never exceeded, nothing
+      // is demoted, and the controller issues no directives at all.
+      expect(controller.getState('cam-0')!.currentQuality).toBe('high');
+      expect(controller.getState('cam-1')!.currentQuality).toBe('high');
+      expect(controller.getState('cam-2')!.currentQuality).toBe('low');
+      expect(directives.size).toBe(0);
+
+      // Resume → cam-2 promotes, cap now exceeded → exactly one HQ demoted (cap holds).
+      playing = true;
+      controller.getState('cam-2')!.lastSwitchTime = 0;
+      tick(3);
+      const highCount = ['cam-0', 'cam-1', 'cam-2'].filter(
+        (k) => controller.getState(k)!.currentQuality === 'high',
+      ).length;
+      expect(highCount).toBe(2);
+    });
+
+    it('still honors an explicit HIGH target while paused', () => {
+      const cam = makeMockCamera({ connectionKey: 'cam-1', targetStream: TargetStream.HIGH, elementHeight: 400 });
+      cameras.set('cam-1', cam);
+      controller.registerCamera('cam-1');
+
+      playing = false;
+      vi.advanceTimersByTime(config.recentlyAddedDelayMs);
+      tick();
+
+      expect(directives.get('cam-1')).toBe('high');
+      expect(controller.getState('cam-1')!.currentQuality).toBe('high');
+    });
+
+    it('still honors an explicit LOW target while paused', () => {
+      const cam = makeMockCamera({ connectionKey: 'cam-1', targetStream: TargetStream.LOW, elementHeight: 400 });
+      cameras.set('cam-1', cam);
+      controller.registerCamera('cam-1');
+      // Start it HQ so applying LOW is a visible change.
+      const state = controller.getState('cam-1')!;
+      state.currentQuality = 'high';
+      state.registeredAt = 0;
+
+      playing = false;
+      vi.advanceTimersByTime(config.recentlyAddedDelayMs);
+      tick();
+
+      expect(directives.get('cam-1')).toBe('low');
+      expect(state.currentQuality).toBe('low');
+      expect(state.lqReason).toBe(LqReason.Manual);
+    });
+  });
+
+  describe('CLOUD-18303: constraint-based LQ tiles recover in the 171-230 band when the constraint clears', () => {
+    it('promotes a CapExceeded tile (height in the 171-230 band) once the cap has room again', () => {
+      config.maxConcurrentHighRes = 2;
+      // 3 tiles, all sub-hysteresis (200px) but not small, all HQ → smallest is CapExceeded.
+      for (let i = 0; i < 3; i++) {
+        const cam = makeMockCamera({ connectionKey: `cam-${i}`, elementHeight: 200, elementArea: (i + 1) * 100_000 });
+        cameras.set(`cam-${i}`, cam);
+        controller.registerCamera(`cam-${i}`);
+        const s = controller.getState(`cam-${i}`)!;
+        s.currentQuality = 'high'; s.registeredAt = 0; s.lastSwitchTime = 0;
+      }
+      tick();
+      const cam0 = controller.getState('cam-0')!; // smallest area → CapExceeded
+      expect(cam0.currentQuality).toBe('low');
+      expect(cam0.lqReason).toBe(LqReason.CapExceeded);
+
+      // Remove one HQ tile → the cap now has room.
+      cameras.delete('cam-1');
+      controller.unregisterCamera('cam-1');
+
+      vi.advanceTimersByTime(config.switchCooldownMs);
+      cam0.lastSwitchTime = 0;
+      tick(3);
+
+      // 200px is in the 171-230 band. It was demoted for the cap, not its size,
+      // so it must recover now that the cap has room.
+      expect(cam0.currentQuality).toBe('high');
+      expect(cam0.lqReason).toBe(LqReason.None);
+    });
+
+    it('promotes an InheritedLq tile (height in the 171-230 band) once the inherited cap constraint is gone', () => {
+      config.maxConcurrentHighRes = 2;
+      for (let i = 0; i < 3; i++) {
+        const cam = makeMockCamera({ connectionKey: `cam-${i}`, elementHeight: 200, elementArea: (i + 1) * 100_000 });
+        cameras.set(`cam-${i}`, cam);
+        controller.registerCamera(`cam-${i}`);
+        const s = controller.getState(`cam-${i}`)!;
+        s.currentQuality = 'high'; s.registeredAt = 0; s.lastSwitchTime = 0;
+      }
+      tick(); // cam-0 → CapExceeded
+      expect(controller.getState('cam-0')!.lqReason).toBe(LqReason.CapExceeded);
+
+      // Add cam-3 while a CapExceeded tile exists → it inherits LQ.
+      const cam3 = makeMockCamera({ connectionKey: 'cam-3', elementHeight: 200, elementArea: 100_000 });
+      cameras.set('cam-3', cam3);
+      controller.registerCamera('cam-3');
+      const cam3s = controller.getState('cam-3')!;
+      cam3s.registeredAt = 0;
+      expect(cam3s.lqReason).toBe(LqReason.InheritedLq);
+
+      // Remove both HQ tiles → the cap has room for both LQ tiles.
+      cameras.delete('cam-1');
+      controller.unregisterCamera('cam-1');
+      cameras.delete('cam-2');
+      controller.unregisterCamera('cam-2');
+
+      vi.advanceTimersByTime(config.switchCooldownMs + config.recentlyAddedDelayMs);
+      controller.getState('cam-0')!.lastSwitchTime = 0;
+      cam3s.lastSwitchTime = 0;
+      tick(5);
+
+      expect(controller.getState('cam-0')!.currentQuality).toBe('high');
+      expect(cam3s.currentQuality).toBe('high');
+      expect(cam3s.lqReason).toBe(LqReason.None);
+    });
+
+    it('promotes a TooManyItems tile (height in the 171-230 band) once the camera count drops below the limit', () => {
+      config.maxCamerasBeforeForceLq = 2;
+      // cam-0, cam-1 fill the limit; cam-2 (registered at size == limit) → TooManyItems.
+      for (let i = 0; i < 2; i++) {
+        const cam = makeMockCamera({ connectionKey: `cam-${i}`, elementHeight: 200 });
+        cameras.set(`cam-${i}`, cam);
+        controller.registerCamera(`cam-${i}`);
+        controller.getState(`cam-${i}`)!.registeredAt = 0;
+      }
+      const cam2 = makeMockCamera({ connectionKey: 'cam-2', elementHeight: 200 });
+      cameras.set('cam-2', cam2);
+      controller.registerCamera('cam-2');
+      const cam2s = controller.getState('cam-2')!;
+      cam2s.registeredAt = 0;
+      expect(cam2s.lqReason).toBe(LqReason.TooManyItems);
+
+      // Drop the count below the limit.
+      cameras.delete('cam-0');
+      controller.unregisterCamera('cam-0');
+      cameras.delete('cam-1');
+      controller.unregisterCamera('cam-1');
+
+      vi.advanceTimersByTime(config.switchCooldownMs);
+      cam2s.lastSwitchTime = 0;
+      tick(3);
+
+      expect(cam2s.currentQuality).toBe('high');
+      expect(cam2s.lqReason).toBe(LqReason.None);
+    });
+
+    it('does NOT churn a CapExceeded band tile while the cap stays full (headroom gate)', () => {
+      config.maxConcurrentHighRes = 2;
+      for (let i = 0; i < 3; i++) {
+        const cam = makeMockCamera({ connectionKey: `cam-${i}`, elementHeight: 200, elementArea: (i + 1) * 100_000 });
+        cameras.set(`cam-${i}`, cam);
+        controller.registerCamera(`cam-${i}`);
+        const s = controller.getState(`cam-${i}`)!;
+        s.currentQuality = 'high'; s.registeredAt = 0; s.lastSwitchTime = 0;
+      }
+      tick(); // cam-0 (smallest) → CapExceeded, cap full (2 HQ), no room.
+      const cam0 = controller.getState('cam-0')!;
+      expect(cam0.currentQuality).toBe('low');
+      expect(cam0.lqReason).toBe(LqReason.CapExceeded);
+
+      // Cap stays full. Clear the settle-demotion timestamp, satisfy the cooldown,
+      // and tick. Without the headroom gate the tile would promote (Cap recovery)
+      // and Check 8 would re-demote it in the same tick — a start/abort HQ churn
+      // that leaves a nonzero lastSwitchTime. The gate must prevent the promotion
+      // entirely, so the tile is never switched.
+      cam0.lastSwitchTime = 0;
+      vi.advanceTimersByTime(config.switchCooldownMs + config.tickIntervalMs);
+      tick();
+
+      expect(cam0.currentQuality).toBe('low');
+      expect(cam0.lqReason).toBe(LqReason.CapExceeded);
+      expect(cam0.lastSwitchTime).toBe(0);
     });
   });
 });

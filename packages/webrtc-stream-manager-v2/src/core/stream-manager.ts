@@ -208,20 +208,16 @@ export class StreamManager extends Disposable {
         const connection = this.connections.get(key);
         if (!connection) return;
 
-        if (
-          !this._playing &&
-          quality === 'high' &&
-          connection.targetStream === TargetStream.AUTO
-        ) {
-          return;
-        }
-
+        // Pause is handled inside RadassController (it freezes all adaptive
+        // decisions while !isPlaying), so no upgrade/downgrade guard is needed
+        // here — the controller never issues an adaptive directive while paused.
         if (quality === 'high') {
           connection.requestHighRes();
         } else {
           connection.releaseHighRes();
         }
       },
+      isPlaying: (): boolean => this._playing,
     };
 
     this.radassController = new RadassController(radassConfig, host);
@@ -522,9 +518,9 @@ export class StreamManager extends Disposable {
   }
 
   /**
-   * Toggle the playing state. When paused, the quality optimizer stops
-   * upgrading connections to high-res (but does not downgrade existing ones),
-   * and a DC pause command is dispatched to every connection.
+   * Toggle the playing state. When paused, RADASS freezes all adaptive quality
+   * decisions (no upgrades and no downgrades — see CLOUD-18235) and a DC pause
+   * command is dispatched to every connection.
    */
   togglePlaying(): void {
     this.setPlaying(!this._playing);

@@ -29,6 +29,9 @@ export interface RadassHost {
   getCameraInfo(connectionKey: string): CameraInfo | null;
   /** Apply a quality directive to a camera. */
   applyDirective(connectionKey: string, quality: 'high' | 'low'): void;
+  /** Whether playback is currently playing. When paused, RADASS freezes all
+   *  adaptive decisions (no promotions or demotions). See CLOUD-18235. */
+  isPlaying(): boolean;
 }
 
 // ─── RadassController ─────────────────────────────────────────────────────────
@@ -106,6 +109,7 @@ export class RadassController extends Disposable {
     if (this.disposed) return;
 
     const now = performance.now();
+    const playing = this.host.isPlaying();
 
     // Pre-fetch camera info for the entire tick to avoid repeated getBoundingClientRect() calls
     const infoCache = new Map<string, CameraInfo | null>();
@@ -114,14 +118,18 @@ export class RadassController extends Disposable {
     }
 
     // ── Check 7: Per-camera anti-thrash recovery ─────────────────────
-    for (const [k, state] of this.states) {
-      if (!state.antiThrash) continue;
-      if (now - state.antiThrashAt < this.config.antiThrashRetryMs) continue;
-      // Only reset if this camera doesn't currently have bad MOS
-      const info = infoCache.get(k) ?? null;
-      if (info && info.snapshot.mos < this.config.mosThreshold) continue;
-      state.antiThrash = false;
-      state.antiThrashAt = 0;
+    // Skipped while paused: clearing the flag off stale/paused MOS would just
+    // churn state, and promotions are frozen while paused anyway (CLOUD-18235).
+    if (playing) {
+      for (const [k, state] of this.states) {
+        if (!state.antiThrash) continue;
+        if (now - state.antiThrashAt < this.config.antiThrashRetryMs) continue;
+        // Only reset if this camera doesn't currently have bad MOS
+        const info = infoCache.get(k) ?? null;
+        if (info && info.snapshot.mos < this.config.mosThreshold) continue;
+        state.antiThrash = false;
+        state.antiThrashAt = 0;
+      }
     }
 
     let switchedThisTick = false;
@@ -131,22 +139,49 @@ export class RadassController extends Disposable {
       if (!info) continue;
 
       // ── Check 1: Forced states ──────────────────────────────────────
+      // Explicit HIGH is the user's choice — honored even while paused.
       if (info.targetStream === TargetStream.HIGH) {
         this.setQuality(state, 'high', LqReason.None, now);
         this.host.applyDirective(key, 'high');
         continue;
       }
 
-      if (info.viewportAreaFraction > this.config.forceHighViewportFraction) {
+      // Viewport-force is an *adaptive* promotion (a large tile → HQ), so it is
+      // suppressed while paused just like every other auto decision below.
+      if (playing && info.viewportAreaFraction > this.config.forceHighViewportFraction) {
         this.setQuality(state, 'high', LqReason.None, now);
         this.host.applyDirective(key, 'high');
         continue;
       }
 
+      // Explicit LOW is the user's choice — honored even while paused.
       if (info.targetStream === TargetStream.LOW) {
         this.setQuality(state, 'low', LqReason.Manual, now);
         this.host.applyDirective(key, 'low');
         continue;
+      }
+
+      // ── Pause freeze (CLOUD-18235) ──────────────────────────────────
+      // While paused, freeze every adaptive quality decision: no size /
+      // performance / cap demotions and no promotions. Only the explicit
+      // HIGH/LOW targets above are honored. Streams are DC-paused on pause so
+      // adaptive signals are moot, and pausing must never demote an HQ tile.
+      // Leaving currentQuality/lqReason untouched keeps controller state
+      // consistent with what is on screen; the next playing tick re-evaluates.
+      // (Desktop gates each auto decision individually on isMediaPaused(); the
+      // web freezes the whole adaptive pass because it also DC-pauses streams.)
+      if (!playing) {
+        continue;
+      }
+
+      // targetStream is AUTO here (HIGH and LOW both `continue` above). If the
+      // camera was pinned to low by a manual LOW selection and the user has now
+      // switched back to Auto, clear the sticky Manual reason so the auto checks
+      // below (initial promotion, size, performance) can re-evaluate it. Without
+      // this, LqReason.Manual matches no promotion branch and the camera stays
+      // low forever after Low → Auto (CLOUD-18038).
+      if (state.lqReason === LqReason.Manual) {
+        state.lqReason = LqReason.None;
       }
 
       if (!info.canAutoUpgrade) {
@@ -193,11 +228,13 @@ export class RadassController extends Disposable {
           continue;
         }
 
-        // Hysteresis: only promote back if above hysteresis threshold.
-        // Also applies to CapExceeded cameras (they can recover when cap allows).
+        // SmallItem hysteresis: a tile demoted for *being small* must grow past
+        // the hysteresis threshold (not merely back over the small threshold)
+        // before returning to HQ. This dead-band prevents flapping around
+        // smallItemHeightPx.
         if (
           state.currentQuality === 'low' &&
-          (state.lqReason === LqReason.SmallItem || state.lqReason === LqReason.CapExceeded) &&
+          state.lqReason === LqReason.SmallItem &&
           info.elementHeight > this.config.hysteresisHeightPx &&
           this.canSwitch(state, now)
         ) {
@@ -206,16 +243,42 @@ export class RadassController extends Disposable {
           continue;
         }
 
-        // TooManyItems/InheritedLq recovery blocks are not cap-aware by design.
-        // If promotion exceeds maxConcurrentHighRes, Check 8 (cap enforcement)
-        // self-corrects within the same tick by demoting the smallest HQ camera.
+        // Constraint-based recovery (CapExceeded / TooManyItems / InheritedLq):
+        // these tiles were demoted for a *global* reason, not for their own
+        // size, so they recover as soon as the constraint clears — gated on the
+        // tile not being small (> smallItemHeightPx), NOT the size hysteresis.
+        // Gating these behind hysteresisHeightPx stranded tiles in the 171-230
+        // band in LQ even when the cap/count had room (CLOUD-18303).
+        //
+        // CapExceeded and InheritedLq are additionally gated on real cap
+        // headroom (hasHqHeadroom): promote only when a HQ slot is genuinely
+        // free. Without it, under a sustained-full cap the smallest constrained
+        // band tile would promote here and Check 8 would re-demote it every
+        // switchCooldownMs — a real HQ-upgrade start/abort churn. (Size-based
+        // promotions above keep size priority and stay non-headroom-gated;
+        // Check 8 remains their safety net. TooManyItems keeps only its count
+        // gate — it recovers when the >16-camera limit clears even if that means
+        // Check 8 then re-arbitrates a cap slot by size, preserving its contract.)
+
+        // CapExceeded recovery: promote when the max-concurrent-HQ cap has room.
+        if (
+          state.currentQuality === 'low' &&
+          state.lqReason === LqReason.CapExceeded &&
+          info.elementHeight > this.config.smallItemHeightPx &&
+          this.canSwitch(state, now) &&
+          this.hasHqHeadroom(infoCache)
+        ) {
+          this.setQuality(state, 'high', LqReason.None, now);
+          this.host.applyDirective(key, 'high');
+          continue;
+        }
 
         // TooManyItems recovery: promote when camera count drops back under the limit
         if (
           state.currentQuality === 'low' &&
           state.lqReason === LqReason.TooManyItems &&
           this.states.size < this.config.maxCamerasBeforeForceLq &&
-          info.elementHeight > this.config.hysteresisHeightPx &&
+          info.elementHeight > this.config.smallItemHeightPx &&
           this.canSwitch(state, now)
         ) {
           this.setQuality(state, 'high', LqReason.None, now);
@@ -224,13 +287,14 @@ export class RadassController extends Disposable {
         }
 
         // InheritedLq recovery: promote when no other cameras have performance-class LQ
-        // reasons. Note: multiple InheritedLq cameras block each other until all can
-        // recover simultaneously (s !== state excludes self from the check).
+        // reasons and the HQ cap has room. Note: multiple InheritedLq cameras block
+        // each other until all can recover simultaneously (s !== state excludes self).
         if (
           state.currentQuality === 'low' &&
           state.lqReason === LqReason.InheritedLq &&
-          info.elementHeight > this.config.hysteresisHeightPx &&
-          this.canSwitch(state, now)
+          info.elementHeight > this.config.smallItemHeightPx &&
+          this.canSwitch(state, now) &&
+          this.hasHqHeadroom(infoCache)
         ) {
           const hasPerformanceClassLq = [...this.states.values()].some(
             (s) =>
@@ -251,6 +315,11 @@ export class RadassController extends Disposable {
 
       this.host.applyDirective(key, state.currentQuality);
     }
+
+    // Pause freeze (CLOUD-18235): the global demotion/promotion passes below
+    // (performance, swap, cap enforcement) are all adaptive — skip them while
+    // paused so pausing never changes any tile's quality.
+    if (!playing) return;
 
     // ── Check 3: Performance-based switching ────────────────────────────
     // Pass 1: Find ANY camera with bad MOS
@@ -297,8 +366,15 @@ export class RadassController extends Disposable {
       }
     }
 
-    // Pass 2: Promote performance-LQ cameras if conditions improve
-    if (!switchedThisTick) {
+    // Pass 2: Promote performance-LQ cameras if conditions improve.
+    // Gate on !hasBadMos: while ANY camera is still struggling the system is
+    // considered loaded, so we must not re-promote — even a camera whose own MOS
+    // currently looks healthy. Pass 1 demotes on the *global* bad-MOS signal
+    // (smallest HQ, regardless of which camera is bad), so without this symmetric
+    // gate a healthy-MOS camera would be demoted (Pass 1) then re-promoted (Pass 2)
+    // then demoted again, tripping anti-thrash and locking it out of HQ for
+    // antiThrashRetryMs (10 min). See CLOUD-18327.
+    if (!switchedThisTick && !hasBadMos) {
       for (const [k, s] of this.states) {
         if (switchedThisTick) break;
         if (s.currentQuality !== 'low' || s.lqReason !== LqReason.Performance) continue;
@@ -408,6 +484,27 @@ export class RadassController extends Disposable {
     // lastSwitchTime === 0 means the camera has never been switched; always eligible
     if (state.lastSwitchTime === 0) return true;
     return now - state.lastSwitchTime >= this.config.switchCooldownMs;
+  }
+
+  /**
+   * True if at least one cap-counted HQ slot is free. Counts current HQ cameras
+   * using the same filter as Check 8 cap enforcement (excludes forced-HIGH and
+   * viewport-forced cameras, which don't count against maxConcurrentHighRes).
+   * Reads live `currentQuality`, so in-tick promotions are reflected. Used to
+   * gate constraint-based recovery so it never promotes into a full cap only for
+   * Check 8 to immediately re-demote (CLOUD-18303 churn).
+   */
+  private hasHqHeadroom(infoCache: Map<string, CameraInfo | null>): boolean {
+    let count = 0;
+    for (const [k, s] of this.states) {
+      if (s.currentQuality !== 'high') continue;
+      const info = infoCache.get(k) ?? null;
+      if (!info) continue;
+      if (info.targetStream === TargetStream.HIGH) continue;
+      if (info.viewportAreaFraction > this.config.forceHighViewportFraction) continue;
+      count++;
+    }
+    return count < this.config.maxConcurrentHighRes;
   }
 
   private resetAntiThrash(): void {
