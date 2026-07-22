@@ -41,12 +41,25 @@ export { BackfillFetcher } from './stepping/backfill-fetcher';
 export type {
   BackfillFetcherConfig,
   BackfillFetcherState,
+  RecordedSpan,
 } from './stepping/backfill-fetcher';
 export { FrameStepper } from './stepping/frame-stepper';
 export type {
   FrameStepperConfig,
   FrameStepperState,
 } from './stepping/frame-stepper';
+export { ReversePlayer } from './stepping/reverse-player';
+export type {
+  ReversePlayerConfig,
+  ReversePlayerState,
+  ReverseRate,
+  PacerClock,
+} from './stepping/reverse-player';
+export { PlaybackCoordinator } from './stepping/playback-coordinator';
+export type {
+  PlaybackCoordinatorConfig,
+  PlaybackMode,
+} from './stepping/playback-coordinator';
 export { createStepperOpenSession } from './stepping/open-session-adapter';
 export type { StepperSessionOptions } from './stepping/open-session-adapter';
 export type { PeerConnectionConfig } from './core/peer-connection';

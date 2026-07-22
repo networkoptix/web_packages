@@ -53,6 +53,15 @@ describe('createStepperOpenSession', () => {
     });
   });
 
+  it('a per-call speed wins over the option default (per-mode fetch sessions)', () => {
+    const { manager, createFetchSession } = makeManager();
+
+    const openSession = createStepperOpenSession(manager, URL_CONFIG, { speed: 1 });
+    openSession(42, 4);
+
+    expect(createFetchSession.mock.calls[0][1].speed).toBe(4);
+  });
+
   it('mints a fresh session per call (no caching) so the fetcher owns each lifecycle', () => {
     const { manager, createFetchSession } = makeManager();
 

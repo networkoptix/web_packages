@@ -98,6 +98,42 @@ Codec-aware short-circuit: before step 2, `CameraConnection` checks
 `mediaStreams` metadata. If the only viable stream requires transcoding, it
 skips SRTP and goes straight to `MseRenderer` from the start.
 
+## Archive playback: frame stepping & continuous reverse (`src/stepping/`)
+
+Frame-exact archive navigation runs on a companion **fetch session** (an
+MSE/fMP4 `MediaFetchSession`, independent of the tile's SRTP peer), decoded with
+WebCodecs — never the live video element. One layer stack serves both
+directions:
+
+- **`BackfillFetcher`** owns the fetch session and pipes it through the
+  `Fmp4Parser` into an anchored **`SampleStore`** (encoded-domain, byte-capped).
+  It aims windows backward (`extendBack`), verifies landings, and pauses
+  delivery at each window end. `setWindowMs` resizes the per-aim window at
+  runtime.
+- **`GopDecoder`** decodes a whole key-led GOP per request and caches every
+  frame tick-keyed under a byte cap, with directional trims (`trimAbove` /
+  `trimBelow`).
+- **`FrameStepper`** — the click-driven prev/next state machine. Owns its own
+  decoder; borrows the fetcher.
+- **`ReversePlayer`** — the clock-paced continuous reverse presenter (−1×/−2×/
+  −4×). A sibling of `FrameStepper` (not a mode of it), it composes the SAME
+  fetcher/store with its OWN decoder. The pacing loop derives the target archive
+  tick from a drift-free wallclock↔archive anchor and keys one wakeup (an
+  injectable `PacerClock`) to the next real sample tick; late wakes paint the
+  floor sample (skip, never slow-motion). Supply is kept ahead by widening the
+  window and chaining `extendBack`; starvation is honest `buffering`, bounded
+  then `autostopped` INTO stepping (never disabled for supply). Holes are jumped,
+  not crawled. At a chunk's start `extendBack` gap-hops: when the default ask
+  would fall in a known recording gap, it re-aims at the previous chunk's tail
+  (chunk oracle), and the archive-start conclusion only stands when the oracle
+  agrees no earlier data exists.
+- **`PlaybackCoordinator`** enforces exactly one engaged consumer of the shared
+  fetcher and implements the stepping↔reverse handoffs (`playReverse` /
+  `pauseReverse` / `enterStepping`), including the autostop-into-stepping landing.
+
+One uniform fetch-session **speed = 4** serves stepping and every reverse rate
+(all |rate| ≤ 4), so rate changes are presentation-only — no session reopen.
+
 ## Which API layer to pick
 
 | Job | Use | Why |

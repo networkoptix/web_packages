@@ -154,6 +154,40 @@ describe('FrameStepper', () => {
     MockDecoder.globalFailNext = 0;
   });
 
+  it('an idle stepper ignores fetcher stalls (shared-fetcher safety for a concurrent reverse owner)', () => {
+    const { stepper, fetcher } = makeStepper();
+    // Never entered stepping — idle, but still subscribed to the shared fetcher.
+    expect(stepper.state).toBe('idle');
+
+    // Enough stalls to trip the background-stall bound (3) were it not guarded.
+    fetcher.state = 'collecting';
+    fetcher.emit('stalled');
+    fetcher.emit('stalled');
+    fetcher.emit('stalled');
+    fetcher.emit('stalled');
+
+    // A concurrent owner's delivery is left untouched.
+    expect(fetcher.pauseDelivery).not.toHaveBeenCalled();
+    expect(stepper.state).toBe('idle');
+  });
+
+  it('an exited stepper ignores fetcher stalls (delivery belongs to whoever re-aimed)', async () => {
+    const { stepper, fetcher } = makeStepper();
+    stepper.enterStepping(T0);
+    stepper.stepPrev();
+    await flush();
+    stepper.exit();
+    fetcher.pauseDelivery.mockClear();
+
+    fetcher.state = 'collecting';
+    fetcher.emit('stalled');
+    fetcher.emit('stalled');
+    fetcher.emit('stalled');
+
+    expect(fetcher.pauseDelivery).not.toHaveBeenCalled();
+    expect(stepper.state).toBe('idle');
+  });
+
   it('enterStepping aims the entry fetch at the anchor (governing GOP, not a forward window)', () => {
     const { stepper, fetcher } = makeStepper();
 

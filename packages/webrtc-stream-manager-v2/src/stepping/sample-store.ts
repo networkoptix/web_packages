@@ -566,13 +566,17 @@ export class SampleStore {
         continue;
       }
       // Adjacent samples closer than any real frame interval = interleaved
-      // mis-anchored coverage — decoding would feed P-frames references from a
-      // different recording. Refuse rather than ghost.
+      // mis-anchored coverage; decoding across the pair would pull P-frame
+      // references from a different recording. Barrier the run here rather
+      // than rejecting the whole interval, so one poisoned pair doesn't make
+      // every GOP above it undecodable.
       if (
         Number.isFinite(this.minDurationTicks)
         && gap < this.minDurationTicks - this.epsilonTicks
       ) {
-        return null;
+        run.length = 0;
+        prevTicks = s.ticks;
+        continue;
       }
       prevTicks = s.ticks;
       if (s.key) {
@@ -590,10 +594,18 @@ export class SampleStore {
 
   /** Merged coverage intervals (holes are the gaps between them). */
   coverage(): CoverageInterval[] {
+    // Sub-frame slack: a gap shorter than the shortest real frame interval
+    // cannot hold a missing frame — it is anchor wobble between fragments
+    // placed by different aims. Treating those as holes shatters coverage into
+    // micro-intervals the reverse runway/resume logic can never span contiguously.
+    const mergeSlackTicks = Math.max(
+      this.epsilonTicks,
+      Number.isFinite(this.minDurationTicks) ? this.minDurationTicks - this.epsilonTicks : 0,
+    );
     const merged: CoverageInterval[] = [];
     for (const f of this.fragments) {
       const last = merged[merged.length - 1];
-      if (last && f.startTicks <= last.endTicks + this.epsilonTicks) {
+      if (last && f.startTicks <= last.endTicks + mergeSlackTicks) {
         last.endTicks = Math.max(last.endTicks, f.endTicks);
       } else {
         merged.push({ startTicks: f.startTicks, endTicks: f.endTicks });

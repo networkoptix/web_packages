@@ -588,6 +588,12 @@ export class FrameStepper {
    * the machine must never wedge in `loading`, and stepping stays alive.
    */
   private onStalled(): void {
+    // Idle/disabled the stepper owns no aim, but it still borrows the fetcher —
+    // a concurrent owner (ReversePlayer) does. Reacting here would settle that
+    // owner's delivery out from under it via noteBackgroundStall → pauseDelivery.
+    if (this._state === 'idle' || this._state === 'disabled') {
+      return;
+    }
     if (this._state !== 'loading') {
       this.noteBackgroundStall();
       return;

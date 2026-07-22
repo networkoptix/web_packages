@@ -95,7 +95,7 @@ export class GopDecoder {
   static lastDecodeFailure: DecodeFailureSnapshot | null = null;
 
   private readonly config: GopDecoderConfig;
-  private readonly byteCap: number;
+  private readonly byteCap_: number;
   private decoder: VideoDecoder | null = null;
   private active: SampleConfig | null = null;
   /** Presentation-ordered tick queue, zipped against decoder outputs. */
@@ -114,7 +114,7 @@ export class GopDecoder {
 
   constructor(config: GopDecoderConfig) {
     this.config = config;
-    this.byteCap = config.byteCapBytes ?? DEFAULT_BYTE_CAP;
+    this.byteCap_ = config.byteCapBytes ?? DEFAULT_BYTE_CAP;
   }
 
   /** Probe support without constructing (HW session exhaustion shows here). */
@@ -145,6 +145,11 @@ export class GopDecoder {
 
   get cacheByteLength(): number {
     return this.cacheBytes;
+  }
+
+  /** Decoded-frame cache byte cap (the paced reverse presenter byte-gates prefetch against it). */
+  get byteCap(): number {
+    return this.byteCap_;
   }
 
   /** Post-mortem of this instance's most recent failure (survives dispose). */
@@ -341,9 +346,9 @@ export class GopDecoder {
 
   /** FIFO-evict to the byte cap, never the frame just inserted. */
   private evictToCap(justInserted: number): void {
-    if (this.cacheBytes <= this.byteCap) return;
+    if (this.cacheBytes <= this.byteCap_) return;
     for (const [t, entry] of this.cache) {
-      if (this.cacheBytes <= this.byteCap) break;
+      if (this.cacheBytes <= this.byteCap_) break;
       if (t === justInserted) continue;
       this.cacheBytes -= entry.bytes;
       entry.frame.close();

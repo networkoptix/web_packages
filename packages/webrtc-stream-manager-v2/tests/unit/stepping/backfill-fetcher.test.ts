@@ -328,6 +328,52 @@ describe('BackfillFetcher', () => {
     expect(fetcher.state).toBe('paused');
   });
 
+  it('setWindowMs resizes the next aim window at runtime (windowMs getter reflects it)', async () => {
+    const { fetcher } = makeFetcher();
+    expect(fetcher.windowMs).toBe(10_000);
+
+    fetcher.setWindowMs(20_000);
+    expect(fetcher.windowMs).toBe(20_000);
+
+    await fetcher.openWindow(T0 + 500);
+    const session = lastSession();
+    // The wider window positions the session 20 s (not the 10 s default)
+    // before the ask — the aim read the resized window live.
+    expect(session.positionMs).toBe(T0 + 500 - 20_000);
+  });
+
+  it('passes fetchSpeed to new sessions; a speed change stops live-session reuse until it matches again', async () => {
+    const speeds: (number | undefined)[] = [];
+    const { fetcher } = makeFetcher({
+      openSession: (positionMs: number, speed?: number) => {
+        speeds.push(speed);
+        return new MockFetchSession(positionMs) as unknown as MediaFetchSession;
+      },
+    });
+    expect(fetcher.fetchSpeed).toBeUndefined();
+
+    await fetcher.openWindow(T0 + 500);
+    // Same requested speed → the live session is reused via DC seek.
+    await fetcher.openWindow(T0 + 400);
+    expect(MockFetchSession.instances).toHaveLength(1);
+
+    // Speed is baked at handshake: a change makes the next aim reconnect.
+    fetcher.setFetchSpeed(4);
+    expect(fetcher.fetchSpeed).toBe(4);
+    await fetcher.openWindow(T0 + 300);
+    expect(MockFetchSession.instances).toHaveLength(2);
+
+    // Matching speed again → reuse resumes.
+    await fetcher.openWindow(T0 + 200);
+    expect(MockFetchSession.instances).toHaveLength(2);
+
+    // Restoring the factory default forces one more reconnect.
+    fetcher.setFetchSpeed(undefined);
+    await fetcher.openWindow(T0 + 100);
+    expect(MockFetchSession.instances).toHaveLength(3);
+    expect(speeds).toEqual([undefined, 4, undefined]);
+  });
+
   it('openAtAnchor positions the session at the anchor and completes on the governing GOP', async () => {
     const { fetcher, events } = makeFetcher();
     await fetcher.openAtAnchor(T0 + 500);
@@ -506,6 +552,75 @@ describe('BackfillFetcher', () => {
     expect(events.progress).toHaveLength(1);
     expect(events.landingfailed).toHaveLength(0);
     expect(events.noearlierdata).toHaveLength(0);
+  });
+
+  it('vetoes a stable early landing when the chunk oracle says the archive is continuous there', async () => {
+    vi.useFakeTimers();
+    const { fetcher, events } = makeFetcher();
+    // The client knows recording is continuous across the landing AND the ask:
+    // a stable early landing here can only be server mis-positioning.
+    fetcher.setRecordedSpans([{ startMs: T0 - 100_000, endMs: T0 + 100_000 }]);
+    await fetcher.openWindow(T0 + 500);
+    const session = lastSession();
+    session.deliverInit();
+
+    session.deliverAnchor(T0 - 40_000);
+    session.deliverGop();
+    await vi.advanceTimersByTimeAsync(1_300);
+    session.deliverAnchor(T0 - 40_000);
+    session.deliverAnchor(T0 - 40_000);
+    session.deliverGop();
+
+    expect(events.landingfailed).toHaveLength(1);
+    expect(fetcher.store!.sampleCount).toBe(0); // no phantom island admitted
+    expect(fetcher.state).toBe('paused');
+  });
+
+  it('vetoes a stable early landing in an OLDER span when the ask itself is recorded (cross-span spray)', async () => {
+    vi.useFakeTimers();
+    const { fetcher, events } = makeFetcher();
+    // The ask (window start T0-9.5s) is inside the second recorded span — the
+    // server had the data; landing in the older span is mis-positioning.
+    fetcher.setRecordedSpans([
+      { startMs: T0 - 100_000, endMs: T0 - 35_000 },
+      { startMs: T0 - 20_000, endMs: T0 + 100_000 },
+    ]);
+    await fetcher.openWindow(T0 + 500);
+    const session = lastSession();
+    session.deliverInit();
+
+    session.deliverAnchor(T0 - 40_000);
+    session.deliverGop();
+    await vi.advanceTimersByTimeAsync(1_300);
+    session.deliverAnchor(T0 - 40_000);
+    session.deliverAnchor(T0 - 40_000);
+    session.deliverGop();
+
+    expect(events.landingfailed).toHaveLength(1);
+    expect(fetcher.store!.sampleCount).toBe(0);
+  });
+
+  it('still accepts a stable early landing across a genuine recording gap when spans are known', async () => {
+    vi.useFakeTimers();
+    const { fetcher, events } = makeFetcher();
+    // A real gap separates the landing (previous chunk) from the ask.
+    fetcher.setRecordedSpans([
+      { startMs: T0 - 100_000, endMs: T0 - 35_000 },
+      { startMs: T0 - 8_000, endMs: T0 + 100_000 },
+    ]);
+    await fetcher.openWindow(T0 + 500);
+    const session = lastSession();
+    session.deliverInit();
+
+    session.deliverAnchor(T0 - 40_000);
+    session.deliverGop();
+    await vi.advanceTimersByTimeAsync(1_300);
+    session.deliverAnchor(T0 - 40_000);
+    session.deliverAnchor(T0 - 40_000);
+    session.deliverGop();
+
+    expect(events.landingfailed).toHaveLength(0);
+    expect(fetcher.store!.sampleCount).toBe(30); // legitimate cross-gap island
   });
 
   it('a re-seeked aim that lands correctly recovers the window', async () => {
@@ -772,6 +887,104 @@ describe('BackfillFetcher', () => {
     expect(fetcher.state).toBe('paused');
   });
 
+  it('extendBack hops to the previous chunk tail when the default ask falls in a recording gap', async () => {
+    const { fetcher } = makeFetcher();
+    // Previous chunk ends 35 s back; the current chunk starts 2 s back. The
+    // default extend ask (oldest + overlap - window = T0-9s) falls in the gap.
+    fetcher.setRecordedSpans([
+      { startMs: T0 - 100_000, endMs: T0 - 35_000 },
+      { startMs: T0 - 2_000, endMs: T0 + 100_000 },
+    ]);
+    await fetcher.openWindow(T0 + 500);
+    const session = lastSession();
+    session.deliverInit();
+    session.deliverAnchor(T0);
+    session.deliverGop();
+    expect(fetcher.state).toBe('paused');
+
+    await fetcher.extendBack();
+
+    // Aim re-targeted at the previous span's tail (inset 1 s), not the gap.
+    expect(session.seek).toHaveBeenCalledWith(T0 - 36_000 - 10_000);
+    expect(fetcher.state).toBe('collecting');
+  });
+
+  it('a hopped aim completes once the previous chunk tail is delivered', async () => {
+    const { fetcher, events } = makeFetcher();
+    fetcher.setRecordedSpans([
+      { startMs: T0 - 100_000, endMs: T0 - 35_000 },
+      { startMs: T0 - 2_000, endMs: T0 + 100_000 },
+    ]);
+    await fetcher.openWindow(T0 + 500);
+    const session = lastSession();
+    session.deliverInit();
+    session.deliverAnchor(T0);
+    session.deliverGop();
+    expect(events.windowcomplete).toHaveLength(1);
+
+    await fetcher.extendBack();
+
+    // The server lands inside the previous chunk's tail; ~1 s of delivery
+    // passes the hopped toMs (T0-36s) → the aim completes on its own delivery.
+    session.deliverAnchor(T0 - 36_500);
+    session.deliverGop();
+    expect(fetcher.store!.sampleCount).toBe(60);
+    expect(fetcher.store!.coverage()).toHaveLength(2); // detached cross-gap island
+    expect(events.windowcomplete).toHaveLength(2);
+    expect(fetcher.state).toBe('paused');
+  });
+
+  it('extendBack does not hop when the default ask is inside recorded archive', async () => {
+    const { fetcher } = makeFetcher();
+    fetcher.setRecordedSpans([{ startMs: T0 - 100_000, endMs: T0 + 100_000 }]);
+    await fetcher.openWindow(T0 + 500);
+    const session = lastSession();
+    session.deliverInit();
+    session.deliverAnchor(T0);
+    session.deliverGop();
+
+    await fetcher.extendBack();
+
+    expect(session.seek).toHaveBeenCalledWith(T0 + 1_000 - 10_000);
+  });
+
+  it('extendBack does not hop when spans are unknown', async () => {
+    const { fetcher } = makeFetcher();
+    await fetcher.openWindow(T0 + 500);
+    const session = lastSession();
+    session.deliverInit();
+    session.deliverAnchor(T0);
+    session.deliverGop();
+
+    await fetcher.extendBack();
+
+    expect(session.seek).toHaveBeenCalledWith(T0 + 1_000 - 10_000);
+  });
+
+  it('extendBack does not hop when no recorded span exists below the ask (genuine archive start)', async () => {
+    const { fetcher } = makeFetcher();
+    fetcher.setRecordedSpans([{ startMs: T0 - 2_000, endMs: T0 + 100_000 }]);
+    await fetcher.openWindow(T0 + 500);
+    const session = lastSession();
+    session.deliverInit();
+    session.deliverAnchor(T0);
+    session.deliverGop();
+
+    await fetcher.extendBack();
+
+    expect(session.seek).toHaveBeenCalledWith(T0 + 1_000 - 10_000);
+  });
+
+  it('hasRecordedDataBefore reports the chunk-oracle verdict', () => {
+    const { fetcher } = makeFetcher();
+    expect(fetcher.hasRecordedDataBefore(T0)).toBeNull();
+    fetcher.setRecordedSpans([{ startMs: T0 - 10_000, endMs: T0 }]);
+    expect(fetcher.hasRecordedDataBefore(T0 - 5_000)).toBe(true);
+    expect(fetcher.hasRecordedDataBefore(T0 - 9_500)).toBe(false);
+    fetcher.setRecordedSpans(null);
+    expect(fetcher.hasRecordedDataBefore(T0)).toBeNull();
+  });
+
   it('refetchHole seeks while paused without resuming', async () => {
     const { fetcher, events } = makeFetcher();
     await fetcher.openWindow(T0 + 500);
@@ -989,6 +1202,37 @@ describe('BackfillFetcher', () => {
     expect(Math.abs(coverage[0].startTicks - fetcher.store!.epochMsToTicks(T0 - 9_000)))
       .toBeLessThan(20);
     expect(Math.abs(coverage[1].endTicks - fetcher.store!.epochMsToTicks(T0 + 2_000)))
+      .toBeLessThan(20);
+  });
+
+  it('drops in-flight residue of an aim whose landing was never verified (spray never re-binds)', async () => {
+    vi.useFakeTimers();
+    const { fetcher } = makeFetcher();
+    await fetcher.openWindow(T0 + 500);
+    const session = lastSession();
+    session.deliverInit();
+
+    // Aim 1 mis-lands 2 h forward (spray) → re-seek scheduled; its landing is
+    // never verified, but its anchor stays on the ledger.
+    session.deliverAnchor(T0 + 7_200_000);
+    session.deliverGop();
+    expect(fetcher.store!.sampleCount).toBe(0);
+
+    await vi.advanceTimersByTimeAsync(1_300); // re-seek fires → new generation
+
+    // Old-aim media still in flight, then the re-seeked aim's echo + delivery.
+    session.deliver(gopAtBaseDts(30 * 512, 2));
+    session.deliverAnchor(T0 - 9_500, 60 * 512);
+    session.deliver(gopAtBaseDts(60 * 512, 3));
+
+    // The residue would place a phantom island 2 h up (the spray mapping) —
+    // it must DROP, not re-bind; only the verified aim's delivery lands.
+    expect(fetcher.preAimRebinds).toBe(0);
+    expect(fetcher.preAimDrops).toBeGreaterThanOrEqual(1);
+    expect(fetcher.store!.sampleCount).toBe(30);
+    const coverage = fetcher.store!.coverage();
+    expect(coverage).toHaveLength(1);
+    expect(Math.abs(coverage[0].startTicks - fetcher.store!.epochMsToTicks(T0 - 9_500)))
       .toBeLessThan(20);
   });
 

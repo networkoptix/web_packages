@@ -167,6 +167,22 @@ describe('SampleStore — cross-window coherence', () => {
     expect(holeEnd).not.toBeNull();
     expect(store.contiguous(holeEnd!.ticks, w1Start)).toBe(false);
   });
+
+  it('dissolves a sub-frame micro-gap between windows (anchor wobble, not a hole)', () => {
+    const store = makeStore();
+    const gop = uniformGop(30); // 30 × 512 ticks = 1 s, frame interval ≈ 33 ms
+
+    insert(store, makeFragment(0, gop), anchor(T0, 0));
+    // Second window lands 10 ms short of flush — sub-frame, so no frame can be
+    // missing in the gap. Split coverage here shatters the reverse runway into
+    // micro-intervals that can never resume (live-edge wedge).
+    insert(store, makeFragment(1_000_000, gop, 2), anchor(T0 - 1010, 1_000_000));
+
+    expect(store.coverage()).toHaveLength(1);
+    const w1First = store.sampleNear(T0 * TICKS_PER_MS)!;
+    const below = store.prevSample(w1First.ticks)!;
+    expect(store.contiguous(below.ticks, w1First.ticks)).toBe(true);
+  });
 });
 
 // ─── Stitch fingerprint (real spike data) ───────────────────────────────────
@@ -474,6 +490,28 @@ describe('SampleStore — mis-anchored interleave (P0.10)', () => {
       samples: [{ ticks: rogueTicks, durationTicks: 512, key: false, bytes: new Uint8Array(999), configEpoch: 0 }],
     });
     expect(store.gopFor(T0 * TICKS_PER_MS + 11 * 512)).toBeNull();
+  });
+
+  it('a poisoned pair only barriers its own seam — a later keyframe re-legitimizes decode above it', () => {
+    const store = makeStore();
+    // Keys every 5 samples so GOPs exist above and below the rogue.
+    const specs = Array.from({ length: 30 }, (_, i) => ({ duration: 512, size: 1000 + i, key: i % 5 === 0 }));
+    insert(store, makeFragment(0, specs), anchor(T0, 0));
+    const rogueTicks = T0 * TICKS_PER_MS + 10 * 512 + 256;
+    (store as unknown as { fragments: unknown[] }).fragments.push({
+      startTicks: rogueTicks,
+      endTicks: rogueTicks + 512,
+      byteLength: 999,
+      samples: [{ ticks: rogueTicks, durationTicks: 512, key: false, bytes: new Uint8Array(999), configEpoch: 0 }],
+    });
+    // Across the pair: still refused (never decode over interleaved wobble)…
+    expect(store.gopFor(T0 * TICKS_PER_MS + 11 * 512)).toBeNull();
+    // …but a target whose own governing keyframe sits above the pair decodes —
+    // one poisoned seam must not make the whole interval unplayable (the
+    // reverse buffering↔resume thrash-wedge).
+    const above = store.gopFor(T0 * TICKS_PER_MS + 16 * 512);
+    expect(above).not.toBeNull();
+    expect(Math.abs(above!.samples[0].ticks - (T0 * TICKS_PER_MS + 15 * 512))).toBeLessThan(1);
   });
 
   it('resolves an off-by-one-frame fingerprint conflict via sequence alignment (§7.2)', () => {

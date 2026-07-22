@@ -14,9 +14,18 @@ import type { Logger } from '../types';
 
 // ─── Config ─────────────────────────────────────────────────────────────────
 
+/** A recorded-archive span the client knows about (`endMs` = Infinity while still recording). */
+export interface RecordedSpan {
+  startMs: number;
+  endMs: number;
+}
+
 export interface BackfillFetcherConfig {
-  /** Open a fetch session positioned at `positionMs` (injected for testability). */
-  openSession: (positionMs: number) => MediaFetchSession;
+  /**
+   * Open a fetch session positioned at `positionMs` (injected for testability).
+   * `speed` overrides the factory's session speed; undefined = factory default.
+   */
+  openSession: (positionMs: number, speed?: number) => MediaFetchSession;
   /** Window length fetched per request (default 10 s). */
   windowMs?: number;
   /** Overlap with existing coverage when extending back (default 1 s). */
@@ -87,6 +96,10 @@ const DEFAULT_STALL_TIMEOUT_MS = 10_000;
 const HOLE_PROBE_STALL_TIMEOUT_MS = 2_000;
 /** Two landings this close are the server's deterministic answer, not a spray. */
 const SAME_LANDING_TOLERANCE_MS = 2_500;
+/** Edge jitter absorbed when matching a landing/ask against the client's recorded spans. */
+const RECORDED_SPAN_EDGE_SLACK_MS = 1_000;
+/** Hop aims end this far inside the previous chunk's tail so window completion keys on real delivery, not the jittery span edge. */
+const HOP_TAIL_INSET_MS = RECORDED_SPAN_EDGE_SLACK_MS;
 /** Runaway backstop on fragments awaiting an anchor (the server self-paces). */
 const MAX_PENDING_FRAGMENTS = 600;
 /**
@@ -215,6 +228,16 @@ export class BackfillFetcher extends Disposable {
 
   private stallTimer: ReturnType<typeof globalThis.setTimeout> | null = null;
 
+  /** Requested session speed; undefined = the openSession factory's default. */
+  private _fetchSpeed: number | undefined;
+  /** Speed the LIVE session was opened with — reuse requires it to match {@link _fetchSpeed}. */
+  private sessionSpeed: number | undefined;
+
+  /** Recorded-archive spans from the client's chunk data; null = unknown. */
+  private recordedSpans: RecordedSpan[] | null = null;
+  /** Generations whose landing was verified — only their in-flight residue may re-bind. */
+  private landedGens = new Set<number>();
+
   constructor(config: BackfillFetcherConfig) {
     super();
     this.config = {
@@ -232,6 +255,46 @@ export class BackfillFetcher extends Disposable {
 
   get state(): BackfillFetcherState {
     return this._state;
+  }
+
+  get windowMs(): number {
+    return this.config.windowMs;
+  }
+
+  /**
+   * Resize the per-aim window at runtime; the next aim reads it live. Continuous
+   * reverse widens it to amortize per-aim re-seek overhead; the caller restores
+   * the stepping default on stop.
+   */
+  setWindowMs(ms: number): void {
+    this.config.windowMs = ms;
+  }
+
+  /** Fetch-session speed requested of the next session open (undefined = factory default). */
+  get fetchSpeed(): number | undefined {
+    return this._fetchSpeed;
+  }
+
+  /**
+   * Set the speed for fetch sessions. Speed is baked into a session at
+   * handshake, so a live session opened at a DIFFERENT speed stops being
+   * reused — the next aim reconnects instead of DC-seeking it. Continuous
+   * reverse raises this (supply must outrun the drain rate); the caller
+   * restores the stepping default on stop.
+   */
+  setFetchSpeed(speed: number | undefined): void {
+    this._fetchSpeed = speed;
+  }
+
+  /**
+   * Supply the recorded-archive spans the client knows for this camera (from
+   * the timeline's recordedTimePeriods). Landing verification uses them to
+   * tell a legitimate cross-gap island (the previous chunk's tail across a
+   * real recording gap) from server mis-positioning inside continuous archive.
+   * Null = unknown → landing verdicts fall back to trusting the server.
+   */
+  setRecordedSpans(spans: RecordedSpan[] | null): void {
+    this.recordedSpans = spans;
   }
 
   /** Available after `ready`. */
@@ -331,7 +394,7 @@ export class BackfillFetcher extends Disposable {
     this.window = { fromMs, toMs };
     this.beginRequest(false);
 
-    if (this.session && this.session.state === 'connected') {
+    if (this.session && this.session.state === 'connected' && this.sessionSpeed === this._fetchSpeed) {
       // A seek can truncate the previous aim's delivery mid-box; the new
       // aim's first box must parse from a clean slate.
       this.parser.reset();
@@ -361,7 +424,7 @@ export class BackfillFetcher extends Disposable {
     this.window = { fromMs: anchorMs - this.config.windowMs, toMs: anchorMs };
     this.beginRequest(true);
 
-    if (this.session && this.session.state === 'connected') {
+    if (this.session && this.session.state === 'connected' && this.sessionSpeed === this._fetchSpeed) {
       // Warm: a paused seek delivers exactly the governing GOP, no forward fill.
       if (this._state === 'collecting') {
         this.session.pause();
@@ -384,6 +447,11 @@ export class BackfillFetcher extends Disposable {
    * stitch. Defaults to the oldest covered position; a caller working a
    * specific coverage island (the cursor's, when older detached islands
    * exist) passes that island's floor instead.
+   *
+   * When the default window's ask would fall inside a known recording gap and
+   * miss the previous chunk entirely, the aim hops to that chunk's tail
+   * instead — asking in the gap only draws a forward landing at the current
+   * chunk's start (zero backward growth, misread as archive start).
    */
   async extendBack(floorMs?: number): Promise<void> {
     this.throwIfDisposed();
@@ -393,7 +461,15 @@ export class BackfillFetcher extends Disposable {
       throw new Error('extendBack before any coverage');
     }
     const oldestMs = floorMs ?? store.ticksToEpochMs(coverage[0].startTicks);
-    await this.openWindow(oldestMs + this.config.overlapMs);
+    let toMs = oldestMs + this.config.overlapMs;
+    const fromMs = toMs - this.config.windowMs;
+    if (this.askIsRecorded(fromMs) === false) {
+      const prevEnd = this.prevRecordedEndBefore(fromMs);
+      if (prevEnd !== null) {
+        toMs = prevEnd - HOP_TAIL_INSET_MS;
+      }
+    }
+    await this.openWindow(toMs);
   }
 
   /**
@@ -442,9 +518,11 @@ export class BackfillFetcher extends Disposable {
     this.staleAnchorOffset = null;
     this.lastActivityAtMs = null;
     this.anchorLedger = [];
+    this.landedGens.clear();
     this.setState('opening');
 
-    const session = this.config.openSession(positionMs);
+    const session = this.config.openSession(positionMs, this._fetchSpeed);
+    this.sessionSpeed = this._fetchSpeed;
     this.session = session;
     this.sessionCleanups.push(
       session.on('timestamp', (d) => {
@@ -868,6 +946,18 @@ export class BackfillFetcher extends Disposable {
         continue;
       }
       if (governing.gen < this.generation) {
+        if (!this.landedGens.has(governing.gen)) {
+          // Residue of an aim whose landing was never verified (superseded or
+          // abandoned at a misland): its mapping may be a mis-positioned
+          // delivery, and inserting it would poison the store with phantom
+          // coverage far from any ask. Dropping costs at most a refetchable
+          // hole; admitting spray teleports the reverse playhead.
+          this._preAimDrops++;
+          this.config.logger?.warn?.(
+            '[BackfillFetcher] dropped in-flight residue of an unverified aim',
+          );
+          continue;
+        }
         // The previous delivery's in-flight media (a flushed partial or
         // grid-cut tail): place it under the mapping that governed it and let
         // the store judge. Never this aim's landing or window accounting, but
@@ -936,6 +1026,74 @@ export class BackfillFetcher extends Disposable {
     this.checkWindowComplete();
   }
 
+  /**
+   * True when `[fromMs, toMs]` lies inside ONE known recorded span — i.e. the
+   * archive is continuous between them and no cross-gap island can exist there.
+   * Null = spans unknown, no verdict. Landing verification and the reverse
+   * hole-jump pacing both key on this.
+   */
+  spanIsGapFree(fromMs: number, toMs: number): boolean | null {
+    if (!this.recordedSpans) return null;
+    for (const s of this.recordedSpans) {
+      if (fromMs >= s.startMs - RECORDED_SPAN_EDGE_SLACK_MS
+        && toMs <= s.endMs + RECORDED_SPAN_EDGE_SLACK_MS) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * True when the ask sits STRICTLY inside a known recorded span (edge-inset by
+   * the slack — span-edge asks are ambiguous and stay unverdicted). Null =
+   * spans unknown.
+   */
+  private askIsRecorded(askMs: number): boolean | null {
+    if (!this.recordedSpans) return null;
+    for (const s of this.recordedSpans) {
+      if (askMs >= s.startMs + RECORDED_SPAN_EDGE_SLACK_MS
+        && askMs <= s.endMs - (Number.isFinite(s.endMs) ? RECORDED_SPAN_EDGE_SLACK_MS : 0)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * The end of the latest recorded span that lies wholly below `ms` (with the
+   * edge slack), i.e. the previous chunk's tail across a recording gap. Null =
+   * spans unknown, or no earlier span. Open-ended spans never qualify — an
+   * unfinished recording cannot sit below a gap.
+   */
+  private prevRecordedEndBefore(ms: number): number | null {
+    if (!this.recordedSpans) return null;
+    let best: number | null = null;
+    for (const s of this.recordedSpans) {
+      if (Number.isFinite(s.endMs)
+        && s.endMs <= ms - RECORDED_SPAN_EDGE_SLACK_MS
+        && (best === null || s.endMs > best)) {
+        best = s.endMs;
+      }
+    }
+    return best;
+  }
+
+  /**
+   * True when any recorded span STARTS below `ms` (with the edge slack) — the
+   * archive provably holds earlier data, whether across a gap or lower inside
+   * the same span. Null = spans unknown, no verdict. Reverse playback's
+   * archive-start conclusion keys on this.
+   */
+  hasRecordedDataBefore(ms: number): boolean | null {
+    if (!this.recordedSpans) return null;
+    for (const s of this.recordedSpans) {
+      if (s.startMs < ms - RECORDED_SPAN_EDGE_SLACK_MS) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   /** Landing verification: first fragment of each aim must be near the ask. */
   private checkLanding(fragment: Fmp4VideoFragment, anchor: AnchorPair): boolean {
     if (this.landingChecked || !this.window) return true;
@@ -949,6 +1107,7 @@ export class BackfillFetcher extends Disposable {
     const landed = firstMs >= target - this.config.landingSlackMs && firstMs <= toMs + 1_000;
     if (landed) {
       this.landingChecked = true;
+      this.landedGens.add(this.generation);
       return true;
     }
 
@@ -967,13 +1126,27 @@ export class BackfillFetcher extends Disposable {
     if (this.firstMislandMs !== null
       && Math.abs(firstMs - this.firstMislandMs) <= SAME_LANDING_TOLERANCE_MS) {
       if (firstMs < target) {
-        // Early but stable: correctly-anchored data from across a recording
-        // gap (e.g. the previous chunk's last GOP) — accept it as a separate
-        // coverage island rather than rejecting the frames the step wants.
+        // Early but stable. Legitimate ONLY when the ask itself falls in a
+        // recording gap — the server then positions at the previous chunk's
+        // tail (a cross-gap island). When the client's chunk data says the ask
+        // is inside recorded archive, the server mis-positioned despite having
+        // the data (large jumps teleport reverse through phantom islands) —
+        // abandon, never admit it.
+        if (this.askIsRecorded(target) === true) {
+          this.config.logger?.warn?.(
+            '[BackfillFetcher] stable early landing for an ask inside recorded archive — mis-positioning, aim abandoned',
+          );
+          this.pauseDelivery();
+          this.emit('landingfailed', undefined);
+          return false;
+        }
+        // Ask in a gap (or spans unknown): accept the island rather than
+        // rejecting the frames the step wants.
         this.config.logger?.info?.(
           '[BackfillFetcher] stable early landing accepted as a coverage island',
         );
         this.landingChecked = true;
+        this.landedGens.add(this.generation);
         return true;
       }
       // Forward and stable: the server cannot position earlier here.
