@@ -87,6 +87,15 @@ const RESYNC_FOURCCS = ['ftyp', 'styp', 'moov', 'moof'].map(
 /** Sanity bound on a resync candidate's size field (real moov/moof ≪ this). */
 const RESYNC_MAX_BOX_SIZE = 1 << 20;
 
+/**
+ * A corrupt box length would buffer the whole stream without ever completing
+ * a box (the largest legitimate box, one GOP's mdat, is a few MB).
+ */
+const MAX_BOX_BYTES = 64 * 1024 * 1024;
+
+/** Sanity ceiling on a trun's declared sample count (~28 min of 60 fps video). */
+const MAX_TRUN_SAMPLE_COUNT = 100_000;
+
 function view(bytes: Uint8Array): DataView {
   return new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
 }
@@ -247,6 +256,11 @@ export class Fmp4Parser {
         this.pending = null;
         return events;
       }
+      if (size > MAX_BOX_BYTES) {
+        events.push({ kind: 'unsupported', reason: `implausible box size (${type}, size=${size})` });
+        this.pending = null;
+        return events;
+      }
       if (size > remaining) break; // incomplete — wait for more bytes
 
       if (type === 'moov') {
@@ -274,6 +288,11 @@ export class Fmp4Parser {
         }
         if (mdatSize < mdatHdr) {
           events.push({ kind: 'unsupported', reason: 'corrupt mdat header' });
+          this.pending = null;
+          return events;
+        }
+        if (mdatSize > MAX_BOX_BYTES) {
+          events.push({ kind: 'unsupported', reason: `implausible box size (mdat, size=${mdatSize})` });
           this.pending = null;
           return events;
         }
@@ -474,6 +493,9 @@ export class Fmp4Parser {
         let o = trun.start + trun.hdr + 4;
         const count = dv.getUint32(o);
         o += 4;
+        if (count > MAX_TRUN_SAMPLE_COUNT) {
+          return [{ kind: 'unsupported', reason: `implausible trun sample count (${count})` }];
+        }
 
         let dataPos: number;
         if (trunFlags & TRUN_DATA_OFFSET) {
@@ -509,6 +531,11 @@ export class Fmp4Parser {
 
           if (duration === undefined || size === undefined) {
             return [{ kind: 'unsupported', reason: 'sample without duration/size (no trun field, no defaults)' }];
+          }
+          // A zero default size would run the walk out its full declared
+          // count without ever advancing dataPos.
+          if (size === 0) {
+            return [{ kind: 'unsupported', reason: 'zero-size sample' }];
           }
           if (flags === undefined) {
             return [{ kind: 'unsupported', reason: 'sample without resolvable flags (keyframe unknown)' }];

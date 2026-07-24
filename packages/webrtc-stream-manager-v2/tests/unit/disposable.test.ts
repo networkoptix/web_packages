@@ -27,6 +27,11 @@ class TestDisposable extends Disposable {
     return this.setInterval(callback, delay);
   }
 
+  /** Expose protected clearTimeout for testing. */
+  public exposedClearTimeout(id: ReturnType<typeof globalThis.setTimeout>) {
+    this.clearTimeout(id);
+  }
+
   protected override onAfterAbort(): void {
     this.afterAbortCallCount++;
   }
@@ -129,6 +134,52 @@ describe('Disposable', () => {
 
       // Should still be 1 -- no further calls after dispose
       expect(callback).toHaveBeenCalledTimes(1);
+    });
+
+    it('clearTimeout cancels a managed timer', () => {
+      const instance = new TestDisposable();
+      const callback = vi.fn();
+      const id = instance.exposedSetTimeout(callback, 1000);
+
+      instance.exposedClearTimeout(id);
+      vi.advanceTimersByTime(2000);
+
+      expect(callback).not.toHaveBeenCalled();
+    });
+
+    it('re-arming a timer many times keeps a single abort listener', async () => {
+      const instance = new TestDisposable();
+      const addListener = vi.spyOn(instance.signal, 'addEventListener');
+
+      let id = instance.exposedSetTimeout(() => {}, 1000);
+      for (let i = 0; i < 100; i++) {
+        instance.exposedClearTimeout(id);
+        id = instance.exposedSetTimeout(() => {}, 1000);
+      }
+
+      expect(addListener).toHaveBeenCalledTimes(1);
+
+      // The surviving timer is still swept on dispose.
+      const callback = vi.fn();
+      instance.exposedClearTimeout(id);
+      instance.exposedSetTimeout(callback, 1000);
+      await instance.dispose();
+      vi.advanceTimersByTime(2000);
+      expect(callback).not.toHaveBeenCalled();
+    });
+
+    it('a fired timer runs its callback and later timers are still swept', async () => {
+      const instance = new TestDisposable();
+      const fired = vi.fn();
+      instance.exposedSetTimeout(fired, 100);
+      vi.advanceTimersByTime(100);
+      expect(fired).toHaveBeenCalledOnce();
+
+      const pending = vi.fn();
+      instance.exposedSetTimeout(pending, 1000);
+      await instance.dispose();
+      vi.advanceTimersByTime(2000);
+      expect(pending).not.toHaveBeenCalled();
     });
   });
 

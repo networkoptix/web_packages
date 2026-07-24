@@ -159,10 +159,11 @@ function rawBox(type: string, ...parts: (number[] | Uint8Array)[]): Uint8Array {
 function fragmentThatThrows(trackId: number): Uint8Array {
   const mfhd = rawBox('mfhd', u32(0), u32(99));
   // tfhd carries default duration/size/flags (0x38) so only the cts read runs.
-  const tfhd = rawBox('tfhd', u32(0x38), u32(trackId), u32(512), u32(0), u32(0x10000));
+  const tfhd = rawBox('tfhd', u32(0x38), u32(trackId), u32(512), u32(4), u32(0x10000));
   const tfdt = rawBox('tfdt', u32(0), u32(0));
-  // trun: data-offset + per-sample cts (0x801), count ≫ segment bytes.
-  const trun = rawBox('trun', u32(0x801), u32(1_000_000), u32(0));
+  // trun: data-offset + per-sample cts (0x801), count ≫ segment bytes (but
+  // under the implausible-count cap, so the cts reads actually run).
+  const trun = rawBox('trun', u32(0x801), u32(50_000), u32(0));
   const moof = rawBox('moof', mfhd, rawBox('traf', tfhd, tfdt, trun));
   const mdat = rawBox('mdat', new Array(64).fill(0));
   const out = new Uint8Array(moof.byteLength + mdat.byteLength);
@@ -1770,5 +1771,71 @@ describe('BackfillFetcher', () => {
     expect(events.unsupported).toEqual(['parser exception']);
     expect(fetcher.state).toBe('failed');
     await expect(fetcher.openWindow(T0)).rejects.toThrow('failed');
+  });
+});
+
+// ─── Tests: hang hardening ───────────────────────────────────────────────────
+
+describe('BackfillFetcher — hang hardening', () => {
+  beforeEach(() => {
+    MockFetchSession.instances = [];
+    MockFetchSession.gateConnect = false;
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it('bytes without parser progress trip the no-progress belt', async () => {
+    vi.useFakeTimers();
+    const { fetcher, events } = makeFetcher();
+    await fetcher.openWindow(T0 + 500);
+    const session = lastSession();
+    session.deliverInit();
+    session.deliverAnchor(T0);
+
+    // An orphan mdat header declaring 1 MB the stream never completes: every
+    // dribble re-arms the byte-keyed stall timer, but no box ever parses.
+    const header = new Uint8Array(8);
+    new DataView(header.buffer).setUint32(0, 1 << 20);
+    header.set([0x6d, 0x64, 0x61, 0x74], 4); // 'mdat'
+    session.deliver(header);
+    for (let i = 0; i < 29; i++) {
+      await vi.advanceTimersByTimeAsync(1_000);
+      session.deliver(new Uint8Array(16));
+    }
+    expect(events.stalled).toHaveLength(0);
+
+    await vi.advanceTimersByTimeAsync(2_000);
+    expect(events.stalled.length).toBeGreaterThan(0);
+    expect(fetcher.state).toBe('collecting'); // recoverable strike, not a hard fail
+  });
+
+  it('the belt is cleared once the aim completes', async () => {
+    vi.useFakeTimers();
+    const { fetcher, events } = makeFetcher();
+    await fetcher.openWindow(T0 + 500);
+    const session = lastSession();
+    session.deliverInit();
+    session.deliverAnchor(T0);
+    session.deliverGop();
+    expect(events.windowcomplete).toHaveLength(1);
+
+    await vi.advanceTimersByTimeAsync(120_000);
+    expect(events.stalled).toHaveLength(0);
+  });
+
+  it('a connect that never settles reports sessionlost at the deadline', async () => {
+    vi.useFakeTimers();
+    MockFetchSession.gateConnect = true;
+    const { fetcher, events } = makeFetcher();
+
+    const opening = fetcher.openWindow(T0 + 500);
+    await vi.advanceTimersByTimeAsync(20_000);
+    await opening;
+
+    expect(events.sessionlost).toHaveLength(1);
+    expect(fetcher.state).toBe('idle');
+    expect(lastSession().disposed).toBe(true);
   });
 });

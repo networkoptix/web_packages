@@ -94,6 +94,13 @@ const DEFAULT_RESEEK_DELAY_MS = 1_200;
 const DEFAULT_STALL_TIMEOUT_MS = 10_000;
 /** A hole probe asks for one GOP; silence beyond ~2 s already means the gap is empty. */
 const HOLE_PROBE_STALL_TIMEOUT_MS = 2_000;
+/**
+ * Belt keyed on parser progress: byte delivery re-arms the stall timer, so
+ * bytes-without-boxes would otherwise mask a stall forever.
+ */
+const NO_PROGRESS_TIMEOUT_MS = 30_000;
+/** Bound on the cold `session.connect()` await, which runs before any stall timer is armed. */
+const CONNECT_DEADLINE_MS = 20_000;
 /** Two landings this close are the server's deterministic answer, not a spray. */
 const SAME_LANDING_TOLERANCE_MS = 2_500;
 /** Edge jitter absorbed when matching a landing/ask against the client's recorded spans. */
@@ -227,6 +234,7 @@ export class BackfillFetcher extends Disposable {
   private conflictAbandoned = false;
 
   private stallTimer: ReturnType<typeof globalThis.setTimeout> | null = null;
+  private progressBelt: ReturnType<typeof globalThis.setTimeout> | null = null;
 
   /** Requested session speed; undefined = the openSession factory's default. */
   private _fetchSpeed: number | undefined;
@@ -402,6 +410,7 @@ export class BackfillFetcher extends Disposable {
       this.session.resume();
       this.setState('collecting');
       this.armStallTimer();
+      this.armProgressBelt();
       return;
     }
 
@@ -433,6 +442,7 @@ export class BackfillFetcher extends Disposable {
       this.session.seek(anchorMs);
       this.setState('collecting');
       this.armStallTimer();
+      this.armProgressBelt();
       return;
     }
 
@@ -493,6 +503,7 @@ export class BackfillFetcher extends Disposable {
     this.session.seek(atMs);
     this.setState('collecting');
     this.armStallTimer();
+    this.armProgressBelt();
     return true;
   }
 
@@ -500,6 +511,7 @@ export class BackfillFetcher extends Disposable {
   pauseDelivery(): void {
     this.session?.pause();
     this.clearStallTimer();
+    this.clearProgressBelt();
     this.clearReseekTimer();
     if (this._state === 'collecting' || this._state === 'opening') {
       this.setState('paused');
@@ -534,8 +546,17 @@ export class BackfillFetcher extends Disposable {
       session.on('error', () => this.onSessionLost()),
     );
 
+    let connectTimer: ReturnType<typeof globalThis.setTimeout> | null = null;
     try {
-      await session.connect();
+      await Promise.race([
+        session.connect(),
+        new Promise<never>((_, reject) => {
+          connectTimer = this.setTimeout(() => {
+            connectTimer = null;
+            reject(new Error(`session connect exceeded ${CONNECT_DEADLINE_MS} ms`));
+          }, CONNECT_DEADLINE_MS);
+        }),
+      ]);
     } catch (err) {
       if (this.disposed || this.session !== session) {
         // Superseded mid-connect: a newer aim owns the fetcher, so this
@@ -551,6 +572,10 @@ export class BackfillFetcher extends Disposable {
       this.setState('idle');
       this.emit('sessionlost', undefined);
       return;
+    } finally {
+      if (connectTimer !== null) {
+        this.clearTimeout(connectTimer);
+      }
     }
     if (this.disposed || this.session !== session) {
       if (!session.disposed) {
@@ -568,6 +593,7 @@ export class BackfillFetcher extends Disposable {
 
     this.setState('collecting');
     this.armStallTimer();
+    this.armProgressBelt();
   }
 
   private teardownSession(): void {
@@ -578,6 +604,7 @@ export class BackfillFetcher extends Disposable {
     }
     this.session = null;
     this.clearStallTimer();
+    this.clearProgressBelt();
     this.clearReseekTimer();
     this.clearSuspectAnchor();
   }
@@ -709,7 +736,7 @@ export class BackfillFetcher extends Disposable {
 
   private clearSuspectAnchor(): void {
     if (this.suspectAnchorTimer !== null) {
-      clearTimeout(this.suspectAnchorTimer);
+      this.clearTimeout(this.suspectAnchorTimer);
       this.suspectAnchorTimer = null;
     }
     this.suspectAnchor = null;
@@ -812,6 +839,9 @@ export class BackfillFetcher extends Disposable {
       this.config.logger?.error?.('[BackfillFetcher] parser exception', err);
       this.fail('parser exception');
       return;
+    }
+    if (events.length) {
+      this.armProgressBelt();
     }
     for (const event of events) {
       if (event.kind === 'init') {
@@ -1219,7 +1249,7 @@ export class BackfillFetcher extends Disposable {
 
   private clearReseekTimer(): void {
     if (this.reseekTimer !== null) {
-      clearTimeout(this.reseekTimer);
+      this.clearTimeout(this.reseekTimer);
       this.reseekTimer = null;
     }
     this.reseekPending = false;
@@ -1257,6 +1287,7 @@ export class BackfillFetcher extends Disposable {
   private completeWindow(): void {
     this.session?.pause();
     this.clearStallTimer();
+    this.clearProgressBelt();
     this.setState('paused');
     this.emit('windowcomplete', undefined);
   }
@@ -1282,8 +1313,28 @@ export class BackfillFetcher extends Disposable {
 
   private clearStallTimer(): void {
     if (this.stallTimer !== null) {
-      clearTimeout(this.stallTimer);
+      this.clearTimeout(this.stallTimer);
       this.stallTimer = null;
+    }
+  }
+
+  /** See {@link NO_PROGRESS_TIMEOUT_MS}: re-armed on parser output, not byte arrival. */
+  private armProgressBelt(): void {
+    this.clearProgressBelt();
+    if (this.disposed) return;
+    this.progressBelt = this.setTimeout(() => {
+      this.progressBelt = null;
+      if (this._state === 'collecting' || this._state === 'opening') {
+        this.emit('stalled', undefined);
+        this.armProgressBelt();
+      }
+    }, NO_PROGRESS_TIMEOUT_MS);
+  }
+
+  private clearProgressBelt(): void {
+    if (this.progressBelt !== null) {
+      this.clearTimeout(this.progressBelt);
+      this.progressBelt = null;
     }
   }
 

@@ -10,6 +10,11 @@ export interface GopDecoderConfig {
   timescale: number;
   /** Decoded-frame cache cap. Default 256 MB. */
   byteCapBytes?: number;
+  /**
+   * Per-run decode deadline: a decoder fed a malformed bitstream can neither
+   * output nor error, so flush() never settles.
+   */
+  decodeTimeoutMs?: number;
   /** Coded dimensions from the init segment — failure diagnostics only. */
   codedWidth?: number;
   codedHeight?: number;
@@ -27,7 +32,13 @@ export interface DecodeRun {
 export interface DecodeFailureSnapshot {
   /** Epoch ms when the failure was recorded. */
   at: number;
-  phase: 'unsupported-config' | 'invalid-run' | 'decode' | 'decoder-error' | 'missing-target';
+  phase:
+    | 'unsupported-config'
+    | 'invalid-run'
+    | 'decode'
+    | 'decode-timeout'
+    | 'decoder-error'
+    | 'missing-target';
   errorName: string;
   errorMessage: string;
   codec: string;
@@ -49,6 +60,8 @@ export interface DecodeFailureSnapshot {
 // ─── Constants ──────────────────────────────────────────────────────────────
 
 const DEFAULT_BYTE_CAP = 256 * 1024 * 1024;
+// Real decodes finish well under 2 s; this only catches a decoder that will never answer.
+const DEFAULT_DECODE_TIMEOUT_MS = 10_000;
 const DESCRIPTION_HEAD_BYTES = 16;
 
 /** Cache-entry byte cost; GPU-opaque frames that refuse allocationSize() fall back to the NV12 estimate (≈1.5 B/px). */
@@ -170,7 +183,7 @@ export class GopDecoder {
     const hit = this.cache.get(target.ticks);
     if (hit) return Promise.resolve(hit.frame);
 
-    const queued: Promise<VideoFrame> = this.chain.then(() => this.decodeRun(run));
+    const queued: Promise<VideoFrame> = this.chain.then(() => this.decodeRunWithDeadline(run));
     // Keep the chain alive past rejections so later runs still execute.
     this.chain = queued.catch((): undefined => undefined);
     return queued;
@@ -214,6 +227,43 @@ export class GopDecoder {
   }
 
   // ── Private ───────────────────────────────────────────────────────────
+
+  /**
+   * On timeout the decoder is failed and closed — closing rejects the pending
+   * flush(), so the losing run settles and the serialization chain stays live.
+   */
+  private decodeRunWithDeadline(run: DecodeRun): Promise<VideoFrame> {
+    const timeoutMs = this.config.decodeTimeoutMs ?? DEFAULT_DECODE_TIMEOUT_MS;
+    let timer: ReturnType<typeof globalThis.setTimeout> | null = null;
+    const deadline = new Promise<never>((_, reject) => {
+      timer = globalThis.setTimeout(() => {
+        timer = null;
+        if (this._disposed) {
+          reject(new Error('GopDecoder disposed'));
+          return;
+        }
+        this._failed = true;
+        const error = this.recordFailure(
+          'decode-timeout',
+          new Error(`decode produced no result within ${timeoutMs} ms`),
+          run,
+        );
+        if (this.decoder && this.decoder.state !== 'closed') {
+          try {
+            this.decoder.close();
+          } catch {
+            // Already closed by an error.
+          }
+        }
+        reject(error);
+      }, timeoutMs);
+    });
+    return Promise.race([this.decodeRun(run), deadline]).finally(() => {
+      if (timer !== null) {
+        clearTimeout(timer);
+      }
+    });
+  }
 
   private async decodeRun(run: DecodeRun): Promise<VideoFrame> {
     if (this._disposed) throw new Error('GopDecoder disposed');

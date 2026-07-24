@@ -817,6 +817,44 @@ describe('FrameStepper', () => {
     expect(events.disabled).toEqual(['cannot aim fetch window']);
   });
 
+  it('no-keyframe refetch that cannot be aimed falls back to openWindow', async () => {
+    const store = makeStore();
+    const { stepper, fetcher } = makeStepper(store);
+    stepper.enterStepping(T0);
+    await flush();
+    // Covered target whose governing keyframe is not contiguously present,
+    // at a moment the session cannot take a warm re-seek.
+    vi.spyOn(store, 'gopFor').mockReturnValue(null);
+    fetcher.refetchHole.mockReturnValue(false);
+
+    stepper.stepPrev();
+    await flush();
+
+    expect(stepper.state).toBe('loading');
+    expect(fetcher.refetchHole).toHaveBeenCalledTimes(1);
+    expect(fetcher.openWindow).toHaveBeenCalledTimes(1);
+    expect(fetcher.openWindow.mock.calls[0][0]).toBeCloseTo(
+      fetcher.refetchHole.mock.calls[0][0] as number,
+      3,
+    );
+  });
+
+  it('disables when the no-keyframe fallback window cannot be aimed either', async () => {
+    const store = makeStore();
+    const { stepper, fetcher, events } = makeStepper(store);
+    stepper.enterStepping(T0);
+    await flush();
+    vi.spyOn(store, 'gopFor').mockReturnValue(null);
+    fetcher.refetchHole.mockReturnValue(false);
+    fetcher.openWindow.mockRejectedValue(new Error('no session'));
+
+    stepper.stepPrev();
+    await flush();
+
+    expect(stepper.state).toBe('disabled');
+    expect(events.disabled).toEqual(['cannot aim fetch window']);
+  });
+
   it('exit() lands on plain paused video: decoder gone, delivery paused', async () => {
     const { stepper, fetcher } = makeStepper();
     stepper.enterStepping(T0);

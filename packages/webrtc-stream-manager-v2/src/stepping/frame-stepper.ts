@@ -446,7 +446,12 @@ export class FrameStepper {
     if (!run) {
       // Covered but no governing keyframe — treat like a hole.
       this.beginLoading(direction);
-      this.fetcher.refetchHole(store.ticksToEpochMs(target.ticks));
+      const holeMs = store.ticksToEpochMs(target.ticks);
+      if (!this.fetcher.refetchHole(holeMs)) {
+        void this.fetcher.openWindow(holeMs).catch(() => {
+          this.disable('cannot aim fetch window');
+        });
+      }
       return;
     }
 

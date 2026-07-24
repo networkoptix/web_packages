@@ -60,6 +60,8 @@ const mockState = {
   allocationThrows: false,
   /** Flush fires the error callback then rejects (decoder fault sim). */
   errorOnFlush: false,
+  /** Flush never settles — no output, no error (wedged HW decoder sim). */
+  hangOnFlush: false,
 };
 
 class MockVideoDecoder {
@@ -94,6 +96,9 @@ class MockVideoDecoder {
 
   async flush(): Promise<void> {
     await Promise.resolve(); // flush is genuinely async
+    if (mockState.hangOnFlush) {
+      return new Promise<void>(() => undefined);
+    }
     const batch = this.pending;
     this.pending = [];
     if (mockState.errorOnFlush) {
@@ -157,6 +162,7 @@ describe('GopDecoder', () => {
     mockState.allocationBytes = null;
     mockState.allocationThrows = false;
     mockState.errorOnFlush = false;
+    mockState.hangOnFlush = false;
     GopDecoder.lastDecodeFailure = null;
     vi.stubGlobal('VideoDecoder', MockVideoDecoder);
     vi.stubGlobal('EncodedVideoChunk', MockEncodedVideoChunk);
@@ -461,5 +467,78 @@ describe('GopDecoder', () => {
     await decoder.frameAt(makeRun(2, 1));
     expect(decoder.cacheByteLength).toBe(2 * 64 * 48 * 1.5);
     decoder.dispose();
+  });
+
+  // ── Decode deadline ──────────────────────────────────────────────────────
+
+  describe('decode deadline', () => {
+    beforeEach(() => {
+      vi.useFakeTimers();
+    });
+
+    afterEach(() => {
+      vi.useRealTimers();
+    });
+
+    it('a flush that never settles rejects at the deadline and fails the decoder', async () => {
+      mockState.hangOnFlush = true;
+      const decoder = new GopDecoder({ timescale: TIMESCALE, decodeTimeoutMs: 5_000 });
+
+      const pending = decoder.frameAt(makeRun(3, 1));
+      const rejected = expect(pending).rejects.toThrow('no result within 5000 ms');
+      await vi.advanceTimersByTimeAsync(5_000);
+      await rejected;
+
+      expect(decoder.failed).toBe(true);
+      expect(decoder.lastDecodeFailure?.phase).toBe('decode-timeout');
+      // The wedged hardware decoder was closed, not left running.
+      expect(mockState.decoders[0].state).toBe('closed');
+      decoder.dispose();
+    });
+
+    it('a run queued behind a hung one rejects too — the chain is not poisoned', async () => {
+      mockState.hangOnFlush = true;
+      const decoder = new GopDecoder({ timescale: TIMESCALE, decodeTimeoutMs: 5_000 });
+
+      const first = decoder.frameAt(makeRun(3, 1));
+      const second = decoder.frameAt(makeRun(3, 1, [0], CONFIG_A, T0_TICKS + 100_000));
+      const firstRejected = expect(first).rejects.toThrow('no result within');
+      const secondRejected = expect(second).rejects.toThrow('GopDecoder failed');
+      await vi.advanceTimersByTimeAsync(5_000);
+      await firstRejected;
+      await secondRejected;
+
+      // A replacement instance (the stepper's recovery move) decodes normally.
+      mockState.hangOnFlush = false;
+      const fresh = new GopDecoder({ timescale: TIMESCALE, decodeTimeoutMs: 5_000 });
+      await expect(fresh.frameAt(makeRun(3, 1))).resolves.toBeInstanceOf(MockVideoFrame);
+      decoder.dispose();
+      fresh.dispose();
+    });
+
+    it('a normal decode clears the deadline — no failure recorded afterwards', async () => {
+      const decoder = new GopDecoder({ timescale: TIMESCALE, decodeTimeoutMs: 5_000 });
+
+      await decoder.frameAt(makeRun(3, 1));
+      await vi.advanceTimersByTimeAsync(10_000);
+
+      expect(decoder.failed).toBe(false);
+      expect(decoder.lastDecodeFailure).toBeNull();
+      expect(mockState.decoders[0].state).toBe('configured');
+      decoder.dispose();
+    });
+
+    it('a timeout after dispose is teardown, not a failure', async () => {
+      mockState.hangOnFlush = true;
+      const decoder = new GopDecoder({ timescale: TIMESCALE, decodeTimeoutMs: 5_000 });
+
+      const pending = decoder.frameAt(makeRun(3, 1));
+      const rejected = expect(pending).rejects.toThrow('disposed');
+      decoder.dispose();
+      await vi.advanceTimersByTimeAsync(5_000);
+      await rejected;
+
+      expect(decoder.lastDecodeFailure).toBeNull();
+    });
   });
 });

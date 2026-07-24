@@ -1322,7 +1322,7 @@ export class CameraConnection extends Disposable {
     this.swapAbort?.abort();
     this.swapAbort = null;
     if (this.rearmTimer !== null) {
-      clearTimeout(this.rearmTimer);
+      this.clearTimeout(this.rearmTimer);
       this.rearmTimer = null;
     }
     this.cleanupBasePc();

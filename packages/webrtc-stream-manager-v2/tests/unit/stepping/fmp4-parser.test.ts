@@ -412,6 +412,61 @@ describe('Fmp4Parser — hardened paths', () => {
       { kind: 'unsupported', reason: "expected mdat after moof, got 'free'" },
     ]);
   });
+
+  it('rejects zero-size samples instead of walking a no-progress table', () => {
+    const parser = freshParser();
+    // No per-sample sizes + a zero default: dataPos would never advance while
+    // the loop ran out the full declared count.
+    const seg = syntheticFragment({
+      samples: Array.from({ length: 50_000 }, () => ({})),
+      tfhdDefaults: { duration: 512, size: 0, flags: NONKEY_FLAGS },
+      mdatBytes: 8,
+    });
+    const events = parser.push(seg);
+    expect(events).toEqual([
+      { kind: 'unsupported', reason: 'zero-size sample' },
+    ]);
+  });
+
+  it('rejects an implausible trun sample count before walking it', () => {
+    const parser = freshParser();
+    const moof = box('moof',
+      box('mfhd', be32(0, 1)),
+      box('traf',
+        box('tfhd', be32(0x020038, 1, 512, 100, NONKEY_FLAGS)),
+        box('tfdt', be32(0, 0)),
+        box('trun', be32(0x01, 500_000, 0)),
+      ),
+    );
+    const events = parser.push(concat(moof, box('mdat', new Uint8Array(8))));
+    expect(events).toEqual([
+      { kind: 'unsupported', reason: 'implausible trun sample count (500000)' },
+    ]);
+  });
+
+  it('rejects an implausible declared box size instead of buffering forever', () => {
+    const parser = freshParser();
+    const header = new Uint8Array(8);
+    new DataView(header.buffer).setUint32(0, 100 * 1024 * 1024);
+    header.set(ascii('free'), 4);
+    const events = parser.push(header);
+    expect(events).toEqual([
+      { kind: 'unsupported', reason: 'implausible box size (free, size=104857600)' },
+    ]);
+  });
+
+  it('rejects an implausible mdat size behind a valid moof', () => {
+    const parser = freshParser();
+    const dv = new DataView(GOP01.buffer, GOP01.byteOffset, GOP01.byteLength);
+    const moofSize = dv.getUint32(0);
+    const mdatHeader = new Uint8Array(8);
+    new DataView(mdatHeader.buffer).setUint32(0, 100 * 1024 * 1024);
+    mdatHeader.set(ascii('mdat'), 4);
+    const events = parser.push(concat(GOP01.subarray(0, moofSize), mdatHeader));
+    expect(events).toEqual([
+      { kind: 'unsupported', reason: 'implausible box size (mdat, size=104857600)' },
+    ]);
+  });
 });
 
 // ─── Tests: overlap fingerprint data (store contract) ───────────────────────

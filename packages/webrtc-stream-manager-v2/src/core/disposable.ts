@@ -2,6 +2,7 @@
 
 export abstract class Disposable {
   private readonly abortController = new AbortController();
+  private pendingTimers: Set<ReturnType<typeof globalThis.setTimeout>> | null = null;
 
   get signal(): AbortSignal {
     return this.abortController.signal;
@@ -31,15 +32,39 @@ export abstract class Disposable {
   }
 
   protected setTimeout(callback: () => void, delay: number) {
-    const id = globalThis.setTimeout(callback, delay);
-    this.onDispose(() => clearTimeout(id));
+    const id = globalThis.setTimeout(() => {
+      this.pendingTimers?.delete(id);
+      callback();
+    }, delay);
+    this.trackTimer(id);
     return id;
+  }
+
+  /** Counterpart to {@link setTimeout}; keeps the pending-timer set from growing under re-arm patterns. */
+  protected clearTimeout(id: ReturnType<typeof globalThis.setTimeout>): void {
+    this.pendingTimers?.delete(id);
+    globalThis.clearTimeout(id);
   }
 
   protected setInterval(callback: () => void, delay: number) {
     const id = globalThis.setInterval(callback, delay);
-    this.onDispose(() => clearInterval(id));
+    this.trackTimer(id);
     return id;
+  }
+
+  protected clearInterval(id: ReturnType<typeof globalThis.setInterval>): void {
+    this.pendingTimers?.delete(id);
+    globalThis.clearInterval(id);
+  }
+
+  private trackTimer(id: ReturnType<typeof globalThis.setTimeout>): void {
+    if (!this.pendingTimers) {
+      this.pendingTimers = new Set();
+      // Single sweep — a listener per set* call accumulates unboundedly under
+      // re-arm patterns. clearTimeout clears intervals too (shared handle pool).
+      this.onDispose(() => this.pendingTimers?.forEach((t) => globalThis.clearTimeout(t)));
+    }
+    this.pendingTimers.add(id);
   }
 
   /** Hook that runs after the abort signal fires during {@link dispose}. Override in subclasses for synchronous post-abort cleanup. */
