@@ -396,7 +396,17 @@ export const frameRateTracker$ = framesPerSecondFactory().pipe(
     share({ resetOnRefCountZero: false }),
 );
 
-export const throttleByFrameRateScheduler$ = frameRateTracker$.pipe(take(1), exhaustMap(({ fps }) => timer(1000 / fps)), switchMap(() => animationFrames$), shareReplay({ bufferSize: 1, refCount: false }));
+// CLOUD-16679: terminate in `share()` (bufferSize 0), NOT `shareReplay({ bufferSize: 1 })`.
+// A ReplaySubject connector replays its buffered animation-frame value synchronously on
+// subscribe; inside rxjs `throttle.startThrottle` that replay fires `endThrottling` before
+// `throttled = ...subscribe(...)` is assigned, so the just-created duration subscription is
+// never torn down and accumulates on the connector's `.observers` forever (the dominant
+// instance-count leak). `share()` never replays, so the assignment always completes first
+// and the duration is correctly unsubscribed. The 30s grace before reset keeps the
+// connector warm across back-to-back throttle windows (avoids re-running the
+// frameRateTracker$/timer init per frame) while still releasing the animationFrames$
+// chain once nothing has been throttling for 30s, so no rAF loop runs while idle.
+export const throttleByFrameRateScheduler$ = frameRateTracker$.pipe(take(1), exhaustMap(({ fps }) => timer(1000 / fps)), switchMap(() => animationFrames$), share({ resetOnRefCountZero: () => timer(30_000) }));
 
 export const throttleByFrameRate = <T>() => throttle<T>(() => throttleByFrameRateScheduler$, { leading: false, trailing: true });
 

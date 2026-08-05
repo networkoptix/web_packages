@@ -240,6 +240,7 @@ export class PeerConnectionWrapper extends Disposable {
     this.onDispose(() => {
       this.cleanupDataChannel();
       this.stopSenderTracks();
+      this.stopReceiverTracks();
       this.pc.close();
     });
 
@@ -614,6 +615,23 @@ export class PeerConnectionWrapper extends Disposable {
       }
     } catch {
       // getSenders() may throw if the PC is already closed.
+    }
+  }
+
+  // CLOUD-16679: these are receive-only connections, so stopSenderTracks() above
+  // is a no-op — the decoder-bearing tracks live on the RECEIVERS. Without
+  // stopping them, pc.close() leaves the native video decoder + GPU decode
+  // surfaces alive until the JS RTCPeerConnection is garbage-collected, which on
+  // an idle page seldom happens; RADASS promote/demote churn then ratchets
+  // renderer native memory (~700 MB/h observed). Stopping the receiver tracks
+  // forces prompt decoder teardown on dispose.
+  private stopReceiverTracks(): void {
+    try {
+      for (const receiver of this.pc.getReceivers()) {
+        receiver.track?.stop();
+      }
+    } catch {
+      // getReceivers() may throw if the PC is already closed.
     }
   }
 }

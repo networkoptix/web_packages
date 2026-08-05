@@ -6,8 +6,15 @@ import type { Logger } from '../types';
  * Diagnostic instrumentation for debugging slow camera loads.
  *
  * Collects per-camera timeline data from connect() through first playing frame.
+ * Recording is OFF by default (it would otherwise slowly leak one timeline per
+ * archive fetch-session — CLOUD-16679). Turn it on for a debug session with
+ * `window.__webrtcDiag.enable()`.
+ *
  * Exposes `window.__webrtcDiag` for console inspection:
  *
+ *   __webrtcDiag.enable()           — start recording (off by default)
+ *   __webrtcDiag.disable()          — stop recording
+ *   __webrtcDiag.enabled            — current recording state
  *   __webrtcDiag.summary()          — table of all cameras with phase timings
  *   __webrtcDiag.slow()             — only cameras that took > 5s to first frame
  *   __webrtcDiag.detail(cameraKey)  — full timeline for one camera
@@ -60,19 +67,32 @@ export interface DiagCameraTimeline {
 
 // ─── Tracker singleton ──────────────────────────────────────────────────────
 
-class DiagTracker {
+export class DiagTracker {
   private timelines = new Map<string, DiagCameraTimeline>();
+
+  // Recording is OFF by default. It ships in every build purely as a debug aid,
+  // and each fetch-session (`connectionKey:fetch#N`) would otherwise add a
+  // never-evicted timeline — a slow leak on the archive scrub/step path
+  // (CLOUD-16679). A dev opts in for a session via __webrtcDiag.enable().
+  private _enabled = false;
+
+  /** Whether timelines are being recorded. */
+  get isEnabled(): boolean {
+    return this._enabled;
+  }
+
+  /** Begin recording (collects from now on). */
+  enable(): void {
+    this._enabled = true;
+  }
+
+  /** Stop recording. Existing data is kept (use reset() to clear). */
+  disable(): void {
+    this._enabled = false;
+  }
 
   /** Start tracking a new camera connection. */
   startCamera(connectionKey: string, meta?: Partial<DiagCameraTimeline>): DiagCameraTimeline {
-    // If re-connecting, preserve old data with a suffix
-    const existing = this.timelines.get(connectionKey);
-    if (existing && !existing.disposed) {
-      existing.disposed = true;
-      const suffix = `_prev_${Date.now()}`;
-      this.timelines.set(connectionKey + suffix, existing);
-    }
-
     const timeline: DiagCameraTimeline = {
       connectionKey,
       connectStartMs: performance.now(),
@@ -86,6 +106,19 @@ class DiagTracker {
       disposed: false,
       ...meta,
     };
+
+    // Gated: while disabled, return a detached timeline (callers ignore the
+    // value) but never retain it — the Map cannot grow.
+    if (!this._enabled) return timeline;
+
+    // If re-connecting, preserve old data with a suffix
+    const existing = this.timelines.get(connectionKey);
+    if (existing && !existing.disposed) {
+      existing.disposed = true;
+      const suffix = `_prev_${Date.now()}`;
+      this.timelines.set(connectionKey + suffix, existing);
+    }
+
     this.timelines.set(connectionKey, timeline);
     return timeline;
   }
@@ -317,6 +350,15 @@ export const diagTracker = new DiagTracker();
 // Expose on window for console access
 if (typeof window !== 'undefined') {
   (window as unknown as Record<string, unknown>).__webrtcDiag = {
+    enable: () => {
+      diagTracker.enable();
+      console.log('[WEBRTC-DIAG] recording ENABLED — collecting from now on. Call __webrtcDiag.disable() to stop.');
+    },
+    disable: () => {
+      diagTracker.disable();
+      console.log('[WEBRTC-DIAG] recording DISABLED. Existing data kept; __webrtcDiag.reset() to clear.');
+    },
+    get enabled() { return diagTracker.isEnabled; },
     summary: () => diagTracker.summary(),
     slow: (ms?: number) => diagTracker.slow(ms),
     detail: (key: string) => diagTracker.detail(key),

@@ -292,3 +292,159 @@ describe('frame-rate utilities', () => {
     });
   });
 });
+
+// ─── CLOUD-16679 throttleByFrameRate scheduler leak regression ───────────────
+//
+// `throttleByFrameRate()` throttles a source to the browser frame rate via a
+// module-level scheduler observable. The bug: the scheduler terminated in
+// `shareReplay({ bufferSize: 1 })`, whose ReplaySubject connector replays its
+// buffered animation-frame value *synchronously* when a new subscriber
+// subscribes. Inside rxjs `throttle.startThrottle`, that synchronous replay
+// fires the duration's `endThrottling` before the `throttled = ...subscribe()`
+// assignment completes, so the just-created duration subscription is never
+// unsubscribed and is orphaned on the connector. The fix replaces the terminal
+// `shareReplay` with `share()` (bufferSize 0 = no synchronous replay).
+//
+// Note: in v2 the scheduler used `refCount: true`, so when the throttle refcount
+// hits zero the connector resets and cleans up — the orphan accumulation is
+// therefore latent (does not grow the observer count under load). The directly
+// observable regression is the synchronous replay itself, which these tests
+// drive through the real exported `throttleByFrameRate()` against a
+// deterministic animation-frame clock (fake timers + a setTimeout-backed
+// requestAnimationFrame shim so RAF, windowTime and timer share one clock).
+
+describe('throttleByFrameRate (CLOUD-16679 scheduler leak)', () => {
+  let originalRAF: typeof globalThis.requestAnimationFrame;
+  let originalCAF: typeof globalThis.cancelAnimationFrame;
+  let originalVisibility: PropertyDescriptor | undefined;
+
+  beforeEach(() => {
+    vi.resetModules();
+    vi.useFakeTimers();
+
+    let rafId = 0;
+    const pending = new Map<number, ReturnType<typeof setTimeout>>();
+    originalRAF = globalThis.requestAnimationFrame;
+    originalCAF = globalThis.cancelAnimationFrame;
+    globalThis.requestAnimationFrame = ((cb: FrameRequestCallback): number => {
+      const handle = ++rafId;
+      const timer = setTimeout(() => {
+        pending.delete(handle);
+        cb(Date.now());
+      }, 16);
+      pending.set(handle, timer);
+      return handle;
+    }) as typeof globalThis.requestAnimationFrame;
+    globalThis.cancelAnimationFrame = ((handle: number): void => {
+      const timer = pending.get(handle);
+      if (timer !== undefined) {
+        clearTimeout(timer);
+        pending.delete(handle);
+      }
+    }) as typeof globalThis.cancelAnimationFrame;
+
+    originalVisibility = Object.getOwnPropertyDescriptor(
+      document,
+      'visibilityState',
+    );
+    Object.defineProperty(document, 'visibilityState', {
+      configurable: true,
+      get: () => 'visible',
+    });
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+    globalThis.requestAnimationFrame = originalRAF;
+    globalThis.cancelAnimationFrame = originalCAF;
+    if (originalVisibility) {
+      Object.defineProperty(document, 'visibilityState', originalVisibility);
+    }
+    vi.restoreAllMocks();
+  });
+
+  // Drive several concurrent throttled sources continuously (a pending value on
+  // every frame) so the scheduler refcount stays >= 1 and its connector stays
+  // warm with a buffered frame — mirroring production multi-camera load.
+  async function warmScheduler(
+    throttleByFrameRate: <T>() => import('rxjs').MonoTypeOperatorFunction<T>,
+  ) {
+    const warmSources = Array.from({ length: 3 }, () => new Subject<number>());
+    const warmSubscriptions = warmSources.map((source$) =>
+      source$.pipe(throttleByFrameRate<number>()).subscribe(),
+    );
+    for (let i = 0; i < 260; i++) {
+      warmSources.forEach((source$) => source$.next(i));
+      vi.advanceTimersByTime(16);
+    }
+    // Keep the warm windows open (pending values) right up to the assertion.
+    warmSources.forEach((source$) => source$.next(9999));
+    return { warmSources, warmSubscriptions };
+  }
+
+  it('does not deliver a throttled value synchronously while the frame-rate scheduler is warm', async () => {
+    const { throttleByFrameRate } = await import('../../src/utils/frame-rate');
+    const { warmSources, warmSubscriptions } = await warmScheduler(
+      throttleByFrameRate,
+    );
+
+    // A brand-new subscriber must wait for the NEXT real animation frame before
+    // emitting. With the shareReplay bug the warm connector replays its buffered
+    // frame synchronously on subscribe, delivering the trailing value
+    // immediately (and orphaning a duration subscription on the connector).
+    const probe$ = new Subject<number>();
+    const probeOutputs: number[] = [];
+    const probeSubscription = probe$
+      .pipe(throttleByFrameRate<number>())
+      .subscribe((value) => probeOutputs.push(value));
+    probe$.next(42);
+
+    expect(probeOutputs).toEqual([]);
+
+    // After a real frame the trailing value is delivered (still functional).
+    vi.advanceTimersByTime(20);
+    expect(probeOutputs).toEqual([42]);
+
+    warmSubscriptions.forEach((subscription) => subscription.unsubscribe());
+    probeSubscription.unsubscribe();
+    warmSources.forEach((source$) => source$.complete());
+    probe$.complete();
+  });
+
+  it('throttles emissions to the frame cadence (trailing value preserved, not passed through)', async () => {
+    const { throttleByFrameRate } = await import('../../src/utils/frame-rate');
+    const { warmSources, warmSubscriptions } = await warmScheduler(
+      throttleByFrameRate,
+    );
+
+    const source$ = new Subject<number>();
+    const outputs: number[] = [];
+    const subscription = source$
+      .pipe(throttleByFrameRate<number>())
+      .subscribe((value) => outputs.push(value));
+
+    // Emit a rapid burst within a single frame gap: leading:false means nothing
+    // is emitted until the window closes on the next frame, and only the
+    // trailing (latest) value survives.
+    source$.next(1);
+    source$.next(2);
+    source$.next(3);
+    expect(outputs).toEqual([]);
+
+    vi.advanceTimersByTime(20); // one frame closes the window
+    expect(outputs).toEqual([3]);
+
+    // Another burst collapses to its trailing value on the next frame.
+    source$.next(4);
+    source$.next(5);
+    vi.advanceTimersByTime(20);
+    expect(outputs).toEqual([3, 5]);
+
+    subscription.unsubscribe();
+    source$.complete();
+    warmSubscriptions.forEach((warmSubscription) =>
+      warmSubscription.unsubscribe(),
+    );
+    warmSources.forEach((warmSource$) => warmSource$.complete());
+  });
+});

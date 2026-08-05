@@ -132,7 +132,19 @@ const throttleByFrameRateScheduler$ = frameRateTracker$.pipe(
   take(1),
   exhaustMap(({ fps }) => timer(1000 / fps)),
   switchMap(() => animationFrames$),
-  shareReplay({ bufferSize: 1, refCount: true }),
+  // CLOUD-16679: `share()` (bufferSize 0) instead of `shareReplay({ bufferSize: 1 })`.
+  // A ReplaySubject connector replays its buffered animation-frame value
+  // synchronously on subscribe; inside rxjs `throttle.startThrottle` that replay
+  // fires `endThrottling` before `throttled = ...subscribe(...)` is assigned, so
+  // the new duration subscription is never torn down and leaks on the connector.
+  // `share()` never replays, so a new subscriber waits for the next real frame
+  // and the subscription is assigned before the duration can emit. The 30s
+  // grace before reset keeps the connector warm across back-to-back throttle
+  // windows (avoids re-running the frameRateTracker$/timer init per frame)
+  // while still tearing down the rAF chain once nothing has been throttling
+  // for 30s — `resetOnRefCountZero: false` left a permanent rAF loop running
+  // forever after the first throttled emission, even on video-free pages.
+  share({ resetOnRefCountZero: () => timer(30_000) }),
 );
 
 /**
