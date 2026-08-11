@@ -178,6 +178,67 @@ describe('QualityMonitor', () => {
       expect(snap2.mos).toBeLessThan(3);
     });
 
+    it('skips the MOS update when the counters go backwards (peer-connection swap)', () => {
+      // Establish a baseline, then a heavily lossy interval → MOS is bad.
+      monitor.updateStats({
+        rtt: 0.05, jitter: 0.01,
+        packetsReceived: 900, packetsLost: 100,
+        bytesReceived: 5000,
+      });
+      monitor.updateStats({
+        rtt: 0.05, jitter: 0.01,
+        packetsReceived: 1000, packetsLost: 200,
+        bytesReceived: 10000,
+      });
+      const lossyMos = monitor.snapshot().mos;
+      expect(lossyMos).toBeLessThan(3);
+
+      // The active PC swaps: the new PC's cumulative counters start near zero, so
+      // both deltas go negative. That must not be read as a zero-loss interval —
+      // the resulting falsely-healthy MOS is what drives RADASS oscillation.
+      monitor.updateStats({
+        rtt: 0.05, jitter: 0.01,
+        packetsReceived: 180, packetsLost: 20,
+        bytesReceived: 900,
+      });
+      expect(monitor.snapshot().mos).toBe(lossyMos);
+    });
+
+    it('resetStatsDeltas() does not read a long-lived PC\'s lifetime average as one interval', () => {
+      // The demote path is the dangerous one: the base PC has been running all
+      // session, so its cumulative counters are huge and its LIFETIME loss ratio
+      // is low even while the CURRENT interval is badly congested. A baseline
+      // seeded at zero would diff against those cumulative totals and read the
+      // lifetime average — falsely healthy, exactly the H2 failure mode.
+      monitor.updateStats({
+        rtt: 0.05, jitter: 0.01,
+        packetsReceived: 100, packetsLost: 100,
+        bytesReceived: 900,
+      });
+      const beforeSwap = monitor.snapshot().mos;
+      expect(beforeSwap).toBeLessThan(3);
+
+      // Active PC swaps to the long-lived base PC: ~1 % loss over its lifetime,
+      // but the link is congested right now. The first post-swap sample carries
+      // no interval information at all, so it must not move MOS.
+      monitor.resetStatsDeltas();
+      monitor.updateStats({
+        rtt: 0.05, jitter: 0.01,
+        packetsReceived: 3_000_000, packetsLost: 30_000,
+        bytesReceived: 900_000_000,
+      });
+      expect(monitor.snapshot().mos).toBe(beforeSwap);
+
+      // The next sample is a true interval against the new baseline: 150 lost of
+      // 1000 = 15 % loss, and that is what MOS must reflect.
+      monitor.updateStats({
+        rtt: 0.05, jitter: 0.01,
+        packetsReceived: 3_000_850, packetsLost: 30_150,
+        bytesReceived: 900_500_000,
+      });
+      expect(monitor.snapshot().mos).toBeLessThan(3.5);
+    });
+
     it('records bytes for stall detection', () => {
       vi.useFakeTimers();
       const fakeNow = vi.spyOn(performance, 'now');

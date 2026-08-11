@@ -61,12 +61,33 @@ export class QualityMonitor extends Disposable {
   private prevPacketsLost = 0;
   private prevPacketsReceived = 0;
   private statsUpdateCount = 0;
+  private rebaseNextSample = false;
 
   // ── Public API ──────────────────────────────────────────────────────────
 
   /** Number of stats updates received. Used to gate performance decisions. */
   getStatsUpdateCount(): number {
     return this.statsUpdateCount;
+  }
+
+  /**
+   * Rebase the packet-delta baseline. Call this whenever the peer connection
+   * that feeds `updateStats()` is replaced (HQ upgrade / LQ downgrade): the two
+   * PCs carry independent cumulative counters, so diffing across the swap
+   * produces a meaningless loss ratio.
+   *
+   * The next sample is *skipped* rather than diffed against a zero baseline.
+   * Zero-seeding would make the first sample read the new PC's entire lifetime
+   * average as if it were one interval — on a downgrade the base PC has run all
+   * session, so a genuinely congested link would report its low lifetime ratio
+   * and look healthy. One skipped sample (~1 s) is the correct cost: a swap
+   * boundary carries no interval information.
+   *
+   * `statsUpdateCount` is deliberately left alone — it gates how much history
+   * RADASS has for this camera, which a swap does not invalidate.
+   */
+  resetStatsDeltas(): void {
+    this.rebaseNextSample = true;
   }
 
   /** Return a synchronous snapshot of the current quality state. */
@@ -126,6 +147,22 @@ export class QualityMonitor extends Disposable {
     this.statsUpdateCount++;
     const deltaLost = stats.packetsLost - this.prevPacketsLost;
     const deltaReceived = stats.packetsReceived - this.prevPacketsReceived;
+
+    // Skip any sample that does not describe a real interval on a single PC:
+    // either an explicit rebase after a known swap, or a negative delta, which
+    // means the counters went backwards and the sample came from a different PC
+    // than the previous one (a missed rebase). Either way, resync the baseline
+    // and leave MOS untouched rather than computing a loss ratio from two
+    // unrelated counter series — the bogus result reads as a healthy MOS and
+    // drives RADASS oscillation.
+    if (this.rebaseNextSample || deltaLost < 0 || deltaReceived < 0) {
+      this.rebaseNextSample = false;
+      this.prevPacketsLost = stats.packetsLost;
+      this.prevPacketsReceived = stats.packetsReceived;
+      this.recordBytesReceived(stats.bytesReceived);
+      return;
+    }
+
     const deltaTotal = deltaLost + deltaReceived;
     const intervalLoss = deltaTotal > 0 ? deltaLost / deltaTotal : 0;
 

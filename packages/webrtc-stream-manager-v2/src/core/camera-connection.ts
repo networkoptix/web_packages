@@ -1025,7 +1025,7 @@ export class CameraConnection extends Disposable {
         this.upgradeMediaStream = detail.streams[0] ?? null;
         this.attachUpgradeTrackEndedListener(detail.track, pcw);
         // Activate upgrade on first track (smooth swap from base).
-        this._isUpgraded = true;
+        this.setUpgraded(true);
         this.swapManagedTrack(detail.track, pcw);
         this.emit('track', {
           track: detail.track,
@@ -1069,7 +1069,7 @@ export class CameraConnection extends Disposable {
     // Replay stored track if it was received before listeners were added.
     if (pcw.activeStream) {
       this.upgradeMediaStream = pcw.activeStream;
-      this._isUpgraded = true;
+      this.setUpgraded(true);
       const track = pcw.activeStream.getVideoTracks()[0];
       if (track) {
         this.attachUpgradeTrackEndedListener(track, pcw);
@@ -1344,7 +1344,23 @@ export class CameraConnection extends Disposable {
     }
     this.upgradePc = null;
     this.upgradeMediaStream = null;
-    this._isUpgraded = false;
+    this.setUpgraded(false);
+  }
+
+  /**
+   * Flip the active peer connection between base and upgrade.
+   *
+   * `pollQuality()` reads `activePc.getStats()`, but the QualityMonitor keeps a
+   * single packets-lost/received baseline. Base and upgrade PCs carry
+   * independent cumulative counters, so the first sample after a swap would be
+   * diffed against the other PC's series and yield a meaningless — typically
+   * falsely healthy — MOS right at the switch boundary, which is exactly what
+   * RADASS reads to decide whether to promote again (CLOUD-18327).
+   */
+  private setUpgraded(upgraded: boolean): void {
+    if (this._isUpgraded === upgraded) return;
+    this._isUpgraded = upgraded;
+    this.qualityMonitor.resetStatsDeltas();
   }
 
   // ── Private: MSE fallback ────────────────────────────────────────────

@@ -39,6 +39,15 @@ export interface RadassHost {
 export class RadassController extends Disposable {
   private readonly states = new Map<string, CameraRadassState>();
 
+  /**
+   * Accumulated milliseconds of *observed* system-wide healthy MOS, reset to 0
+   * the moment any camera reports bad MOS. Gates performance promotion — see
+   * the dwell comment in tick(). System-wide by nature, so it is a single
+   * controller field rather than per-camera state: Pass 1 demotes on the global
+   * bad-MOS signal, so recovery is judged globally too.
+   */
+  private healthyMs = 0;
+
   constructor(
     private readonly config: RadassConfig,
     private readonly host: RadassHost,
@@ -61,6 +70,8 @@ export class RadassController extends Disposable {
       antiThrash: false,
       antiThrashAt: 0,
       performancePromotionPending: false,
+      failedHqAttempts: 0,
+      hqMs: 0,
     };
 
     // Check 5: Camera count enforcement (>16 cameras → force LQ)
@@ -141,6 +152,9 @@ export class RadassController extends Disposable {
       // ── Check 1: Forced states ──────────────────────────────────────
       // Explicit HIGH is the user's choice — honored even while paused.
       if (info.targetStream === TargetStream.HIGH) {
+        // An explicit user HIGH is a fresh intent: forget the automatic backoff
+        // history so a later return to Auto starts from the base delay.
+        state.failedHqAttempts = 0;
         this.setQuality(state, 'high', LqReason.None, now);
         this.host.applyDirective(key, 'high');
         continue;
@@ -328,6 +342,23 @@ export class RadassController extends Disposable {
       return info && info.statsUpdateCount >= this.config.minStatsForPerformanceCheck && info.snapshot.mos < this.config.mosThreshold;
     });
 
+    // Sustained-health dwell (CLOUD-18327 follow-up): hasBadMos is an
+    // instantaneous reading, so gating Pass 2 on it alone is memoryless. A
+    // performance demotion genuinely relieves load, so MOS genuinely recovers —
+    // the controller then promotes, the load returns, Pass 1 demotes again and
+    // latches anti-thrash for 10 minutes. Require a *sustained* recovery, not
+    // the one caused by the demotion itself. Mirrors the smallSince dwell on
+    // the size path.
+    //
+    // Accumulated per playing tick rather than measured as (now - startedAt):
+    // this pass is below the pause return, so a wall-clock timestamp would let
+    // time spent paused satisfy the dwell with zero health evidence — the
+    // streams are DC-paused while paused, so no MOS is being observed at all.
+    // Counting ticks means the dwell only ever advances on evidence.
+    this.healthyMs = hasBadMos ? 0 : this.healthyMs + this.config.tickIntervalMs;
+
+    this.accrueHqEvidence();
+
     if (hasBadMos && !switchedThisTick) {
       // Find the smallest HQ camera by area to demote
       let smallestHqKey: string | null = null;
@@ -356,6 +387,11 @@ export class RadassController extends Disposable {
             s.antiThrash = true;
             s.antiThrashAt = now;
             s.performancePromotionPending = false;
+            // This promotion demonstrably failed: we promoted it, and the load
+            // came back. Each failure doubles the healthy period required before
+            // the next attempt, so a link that cannot carry HQ stops being
+            // retried forever instead of cycling at the anti-thrash period.
+            s.failedHqAttempts++;
           }
         }
 
@@ -379,13 +415,24 @@ export class RadassController extends Disposable {
         if (switchedThisTick) break;
         if (s.currentQuality !== 'low' || s.lqReason !== LqReason.Performance) continue;
         if (s.antiThrash) continue;
+        // Health must have been *observed* for the required period, not merely
+        // be healthy right now (see the dwell comment above). The requirement
+        // escalates with this camera's failed HQ attempts.
+        if (this.healthyMs < this.requiredHealthyMs(s)) continue;
         if (!this.canSwitch(s, now)) continue;
         if (now - s.registeredAt < this.config.recentlyAddedDelayMs) continue;
 
         const info = infoCache.get(k) ?? null;
         if (!info) continue;
         if (info.snapshot.mos < this.config.mosThreshold) continue;
-        if (info.elementHeight <= this.config.hysteresisHeightPx) continue;
+        // Gated on smallItemHeightPx, NOT the size hysteresis: Performance is a
+        // *global* demotion reason like CapExceeded / TooManyItems / InheritedLq
+        // above, so it recovers as soon as the constraint clears, provided the
+        // tile is not small. The hysteresis dead-band only means something for
+        // size-driven demotions. Gating this at hysteresisHeightPx stranded
+        // tiles in the 171-230 band (CLOUD-18303) — permanently, since swap no
+        // longer promotes Performance-LQ tiles either.
+        if (info.elementHeight <= this.config.smallItemHeightPx) continue;
 
         this.setQuality(s, 'high', LqReason.None, now);
         this.host.applyDirective(k, 'high');
@@ -409,7 +456,16 @@ export class RadassController extends Disposable {
         if (info.targetStream !== TargetStream.AUTO) continue;
         if (info.viewportAreaFraction > this.config.forceHighViewportFraction) continue;
 
-        if (s.currentQuality === 'low' && s.lqReason !== LqReason.Manual) {
+        // Performance-LQ is excluded alongside Manual: swap is size-driven and
+        // applies no MOS gate at all, so it would promote a camera the
+        // performance pass just demoted, restore the load, and feed the
+        // HQ→LQ→HQ→LQ oscillation that latches anti-thrash (CLOUD-18327).
+        // Performance recovery is Pass 2's job, behind the sustained-health dwell.
+        if (
+          s.currentQuality === 'low' &&
+          s.lqReason !== LqReason.Manual &&
+          s.lqReason !== LqReason.Performance
+        ) {
           if (info.elementArea > largestLqArea && this.canSwitch(s, now)) {
             largestLqArea = info.elementArea;
             largestLqKey = k;
@@ -475,9 +531,61 @@ export class RadassController extends Disposable {
   ): void {
     if (state.currentQuality !== quality) {
       state.lastSwitchTime = now;
+      state.hqMs = 0;
     }
     state.currentQuality = quality;
     state.lqReason = quality === 'high' ? LqReason.None : reason;
+  }
+
+  /**
+   * Healthy time this camera must observe before it may be promoted again.
+   *
+   * With no failures yet the base dwell applies: nothing has gone wrong, and
+   * anti-thrash is not engaged either, so performanceRecoveryDelayMs is the real
+   * gate for an ordinary recovery after a one-off blip.
+   *
+   * From the first FAILED attempt the ladder is built on antiThrashRetryMs
+   * rather than on the base dwell, because a failed attempt always engages
+   * anti-thrash and promotion is then gated by max(antiThrashRetryMs, this).
+   * Rungs below that floor cannot bind, so basing the doubling on the small base
+   * dwell would produce several silent no-op rungs before escalation was even
+   * observable. Starting at the floor makes the very first failure lengthen the
+   * retry interval.
+   */
+  private requiredHealthyMs(state: CameraRadassState): number {
+    if (state.failedHqAttempts === 0) {
+      return this.config.performanceRecoveryDelayMs;
+    }
+    return Math.min(
+      this.config.antiThrashRetryMs * 2 ** state.failedHqAttempts,
+      this.config.maxPerformanceRecoveryDelayMs,
+    );
+  }
+
+  /**
+   * Accumulate observed HQ time and clear the backoff history of any camera that
+   * has held HQ, uninterrupted, for successfulHqPeriodMs. That is the only
+   * positive evidence the link can now carry HQ, so a one-off bad spell never
+   * penalizes a camera forever.
+   *
+   * Counted per playing tick rather than as (now - enteredHqAt), for the same
+   * reason as healthyMs: this runs below the pause return, so a wall-clock span
+   * would let a paused HQ tile bank "success" it never demonstrated — the stream
+   * is DC-paused, so no HQ is actually being sustained. Cooldowns like
+   * lastSwitchTime may safely expire during a pause; this is evidence, so it may
+   * not.
+   */
+  private accrueHqEvidence(): void {
+    for (const [, s] of this.states) {
+      if (s.currentQuality !== 'high') {
+        s.hqMs = 0;
+        continue;
+      }
+      s.hqMs += this.config.tickIntervalMs;
+      if (s.hqMs >= this.config.successfulHqPeriodMs) {
+        s.failedHqAttempts = 0;
+      }
+    }
   }
 
   private canSwitch(state: CameraRadassState, now: number): boolean {
@@ -507,6 +615,16 @@ export class RadassController extends Disposable {
     return count < this.config.maxConcurrentHighRes;
   }
 
+  /**
+   * Release the anti-thrash brake on every camera. Called on layout changes
+   * (register / unregister / small-item demotion), matching desktop.
+   *
+   * Deliberately does NOT touch failedHqAttempts or hqMs: this runs on
+   * every layout tweak, and zeroing the backoff here would let ordinary layout
+   * churn restart the promote/demote cycle from the base delay indefinitely.
+   * The backoff is cleared only by real evidence — a sustained successful HQ
+   * period, an explicit user HIGH, or the camera going away.
+   */
   private resetAntiThrash(): void {
     for (const [, state] of this.states) {
       state.antiThrash = false;

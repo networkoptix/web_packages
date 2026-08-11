@@ -39,6 +39,15 @@ export interface CameraRadassState {
   antiThrashAt: number;
   /** True if this camera was recently promoted from performance LQ. */
   performancePromotionPending: boolean;
+  /** Consecutive HQ promotions that were undone by a performance demotion.
+   *  Drives the exponential promotion backoff. Deliberately NOT cleared by
+   *  resetAntiThrash() — see the comment there. */
+  failedHqAttempts: number;
+  /** Accumulated milliseconds this camera has held HQ, counted only on playing
+   *  ticks and reset whenever it is not high. Evidence of a successful
+   *  promotion, so it must accrue from observation rather than wall-clock —
+   *  see hqMs handling in the controller. */
+  hqMs: number;
 }
 
 /** Configuration for the RadassController. All timing values in milliseconds. */
@@ -72,6 +81,29 @@ export interface RadassConfig {
    *  Stats are polled every ~1s, so 10 = ~10s of stable data before MOS is trusted.
    *  Default: 10. */
   minStatsForPerformanceCheck: number;
+  /** Observed healthy time required before a performance-demoted camera may
+   *  return to HQ. Demoting a camera relieves load, so MOS recovers as a direct
+   *  result of the demotion; promoting on that instantaneous reading restores
+   *  the load and starts a HQ→LQ→HQ→LQ oscillation. Accumulated only across
+   *  playing ticks, so it measures observed evidence rather than wall-clock
+   *  time. Must be meaningfully larger than switchCooldownMs. Default: 15_000. */
+  performanceRecoveryDelayMs: number;
+  /** Upper bound on the exponential promotion backoff. Each HQ attempt that is
+   *  undone by a performance demotion doubles the required healthy period
+   *  (antiThrashRetryMs * 2^failures, from the first failure), so a link that
+   *  genuinely cannot carry HQ settles at LQ instead of retrying forever.
+   *
+   *  MUST be larger than antiThrashRetryMs. Promotion is gated by
+   *  max(antiThrashRetryMs, requiredHealthyMs), so a cap at or below that floor
+   *  makes every rung non-binding and silently disables the whole backoff.
+   *  Default: 1_800_000 (30 min), 3x antiThrashRetryMs — reached at the second
+   *  failed attempt. */
+  maxPerformanceRecoveryDelayMs: number;
+  /** Uninterrupted time at HQ that counts as a successful promotion and clears
+   *  the failure history. Must comfortably exceed switchCooldownMs, so that a
+   *  promotion which is immediately undone never counts as a success.
+   *  Default: 60_000. */
+  successfulHqPeriodMs: number;
 }
 
 /** Default RADASS config matching desktop client values. */
@@ -89,4 +121,7 @@ export const DEFAULT_RADASS_CONFIG: RadassConfig = {
   smallItemDelayMs: 1_000,
   recentlyAddedDelayMs: 1_000,
   minStatsForPerformanceCheck: 10,
+  performanceRecoveryDelayMs: 15_000,
+  maxPerformanceRecoveryDelayMs: 1_800_000,
+  successfulHqPeriodMs: 60_000,
 };

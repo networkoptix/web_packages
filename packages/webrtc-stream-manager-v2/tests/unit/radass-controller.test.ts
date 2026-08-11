@@ -82,6 +82,15 @@ describe('RadassController', () => {
     }
   }
 
+  /**
+   * Hold the current (healthy) conditions for longer than the sustained-health
+   * dwell, so a performance-demoted camera becomes eligible for promotion.
+   * Performance recovery is deliberately not instantaneous — see CLOUD-18327.
+   */
+  function holdHealthyPastRecoveryDwell() {
+    vi.advanceTimersByTime(config.performanceRecoveryDelayMs + config.tickIntervalMs);
+  }
+
   describe('forced states (Check 1)', () => {
     it('forces HQ for TargetStream.HIGH regardless of size', () => {
       const cam = makeMockCamera({
@@ -296,7 +305,8 @@ describe('RadassController', () => {
       state.lastSwitchTime = 0;
       state.registeredAt = 0;
 
-      tick();
+      // Health must be sustained, not instantaneous, before promotion.
+      holdHealthyPastRecoveryDwell();
       expect(state.currentQuality).toBe('high');
     });
 
@@ -334,11 +344,11 @@ describe('RadassController', () => {
       tick();
       expect(state2.lqReason).toBe(LqReason.Performance);
 
-      // Recovery: cam-1 gets good MOS, cam-2 recovers
+      // Recovery: cam-1 gets good MOS and *stays* good past the sustained-health
+      // dwell — a genuine recovery, not the transient relief the demotion itself
+      // caused — so cam-2 is promoted back.
       cam1.snapshot = { mos: 5.0, focus: 3, stalled: false };
-      state2.lastSwitchTime = 0; // clear cooldown
-      tick();
-      // cam-2 should be promoted back
+      holdHealthyPastRecoveryDwell();
       expect(state2.currentQuality).toBe('high');
 
       // Second demotion: cam-1 bad MOS again → cam-2 demoted again
@@ -347,10 +357,10 @@ describe('RadassController', () => {
       tick();
       expect(state2.lqReason).toBe(LqReason.Performance);
 
-      // Now anti-thrash should be set — no more auto promotions
+      // Now anti-thrash should be set — no more auto promotions, even after a
+      // genuinely sustained healthy period.
       cam1.snapshot = { mos: 5.0, focus: 3, stalled: false };
-      state2.lastSwitchTime = 0;
-      tick();
+      holdHealthyPastRecoveryDwell();
       // cam-2 should NOT be promoted (anti-thrash blocks it)
       expect(state2.currentQuality).toBe('low');
     });
@@ -421,10 +431,15 @@ describe('RadassController', () => {
     });
 
     it('inherits LQ reason from the large camera on swap', () => {
+      // SmallItem stands in for "some swap-eligible LQ reason". Performance is
+      // deliberately not used here: a performance-demoted camera is excluded from
+      // swap entirely (CLOUD-18327), so it could never reach the inherit path.
+      // The 200px height keeps cam-big inside the size hysteresis band so the
+      // per-camera SmallItem recovery cannot promote it ahead of the swap.
       const bigLq = makeMockCamera({
         connectionKey: 'cam-big',
         elementArea: 600_000,
-        elementHeight: 600,
+        elementHeight: 200,
       });
       const smallHq = makeMockCamera({
         connectionKey: 'cam-small',
@@ -438,7 +453,7 @@ describe('RadassController', () => {
 
       const bigState = controller.getState('cam-big')!;
       bigState.currentQuality = 'low';
-      bigState.lqReason = LqReason.Performance;
+      bigState.lqReason = LqReason.SmallItem;
       bigState.lastSwitchTime = 0;
       bigState.registeredAt = 0;
       controller.getState('cam-small')!.currentQuality = 'high';
@@ -448,7 +463,8 @@ describe('RadassController', () => {
       tick();
 
       const smallState = controller.getState('cam-small')!;
-      expect(smallState.lqReason).toBe(LqReason.Performance);
+      expect(bigState.currentQuality).toBe('high');
+      expect(smallState.lqReason).toBe(LqReason.SmallItem);
     });
   });
 
@@ -846,8 +862,8 @@ describe('RadassController', () => {
       vi.advanceTimersByTime(config.switchCooldownMs + config.recentlyAddedDelayMs);
       state1.lastSwitchTime = 0;
 
-      // Tick to promote cam-1 back (Performance recovery)
-      tick();
+      // Hold the recovery past the sustained-health dwell to promote cam-1 back.
+      holdHealthyPastRecoveryDwell();
       expect(state1.currentQuality).toBe('high');
 
       // Now cam-1 is HQ/None. There should be no more performance-class LQ cameras
@@ -1089,10 +1105,9 @@ describe('RadassController', () => {
       expect(state3.currentQuality).toBe('low');
       expect(state3.lqReason).toBe(LqReason.Performance);
 
-      // Step 2: cam1 MOS good, cam3 recovers
+      // Step 2: cam1 MOS good and sustained past the dwell → cam3 recovers
       cam1.snapshot = { mos: 5.0, focus: 3, stalled: false };
-      state3.lastSwitchTime = 0;
-      tick();
+      holdHealthyPastRecoveryDwell();
       expect(state3.currentQuality).toBe('high');
       // cam3 should have performancePromotionPending set
       expect(state3.performancePromotionPending).toBe(true);
@@ -1144,10 +1159,9 @@ describe('RadassController', () => {
       tick();
       expect(state2.lqReason).toBe(LqReason.Performance);
 
-      // Promote back
+      // Promote back after a sustained healthy period
       cam1.snapshot = { mos: 5.0, focus: 3, stalled: false };
-      state2.lastSwitchTime = 0;
-      tick();
+      holdHealthyPastRecoveryDwell();
       expect(state2.currentQuality).toBe('high');
 
       // Demotion 2 -> antiThrash set on cam2
@@ -1162,14 +1176,17 @@ describe('RadassController', () => {
       tick();
       expect(state2.currentQuality).toBe('low');
 
-      // Advance past antiThrashRetryMs
+      // Advance past antiThrashRetryMs — the anti-thrash brake itself releases.
       vi.advanceTimersByTime(config.antiThrashRetryMs);
-
-      // Now cam2 should recover (anti-thrash cleared, MOS is good)
       state2.lastSwitchTime = 0;
       tick();
-      expect(state2.currentQuality).toBe('high');
       expect(state2.antiThrash).toBe(false);
+
+      // The promotion additionally waits out the escalating backoff, since this
+      // camera has one failed HQ attempt on record (CLOUD-18327). Releasing the
+      // brake is necessary but no longer sufficient.
+      vi.advanceTimersByTime(config.maxPerformanceRecoveryDelayMs);
+      expect(state2.currentQuality).toBe('high');
     });
 
     it('resetAntiThrash clears per-camera anti-thrash on all cameras', () => {
@@ -1362,13 +1379,432 @@ describe('RadassController', () => {
         expect(goodState.antiThrash).toBe(false);
       }
 
-      // MOS recovers system-wide → cam-good promotes immediately, with no anti-thrash
-      // penalty.
+      // MOS recovers system-wide and stays healthy past the sustained-health
+      // dwell → cam-good promotes, with no anti-thrash penalty.
       camBad.snapshot = { mos: 5.0, focus: 3, stalled: false };
       goodState.lastSwitchTime = 0;
-      tick();
+      holdHealthyPastRecoveryDwell();
       expect(goodState.currentQuality).toBe('high');
       expect(goodState.lqReason).toBe(LqReason.None);
+    });
+  });
+
+  describe('CLOUD-18327 follow-up: sustained-health dwell before performance promotion', () => {
+    it('does not re-promote a performance-demoted camera on the load relief its own demotion caused, and only promotes after health is sustained past performanceRecoveryDelayMs', () => {
+      // Two equal-height AUTO cameras. cam-b has the smaller area, so Pass 1
+      // picks it as the victim when the system reports bad MOS.
+      const camA = makeMockCamera({
+        connectionKey: 'cam-a',
+        elementHeight: 300,
+        elementArea: 500 * 300,
+        viewportAreaFraction: 0.15,
+        statsUpdateCount: 20,
+        snapshot: { mos: 5.0, focus: 3, stalled: false },
+      });
+      const camB = makeMockCamera({
+        connectionKey: 'cam-b',
+        elementHeight: 300,
+        elementArea: 400 * 300,
+        viewportAreaFraction: 0.15,
+        statsUpdateCount: 20,
+        snapshot: { mos: 5.0, focus: 3, stalled: false },
+      });
+      cameras.set('cam-a', camA);
+      cameras.set('cam-b', camB);
+      controller.registerCamera('cam-a');
+      controller.registerCamera('cam-b');
+
+      // Healthy warm-up: both cameras promote to HQ and settle past the
+      // recently-added grace period and the switch cooldown. Timers are advanced
+      // for real throughout — the dwell timing is what is under test, so no state
+      // timestamp is ever hand-set.
+      vi.advanceTimersByTime(config.switchCooldownMs + config.recentlyAddedDelayMs);
+
+      const stateA = controller.getState('cam-a')!;
+      const stateB = controller.getState('cam-b')!;
+      expect(stateA.currentQuality).toBe('high');
+      expect(stateB.currentQuality).toBe('high');
+
+      // Step 1 — system becomes loaded: the smallest HQ camera is demoted.
+      camA.snapshot = { mos: 2.0, focus: 3, stalled: false };
+      camB.snapshot = { mos: 2.0, focus: 3, stalled: false };
+      tick();
+      expect(stateB.currentQuality).toBe('low');
+      expect(stateB.lqReason).toBe(LqReason.Performance);
+
+      // Step 2 — MOS recovers because the demotion relieved the load. This
+      // apparent health is an artifact of the demotion, not a real recovery, so
+      // cam-b must stay LQ until health has held for performanceRecoveryDelayMs.
+      camA.snapshot = { mos: 4.5, focus: 3, stalled: false };
+      camB.snapshot = { mos: 4.5, focus: 3, stalled: false };
+      vi.advanceTimersByTime(5_000);
+      tick();
+      expect(stateB.currentQuality).toBe('low');
+
+      // Step 3 — load returns. Because cam-b was never re-promoted there is no
+      // promote→demote pair, so anti-thrash must not latch.
+      camA.snapshot = { mos: 2.0, focus: 3, stalled: false };
+      camB.snapshot = { mos: 2.0, focus: 3, stalled: false };
+      vi.advanceTimersByTime(5_000);
+      tick();
+      expect(stateB.antiThrash).toBe(false);
+
+      // Step 4 — guard rail against over-correction: genuinely sustained health
+      // past the dwell must still promote the camera back to HQ.
+      camA.snapshot = { mos: 4.5, focus: 3, stalled: false };
+      camB.snapshot = { mos: 4.5, focus: 3, stalled: false };
+      vi.advanceTimersByTime(config.performanceRecoveryDelayMs + config.tickIntervalMs);
+      tick();
+      expect(stateB.currentQuality).toBe('high');
+    });
+
+    it('does not count paused time as healthy evidence', () => {
+      const camA = makeMockCamera({
+        connectionKey: 'cam-a',
+        elementHeight: 300,
+        elementArea: 500 * 300,
+        viewportAreaFraction: 0.15,
+        statsUpdateCount: 20,
+        snapshot: { mos: 5.0, focus: 3, stalled: false },
+      });
+      const camB = makeMockCamera({
+        connectionKey: 'cam-b',
+        elementHeight: 300,
+        elementArea: 400 * 300,
+        viewportAreaFraction: 0.15,
+        statsUpdateCount: 20,
+        snapshot: { mos: 5.0, focus: 3, stalled: false },
+      });
+      cameras.set('cam-a', camA);
+      cameras.set('cam-b', camB);
+      controller.registerCamera('cam-a');
+      controller.registerCamera('cam-b');
+
+      vi.advanceTimersByTime(config.switchCooldownMs + config.recentlyAddedDelayMs);
+      const stateB = controller.getState('cam-b')!;
+
+      // Loaded → cam-b demoted for performance.
+      camA.snapshot = { mos: 2.0, focus: 3, stalled: false };
+      camB.snapshot = { mos: 2.0, focus: 3, stalled: false };
+      tick();
+      expect(stateB.currentQuality).toBe('low');
+      expect(stateB.lqReason).toBe(LqReason.Performance);
+
+      // A brief healthy spell — far short of the dwell — starts the clock.
+      camA.snapshot = { mos: 4.5, focus: 3, stalled: false };
+      camB.snapshot = { mos: 4.5, focus: 3, stalled: false };
+      tick(2);
+      expect(stateB.currentQuality).toBe('low');
+
+      // The user pauses for 20 minutes. RADASS is frozen while paused (CLOUD-18235)
+      // and the streams are DC-paused, so no health evidence is gathered at all.
+      // Wall-clock time alone must not satisfy the dwell.
+      playing = false;
+      vi.advanceTimersByTime(20 * 60 * 1000);
+
+      playing = true;
+      tick();
+      expect(stateB.currentQuality).toBe('low');
+
+      // Once genuinely observed healthy time accumulates while playing, it promotes.
+      holdHealthyPastRecoveryDwell();
+      expect(stateB.currentQuality).toBe('high');
+    });
+
+    it('recovers a Performance-LQ camera sitting in the 171-230px size-hysteresis band', () => {
+      // Performance is a GLOBAL demotion reason, like CapExceeded / TooManyItems /
+      // InheritedLq, so it must recover at smallItemHeightPx (171) — not at the
+      // size hysteresis (230), which only means something for size-driven
+      // demotions. Gating it at 230 strands band tiles in LQ forever now that the
+      // swap path no longer promotes them (CLOUD-18303's principle).
+      const camA = makeMockCamera({
+        connectionKey: 'cam-a',
+        elementHeight: 300,
+        elementArea: 500 * 300,
+        viewportAreaFraction: 0.15,
+        statsUpdateCount: 20,
+        snapshot: { mos: 5.0, focus: 3, stalled: false },
+      });
+      const camBand = makeMockCamera({
+        connectionKey: 'cam-band',
+        elementHeight: 200, // inside the 171-230 band
+        elementArea: 400 * 200,
+        viewportAreaFraction: 0.15,
+        statsUpdateCount: 20,
+        snapshot: { mos: 5.0, focus: 3, stalled: false },
+      });
+      cameras.set('cam-a', camA);
+      cameras.set('cam-band', camBand);
+      controller.registerCamera('cam-a');
+      controller.registerCamera('cam-band');
+
+      vi.advanceTimersByTime(config.switchCooldownMs + config.recentlyAddedDelayMs);
+      const bandState = controller.getState('cam-band')!;
+      expect(bandState.currentQuality).toBe('high');
+
+      // Loaded → the band tile is the smallest HQ, so it takes the demotion.
+      camA.snapshot = { mos: 2.0, focus: 3, stalled: false };
+      camBand.snapshot = { mos: 2.0, focus: 3, stalled: false };
+      tick();
+      expect(bandState.currentQuality).toBe('low');
+      expect(bandState.lqReason).toBe(LqReason.Performance);
+
+      // Sustained recovery: it must come back, not be stranded at its size.
+      camA.snapshot = { mos: 5.0, focus: 3, stalled: false };
+      camBand.snapshot = { mos: 5.0, focus: 3, stalled: false };
+      holdHealthyPastRecoveryDwell();
+      expect(bandState.currentQuality).toBe('high');
+      expect(bandState.lqReason).toBe(LqReason.None);
+    });
+  });
+
+  describe('CLOUD-18327 follow-up: escalating backoff on failed HQ attempts', () => {
+    /**
+     * Set up two AUTO cameras on a link that genuinely cannot carry HQ for the
+     * smaller one, and return a driver that simulates the causal loop: while
+     * cam-b is HQ the system is overloaded (bad MOS), and demoting it relieves
+     * the load (good MOS). That coupling is what turns a memoryless promotion
+     * rule into a limit cycle.
+     */
+    function setupUnsustainableLink() {
+      const camA = makeMockCamera({
+        connectionKey: 'cam-a',
+        elementHeight: 400,
+        elementArea: 600 * 400,
+        viewportAreaFraction: 0.15,
+        statsUpdateCount: 20,
+        snapshot: { mos: 5.0, focus: 3, stalled: false },
+      });
+      const camB = makeMockCamera({
+        connectionKey: 'cam-b',
+        elementHeight: 300,
+        elementArea: 400 * 300,
+        viewportAreaFraction: 0.15,
+        statsUpdateCount: 20,
+        snapshot: { mos: 5.0, focus: 3, stalled: false },
+      });
+      cameras.set('cam-a', camA);
+      cameras.set('cam-b', camB);
+      controller.registerCamera('cam-a');
+      controller.registerCamera('cam-b');
+      vi.advanceTimersByTime(config.switchCooldownMs + config.recentlyAddedDelayMs);
+
+      const stateB = controller.getState('cam-b')!;
+      let wasHigh = stateB.currentQuality === 'high';
+
+      /** Run for `minutes`, returning the timestamps of each HQ promotion. */
+      function run(minutes: number, opts: { healthy?: boolean } = {}): number[] {
+        const steps = (minutes * 60 * 1000) / config.tickIntervalMs;
+        const promotions: number[] = [];
+        for (let i = 0; i < steps; i++) {
+          // Load follows cam-b's own quality unless the caller forces health.
+          const loaded = opts.healthy ? false : stateB.currentQuality === 'high';
+          const snapshot = { mos: loaded ? 2.0 : 5.0, focus: 3, stalled: false };
+          camA.snapshot = snapshot;
+          camB.snapshot = snapshot;
+          tick();
+          const isHigh = stateB.currentQuality === 'high';
+          if (isHigh && !wasHigh) promotions.push(performance.now());
+          wasHigh = isHigh;
+        }
+        return promotions;
+      }
+
+      /** Force healthy conditions until cam-b is promoted. Returns ticks used. */
+      function runHealthyUntilPromoted(maxMinutes = 60): number {
+        const steps = (maxMinutes * 60 * 1000) / config.tickIntervalMs;
+        for (let i = 0; i < steps; i++) {
+          const snapshot = { mos: 5.0, focus: 3, stalled: false };
+          camA.snapshot = snapshot;
+          camB.snapshot = snapshot;
+          tick();
+          if (stateB.currentQuality === 'high') {
+            wasHigh = true;
+            return i + 1;
+          }
+        }
+        throw new Error('cam-b was never promoted');
+      }
+
+      return { camA, camB, stateB, run, runHealthyUntilPromoted };
+    }
+
+    it('settles instead of retrying HQ forever on a link that cannot carry it', () => {
+      const { stateB, run } = setupUnsustainableLink();
+
+      const times = run(180);
+      expect(times.length).toBeGreaterThanOrEqual(4);
+
+      const gaps = times.slice(1).map((t, i) => t - times[i]);
+
+      // Per-hour attempt counts are phase-fragile (a flat 10-minute cycle divides
+      // the hour exactly, so drift decides whether an hour sees 6 or 5). Assert
+      // the underlying property instead: the retry interval grows. Without the
+      // backoff every gap is the same ~10 minutes forever and nothing settles.
+      expect(gaps[gaps.length - 1]).toBeGreaterThan(gaps[0] * 1.4);
+      expect(stateB.currentQuality).toBe('low');
+    });
+
+    it('grows the retry interval beyond the anti-thrash floor once attempts keep failing', () => {
+      const { stateB, run } = setupUnsustainableLink();
+
+      const times = run(150);
+      expect(stateB.failedHqAttempts).toBeGreaterThanOrEqual(2);
+      expect(times.length).toBeGreaterThanOrEqual(3);
+
+      // Anti-thrash alone re-arms every antiThrashRetryMs, so without the backoff
+      // every gap is ~10 minutes forever (tick quantization makes it a hair over,
+      // hence the 1.5x margin rather than a bare >). The escalation has to
+      // overtake that floor, otherwise it is masked and changes nothing.
+      const lastGap = times[times.length - 1] - times[times.length - 2];
+      expect(lastGap).toBeGreaterThan(config.antiThrashRetryMs * 1.5);
+    });
+
+    it('does not count paused HQ time as a successful HQ period', () => {
+      const { camA, camB, stateB, run, runHealthyUntilPromoted } = setupUnsustainableLink();
+
+      run(60);
+      const failures = stateB.failedHqAttempts;
+      expect(failures).toBeGreaterThanOrEqual(2);
+
+      // Get it back to HQ, then pause immediately — well before it has held HQ
+      // for successfulHqPeriodMs.
+      runHealthyUntilPromoted();
+      expect(stateB.currentQuality).toBe('high');
+      expect(stateB.failedHqAttempts).toBe(failures);
+
+      // Paused at HQ for 5 minutes. The stream is DC-paused, so this is zero
+      // evidence that the link can now carry HQ. The failure history must stand.
+      camA.snapshot = { mos: 5.0, focus: 3, stalled: false };
+      camB.snapshot = { mos: 5.0, focus: 3, stalled: false };
+      playing = false;
+      vi.advanceTimersByTime(5 * 60 * 1000);
+      playing = true;
+      tick();
+      expect(stateB.failedHqAttempts).toBe(failures);
+
+      // Actually observed HQ time does clear it.
+      run(2, { healthy: true });
+      expect(stateB.failedHqAttempts).toBe(0);
+    });
+
+    it('caps the escalating delay so recovery stays possible', () => {
+      const { stateB } = setupUnsustainableLink();
+      const required = (failures: number): number => {
+        stateB.failedHqAttempts = failures;
+        return (controller as unknown as {
+          requiredHealthyMs(s: typeof stateB): number;
+        }).requiredHealthyMs(stateB);
+      };
+
+      // f=0 is the ordinary first recovery after a one-off blip: no promotion has
+      // failed yet, and anti-thrash is not engaged either, so the base dwell is
+      // the real gate. From the first FAILED attempt the ladder is based on
+      // antiThrashRetryMs, the floor it actually has to beat — a rung below that
+      // floor can never bind and would be a silent no-op.
+      expect(required(0)).toBe(config.performanceRecoveryDelayMs);
+      expect(required(1)).toBe(config.antiThrashRetryMs * 2);
+      expect(required(2)).toBe(config.maxPerformanceRecoveryDelayMs);
+
+      // Unbounded doubling would run away to hours and then Infinity, which is a
+      // permanent blacklist. The cap is what keeps recovery reachable.
+      expect(config.performanceRecoveryDelayMs * 2 ** 20)
+        .toBeGreaterThan(config.maxPerformanceRecoveryDelayMs);
+      expect(required(20)).toBe(config.maxPerformanceRecoveryDelayMs);
+      expect(required(200)).toBe(config.maxPerformanceRecoveryDelayMs);
+      expect(Number.isFinite(required(200))).toBe(true);
+    });
+
+    it('keeps the escalated backoff across a resetAntiThrash() layout change', () => {
+      const { stateB, run } = setupUnsustainableLink();
+
+      run(60);
+      const escalated = stateB.failedHqAttempts;
+      expect(escalated).toBeGreaterThanOrEqual(2);
+
+      // Layout churn wipes the anti-thrash brake. The backoff must survive it,
+      // otherwise adding or removing a tile restarts the cycle from 15s.
+      controller.registerCamera('cam-c');
+      expect(stateB.antiThrash).toBe(false); // brake wiped, as designed
+      expect(stateB.failedHqAttempts).toBe(escalated);
+
+      controller.unregisterCamera('cam-c');
+      expect(stateB.failedHqAttempts).toBe(escalated);
+    });
+
+    it('still returns to HQ when the network genuinely recovers for a sustained period', () => {
+      const { stateB, run } = setupUnsustainableLink();
+
+      run(60);
+      expect(stateB.currentQuality).toBe('low');
+
+      // The link is genuinely fixed. Even at the backoff cap the camera must come
+      // back — this prevents futile retries, it does not blacklist cameras.
+      const promotions = run(35, { healthy: true });
+      expect(promotions.length).toBeGreaterThanOrEqual(1);
+      expect(stateB.currentQuality).toBe('high');
+    });
+
+    it('clears the failure history after a sustained successful HQ period', () => {
+      const { stateB, run } = setupUnsustainableLink();
+
+      run(60);
+      expect(stateB.failedHqAttempts).toBeGreaterThanOrEqual(2);
+
+      // Genuine recovery: the camera regains HQ and holds it. A one-off bad spell
+      // must not penalize it forever, so the history resets and a future blip
+      // starts again from the base delay.
+      run(35, { healthy: true });
+      expect(stateB.currentQuality).toBe('high');
+      expect(stateB.failedHqAttempts).toBe(0);
+    });
+  });
+
+  describe('CLOUD-18327 follow-up: swap must not undo a performance demotion', () => {
+    it('does not swap a Performance-LQ camera back to HQ even when it is far larger than the smallest HQ camera', () => {
+      // cam-big is 150px tall — at or below smallItemHeightPx (171), so Pass 2
+      // can never promote it whatever the dwell says, and neither can any
+      // size-recovery branch. That leaves the swap path as the ONLY thing that
+      // could move it, which is what this test is about. Its area is still
+      // 3.75x cam-small's, so the swap ratio is comfortably met.
+      const camBig = makeMockCamera({
+        connectionKey: 'cam-big',
+        elementHeight: 150,
+        elementArea: 2000 * 150,
+        viewportAreaFraction: 0.15,
+        statsUpdateCount: 20,
+        snapshot: { mos: 5.0, focus: 3, stalled: false },
+      });
+      const camSmall = makeMockCamera({
+        connectionKey: 'cam-small',
+        elementHeight: 200,
+        elementArea: 400 * 200,
+        viewportAreaFraction: 0.15,
+        statsUpdateCount: 20,
+        snapshot: { mos: 5.0, focus: 3, stalled: false },
+      });
+      cameras.set('cam-big', camBig);
+      cameras.set('cam-small', camSmall);
+      controller.registerCamera('cam-big');
+      controller.registerCamera('cam-small');
+
+      // cam-big was demoted because the connection could not sustain HQ. The
+      // reason is set up front, before any tick can offer a swap, so the swap
+      // path never sees it under a different reason.
+      const bigState = controller.getState('cam-big')!;
+      const smallState = controller.getState('cam-small')!;
+      bigState.currentQuality = 'low';
+      bigState.lqReason = LqReason.Performance;
+
+      // Long enough for cam-small to promote and for both cameras to clear the
+      // switch cooldown, i.e. well past the point where a swap becomes possible.
+      // cam-big's size has not changed, so the layout-driven swap would happily
+      // promote it right back — reintroducing the load that caused the demotion.
+      vi.advanceTimersByTime(2 * (config.switchCooldownMs + config.recentlyAddedDelayMs));
+
+      expect(smallState.currentQuality).toBe('high');
+      expect(bigState.currentQuality).toBe('low');
+      expect(bigState.lqReason).toBe(LqReason.Performance);
     });
   });
 

@@ -1742,6 +1742,31 @@ describe('CameraConnection', () => {
         bytesReceived: 50000,
       });
     });
+
+    it('resets the quality-monitor stats deltas whenever the active PC swaps', async () => {
+      // pollQuality reads the ACTIVE pc, but the monitor keeps one prev* pair. If
+      // it is not rebased on a swap, the first post-swap sample is diffed against
+      // the other PC's cumulative counters and yields a bogus loss ratio.
+      const { cc } = await setupWithLowConnected();
+      const resetSpy = vi.spyOn(cc.qualityMonitor, 'resetStatsDeltas');
+
+      // Upgrade path: base → upgrade.
+      cc.requestHighRes();
+      await vi.advanceTimersByTimeAsync(0);
+      const highPcw = getMock(1);
+      highPcw.simulateStateChange(PeerState.connected);
+      await vi.advanceTimersByTimeAsync(0);
+      const highMock = makeMockStream('high');
+      highPcw.simulateTrack(highMock.track, [highMock.stream]);
+      expect(cc.isHighRes).toBe(true);
+      expect(resetSpy).toHaveBeenCalledTimes(1);
+
+      // Downgrade path: upgrade → base.
+      cc.releaseHighRes();
+      await vi.advanceTimersByTimeAsync(0);
+      expect(cc.isHighRes).toBe(false);
+      expect(resetSpy).toHaveBeenCalledTimes(2);
+    });
   });
 
   // ── 42. reconnect() only fires when the PC is in a connected state ──
