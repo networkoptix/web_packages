@@ -440,6 +440,11 @@ export class WebRTCStreamManager {
     return this._connection.sendResume();
   }
 
+  /** Pause/resume driven by archive data availability. */
+  setDataPaused(paused: boolean): boolean {
+    return this._connection.setDataPaused(paused);
+  }
+
   /** Enable analytics metadata on this camera's connection. */
   enableMetadata(): void {
     this._connection.enableMetadata();

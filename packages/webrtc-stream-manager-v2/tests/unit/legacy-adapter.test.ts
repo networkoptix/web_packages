@@ -58,6 +58,7 @@ const { mockState, MockStreamManager, MockCameraConnection } = vi.hoisted(() => 
 
     updatePosition = vi.fn();
     updateSpeed = vi.fn();
+    setDataPaused = vi.fn().mockReturnValue(true);
     activeStreamIndex = 1;
     getPlayingCodec = vi.fn().mockResolvedValue('video/H265');
     setVideoElement = vi.fn();
@@ -784,6 +785,30 @@ describe('WebRTCStreamManager (legacy facade)', () => {
 
       const connection = mockState.connections.get('sys1:cam1');
       expect(connection.getPlayingCodec).toHaveBeenCalled();
+    });
+  });
+
+  // ── Archive-gap pause (delegation) ───────────────────────────────────
+
+  describe('instance setDataPaused()', () => {
+    it('delegates to the underlying connection', () => {
+      WebRTCStreamManager.connect(makeUrlConfig('sys1', 'cam1'));
+      const instance = WebRTCStreamManager.getInstance({ id: 'cam1', systemId: 'sys1' })!;
+
+      expect(instance.setDataPaused(true)).toBe(true);
+
+      const connection = mockState.connections.get('sys1:cam1');
+      expect(connection.setDataPaused).toHaveBeenCalledWith(true);
+    });
+
+    it('forwards the false case for resume', () => {
+      WebRTCStreamManager.connect(makeUrlConfig('sys1', 'cam1'));
+      const instance = WebRTCStreamManager.getInstance({ id: 'cam1', systemId: 'sys1' })!;
+
+      instance.setDataPaused(false);
+
+      const connection = mockState.connections.get('sys1:cam1');
+      expect(connection.setDataPaused).toHaveBeenCalledWith(false);
     });
   });
 });

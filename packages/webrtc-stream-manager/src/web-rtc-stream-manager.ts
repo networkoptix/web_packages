@@ -1127,6 +1127,20 @@ export class WebRTCStreamManager {
     }
 
     /**
+     * No-op in V1: separating data-driven pause from user pause needs V2's two-intent
+     * CameraConnection, which V1 has no equivalent of (its single pause flag would let
+     * a global play() resume a camera still sitting in an archive gap).
+     *
+     * So on a layouts route WITHOUT useWebRTCStreamManagerV2, gap pausing silently
+     * does nothing — streams simply keep running through gaps, as they did before
+     * layoutsGapPause existed. That degradation is intentional; the feature ships
+     * behind V2. Declared only to satisfy IWebRTCStreamManagerInstance.
+     */
+    public setDataPaused(_paused: boolean): boolean {
+        return false;
+    }
+
+    /**
      * Send nextFrame command to server (only works when paused)
      */
     public sendNextFrame(): boolean {

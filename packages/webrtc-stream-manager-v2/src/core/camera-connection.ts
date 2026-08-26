@@ -199,7 +199,15 @@ export class CameraConnection extends Disposable {
   private static readonly POST_RESUME_REARM_COOLDOWN_MS = 3_000;
 
   // ── Pause state ────────────────────────────────────────────────────
-  private _isPaused = false;
+  // Two independent intents. Global pause (StreamManager.setPlaying) owns
+  // _userPaused; archive-gap logic owns _dataPaused. The stream is paused when
+  // EITHER holds, so neither owner can resume a stream the other still wants
+  // stopped. Collapsing these into one flag lets a global play() resume a camera
+  // that is still sitting in an archive gap.
+  private _userPaused = false;
+  private _dataPaused = false;
+  /** Last effective state actually dispatched to the PCs; guards redundant DC traffic. */
+  private _pauseApplied = false;
   /** PC died while paused (server tore down media). Rebuild on next resume. */
   private _needsBaseRebuild = false;
   private _needsUpgradeRebuild = false;
@@ -516,21 +524,47 @@ export class CameraConnection extends Disposable {
     this.forEachPc((pcw) => pcw.sendSeek(positionMs));
   }
 
-  /** Whether this connection is currently paused. */
+  /** Whether this connection is currently paused, for any reason. */
   get isPaused(): boolean {
-    return this._isPaused;
+    return this._userPaused || this._dataPaused;
   }
 
-  /** _isPaused is set unconditionally so dcopen-resync can match state on a fresh PC mid-reconnect. */
+  /**
+   * Intent flags are set unconditionally, even when no PC accepts the command,
+   * so dcopen-resync can match state on a fresh PC mid-reconnect.
+   */
   sendPause(): boolean {
-    this._isPaused = true;
-    let sent = false;
-    this.forEachPc((pcw) => { if (pcw.sendPause()) sent = true; });
-    return sent;
+    this._userPaused = true;
+    return this.applyPauseState();
   }
 
   sendResume(): boolean {
-    this._isPaused = false;
+    this._userPaused = false;
+    return this.applyPauseState();
+  }
+
+  /** Pause/resume driven by archive data availability, independent of user pause. */
+  setDataPaused(paused: boolean): boolean {
+    this._dataPaused = paused;
+    return this.applyPauseState();
+  }
+
+  /**
+   * Dispatch the effective pause state to the PCs, but only when it actually
+   * changed. The guard is what stops a global resume from un-pausing a camera
+   * that is still data-paused (and vice versa).
+   */
+  private applyPauseState(): boolean {
+    const effective = this.isPaused;
+    if (effective === this._pauseApplied) return false;
+    this._pauseApplied = effective;
+
+    let sent = false;
+    if (effective) {
+      this.forEachPc((pcw) => { if (pcw.sendPause()) sent = true; });
+      return sent;
+    }
+
     // CLOUD-17616: reveal any track deferred while paused — playing is fine now.
     this.revealPendingVisibleTrack();
     if (this._needsBaseRebuild) {
@@ -546,7 +580,6 @@ export class CameraConnection extends Disposable {
         this.connectUpgrade();
       }
     }
-    let sent = false;
     this.forEachPc((pcw) => { if (pcw.sendResume()) sent = true; });
     return sent;
   }
@@ -695,7 +728,7 @@ export class CameraConnection extends Disposable {
       if (!this.disposed && this.baseRetryAc === retryAc) {
         // Let releaseHighRes detect "no retry running" and force-rebuild base.
         this.baseRetryAc = null;
-        if (this._isPaused) {
+        if (this.isPaused) {
           // Pause caused server to drop the SRTP session; defer until resume.
           this._needsBaseRebuild = true;
           return;
@@ -840,19 +873,19 @@ export class CameraConnection extends Disposable {
 
   /** Align a fresh PCW to current playback. Pause is replayed in any mode; seek only applies in archive. */
   private resyncPausedState(pcw: PeerConnectionWrapper): void {
-    if (this._isPaused) {
+    if (this.isPaused) {
       pcw.sendPause();
     }
     // Seek only applies in archive (a position is set).
     if (
       this.currentPosition &&
-      (this._isPaused || this.latestServerTimestampMs !== undefined)
+      (this.isPaused || this.latestServerTimestampMs !== undefined)
     ) {
       pcw.sendSeek(this.latestServerTimestampMs ?? this.currentPosition);
     }
     // CLOUD-17616: pause has now been (re)applied to this PC, so a track this PC
     // deferred while paused will show a frozen frame, not live-playing video.
-    if (this._isPaused) {
+    if (this.isPaused) {
       this.revealPendingVisibleTrack(pcw);
     }
   }
@@ -884,7 +917,7 @@ export class CameraConnection extends Disposable {
         );
         return;
       }
-      if (this._isPaused) {
+      if (this.isPaused) {
         this.config.logger?.info?.(
           `[WEBRTC-DIAG] [${this.connectionKey}] base rearm deferred (paused)`,
         );
@@ -920,7 +953,7 @@ export class CameraConnection extends Disposable {
    */
   private handleBaseFailure(): void {
     if (this.disposed) return;
-    if (this._isPaused) {
+    if (this.isPaused) {
       this.config.logger?.info?.(`[WEBRTC-DIAG] [${this.connectionKey}] handleBaseFailure deferred (paused)`);
       this._needsBaseRebuild = true;
       this.disposeBaseInternal();
@@ -1089,7 +1122,7 @@ export class CameraConnection extends Disposable {
   /** Upgrade failed — fall back to base via {@link releaseHighRes}. */
   private handleUpgradeFailure(): void {
     if (this.disposed) return;
-    if (this._isPaused) {
+    if (this.isPaused) {
       this.config.logger?.info?.(`[WEBRTC-DIAG] [${this.connectionKey}] handleUpgradeFailure deferred (paused)`);
       this._needsUpgradeRebuild = true;
       this.disposeUpgradeInternal();
@@ -1190,7 +1223,7 @@ export class CameraConnection extends Disposable {
   ): void {
     const pcAlreadyPaused = pcw?.dataChannelOpen ?? false;
     if (
-      this._isPaused &&
+      this.isPaused &&
       !pcAlreadyPaused &&
       this.managedStream.getVideoTracks().length > 0
     ) {

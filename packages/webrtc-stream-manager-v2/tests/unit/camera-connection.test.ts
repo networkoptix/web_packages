@@ -1994,4 +1994,98 @@ describe('CameraConnection', () => {
     const { cc } = await setupWithLowConnected();
     await expect(cc.getPlayingCodec()).resolves.toBe('');
   });
+
+  // ── 40. Independent user / data pause intents ───────────────────────
+
+  it('setDataPaused pauses the PCs and reports paused', async () => {
+    const { cc, lowPcw } = await setupWithLowConnected();
+
+    expect(cc.setDataPaused(true)).toBe(true);
+    expect(cc.isPaused).toBe(true);
+    expect(lowPcw.sendPause).toHaveBeenCalledOnce();
+  });
+
+  it('does NOT resume a data-paused connection when the user resumes', async () => {
+    const { cc, lowPcw } = await setupWithLowConnected();
+    cc.setDataPaused(true);
+    lowPcw.sendPause.mockClear();
+    lowPcw.sendResume.mockClear();
+
+    // Global pause/play cycle: setPlaying(false) then setPlaying(true).
+    cc.sendPause();
+    cc.sendResume();
+
+    // Still in an archive gap — the stream must stay paused.
+    expect(cc.isPaused).toBe(true);
+    expect(lowPcw.sendResume).not.toHaveBeenCalled();
+  });
+
+  it('does NOT resume a user-paused connection when data returns', async () => {
+    const { cc, lowPcw } = await setupWithLowConnected();
+    cc.setDataPaused(true);
+    cc.sendPause();
+    lowPcw.sendResume.mockClear();
+
+    cc.setDataPaused(false);
+
+    expect(cc.isPaused).toBe(true);
+    expect(lowPcw.sendResume).not.toHaveBeenCalled();
+  });
+
+  it('resumes once both intents clear', async () => {
+    const { cc, lowPcw } = await setupWithLowConnected();
+    cc.setDataPaused(true);
+    cc.sendPause();
+    lowPcw.sendResume.mockClear();
+
+    cc.sendResume();
+    expect(lowPcw.sendResume).not.toHaveBeenCalled();
+
+    cc.setDataPaused(false);
+    expect(cc.isPaused).toBe(false);
+    expect(lowPcw.sendResume).toHaveBeenCalledOnce();
+  });
+
+  it('emits no DC traffic for a redundant transition', async () => {
+    const { cc, lowPcw } = await setupWithLowConnected();
+    cc.setDataPaused(true);
+    lowPcw.sendPause.mockClear();
+
+    expect(cc.setDataPaused(true)).toBe(false);
+    expect(lowPcw.sendPause).not.toHaveBeenCalled();
+  });
+
+  it('replays a data-pause onto a freshly connected PC via dcopen-resync', async () => {
+    const { cc, lowPcw } = await setupWithLowConnected();
+    cc.setDataPaused(true);
+    lowPcw.sendPause.mockClear();
+
+    // A fresh PC's data channel opening must re-apply the pause.
+    lowPcw.simulateDcOpen();
+    await vi.advanceTimersByTimeAsync(0);
+
+    expect(lowPcw.sendPause).toHaveBeenCalled();
+  });
+
+  it('defers a deferred rebuild until BOTH pause intents clear', async () => {
+    const { cc, lowPcw } = await setupWithLowConnected();
+    cc.setDataPaused(true);
+    cc.sendPause();
+
+    // Base PC dies while paused (server tore down media) → rebuild is deferred,
+    // not performed, per handleBaseFailure.
+    lowPcw.simulateStateChange(PeerState.failed);
+    await vi.advanceTimersByTimeAsync(0);
+    const pcCountAfterFailure = mockState.instances.length;
+
+    // User resumes, but the camera is still in an archive gap: no rebuild yet.
+    cc.sendResume();
+    await vi.advanceTimersByTimeAsync(0);
+    expect(mockState.instances.length).toBe(pcCountAfterFailure);
+
+    // Data returns → effective unpause → the deferred rebuild finally runs.
+    cc.setDataPaused(false);
+    await vi.advanceTimersByTimeAsync(0);
+    expect(mockState.instances.length).toBeGreaterThan(pcCountAfterFailure);
+  });
 });
