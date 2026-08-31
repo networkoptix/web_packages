@@ -1760,6 +1760,243 @@ describe('RadassController', () => {
     });
   });
 
+  describe('CLOUD-18327 QA follow-up: a failed HQ probe backs off the whole system', () => {
+    /**
+     * QA repro: a throttled link that can carry exactly one HQ stream. With
+     * several Performance-LQ cameras, each camera's failedHqAttempts starts at
+     * 0, so after camera B's probe fails, camera C still qualifies for the
+     * base 15s dwell — every ~20s ANOTHER camera blips LQ→HQ→LQ and latches
+     * its own 10-minute anti-thrash. The probe failure is evidence about the
+     * link, so it must gate the next probe from ANY camera.
+     */
+    function setupSharedThrottledLink() {
+      const camA = makeMockCamera({
+        connectionKey: 'cam-a',
+        elementArea: 800 * 600,
+        statsUpdateCount: 20,
+      });
+      const camB = makeMockCamera({
+        connectionKey: 'cam-b',
+        elementHeight: 300,
+        elementArea: 600 * 400,
+        statsUpdateCount: 20,
+      });
+      const camC = makeMockCamera({
+        connectionKey: 'cam-c',
+        elementHeight: 280,
+        elementArea: 500 * 350,
+        statsUpdateCount: 20,
+      });
+      cameras.set('cam-a', camA);
+      cameras.set('cam-b', camB);
+      cameras.set('cam-c', camC);
+      controller.registerCamera('cam-a');
+      controller.registerCamera('cam-b');
+      controller.registerCamera('cam-c');
+      vi.advanceTimersByTime(config.switchCooldownMs + config.recentlyAddedDelayMs);
+
+      const states = ['cam-a', 'cam-b', 'cam-c'].map((k) => controller.getState(k)!);
+      const wasHigh = states.map((s) => s.currentQuality === 'high');
+
+      /** Run for `minutes`; the link supports exactly one HQ stream unless
+       *  `healthy` forces genuine recovery. Returns per-camera promotion counts. */
+      function run(minutes: number, opts: { healthy?: boolean } = {}): number[] {
+        const steps = (minutes * 60 * 1000) / config.tickIntervalMs;
+        const promotions = [0, 0, 0];
+        for (let i = 0; i < steps; i++) {
+          const hqCount = states.filter((s) => s.currentQuality === 'high').length;
+          const loaded = opts.healthy ? false : hqCount >= 2;
+          const snapshot = { mos: loaded ? 2.0 : 5.0, focus: 3, stalled: false };
+          camA.snapshot = snapshot;
+          camB.snapshot = snapshot;
+          camC.snapshot = snapshot;
+          tick();
+          states.forEach((s, idx) => {
+            const isHigh = s.currentQuality === 'high';
+            if (isHigh && !wasHigh[idx]) promotions[idx]++;
+            wasHigh[idx] = isHigh;
+          });
+        }
+        return promotions;
+      }
+
+      return { states, run };
+    }
+
+    it('does not let every Performance-LQ camera burn its own immediate probe in turn', () => {
+      const { states, run } = setupSharedThrottledLink();
+
+      // 5 minutes on the throttled link. The settle phase demotes B and C;
+      // ONE base-dwell probe is allowed. After it fails, the next probe from
+      // ANY camera must wait for the escalated healthy period (>= 10 min), so
+      // no second probe fits inside this window.
+      const promotions = run(5);
+      const [, promoB, promoC] = promotions;
+      expect(promoB + promoC).toBeLessThanOrEqual(1);
+      // The system settles at the link's real capacity: exactly one HQ camera
+      // (which one is a Pass 1 smallest-eligible artifact), the rest parked LQ.
+      const hqCount = states.filter((s) => s.currentQuality === 'high').length;
+      expect(hqCount).toBe(1);
+    });
+
+    /** Drive N cameras against a link that turns bad only after `hqCount >= capacityPlusOne`
+     *  has held for `lagTicks` ticks (congestion takes time to build). */
+    function makeLaggedDriver(
+      cams: MockCamera[],
+      capacityPlusOne: number,
+      lagTicks: number,
+    ) {
+      const states = cams.map((c) => controller.getState(c.connectionKey)!);
+      let overTicks = 0;
+      return {
+        states,
+        run(minutes: number, opts: { healthy?: boolean; onTick?: (i: number) => void } = {}): number[] {
+          const steps = (minutes * 60 * 1000) / config.tickIntervalMs;
+          const promotions = cams.map(() => 0);
+          const wasHigh = states.map((s) => s.currentQuality === 'high');
+          for (let i = 0; i < steps; i++) {
+            const hqCount = states.filter((s) => s.currentQuality === 'high').length;
+            overTicks = hqCount >= capacityPlusOne ? overTicks + 1 : 0;
+            const loaded = opts.healthy ? false : overTicks > lagTicks;
+            const snapshot = { mos: loaded ? 2.0 : 5.0, focus: 3, stalled: false };
+            for (const c of cams) c.snapshot = snapshot;
+            opts.onTick?.(i);
+            tick();
+            states.forEach((s, idx) => {
+              const isHigh = s.currentQuality === 'high';
+              if (isHigh && !wasHigh[idx]) promotions[idx]++;
+              wasHigh[idx] = isHigh;
+            });
+          }
+          return promotions;
+        },
+      };
+    }
+
+    function registerFleet(count: number): MockCamera[] {
+      const cams: MockCamera[] = [];
+      for (let i = 0; i < count; i++) {
+        const cam = makeMockCamera({
+          connectionKey: `cam-${i}`,
+          elementHeight: 400 - i * 10,
+          elementArea: (800 - i * 50) * (400 - i * 10),
+          statsUpdateCount: 20,
+        });
+        cams.push(cam);
+        cameras.set(cam.connectionKey, cam);
+        controller.registerCamera(cam.connectionKey);
+      }
+      vi.advanceTimersByTime(config.switchCooldownMs + config.recentlyAddedDelayMs);
+      return cams;
+    }
+
+    it('waits a full 60s of healthy MOS before the first performance recovery', () => {
+      // CLOUD-18327 QA decision: MOS observed at LQ cannot prove HQ capacity,
+      // so the first recovery must wait for a long sustained-healthy period
+      // rather than a quick 15s one. Pins the default at 60s.
+      expect(DEFAULT_RADASS_CONFIG.performanceRecoveryDelayMs).toBe(60_000);
+
+      const cams = registerFleet(2);
+      const driver = makeLaggedDriver(cams, 3, 0); // capacity 2: no re-overload
+      // Force one performance demotion: bad MOS for a couple of ticks.
+      for (const c of cams) c.snapshot = { mos: 2.0, focus: 3, stalled: false };
+      tick(4);
+      const demoted = driver.states.find((s) => s.currentQuality === 'low')!;
+      expect(demoted.lqReason).toBe(LqReason.Performance);
+
+      // Healthy again. 30s of healthy MOS must NOT promote it.
+      for (const c of cams) c.snapshot = { mos: 5.0, focus: 3, stalled: false };
+      tick((30 * 1000) / config.tickIntervalMs);
+      expect(demoted.currentQuality).toBe('low');
+
+      // A further 35s (past the 60s dwell) must promote it.
+      tick((35 * 1000) / config.tickIntervalMs);
+      expect(demoted.currentQuality).toBe('high');
+    });
+
+    it('counts one system-ladder rung per overload event, even when several probes fail together', () => {
+      // Congestion lag lets Pass 2 promote several probes in successive ticks
+      // before the first bad-MOS tick catches them all at once.
+      const cams = registerFleet(5);
+      const driver = makeLaggedDriver(cams, 2, 20);
+
+      driver.run(10);
+
+      // At least one overload event fired and several cameras sit in
+      // Performance-LQ, but each event advanced the shared ladder by ONE rung.
+      // Per-camera counting would jump straight past this bound and park the
+      // requirement at the 30-minute cap on the very first failure.
+      const sys = (controller as any).systemFailedHqProbes as number;
+      expect(sys).toBeGreaterThanOrEqual(1);
+      const events = Math.max(...driver.states.map((s) => s.failedHqAttempts));
+      expect(sys).toBeLessThanOrEqual(events + 1);
+      expect(sys).toBeLessThan(4);
+    });
+
+    it('keeps escalating when the overload takes longer than successfulHqPeriodMs to build', () => {
+      // 90s congestion lag > 60s successfulHqPeriodMs: the probe crosses the
+      // "success" threshold before the load returns. Success must reset only
+      // the system counter — never the pending flag — or Pass 1 loses failure
+      // attribution and the oscillation free-runs at the base 15s dwell.
+      const cams = registerFleet(3);
+      const driver = makeLaggedDriver(cams, 2, (90 * 1000) / config.tickIntervalMs);
+
+      const promotions = driver.run(30);
+      const totalPromotions = promotions.reduce((a, b) => a + b, 0);
+
+      // Without attribution the measured rate is ~1 blip/minute (136 in 2h).
+      // With escalation intact a 30-minute window fits only the first few
+      // attempts (initial promotions + one or two escalated retries).
+      expect(totalPromotions).toBeLessThanOrEqual(6);
+      const anyThrashed = driver.states.some(
+        (s) => s.antiThrash || s.failedHqAttempts > 0,
+      );
+      expect(anyThrashed).toBe(true);
+    });
+
+    it('resets the system backoff on a demonstrated probe success despite layout churn', () => {
+      const cams = registerFleet(3);
+      const driver = makeLaggedDriver(cams, 2, 0);
+
+      // Burn one probe → system backoff engaged.
+      driver.run(2);
+      expect((controller as any).systemFailedHqProbes).toBeGreaterThanOrEqual(1);
+
+      // Genuine recovery, but with register/unregister churn every 45s —
+      // resetAntiThrash() wipes performancePromotionPending each time, which
+      // must NOT strand the system counter (wasPerformancePromoted survives).
+      let churnKey = 0;
+      const churnEveryTicks = (45 * 1000) / config.tickIntervalMs;
+      driver.run(35, {
+        healthy: true,
+        onTick: (i) => {
+          if (i > 0 && i % churnEveryTicks === 0) {
+            const key = `churn-${churnKey++}`;
+            const cam = makeMockCamera({ connectionKey: key, statsUpdateCount: 0 });
+            cameras.set(key, cam);
+            controller.registerCamera(key);
+            controller.unregisterCamera(key);
+            cameras.delete(key);
+          }
+        },
+      });
+
+      expect((controller as any).systemFailedHqProbes).toBe(0);
+      expect(driver.states.every((s) => s.currentQuality === 'high')).toBe(true);
+    });
+
+    it('still recovers every camera after the network is genuinely healthy for the escalated period', () => {
+      const { states, run } = setupSharedThrottledLink();
+
+      run(5); // burn the first probe, engage the system-wide backoff
+      run(35, { healthy: true }); // sustained genuine health past the 30-min cap
+
+      expect(states[0].currentQuality).toBe('high');
+      expect(states[1].currentQuality).toBe('high');
+      expect(states[2].currentQuality).toBe('high');
+    });
+  });
+
   describe('CLOUD-18327 follow-up: swap must not undo a performance demotion', () => {
     it('does not swap a Performance-LQ camera back to HQ even when it is far larger than the smallest HQ camera', () => {
       // cam-big is 150px tall — at or below smallItemHeightPx (171), so Pass 2

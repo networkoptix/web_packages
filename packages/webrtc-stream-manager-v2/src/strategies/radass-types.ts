@@ -39,6 +39,11 @@ export interface CameraRadassState {
   antiThrashAt: number;
   /** True if this camera was recently promoted from performance LQ. */
   performancePromotionPending: boolean;
+  /** Set on a Pass 2 performance promotion; cleared on demotion or after the
+   *  camera holds HQ for successfulHqPeriodMs (which resets the system probe
+   *  backoff). Unlike performancePromotionPending, NOT cleared by
+   *  resetAntiThrash(), so layout churn cannot strand the backoff counter. */
+  wasPerformancePromoted: boolean;
   /** Consecutive HQ promotions that were undone by a performance demotion.
    *  Drives the exponential promotion backoff. Deliberately NOT cleared by
    *  resetAntiThrash() — see the comment there. */
@@ -86,7 +91,10 @@ export interface RadassConfig {
    *  result of the demotion; promoting on that instantaneous reading restores
    *  the load and starts a HQ→LQ→HQ→LQ oscillation. Accumulated only across
    *  playing ticks, so it measures observed evidence rather than wall-clock
-   *  time. Must be meaningfully larger than switchCooldownMs. Default: 15_000. */
+   *  time. Must be meaningfully larger than switchCooldownMs. MOS observed at
+   *  LQ cannot prove HQ capacity, so this is deliberately long — a short
+   *  dwell makes the first recovery a visible LQ→HQ→LQ blip under a
+   *  bandwidth-limited link (CLOUD-18327 QA re-report). Default: 60_000. */
   performanceRecoveryDelayMs: number;
   /** Upper bound on the exponential promotion backoff. Each HQ attempt that is
    *  undone by a performance demotion doubles the required healthy period
@@ -121,7 +129,7 @@ export const DEFAULT_RADASS_CONFIG: RadassConfig = {
   smallItemDelayMs: 1_000,
   recentlyAddedDelayMs: 1_000,
   minStatsForPerformanceCheck: 10,
-  performanceRecoveryDelayMs: 15_000,
+  performanceRecoveryDelayMs: 60_000,
   maxPerformanceRecoveryDelayMs: 1_800_000,
   successfulHqPeriodMs: 60_000,
 };

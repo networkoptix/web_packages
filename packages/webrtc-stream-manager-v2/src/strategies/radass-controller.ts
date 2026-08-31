@@ -48,6 +48,15 @@ export class RadassController extends Disposable {
    */
   private healthyMs = 0;
 
+  /**
+   * Count of HQ probes undone by a performance demotion, shared by all
+   * cameras. A failed probe tells us about the link, so it must delay the
+   * next probe from ANY camera — per-camera counters alone let each camera
+   * burn its own base-dwell probe in turn (CLOUD-18327 QA re-report).
+   * Cleared only when a probe holds HQ for successfulHqPeriodMs.
+   */
+  private systemFailedHqProbes = 0;
+
   constructor(
     private readonly config: RadassConfig,
     private readonly host: RadassHost,
@@ -70,6 +79,7 @@ export class RadassController extends Disposable {
       antiThrash: false,
       antiThrashAt: 0,
       performancePromotionPending: false,
+      wasPerformancePromoted: false,
       failedHqAttempts: 0,
       hqMs: 0,
     };
@@ -112,6 +122,8 @@ export class RadassController extends Disposable {
 
   protected override onAfterAbort(): void {
     this.states.clear();
+    this.systemFailedHqProbes = 0;
+    this.healthyMs = 0;
   }
 
   // ── Tick loop ───────────────────────────────────────────────────────────
@@ -382,18 +394,25 @@ export class RadassController extends Disposable {
       if (smallestHqKey) {
         // Anti-thrash: if any camera was recently promoted and we're now demoting,
         // mark the promoted camera (not the demoted one) as anti-thrashed
+        let anyProbeFailed = false;
         for (const [, s] of this.states) {
           if (s.performancePromotionPending) {
             s.antiThrash = true;
             s.antiThrashAt = now;
             s.performancePromotionPending = false;
+            s.wasPerformancePromoted = false;
             // This promotion demonstrably failed: we promoted it, and the load
             // came back. Each failure doubles the healthy period required before
             // the next attempt, so a link that cannot carry HQ stops being
             // retried forever instead of cycling at the anti-thrash period.
             s.failedHqAttempts++;
+            anyProbeFailed = true;
           }
         }
+        // One rung per overload event, not per camera: probes promoted in the
+        // same healthy window fail together, and counting each would jump the
+        // shared ladder to its cap on a single failure.
+        if (anyProbeFailed) this.systemFailedHqProbes++;
 
         const targetState = this.states.get(smallestHqKey)!;
         this.setQuality(targetState, 'low', LqReason.Performance, now);
@@ -437,6 +456,7 @@ export class RadassController extends Disposable {
         this.setQuality(s, 'high', LqReason.None, now);
         this.host.applyDirective(k, 'high');
         s.performancePromotionPending = true;
+        s.wasPerformancePromoted = true;
         switchedThisTick = true;
       }
     }
@@ -532,6 +552,8 @@ export class RadassController extends Disposable {
     if (state.currentQuality !== quality) {
       state.lastSwitchTime = now;
       state.hqMs = 0;
+      // A demotion ends the probe's evidence window.
+      if (quality === 'low') state.wasPerformancePromoted = false;
     }
     state.currentQuality = quality;
     state.lqReason = quality === 'high' ? LqReason.None : reason;
@@ -553,13 +575,24 @@ export class RadassController extends Disposable {
    * retry interval.
    */
   private requiredHealthyMs(state: CameraRadassState): number {
-    if (state.failedHqAttempts === 0) {
-      return this.config.performanceRecoveryDelayMs;
-    }
-    return Math.min(
-      this.config.antiThrashRetryMs * 2 ** state.failedHqAttempts,
-      this.config.maxPerformanceRecoveryDelayMs,
-    );
+    const perCamera =
+      state.failedHqAttempts === 0
+        ? this.config.performanceRecoveryDelayMs
+        : Math.min(
+            this.config.antiThrashRetryMs * 2 ** state.failedHqAttempts,
+            this.config.maxPerformanceRecoveryDelayMs,
+          );
+    // System ladder: a failed probe by ANY camera gates the next probe from
+    // every camera (see systemFailedHqProbes). One rung below the per-camera
+    // ladder — the prober itself is penalized harder than bystanders.
+    const system =
+      this.systemFailedHqProbes === 0
+        ? 0
+        : Math.min(
+            this.config.antiThrashRetryMs * 2 ** (this.systemFailedHqProbes - 1),
+            this.config.maxPerformanceRecoveryDelayMs,
+          );
+    return Math.max(perCamera, system);
   }
 
   /**
@@ -584,6 +617,19 @@ export class RadassController extends Disposable {
       s.hqMs += this.config.tickIntervalMs;
       if (s.hqMs >= this.config.successfulHqPeriodMs) {
         s.failedHqAttempts = 0;
+        // A probe that held HQ this long succeeded: reset the system backoff.
+        // Only on the crossing tick — re-running every tick would wipe fresh
+        // failure evidence from another camera's probe. Keyed on
+        // wasPerformancePromoted (survives resetAntiThrash, so layout churn
+        // cannot strand the counter), and performancePromotionPending stays
+        // set so Pass 1 still attributes overloads that build up slower than
+        // successfulHqPeriodMs.
+        const justCrossed =
+          s.hqMs - this.config.tickIntervalMs < this.config.successfulHqPeriodMs;
+        if (justCrossed && s.wasPerformancePromoted) {
+          s.wasPerformancePromoted = false;
+          this.systemFailedHqProbes = 0;
+        }
       }
     }
   }
