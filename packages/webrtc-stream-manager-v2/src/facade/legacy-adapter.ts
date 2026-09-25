@@ -56,6 +56,10 @@ export class RtpEpochBinder {
     }
   }
 
+  reset(): void {
+    this.pairs.length = 0;
+  }
+
   /**
    * Epoch-ms for an RTP timestamp, interpolated from the nearest DC pair
    * (nearest, not last: the unreliable data channel can reorder events).
@@ -346,7 +350,15 @@ export class WebRTCStreamManager {
         }
       },
     );
-    this._close$.subscribe({ complete: () => unsubTimestamp() });
+    // Each new track restarts its RTP clock at 0, and a stream under 30 s old
+    // steps back too little for push() to detect the reset.
+    const unsubTrack = _connection.on('track', () => this._rtpEpochBinder.reset());
+    this._close$.subscribe({
+      complete: () => {
+        unsubTimestamp();
+        unsubTrack();
+      },
+    });
 
     // Bridge the event-based CameraConnection API to an RxJS Observable.
     //

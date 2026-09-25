@@ -674,6 +674,21 @@ describe('WebRTCStreamManager (legacy facade)', () => {
       sub.unsubscribe();
     });
 
+    it('discards pre-swap pairs on a track swap even when the old clock is young', () => {
+      const { facade, mockConnection, sub } = setupInstance();
+      // 10 s into a fresh live stream: too young for the backward-step reset.
+      mockConnection._emit('timestamp', { timestampMs: 1_000_000, rtpTimestamp: 900_000 });
+      mockConnection._emit('track', {
+        track: {} as MediaStreamTrack,
+        streams: [{ id: 'stream-1' } as unknown as MediaStream],
+      });
+      expect(facade.displayedEpochMs(900_090)).toBeNull();
+      // The archive track's clock restarts at 0; its frame must not bind to the live pair.
+      mockConnection._emit('timestamp', { timestampMs: 5_000_000, rtpTimestamp: 0 });
+      expect(facade.displayedEpochMs(900_090)).toBe(5_010_001);
+      sub.unsubscribe();
+    });
+
     it('tolerates small backwards rtp jitter without resetting', () => {
       const { facade, mockConnection, sub } = setupInstance();
       mockConnection._emit('timestamp', { timestampMs: 1_000_000, rtpTimestamp: 900_000 });
