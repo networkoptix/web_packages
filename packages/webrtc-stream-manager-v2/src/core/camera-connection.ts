@@ -174,7 +174,15 @@ export class CameraConnection extends Disposable {
   private upgradeCleanups: (() => void)[] = [];
 
   // ── Swap listener cleanup ──────────────────────────────────────────
+  /** Owns the pending deferred-swap listener; superseded by the next swap and
+   *  linked to the connection's own signal for disposal. */
   private swapAbort: AbortController | null = null;
+  /** Deadline for the pending deferred swap's first frame; null when no swap is deferred. */
+  private swapDeadlineTimer: ReturnType<typeof globalThis.setTimeout> | null =
+    null;
+  /** Deferred-swap first-frame deadline: well above a healthy sub-second unmute,
+   *  below the 10s the consumer waits before declaring the connection established. */
+  private static readonly SWAP_FIRST_FRAME_TIMEOUT_MS = 5_000;
 
   // ── MSE fallback state ─────────────────────────────────────────────
   private mseRenderer: MseRenderer | null = null;
@@ -475,7 +483,7 @@ export class CameraConnection extends Disposable {
     if (baseTrack) {
       // Existing base track — already paused/frozen when paused, not a fresh
       // stream — so reveal it immediately as the inter-track fallback.
-      this.doSwapManagedTrack(baseTrack);
+      this.doSwapManagedTrack(baseTrack, this.basePc ?? undefined);
     }
 
     this.disposeUpgradeInternal();
@@ -1231,7 +1239,7 @@ export class CameraConnection extends Disposable {
       this._pendingVisiblePcw = pcw ?? null;
       return;
     }
-    this.doSwapManagedTrack(newTrack);
+    this.doSwapManagedTrack(newTrack, pcw);
   }
 
   /**
@@ -1243,7 +1251,9 @@ export class CameraConnection extends Disposable {
     if (!this._pendingVisibleTrack) return;
     if (pcw && this._pendingVisiblePcw && this._pendingVisiblePcw !== pcw) return;
     const track = this._pendingVisibleTrack;
-    this.doSwapManagedTrack(track);
+    // Captured before the swap clears the pending state.
+    const owner = this._pendingVisiblePcw ?? pcw;
+    this.doSwapManagedTrack(track, owner ?? undefined);
     this.emit('track', {
       track,
       streams: [this.managedStream],
@@ -1260,15 +1270,21 @@ export class CameraConnection extends Disposable {
    * guaranteeing zero black-frame gaps. A generation counter ensures that
    * stale deferred removals (from a previous call) are silently discarded.
    */
-  private doSwapManagedTrack(newTrack: MediaStreamTrack): void {
+  private doSwapManagedTrack(
+    newTrack: MediaStreamTrack,
+    pcw?: PeerConnectionWrapper,
+  ): void {
     // A real swap supersedes any deferred one.
     this._pendingVisibleTrack = null;
     this._pendingVisiblePcw = null;
     const gen = ++this._swapGeneration;
+    this.clearSwapDeadline();
 
-    // Cancel any pending 'unmute' listener from a previous swap call.
+    // Cancels the previous swap's 'unmute' listener. Owned by the swap, not by a PC:
+    // a teardown cancelling it would strand the outgoing track on screen forever.
     this.swapAbort?.abort();
     this.swapAbort = new AbortController();
+    linkSignal(this.signal, this.swapAbort);
 
     // Add new track immediately — old track keeps rendering until removed.
     if (!this.managedStream.getVideoTracks().includes(newTrack)) {
@@ -1277,6 +1293,7 @@ export class CameraConnection extends Disposable {
 
     const removeOld = () => {
       if (gen !== this._swapGeneration) return; // Superseded by a newer swap.
+      this.clearSwapDeadline();
       for (const old of this.managedStream.getVideoTracks()) {
         if (old !== newTrack) {
           this.managedStream.removeTrack(old);
@@ -1291,6 +1308,37 @@ export class CameraConnection extends Disposable {
       // Defer old-track removal until the new track has its first frame.
       // The signal ensures the listener is cleaned up on dispose or next swap.
       newTrack.addEventListener('unmute', removeOld, { once: true, signal: this.swapAbort.signal });
+      // ...but not forever: a PC can report timestamps while never sending decodable
+      // media, parking the consumer on the outgoing frame indefinitely.
+      const armDeadline = () => {
+        this.swapDeadlineTimer = this.setTimeout(onDeadline, CameraConnection.SWAP_FIRST_FRAME_TIMEOUT_MS);
+      };
+      const onDeadline = () => {
+        this.swapDeadlineTimer = null;
+        if (gen !== this._swapGeneration || !newTrack.muted) return;
+        if (this.isPaused) {
+          // A paused stream sends no frames by design, so a muted track proves
+          // nothing here. Keep waiting rather than blanking the frozen tile.
+          armDeadline();
+          return;
+        }
+        if (pcw && pcw === this.upgradePc) {
+          // The base is still live behind the upgrade: drop back to it so the
+          // tile shows moving video rather than a frame frozen at the promotion.
+          this.handleUpgradeFailure();
+          return;
+        }
+        removeOld();
+      };
+      armDeadline();
+    }
+  }
+
+  /** Cancel the pending deferred swap's first-frame deadline, if one is armed. */
+  private clearSwapDeadline(): void {
+    if (this.swapDeadlineTimer !== null) {
+      this.clearTimeout(this.swapDeadlineTimer);
+      this.swapDeadlineTimer = null;
     }
   }
 
@@ -1352,8 +1400,6 @@ export class CameraConnection extends Disposable {
   private disposeBaseInternal(): void {
     this.baseRetryAc?.abort();
     this.baseRetryAc = null;
-    this.swapAbort?.abort();
-    this.swapAbort = null;
     if (this.rearmTimer !== null) {
       this.clearTimeout(this.rearmTimer);
       this.rearmTimer = null;

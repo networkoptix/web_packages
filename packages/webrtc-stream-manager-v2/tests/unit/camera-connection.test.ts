@@ -276,12 +276,14 @@ function getMock(index: number): MockInstance {
   return inst;
 }
 
-/** Create a mock MediaStream with a single video track. */
-function makeMockStream(id: string) {
+/** Create a mock MediaStream with a single video track. `muted` mirrors the RTP
+ *  lifecycle: a fresh track arrives muted and unmutes on its first decoded frame. */
+function makeMockStream(id: string, muted = false) {
   const trackTarget = new EventTarget();
   const track = Object.assign(trackTarget, {
     kind: 'video',
     id: `track-${id}`,
+    muted,
     readyState: 'live' as MediaStreamTrackState,
   }) as unknown as MediaStreamTrack;
   const stream = {
@@ -289,6 +291,19 @@ function makeMockStream(id: string) {
     getVideoTracks: () => [track],
   } as unknown as MediaStream;
   return { track, stream };
+}
+
+/** First frame decoded: the track starts producing pixels. */
+function simulateUnmute(track: MediaStreamTrack): void {
+  (track as unknown as { muted: boolean }).muted = false;
+  track.dispatchEvent(new Event('unmute'));
+}
+
+/** Server-side SRTP teardown ends the track without any ICE state change. */
+function simulateTrackEnded(track: MediaStreamTrack): void {
+  (track as unknown as { readyState: MediaStreamTrackState }).readyState =
+    'ended';
+  track.dispatchEvent(new Event('ended'));
 }
 
 const TEST_CONFIG: CameraConnectionConfig = {
@@ -2087,5 +2102,111 @@ describe('CameraConnection', () => {
     cc.setDataPaused(false);
     await vi.advanceTimersByTimeAsync(0);
     expect(mockState.instances.length).toBeGreaterThan(pcCountAfterFailure);
+  });
+
+  // ── Deferred upgrade swap vs. base teardown ──────────────────────────
+  // The consumer renders the FIRST video track, so a dead track left at the head of
+  // the managed stream freezes the tile while the upgrade PC still reports timestamps.
+
+  /** Base connected and painting, upgrade connected with a still-muted track. */
+  async function setupWithMutedUpgrade() {
+    const { cc, lowPcw } = await setupWithLowConnected();
+
+    const base = makeMockStream('base');
+    lowPcw.simulateTrack(base.track, [base.stream]);
+    expect(cc.activeStream!.getVideoTracks()).toContain(base.track);
+
+    cc.requestHighRes();
+    await vi.advanceTimersByTimeAsync(0);
+    const highPcw = getMock(1);
+    highPcw.simulateStateChange(PeerState.connected);
+    await vi.advanceTimersByTimeAsync(0);
+
+    const upgrade = makeMockStream('upgrade', true);
+    highPcw.simulateTrack(upgrade.track, [upgrade.stream]);
+
+    // Deliberate: no frames on the upgrade track yet, so the base keeps painting.
+    expect(cc.activeStream!.getVideoTracks()).toContain(base.track);
+
+    return { cc, base, upgrade };
+  }
+
+  it('completes the deferred swap when the upgrade track unmutes after a base teardown', async () => {
+    const { cc, base, upgrade } = await setupWithMutedUpgrade();
+
+    // Tearing the base down aborts swapAbort — the controller that carries the
+    // upgrade track's pending 'unmute' listener.
+    simulateTrackEnded(base.track);
+    await vi.advanceTimersByTimeAsync(0);
+
+    // The upgrade track now paints, so nothing justifies keeping the dead one.
+    simulateUnmute(upgrade.track);
+
+    expect(cc.activeStream!.getVideoTracks()).toEqual([upgrade.track]);
+  });
+
+  // A deferred swap waits for a frame that may never come, so the wait has a deadline:
+  // unbounded, the tile sits on a stale frame forever with the marker still advancing.
+
+  it('falls back to the base stream when the upgrade track never produces a frame', async () => {
+    const { cc, base, upgrade } = await setupWithMutedUpgrade();
+
+    await vi.advanceTimersByTimeAsync(10_000);
+
+    // The base track is still live and painting — that is the picture to show.
+    expect(cc.activeStream!.getVideoTracks()).toEqual([base.track]);
+    expect(cc.activeStream!.getVideoTracks()).not.toContain(upgrade.track);
+  });
+
+  it('retires the outgoing track when a fresh base track never produces a frame', async () => {
+    const { cc, lowPcw } = await setupWithLowConnected();
+
+    const first = makeMockStream('first');
+    lowPcw.simulateTrack(first.track, [first.stream]);
+
+    // A base reconnect (the live→archive seek on reload) brings up a fresh PC.
+    cc.reconnect();
+    await vi.advanceTimersByTimeAsync(0);
+    const freshPcw = getMock(1);
+    freshPcw.simulateStateChange(PeerState.connected);
+    await vi.advanceTimersByTimeAsync(0);
+
+    const fresh = makeMockStream('fresh', true);
+    freshPcw.simulateTrack(fresh.track, [fresh.stream]);
+
+    // Deferred by design while the fresh track has no frames yet.
+    expect(cc.activeStream!.getVideoTracks()).toContain(first.track);
+
+    await vi.advanceTimersByTimeAsync(10_000);
+
+    // The outgoing track belongs to a disposed PC — holding it past the
+    // deadline presents a dead frame as if it were live video.
+    expect(cc.activeStream!.getVideoTracks()).toEqual([fresh.track]);
+  });
+
+  it('holds the frozen frame past the deadline while paused', async () => {
+    const { cc, lowPcw } = await setupWithLowConnected();
+
+    const first = makeMockStream('first');
+    lowPcw.simulateTrack(first.track, [first.stream]);
+
+    cc.sendPause();
+
+    cc.reconnect();
+    await vi.advanceTimersByTimeAsync(0);
+    const freshPcw = getMock(1);
+    freshPcw.simulateStateChange(PeerState.connected);
+    await vi.advanceTimersByTimeAsync(0);
+    // DC open before the track → no pause-deferral, the swap runs directly.
+    freshPcw.simulateDcOpen();
+
+    const fresh = makeMockStream('fresh', true);
+    freshPcw.simulateTrack(fresh.track, [fresh.stream]);
+
+    await vi.advanceTimersByTimeAsync(10_000);
+
+    // A paused stream sends no frames, so staying muted is not a failure —
+    // dropping the outgoing track here would blank a deliberately frozen tile.
+    expect(cc.activeStream!.getVideoTracks()).toContain(first.track);
   });
 });
