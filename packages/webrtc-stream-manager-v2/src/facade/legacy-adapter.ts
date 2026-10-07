@@ -381,6 +381,15 @@ export class WebRTCStreamManager {
         subscriber.next(tuple);
       });
 
+      // A reused connection (same camera in several cells) has already fired its
+      // track event, so replay the current stream to late subscribers.
+      const activeStream = _connection.activeStream;
+      if (activeStream) {
+        const tuple: [MediaStream | null, ConnectionError | null, WebRTCStreamManager] = [activeStream, null, this];
+        this.mediaStream$.next(tuple);
+        subscriber.next(tuple);
+      }
+
       return () => {
         unsubTrack();
         unsubError();

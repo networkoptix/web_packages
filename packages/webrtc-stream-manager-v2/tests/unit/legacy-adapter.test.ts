@@ -60,6 +60,7 @@ const { mockState, MockStreamManager, MockCameraConnection } = vi.hoisted(() => 
     updateSpeed = vi.fn();
     setDataPaused = vi.fn().mockReturnValue(true);
     activeStreamIndex = 1;
+    activeStream: MediaStream | null = null;
     getPlayingCodec = vi.fn().mockResolvedValue('video/H265');
     setVideoElement = vi.fn();
     dispose = vi.fn().mockResolvedValue(undefined);
@@ -503,6 +504,41 @@ describe('WebRTCStreamManager (legacy facade)', () => {
 
       expect(emissions).toHaveLength(1);
       expect(emissions[0][0]).toBeNull();
+
+      sub.unsubscribe();
+    });
+
+    it('replays the active stream to a later connect() on an already-streaming camera', () => {
+      // Same camera in two cells: the second cell joins after the track event
+      // and must get the stream without waiting for a new track.
+      const first: any[] = [];
+      const firstSub = WebRTCStreamManager.connect(makeUrlConfig('sys1', 'cam1'))
+        .subscribe((value) => first.push(value));
+
+      const mockConnection = mockState.connections.get('sys1:cam1')!;
+      const fakeStream = { id: 'stream-1' } as unknown as MediaStream;
+      mockConnection.activeStream = fakeStream;
+      mockConnection._emit('track', { track: {} as MediaStreamTrack, streams: [fakeStream] });
+
+      const second: any[] = [];
+      const secondSub = WebRTCStreamManager.connect(makeUrlConfig('sys1', 'cam1'))
+        .subscribe((value) => second.push(value));
+
+      expect(first).toHaveLength(1);
+      expect(second).toHaveLength(1);
+      expect(second[0][0]).toBe(fakeStream);
+      expect(second[0][1]).toBeNull();
+
+      firstSub.unsubscribe();
+      secondSub.unsubscribe();
+    });
+
+    it('does not emit on subscribe before the connection has a stream', () => {
+      const emissions: any[] = [];
+      const sub = WebRTCStreamManager.connect(makeUrlConfig('sys1', 'cam1'))
+        .subscribe((value) => emissions.push(value));
+
+      expect(emissions).toHaveLength(0);
 
       sub.unsubscribe();
     });
