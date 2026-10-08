@@ -289,6 +289,7 @@ function makeMockStream(id: string, muted = false) {
   const stream = {
     id,
     getVideoTracks: () => [track],
+    getAudioTracks: () => [],
   } as unknown as MediaStream;
   return { track, stream };
 }

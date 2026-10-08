@@ -485,6 +485,9 @@ export class CameraConnection extends Disposable {
       // stream — so reveal it immediately as the inter-track fallback.
       this.doSwapManagedTrack(baseTrack, this.basePc ?? undefined);
     }
+    this.swapManagedAudioTrack(
+      this.baseMediaStream?.getAudioTracks().find((t) => t.readyState === 'live'),
+    );
 
     this.disposeUpgradeInternal();
 
@@ -774,6 +777,11 @@ export class CameraConnection extends Disposable {
         // placeholder. Skip forwarding AND the ended listener — its end would
         // tear down a healthy MseRenderer. Replay path below is already gated.
         if (!this._isUpgraded && this._deliveryMethod !== 'mse') {
+          // Prevents audio tracks from replacing the video track.
+          if (detail.track.kind === 'audio') {
+            this.swapManagedAudioTrack(detail.track);
+            return;
+          }
           this.attachBaseTrackEndedListener(detail.track, pcw);
           this.swapManagedTrack(detail.track, pcw);
           this.emit('track', {
@@ -857,6 +865,7 @@ export class CameraConnection extends Disposable {
     if (pcw.activeStream && !this._isUpgraded && this._deliveryMethod !== 'mse') {
       this.baseMediaStream = pcw.activeStream;
       const track = pcw.activeStream.getVideoTracks()[0];
+      this.swapManagedAudioTrack(pcw.activeStream.getAudioTracks()[0]);
       if (track) {
         this.attachBaseTrackEndedListener(track, pcw);
         this.swapManagedTrack(track, pcw);
@@ -1064,6 +1073,11 @@ export class CameraConnection extends Disposable {
     this.upgradeCleanups.push(
       pcw.on('track', (detail) => {
         this.upgradeMediaStream = detail.streams[0] ?? null;
+        // Prevents audio tracks from replacing the video track.
+        if (detail.track.kind === 'audio') {
+          this.swapManagedAudioTrack(detail.track);
+          return;
+        }
         this.attachUpgradeTrackEndedListener(detail.track, pcw);
         // Activate upgrade on first track (smooth swap from base).
         this.setUpgraded(true);
@@ -1112,6 +1126,7 @@ export class CameraConnection extends Disposable {
       this.upgradeMediaStream = pcw.activeStream;
       this.setUpgraded(true);
       const track = pcw.activeStream.getVideoTracks()[0];
+      this.swapManagedAudioTrack(pcw.activeStream.getAudioTracks()[0]);
       if (track) {
         this.attachUpgradeTrackEndedListener(track, pcw);
         this.swapManagedTrack(track, pcw);
@@ -1340,6 +1355,18 @@ export class CameraConnection extends Disposable {
       this.clearTimeout(this.swapDeadlineTimer);
       this.swapDeadlineTimer = null;
     }
+  }
+
+  private _currentAudioTrack: MediaStreamTrack | null = null;
+
+  /** Plain swap for the audio track — no flicker-free handoff needed, unlike {@link doSwapManagedTrack}. */
+  private swapManagedAudioTrack(newTrack: MediaStreamTrack | undefined): void {
+    if (!newTrack || newTrack === this._currentAudioTrack) return;
+    if (this._currentAudioTrack) {
+      this.managedStream.removeTrack(this._currentAudioTrack);
+    }
+    this.managedStream.addTrack(newTrack);
+    this._currentAudioTrack = newTrack;
   }
 
   // ── Private: cleanup helpers ──────────────────────────────────────────
