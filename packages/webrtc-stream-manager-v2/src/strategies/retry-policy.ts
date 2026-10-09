@@ -42,6 +42,20 @@ export function isRetryableError(error: ConnectionError | string): boolean {
 // ─── Retry utility ──────────────────────────────────────────────────────────
 
 /**
+ * Exponential back-off delay for a zero-based `attempt`: `baseDelayMs * 2^attempt`,
+ * capped at `maxDelayMs`, with 50 % jitter (between 50 % and 100 % of the
+ * computed value) so callers that fail together do not retry in lockstep.
+ */
+export function backoffDelay(
+  attempt: number,
+  baseDelayMs: number,
+  maxDelayMs: number,
+): number {
+  const delay = Math.min(baseDelayMs * 2 ** attempt, maxDelayMs);
+  return delay * (0.5 + Math.random() * 0.5);
+}
+
+/**
  * Execute `fn` with automatic retries using exponential back-off.
  *
  * - Respects the provided `AbortSignal`; aborts immediately if signalled.
@@ -89,10 +103,7 @@ export async function withRetry<T>(
         throw error;
       }
 
-      // Exponential back-off with 50 % jitter.
-      const delay = Math.min(baseDelayMs * 2 ** attempt, maxDelayMs);
-      const jittered = delay * (0.5 + Math.random() * 0.5);
-      await abortableSleep(jittered, parentSignal);
+      await abortableSleep(backoffDelay(attempt, baseDelayMs, maxDelayMs), parentSignal);
     }
   }
 

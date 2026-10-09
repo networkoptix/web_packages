@@ -348,6 +348,13 @@ export class StreamManager extends Disposable {
       if (dt) dt.mseFallback = true;
     });
 
+    // A failed HQ upgrade must reach RADASS, or it re-requests HQ every tick (CLOUD-19053).
+    // Skipped once detached: the key may already belong to a replacement connection.
+    connection.on('upgradefailed', () => {
+      if (this.connections.get(connectionKey) !== connection) return;
+      this.radassController.reportHqFailure(connectionKey);
+    });
+
     // Store in LRU cache.
     this.connections.set(connectionKey, connection);
     this.radassController.registerCamera(connectionKey);

@@ -2278,4 +2278,220 @@ describe('RadassController', () => {
       expect(cam0.lastSwitchTime).toBe(0);
     });
   });
+
+  describe('CLOUD-19053: a failed HQ upgrade backs off instead of retrying every tick', () => {
+    /** One AUTO camera that has been promoted to HQ by the initial evaluation. */
+    function setupPromotedCamera() {
+      const cam = makeMockCamera({ connectionKey: 'cam-1', statsUpdateCount: 20 });
+      cameras.set('cam-1', cam);
+      controller.registerCamera('cam-1');
+      vi.advanceTimersByTime(config.recentlyAddedDelayMs + config.tickIntervalMs);
+      const state = controller.getState('cam-1')!;
+      expect(state.currentQuality).toBe('high');
+      return { cam, state };
+    }
+
+    it('demotes the camera and stops sending high until the recovery dwell has passed', () => {
+      const { state } = setupPromotedCamera();
+
+      controller.reportHqFailure('cam-1');
+
+      // MOS on the LQ base stays healthy, yet the camera must not be pushed
+      // straight back to HQ on the next tick (the endless flip of the bug).
+      const dwellTicks = config.performanceRecoveryDelayMs / config.tickIntervalMs;
+      for (let i = 0; i < dwellTicks - 1; i++) {
+        tick();
+        expect(directives.get('cam-1')).toBe('low');
+      }
+      expect(state.lqReason).toBe(LqReason.Performance);
+
+      // HQ is still retried, after the dwell.
+      tick(4);
+      expect(directives.get('cam-1')).toBe('high');
+    });
+
+    it('engages anti-thrash and an escalating backoff when HQ keeps failing', () => {
+      const { state } = setupPromotedCamera();
+
+      // HQ never comes up: each upgrade fails ~5s (first-frame deadline) after it starts.
+      const failAfterTicks = 5_000 / config.tickIntervalMs;
+      const promotions: number[] = [];
+      let highTicks = 0;
+      let wasHigh = true;
+      let failures = 1;
+      controller.reportHqFailure('cam-1');
+      const steps = (180 * 60 * 1000) / config.tickIntervalMs;
+      for (let i = 0; i < steps; i++) {
+        tick();
+        const isHigh = state.currentQuality === 'high';
+        if (isHigh && !wasHigh) promotions.push(performance.now());
+        wasHigh = isHigh;
+        highTicks = isHigh ? highTicks + 1 : 0;
+        if (highTicks >= failAfterTicks) {
+          failures++;
+          highTicks = 0;
+          controller.reportHqFailure('cam-1');
+        }
+      }
+
+      // Without the fix this is one failed attempt every ~5s (≈ 2000 in 3 hours).
+      // With the backoff: one quick retry after the base dwell, then 20 min,
+      // then the 30 min cap — 8 attempts in 3 hours.
+      expect(failures).toBeLessThanOrEqual(8);
+      expect(state.failedHqAttempts).toBeGreaterThanOrEqual(2);
+      const gaps = promotions.slice(1).map((t, i) => t - promotions[i]);
+      expect(gaps.length).toBeGreaterThanOrEqual(2);
+      expect(gaps[0]).toBeGreaterThanOrEqual(config.antiThrashRetryMs);
+      expect(gaps[gaps.length - 1]).toBeGreaterThan(gaps[0]);
+      expect(gaps[gaps.length - 1]).toBeGreaterThanOrEqual(config.maxPerformanceRecoveryDelayMs);
+    });
+
+    it('arms anti-thrash when a performance-promoted camera fails its HQ upgrade', () => {
+      const { state } = setupPromotedCamera();
+      controller.reportHqFailure('cam-1');
+      vi.advanceTimersByTime(config.performanceRecoveryDelayMs + config.tickIntervalMs * 4);
+      expect(state.currentQuality).toBe('high');
+      expect(state.performancePromotionPending).toBe(true);
+
+      controller.reportHqFailure('cam-1');
+
+      expect(state.currentQuality).toBe('low');
+      expect(state.antiThrash).toBe(true);
+      expect(state.failedHqAttempts).toBe(1);
+    });
+
+    it('clears the failure history once a later upgrade holds HQ', () => {
+      const { state } = setupPromotedCamera();
+      controller.reportHqFailure('cam-1');
+      vi.advanceTimersByTime(config.performanceRecoveryDelayMs + config.tickIntervalMs * 4);
+      controller.reportHqFailure('cam-1');
+      expect(state.failedHqAttempts).toBe(1);
+
+      // The link recovers: the next attempt succeeds and holds.
+      vi.advanceTimersByTime(config.maxPerformanceRecoveryDelayMs + config.tickIntervalMs * 4);
+      expect(state.currentQuality).toBe('high');
+      vi.advanceTimersByTime(config.successfulHqPeriodMs + config.tickIntervalMs);
+
+      expect(state.failedHqAttempts).toBe(0);
+      expect(state.antiThrash).toBe(false);
+    });
+
+    it('still sends high for an explicit HIGH target after a failure', () => {
+      const { cam } = setupPromotedCamera();
+      cam.targetStream = TargetStream.HIGH;
+      tick();
+
+      controller.reportHqFailure('cam-1');
+      tick();
+
+      expect(directives.get('cam-1')).toBe('high');
+    });
+
+    it.each([
+      ['explicit HIGH', { targetStream: TargetStream.HIGH }],
+      ['viewport-forced', { viewportAreaFraction: 0.6, elementHeight: 800 }],
+    ])('a forced (%s) tile failing again and again does not stall AUTO recovery', (_name, forced) => {
+      const { state } = setupPromotedCamera();
+      controller.reportHqFailure('cam-1');
+      expect(state.lqReason).toBe(LqReason.Performance);
+
+      const forcedCam = makeMockCamera({ connectionKey: 'cam-f', statsUpdateCount: 20, ...forced });
+      cameras.set('cam-f', forcedCam);
+      controller.registerCamera('cam-f');
+
+      // The forced tile is sent 'high' every tick and fails every 5s.
+      const failEvery = 5_000 / config.tickIntervalMs;
+      const deadline = (config.performanceRecoveryDelayMs + 5_000) / config.tickIntervalMs;
+      let promotedAt = -1;
+      for (let i = 1; i <= deadline && promotedAt < 0; i++) {
+        tick();
+        if (i % failEvery === 0) controller.reportHqFailure('cam-f');
+        if (state.currentQuality === 'high') promotedAt = i;
+      }
+
+      expect(promotedAt).toBeGreaterThan(0);
+      expect(directives.get('cam-f')).toBe('high');
+    });
+
+    it('ignores a failure report for a camera that is not HQ', () => {
+      const cam = makeMockCamera({ connectionKey: 'cam-1', targetStream: TargetStream.LOW });
+      cameras.set('cam-1', cam);
+      controller.registerCamera('cam-1');
+      tick();
+
+      controller.reportHqFailure('cam-1');
+      controller.reportHqFailure('unknown');
+
+      const state = controller.getState('cam-1')!;
+      expect(state.lqReason).toBe(LqReason.Manual);
+      expect(state.failedHqAttempts).toBe(0);
+    });
+
+    it("one camera's failed upgrades do not raise the shared probe backoff for other cameras", () => {
+      const { state } = setupPromotedCamera();
+      const other = makeMockCamera({ connectionKey: 'cam-2', statsUpdateCount: 20 });
+      cameras.set('cam-2', other);
+      controller.registerCamera('cam-2');
+      vi.advanceTimersByTime(config.recentlyAddedDelayMs + config.tickIntervalMs);
+      const otherState = controller.getState('cam-2')!;
+      expect(otherState.currentQuality).toBe('high');
+
+      // cam-1 has a broken PRIMARY stream: its probe after the dwell fails too.
+      controller.reportHqFailure('cam-1');
+      holdHealthyPastRecoveryDwell();
+      tick(4);
+      expect(state.performancePromotionPending).toBe(true);
+      controller.reportHqFailure('cam-1');
+      expect(state.antiThrash).toBe(true);
+
+      // cam-2 has one failure of its own. It needs only its own base dwell, not
+      // the shared probe backoff (antiThrashRetryMs) that cam-1's stream earned.
+      controller.reportHqFailure('cam-2');
+      holdHealthyPastRecoveryDwell();
+      tick(4);
+
+      expect(otherState.currentQuality).toBe('high');
+    });
+
+    it('ignores a failure report while paused (pausing never demotes)', () => {
+      const { state } = setupPromotedCamera();
+      playing = false;
+
+      controller.reportHqFailure('cam-1');
+
+      expect(state.currentQuality).toBe('high');
+    });
+
+    it('a failure reported from inside the promotion directive leaves no pending probe on an LQ camera', () => {
+      // The connection reports synchronously when its own backoff skips the
+      // request, so the report arrives while Pass 2 is still running.
+      let failOnHigh = false;
+      const reentrant = new RadassController(config, {
+        getCameraInfo: (key) => {
+          const cam = cameras.get(key);
+          return cam ? { ...cam } : null;
+        },
+        applyDirective: (key, quality) => {
+          directives.set(key, quality);
+          if (failOnHigh && quality === 'high') reentrant.reportHqFailure(key);
+        },
+        isPlaying: () => playing,
+      });
+      controller.dispose();
+      controller = reentrant;
+      cameras.set('cam-1', makeMockCamera({ connectionKey: 'cam-1', statsUpdateCount: 20 }));
+      controller.registerCamera('cam-1');
+      vi.advanceTimersByTime(config.recentlyAddedDelayMs + config.tickIntervalMs);
+      const state = controller.getState('cam-1')!;
+      controller.reportHqFailure('cam-1');
+
+      failOnHigh = true;
+      holdHealthyPastRecoveryDwell();
+      tick(4);
+
+      expect(state.currentQuality).toBe('low');
+      expect(state.performancePromotionPending).toBe(false);
+      expect(state.antiThrash).toBe(true);
+    });
+  });
 });

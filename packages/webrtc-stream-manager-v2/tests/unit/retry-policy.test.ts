@@ -2,6 +2,7 @@
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import {
+  backoffDelay,
   classifyError,
   isRetryableError,
   withRetry,
@@ -49,6 +50,24 @@ describe('isRetryableError', () => {
     expect(isRetryableError(ConnectionError.mjpegDisabled)).toBe(false);
     expect(isRetryableError(ConnectionError.proxyDisabled)).toBe(false);
     expect(isRetryableError(ConnectionError.invalidAccessToken)).toBe(false);
+  });
+});
+
+// ─── backoffDelay ───────────────────────────────────────────────────────────
+
+describe('backoffDelay', () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it('doubles per attempt up to the cap, jittered between 50% and 100%', () => {
+    vi.spyOn(Math, 'random').mockReturnValue(1);
+    expect(backoffDelay(0, 5_000, 60_000)).toBe(5_000);
+    expect(backoffDelay(2, 5_000, 60_000)).toBe(20_000);
+    expect(backoffDelay(10, 5_000, 60_000)).toBe(60_000);
+
+    vi.spyOn(Math, 'random').mockReturnValue(0);
+    expect(backoffDelay(1, 5_000, 60_000)).toBe(5_000);
   });
 });
 

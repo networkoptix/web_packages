@@ -131,6 +131,11 @@ const { mockState, MockCameraConnection } = vi.hoisted(() => {
     simulateMseFallback(): void {
       this._emitter.dispatchEvent(new CustomEvent('msefallback'));
     }
+
+    /** Test helper: simulate the CameraConnection emitting an upgradefailed event. */
+    simulateUpgradeFailed(): void {
+      this._emitter.dispatchEvent(new CustomEvent('upgradefailed'));
+    }
   }
 
   return { mockState, MockCameraConnection };
@@ -994,6 +999,47 @@ describe('StreamManager', () => {
     sm.connect(urlConfig);
     const secondConn = getMock(1);
     expect(secondConn.needsMse).toBe(false);
+  });
+
+  // ── CLOUD-19053: a failed HQ upgrade stops the per-tick HQ requests ──
+
+  it('upgradefailed stops RADASS from requesting high-res again on the next ticks', () => {
+    StreamManager.configure({
+      ...TEST_CONFIG,
+      radassConfig: { tickIntervalMs: 500, recentlyAddedDelayMs: 200, switchCooldownMs: 100 },
+    });
+    const sm = StreamManager.getInstance();
+    sm.connect(makeUrlConfig('sys1', 'cam1'));
+    vi.advanceTimersByTime(1_000);
+    const conn = getMock(0);
+    expect(conn.requestHighRes).toHaveBeenCalled();
+
+    conn.simulateUpgradeFailed();
+    conn.requestHighRes.mockClear();
+    vi.advanceTimersByTime(10_000);
+
+    expect(conn.requestHighRes).not.toHaveBeenCalled();
+  });
+
+  it('ignores upgradefailed from a detached connection that was replaced', () => {
+    StreamManager.configure({
+      ...TEST_CONFIG,
+      radassConfig: { tickIntervalMs: 500, recentlyAddedDelayMs: 200, switchCooldownMs: 100 },
+    });
+    const sm = StreamManager.getInstance();
+    sm.connect(makeUrlConfig('sys1', 'cam1'));
+    const old = sm.detach('sys1:cam1');
+    expect(old).not.toBeNull();
+    sm.connect(makeUrlConfig('sys1', 'cam1'));
+    vi.advanceTimersByTime(1_000);
+    const replacement = getMock(1);
+    expect(replacement.requestHighRes).toHaveBeenCalled();
+
+    getMock(0).simulateUpgradeFailed();
+    replacement.requestHighRes.mockClear();
+    vi.advanceTimersByTime(500);
+
+    expect(replacement.requestHighRes).toHaveBeenCalled();
   });
 
   // ── 36. buildSignalingUrl uses dynamic deliveryMethod ──────────────

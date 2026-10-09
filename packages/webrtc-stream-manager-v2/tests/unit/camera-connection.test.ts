@@ -335,13 +335,19 @@ async function setupWithLowConnected(config = TEST_CONFIG) {
 
 describe('CameraConnection', () => {
   beforeEach(() => {
-    vi.useFakeTimers();
+    // performance is faked too: the upgrade backoff is timed with performance.now().
+    vi.useFakeTimers({
+      toFake: ['setTimeout', 'clearTimeout', 'setInterval', 'clearInterval', 'setImmediate', 'clearImmediate', 'Date', 'performance'],
+    });
     mockState.instances = [];
     mockMseState.instances = [];
     mockIsMseSupported.mockReturnValue(true);
+    // Retry/backoff jitter at its 100% end, so delays are exact.
+    vi.spyOn(Math, 'random').mockReturnValue(1);
   });
 
   afterEach(() => {
+    vi.mocked(Math.random).mockRestore();
     vi.useRealTimers();
   });
 
@@ -1503,6 +1509,8 @@ describe('CameraConnection', () => {
     const highMock = makeMockStream('high');
     highPcw.simulateTrack(highMock.track, [highMock.stream]);
     expect(cc.isHighRes).toBe(true);
+    const upgradeFailed = vi.fn();
+    cc.on('upgradefailed', upgradeFailed);
 
     // Server tears down the upgrade track.
     (highMock.track as unknown as { readyState: string }).readyState = 'ended';
@@ -1511,6 +1519,7 @@ describe('CameraConnection', () => {
 
     expect(highPcw.disposed).toBe(true);
     expect(cc.isHighRes).toBe(false);
+    expect(upgradeFailed).toHaveBeenCalledOnce();
   });
 
   // ── 37. lostConnection placeholder suppression ──────────────────────
@@ -2209,5 +2218,339 @@ describe('CameraConnection', () => {
     // A paused stream sends no frames, so staying muted is not a failure —
     // dropping the outgoing track here would blank a deliberately frozen tile.
     expect(cc.activeStream!.getVideoTracks()).toContain(first.track);
+  });
+
+  // ── CLOUD-19053: upgrade failures are reported, not swallowed ─────────
+  // The owner (RADASS) keeps requesting HQ every tick unless it learns the
+  // upgrade failed, so the tile flips HQ↔LQ forever.
+
+  it('reports an upgrade that never produces a first frame', async () => {
+    const { cc } = await setupWithMutedUpgrade();
+    const listener = vi.fn();
+    cc.on('upgradefailed', listener);
+
+    await vi.advanceTimersByTimeAsync(10_000);
+
+    expect(listener).toHaveBeenCalledOnce();
+    expect(cc.isHighRes).toBe(false);
+  });
+
+  it('reports an upgrade PC that fails after connecting', async () => {
+    const { cc } = await setupWithLowConnected();
+    const listener = vi.fn();
+    cc.on('upgradefailed', listener);
+    cc.requestHighRes();
+    await vi.advanceTimersByTimeAsync(0);
+    const highPcw = getMock(1);
+    highPcw.simulateStateChange(PeerState.connected);
+    await vi.advanceTimersByTimeAsync(0);
+
+    highPcw.simulateStateChange(PeerState.failed);
+    await vi.advanceTimersByTimeAsync(0);
+
+    expect(listener).toHaveBeenCalledOnce();
+  });
+
+  it('reports an upgrade whose connect attempts are exhausted', async () => {
+    let upgradeShouldFail = false;
+    const { cc } = await setupWithLowConnected({
+      ...TEST_CONFIG,
+      // Non-retryable rejection so withRetry exhausts on the first attempt.
+      signalingUrl: (stream: AvailableStreams) =>
+        upgradeShouldFail
+          ? Promise.reject(ConnectionError.authorization)
+          : `wss://example.com/webrtc?stream=${stream}`,
+    });
+    const listener = vi.fn();
+    cc.on('upgradefailed', listener);
+
+    upgradeShouldFail = true;
+    cc.requestHighRes();
+    await vi.advanceTimersByTimeAsync(0);
+
+    expect(listener).toHaveBeenCalledOnce();
+  });
+
+  it('does not report a deliberate releaseHighRes', async () => {
+    const { cc } = await setupWithLowConnected();
+    const listener = vi.fn();
+    cc.on('upgradefailed', listener);
+    cc.requestHighRes();
+    await vi.advanceTimersByTimeAsync(0);
+    getMock(1).simulateStateChange(PeerState.connected);
+    await vi.advanceTimersByTimeAsync(0);
+
+    cc.releaseHighRes();
+    await vi.advanceTimersByTimeAsync(0);
+
+    expect(listener).not.toHaveBeenCalled();
+  });
+
+  it('does not report an upgrade failure while paused (rebuilt on resume)', async () => {
+    const { cc } = await setupWithLowConnected();
+    const listener = vi.fn();
+    cc.on('upgradefailed', listener);
+    cc.requestHighRes();
+    await vi.advanceTimersByTimeAsync(0);
+    const highPcw = getMock(1);
+    highPcw.simulateStateChange(PeerState.connected);
+    await vi.advanceTimersByTimeAsync(0);
+    cc.sendPause();
+
+    highPcw.simulateStateChange(PeerState.failed);
+    await vi.advanceTimersByTimeAsync(0);
+
+    expect(listener).not.toHaveBeenCalled();
+  });
+
+  // ── CLOUD-19053: requestHighRes backs off after a failed upgrade ──────
+  // Manual HIGH and viewport-forced tiles get 'high' from RADASS every tick
+  // regardless of failures, so the connection itself must not re-upgrade at once.
+
+  /** Start an upgrade and fail its PC after it connects. Returns the upgrade PCW. */
+  async function startAndFailUpgrade(cc: CameraConnection) {
+    cc.requestHighRes();
+    await vi.advanceTimersByTimeAsync(0);
+    const highPcw = getMock(mockState.instances.length - 1);
+    highPcw.simulateStateChange(PeerState.connected);
+    await vi.advanceTimersByTimeAsync(0);
+    highPcw.simulateStateChange(PeerState.failed);
+    await vi.advanceTimersByTimeAsync(0);
+    return highPcw;
+  }
+
+  it('does not re-upgrade at once after a failure, and doubles the wait on repeat failures', async () => {
+    const { cc } = await setupWithLowConnected({
+      ...TEST_CONFIG,
+      targetStream: TargetStream.HIGH,
+    });
+    await startAndFailUpgrade(cc);
+    const pcCount = mockState.instances.length;
+
+    // The next RADASS tick re-sends 'high' for the manual HIGH target.
+    cc.requestHighRes();
+    await vi.advanceTimersByTimeAsync(4_900);
+    cc.requestHighRes();
+    await vi.advanceTimersByTimeAsync(0);
+    expect(mockState.instances.length).toBe(pcCount);
+
+    // After the 5s window the next request retries.
+    await vi.advanceTimersByTimeAsync(100);
+    await startAndFailUpgrade(cc);
+    expect(mockState.instances.length).toBe(pcCount + 1);
+
+    // Second failure in a row: 10s window.
+    await vi.advanceTimersByTimeAsync(9_900);
+    cc.requestHighRes();
+    await vi.advanceTimersByTimeAsync(0);
+    expect(mockState.instances.length).toBe(pcCount + 1);
+    await vi.advanceTimersByTimeAsync(100);
+    cc.requestHighRes();
+    await vi.advanceTimersByTimeAsync(0);
+    expect(mockState.instances.length).toBe(pcCount + 2);
+  });
+
+  /** Start an upgrade that paints its first frame, then fail its PC after `holdMs`. */
+  async function paintThenFailUpgrade(cc: CameraConnection, holdMs: number) {
+    cc.requestHighRes();
+    await vi.advanceTimersByTimeAsync(0);
+    const highPcw = getMock(mockState.instances.length - 1);
+    highPcw.simulateStateChange(PeerState.connected);
+    await vi.advanceTimersByTimeAsync(0);
+    const upgrade = makeMockStream(`upgrade-${mockState.instances.length}`, true);
+    highPcw.simulateTrack(upgrade.track, [upgrade.stream]);
+    simulateUnmute(upgrade.track);
+    expect(cc.activeStream!.getVideoTracks()).toEqual([upgrade.track]);
+    await vi.advanceTimersByTimeAsync(holdMs);
+    highPcw.simulateStateChange(PeerState.failed);
+    await vi.advanceTimersByTimeAsync(0);
+  }
+
+  it('resets the upgrade backoff once an upgrade has held HQ for a minute', async () => {
+    const { cc } = await setupWithLowConnected();
+    const base = makeMockStream('base');
+    getMock(0).simulateTrack(base.track, [base.stream]);
+    await startAndFailUpgrade(cc);
+    await vi.advanceTimersByTimeAsync(5_000);
+
+    // Retry succeeds and holds HQ for a minute, then fails.
+    await paintThenFailUpgrade(cc, 60_000);
+
+    // That failure starts again from the 5s base, not 10s.
+    await vi.advanceTimersByTimeAsync(5_000);
+    const pcCount = mockState.instances.length;
+    cc.requestHighRes();
+    await vi.advanceTimersByTimeAsync(0);
+    expect(mockState.instances.length).toBe(pcCount + 1);
+  });
+
+  it('selecting HIGH clears the upgrade backoff and upgrades at once', async () => {
+    const { cc } = await setupWithLowConnected();
+    await startAndFailUpgrade(cc);
+    const pcCount = mockState.instances.length;
+
+    cc.targetStream = TargetStream.HIGH;
+    await vi.advanceTimersByTimeAsync(0);
+
+    expect(mockState.instances.length).toBe(pcCount + 1);
+  });
+
+  it('a seek across live/archive clears the upgrade backoff', async () => {
+    const { cc } = await setupWithLowConnected();
+    await startAndFailUpgrade(cc);
+
+    // The failure was for live; the archive stream is a new attempt.
+    cc.updatePosition(5_000);
+    await vi.advanceTimersByTimeAsync(0);
+    const pcCount = mockState.instances.length;
+    cc.requestHighRes();
+    await vi.advanceTimersByTimeAsync(0);
+
+    expect(mockState.instances.length).toBe(pcCount + 1);
+  });
+
+  it('does not report an upgrade whose connect attempts end while paused', async () => {
+    let upgradeShouldFail = false;
+    const { cc } = await setupWithLowConnected({
+      ...TEST_CONFIG,
+      signalingUrl: (stream: AvailableStreams) =>
+        upgradeShouldFail
+          ? Promise.reject(ConnectionError.authorization)
+          : `wss://example.com/webrtc?stream=${stream}`,
+    });
+    const listener = vi.fn();
+    cc.on('upgradefailed', listener);
+    cc.sendPause();
+
+    upgradeShouldFail = true;
+    cc.requestHighRes();
+    await vi.advanceTimersByTimeAsync(0);
+    expect(listener).not.toHaveBeenCalled();
+
+    // Resume rebuilds the upgrade, as handleUpgradeFailure does while paused.
+    upgradeShouldFail = false;
+    const pcCount = mockState.instances.length;
+    cc.sendResume();
+    await vi.advanceTimersByTimeAsync(0);
+    expect(mockState.instances.length).toBe(pcCount + 1);
+  });
+
+  it('a releaseHighRes does not clear the upgrade backoff', async () => {
+    const { cc } = await setupWithLowConnected();
+    await startAndFailUpgrade(cc);
+    await vi.advanceTimersByTimeAsync(5_000);
+    cc.requestHighRes();
+    await vi.advanceTimersByTimeAsync(0);
+
+    // RADASS releases the in-flight attempt (e.g. the tile became small).
+    cc.releaseHighRes();
+
+    // The failure count is kept, so the next failure waits 10s, not 5s.
+    await startAndFailUpgrade(cc);
+    await vi.advanceTimersByTimeAsync(5_000);
+    const pcCount = mockState.instances.length;
+    cc.requestHighRes();
+    await vi.advanceTimersByTimeAsync(0);
+    expect(mockState.instances.length).toBe(pcCount);
+    await vi.advanceTimersByTimeAsync(5_000);
+    cc.requestHighRes();
+    await vi.advanceTimersByTimeAsync(0);
+    expect(mockState.instances.length).toBe(pcCount + 1);
+  });
+  it('keeps escalating the backoff when each upgrade paints and then fails soon after', async () => {
+    const { cc } = await setupWithLowConnected({
+      ...TEST_CONFIG,
+      targetStream: TargetStream.HIGH,
+    });
+    const base = makeMockStream('base');
+    getMock(0).simulateTrack(base.track, [base.stream]);
+
+    // A first frame alone does not prove HQ works: the link drops it 3s later.
+    await paintThenFailUpgrade(cc, 3_000);
+    await vi.advanceTimersByTimeAsync(5_000);
+    await paintThenFailUpgrade(cc, 3_000);
+
+    // Second failure in a row: 10s window, not the 5s base.
+    await vi.advanceTimersByTimeAsync(5_000);
+    const pcCount = mockState.instances.length;
+    cc.requestHighRes();
+    await vi.advanceTimersByTimeAsync(0);
+    expect(mockState.instances.length).toBe(pcCount);
+    await vi.advanceTimersByTimeAsync(5_000);
+    cc.requestHighRes();
+    await vi.advanceTimersByTimeAsync(0);
+    expect(mockState.instances.length).toBe(pcCount + 1);
+  });
+
+  it('jitters the upgrade backoff, so tiles that fail together do not retry together', async () => {
+    const { cc } = await setupWithLowConnected();
+    vi.mocked(Math.random).mockReturnValue(0);
+    await startAndFailUpgrade(cc);
+
+    // Jitter at its 50% end: 2.5s instead of 5s.
+    await vi.advanceTimersByTimeAsync(2_500);
+    const pcCount = mockState.instances.length;
+    cc.requestHighRes();
+    await vi.advanceTimersByTimeAsync(0);
+    expect(mockState.instances.length).toBe(pcCount + 1);
+  });
+
+  it('reports a request that the backoff skips, so the owner does not record HQ', async () => {
+    const { cc } = await setupWithLowConnected();
+    await startAndFailUpgrade(cc);
+    const listener = vi.fn();
+    cc.on('upgradefailed', listener);
+    const pcCount = mockState.instances.length;
+
+    cc.requestHighRes();
+    await vi.advanceTimersByTimeAsync(0);
+
+    expect(mockState.instances.length).toBe(pcCount);
+    expect(listener).toHaveBeenCalledOnce();
+  });
+
+  /** Pause, then fail the upgrade's connect attempts, which defers a rebuild to resume. */
+  async function setupPausedUpgradeConnectFailure() {
+    let upgradeShouldFail = false;
+    const { cc, lowPcw } = await setupWithLowConnected({
+      ...TEST_CONFIG,
+      signalingUrl: (stream: AvailableStreams) =>
+        upgradeShouldFail && stream === AvailableStreams.PRIMARY
+          ? Promise.reject(ConnectionError.authorization)
+          : `wss://example.com/webrtc?stream=${stream}`,
+    });
+    cc.sendPause();
+    upgradeShouldFail = true;
+    cc.requestHighRes();
+    await vi.advanceTimersByTimeAsync(0);
+    upgradeShouldFail = false;
+    return { cc, lowPcw };
+  }
+
+  it.each([
+    ['a LOW directive', (cc: CameraConnection) => cc.releaseHighRes()],
+    ['a LOW target', (cc: CameraConnection) => { cc.targetStream = TargetStream.LOW; }],
+  ])('%s while paused cancels the upgrade rebuild deferred to resume', async (_name, goLow) => {
+    const { cc } = await setupPausedUpgradeConnectFailure();
+
+    goLow(cc);
+    const pcCount = mockState.instances.length;
+    cc.sendResume();
+    await vi.advanceTimersByTimeAsync(0);
+
+    expect(mockState.instances.length).toBe(pcCount);
+  });
+
+  it('an MSE fallback while paused cancels the upgrade rebuild deferred to resume', async () => {
+    const { cc, lowPcw } = await setupPausedUpgradeConnectFailure();
+
+    lowPcw.simulateTranscoding({ video: true });
+    await vi.advanceTimersByTimeAsync(0);
+    expect(cc.deliveryMethod).toBe('mse');
+    const pcCount = mockState.instances.length;
+    cc.sendResume();
+    await vi.advanceTimersByTimeAsync(0);
+
+    expect(mockState.instances.length).toBe(pcCount);
   });
 });

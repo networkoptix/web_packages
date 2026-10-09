@@ -114,6 +114,41 @@ export class RadassController extends Disposable {
     this.resetAntiThrash();
   }
 
+  /**
+   * The camera's HQ upgrade could not be established (connect failed, the PC
+   * failed, or no first frame arrived) and the connection fell back to its LQ
+   * base. Record it as a performance demotion so the normal recovery dwell,
+   * anti-thrash and failed-attempt backoff gate the next attempt. Without
+   * this the controller still believes the camera is HQ and re-sends 'high'
+   * every tick, so the tile flips HQ↔LQ forever (CLOUD-19053).
+   */
+  reportHqFailure(connectionKey: string): void {
+    const state = this.states.get(connectionKey);
+    if (!state || state.currentQuality !== 'high') return;
+    // Pausing never changes a tile's quality (CLOUD-18235). A paused
+    // connection still reports a request its backoff skips (e.g. the 'high'
+    // Check 1 sends an explicit-HIGH tile every tick), so ignore it here.
+    const playing = this.host.isPlaying();
+    if (!playing) return;
+    // Forced tiles (explicit HIGH, viewport-forced) get 'high' from Check 1
+    // every tick, so a demotion would not stick. Their failures say nothing
+    // about the AUTO cameras either, so they must not stall AUTO recovery.
+    const info = this.host.getCameraInfo(connectionKey);
+    if (info && this.isForcedHigh(info, playing)) return;
+    const now = performance.now();
+    // Restart the healthy dwell, so this camera is not promoted straight back
+    // (the endless flip of the bug). The shared probe ladder is NOT bumped:
+    // a failed upgrade carries no MOS evidence and can be one camera's broken
+    // stream, and only another camera holding HQ clears that ladder, so one
+    // broken camera would keep every healthy camera out of HQ. Escalation for
+    // this camera comes from its own failedHqAttempts.
+    this.healthyMs = 0;
+    if (state.performancePromotionPending) {
+      this.markFailedProbe(state, now);
+    }
+    this.setQuality(state, 'low', LqReason.Performance, now);
+  }
+
   getState(connectionKey: string): CameraRadassState | undefined {
     return this.states.get(connectionKey);
   }
@@ -162,19 +197,10 @@ export class RadassController extends Disposable {
       if (!info) continue;
 
       // ── Check 1: Forced states ──────────────────────────────────────
-      // Explicit HIGH is the user's choice — honored even while paused.
-      if (info.targetStream === TargetStream.HIGH) {
+      if (this.isForcedHigh(info, playing)) {
         // An explicit user HIGH is a fresh intent: forget the automatic backoff
         // history so a later return to Auto starts from the base delay.
-        state.failedHqAttempts = 0;
-        this.setQuality(state, 'high', LqReason.None, now);
-        this.host.applyDirective(key, 'high');
-        continue;
-      }
-
-      // Viewport-force is an *adaptive* promotion (a large tile → HQ), so it is
-      // suppressed while paused just like every other auto decision below.
-      if (playing && info.viewportAreaFraction > this.config.forceHighViewportFraction) {
+        if (info.targetStream === TargetStream.HIGH) state.failedHqAttempts = 0;
         this.setQuality(state, 'high', LqReason.None, now);
         this.host.applyDirective(key, 'high');
         continue;
@@ -292,7 +318,7 @@ export class RadassController extends Disposable {
           state.lqReason === LqReason.CapExceeded &&
           info.elementHeight > this.config.smallItemHeightPx &&
           this.canSwitch(state, now) &&
-          this.hasHqHeadroom(infoCache)
+          this.hasHqHeadroom(infoCache, playing)
         ) {
           this.setQuality(state, 'high', LqReason.None, now);
           this.host.applyDirective(key, 'high');
@@ -320,7 +346,7 @@ export class RadassController extends Disposable {
           state.lqReason === LqReason.InheritedLq &&
           info.elementHeight > this.config.smallItemHeightPx &&
           this.canSwitch(state, now) &&
-          this.hasHqHeadroom(infoCache)
+          this.hasHqHeadroom(infoCache, playing)
         ) {
           const hasPerformanceClassLq = [...this.states.values()].some(
             (s) =>
@@ -381,7 +407,7 @@ export class RadassController extends Disposable {
         if (now - s.registeredAt < this.config.recentlyAddedDelayMs) continue;
         const info = infoCache.get(k) ?? null;
         if (!info || !info.canAutoUpgrade) continue;
-        if (info.viewportAreaFraction > this.config.forceHighViewportFraction) continue;
+        if (this.isForcedHigh(info, playing)) continue;
         if (info.targetStream !== TargetStream.AUTO) continue;
         if (!this.canSwitch(s, now)) continue;
 
@@ -397,15 +423,7 @@ export class RadassController extends Disposable {
         let anyProbeFailed = false;
         for (const [, s] of this.states) {
           if (s.performancePromotionPending) {
-            s.antiThrash = true;
-            s.antiThrashAt = now;
-            s.performancePromotionPending = false;
-            s.wasPerformancePromoted = false;
-            // This promotion demonstrably failed: we promoted it, and the load
-            // came back. Each failure doubles the healthy period required before
-            // the next attempt, so a link that cannot carry HQ stops being
-            // retried forever instead of cycling at the anti-thrash period.
-            s.failedHqAttempts++;
+            this.markFailedProbe(s, now);
             anyProbeFailed = true;
           }
         }
@@ -454,9 +472,11 @@ export class RadassController extends Disposable {
         if (info.elementHeight <= this.config.smallItemHeightPx) continue;
 
         this.setQuality(s, 'high', LqReason.None, now);
-        this.host.applyDirective(k, 'high');
+        // Mark the probe before the directive: the connection may report a
+        // failure synchronously from inside it, and that must see the probe.
         s.performancePromotionPending = true;
         s.wasPerformancePromoted = true;
+        this.host.applyDirective(k, 'high');
         switchedThisTick = true;
       }
     }
@@ -474,7 +494,7 @@ export class RadassController extends Disposable {
         const info = infoCache.get(k) ?? null;
         if (!info || !info.canAutoUpgrade) continue;
         if (info.targetStream !== TargetStream.AUTO) continue;
-        if (info.viewportAreaFraction > this.config.forceHighViewportFraction) continue;
+        if (this.isForcedHigh(info, playing)) continue;
 
         // Performance-LQ is excluded alongside Manual: swap is size-driven and
         // applies no MOS gate at all, so it would promote a camera the
@@ -523,8 +543,7 @@ export class RadassController extends Disposable {
       const info = infoCache.get(k) ?? null;
       if (!info) continue;
       // Don't cap forced-high cameras
-      if (info.targetStream === TargetStream.HIGH) continue;
-      if (info.viewportAreaFraction > this.config.forceHighViewportFraction) continue;
+      if (this.isForcedHigh(info, playing)) continue;
       hqCameras.push({ key: k, area: info.elementArea });
     }
 
@@ -557,6 +576,20 @@ export class RadassController extends Disposable {
     }
     state.currentQuality = quality;
     state.lqReason = quality === 'high' ? LqReason.None : reason;
+  }
+
+  /**
+   * Record that a performance promotion of this camera failed: anti-thrash it
+   * and count the attempt. Each failure doubles the healthy period required
+   * before the next attempt, so a link that cannot carry HQ stops being
+   * retried forever instead of cycling at the anti-thrash period.
+   */
+  private markFailedProbe(state: CameraRadassState, now: number): void {
+    state.antiThrash = true;
+    state.antiThrashAt = now;
+    state.performancePromotionPending = false;
+    state.wasPerformancePromoted = false;
+    state.failedHqAttempts++;
   }
 
   /**
@@ -634,6 +667,20 @@ export class RadassController extends Disposable {
     }
   }
 
+  /**
+   * Whether Check 1 forces this camera to HQ. Explicit HIGH is the user's
+   * choice, honored even while paused. Viewport-force is an *adaptive*
+   * promotion (a large tile → HQ), so it is suppressed while paused just like
+   * every other auto decision. Forced cameras are exempt from the adaptive
+   * passes and do not count against maxConcurrentHighRes.
+   */
+  private isForcedHigh(info: CameraInfo, playing: boolean): boolean {
+    return (
+      info.targetStream === TargetStream.HIGH ||
+      (playing && info.viewportAreaFraction > this.config.forceHighViewportFraction)
+    );
+  }
+
   private canSwitch(state: CameraRadassState, now: number): boolean {
     // lastSwitchTime === 0 means the camera has never been switched; always eligible
     if (state.lastSwitchTime === 0) return true;
@@ -648,14 +695,16 @@ export class RadassController extends Disposable {
    * gate constraint-based recovery so it never promotes into a full cap only for
    * Check 8 to immediately re-demote (CLOUD-18303 churn).
    */
-  private hasHqHeadroom(infoCache: Map<string, CameraInfo | null>): boolean {
+  private hasHqHeadroom(
+    infoCache: Map<string, CameraInfo | null>,
+    playing: boolean,
+  ): boolean {
     let count = 0;
     for (const [k, s] of this.states) {
       if (s.currentQuality !== 'high') continue;
       const info = infoCache.get(k) ?? null;
       if (!info) continue;
-      if (info.targetStream === TargetStream.HIGH) continue;
-      if (info.viewportAreaFraction > this.config.forceHighViewportFraction) continue;
+      if (this.isForcedHigh(info, playing)) continue;
       count++;
     }
     return count < this.config.maxConcurrentHighRes;

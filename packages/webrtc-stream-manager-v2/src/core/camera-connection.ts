@@ -7,7 +7,7 @@ import {
   QualityMonitor,
   type QualitySnapshot,
 } from '../strategies/quality-monitor';
-import { withRetry, classifyError, type RetryConfig } from '../strategies/retry-policy';
+import { withRetry, classifyError, backoffDelay, type RetryConfig } from '../strategies/retry-policy';
 import { linkSignal } from '../utils/abort-helpers';
 import { extractPlayingCodecMime, isMseSupported } from '../utils/codecs';
 import { diagTracker } from '../utils/diag-tracker';
@@ -98,6 +98,9 @@ interface CameraConnectionEventMap {
   metadatachange: { enabled: boolean };
   /** Raw data channel message (string or ArrayBuffer). Fired for every message. */
   datachannel: string | ArrayBuffer;
+  /** The high-res upgrade failed and the connection fell back to the base
+   *  stream, or high-res was requested while backing off from such a failure. */
+  upgradefailed: undefined;
 }
 
 type CameraConnectionEvent = keyof CameraConnectionEventMap;
@@ -183,6 +186,18 @@ export class CameraConnection extends Disposable {
   /** Deferred-swap first-frame deadline: well above a healthy sub-second unmute,
    *  below the 10s the consumer waits before declaring the connection established. */
   private static readonly SWAP_FIRST_FRAME_TIMEOUT_MS = 5_000;
+
+  // ── Upgrade retry backoff (CLOUD-19053) ────────────────────────────
+  /** Consecutive failed upgrades; cleared only by an upgrade that held HQ for UPGRADE_STABLE_MS. */
+  private upgradeFailures = 0;
+  /** requestHighRes is a no-op until this time (performance.now()). */
+  private upgradeBackoffUntil = 0;
+  /** When the current upgrade painted its first frame (performance.now()); null until then. */
+  private upgradePaintedAt: number | null = null;
+  private static readonly UPGRADE_BACKOFF_BASE_MS = 5_000;
+  private static readonly UPGRADE_BACKOFF_MAX_MS = 60_000;
+  /** A first frame alone does not prove HQ works: a link can paint, then drop the stream seconds later. */
+  private static readonly UPGRADE_STABLE_MS = 60_000;
 
   // ── MSE fallback state ─────────────────────────────────────────────
   private mseRenderer: MseRenderer | null = null;
@@ -359,6 +374,8 @@ export class CameraConnection extends Disposable {
     }
 
     if (target === TargetStream.HIGH) {
+      // An explicit user choice: try HQ now, not after the failure backoff.
+      this.resetUpgradeBackoff();
       this.requestHighRes();
     } else if (target === TargetStream.LOW) {
       this.releaseHighRes();
@@ -417,6 +434,7 @@ export class CameraConnection extends Disposable {
     event: 'datachannel',
     listener: (data: string | ArrayBuffer) => void,
   ): () => void;
+  on(event: 'upgradefailed', listener: () => void): () => void;
   on(
     event: CameraConnectionEvent,
     listener: (...args: never[]) => void,
@@ -461,6 +479,13 @@ export class CameraConnection extends Disposable {
     if (!this.config.availableStreams.includes(AvailableStreams.PRIMARY)) return;
     if (this._isUpgraded) return;
     if (this.upgradeRetryAc) return;
+    // A failed upgrade is not retried at once: callers re-request every RADASS
+    // tick (manual HIGH, viewport-forced), which would flip HQ/LQ forever.
+    // Reported, so an owner that just decided 'high' does not count it as HQ.
+    if (performance.now() < this.upgradeBackoffUntil) {
+      this.emit('upgradefailed', undefined);
+      return;
+    }
 
     this.connectUpgrade();
   }
@@ -471,6 +496,8 @@ export class CameraConnection extends Disposable {
    */
   releaseHighRes(): void {
     if (this.disposed) return;
+    // Low is now wanted: a failure while paused must not rebuild HQ on resume.
+    this._needsUpgradeRebuild = false;
     if (!this.upgradePc && !this.upgradeRetryAc) return;
 
     const wasUpgraded = this._isUpgraded;
@@ -1011,6 +1038,8 @@ export class CameraConnection extends Disposable {
    */
   private async connectUpgrade(): Promise<void> {
     if (this.disposed) return;
+    // MSE delivers native quality — no upgrade concept.
+    if (this._deliveryMethod === 'mse') return;
     const _diagStart = performance.now();
     this.config.logger?.info?.(`[WEBRTC-DIAG] [${this.connectionKey}] connectUpgrade begin`, { upgradeStream: this.upgradeStream, t: _diagStart });
 
@@ -1056,7 +1085,7 @@ export class CameraConnection extends Disposable {
         this.config.logger?.warn?.(
           `[${this.connectionKey}] Upgrade connection (stream=${this.upgradeStream}) failed, staying on base`,
         );
-        this.disposeUpgradeInternal();
+        this.handleUpgradeFailure();
       }
     }
   }
@@ -1142,7 +1171,15 @@ export class CameraConnection extends Disposable {
     }
   }
 
-  /** Upgrade failed — fall back to base via {@link releaseHighRes}. */
+  /**
+   * Upgrade failed (connect attempts exhausted, PC failed, track ended, or no
+   * first frame) — fall back to base via {@link releaseHighRes} and tell the
+   * owner, so it can back off instead of requesting HQ again at once
+   * (CLOUD-19053). This failure is not reported while paused: the rebuild on
+   * resume is automatic, and its own failure is reported then. (A request
+   * that the backoff skips in {@link requestHighRes} is reported even while
+   * paused.)
+   */
   private handleUpgradeFailure(): void {
     if (this.disposed) return;
     if (this.isPaused) {
@@ -1152,6 +1189,24 @@ export class CameraConnection extends Disposable {
       return;
     }
     this.releaseHighRes();
+    this.reportUpgradeFailure();
+  }
+
+  /** Back off the next upgrade (5s doubling to 60s, jittered) and tell the owner. */
+  private reportUpgradeFailure(): void {
+    const delay = backoffDelay(
+      this.upgradeFailures,
+      CameraConnection.UPGRADE_BACKOFF_BASE_MS,
+      CameraConnection.UPGRADE_BACKOFF_MAX_MS,
+    );
+    this.upgradeFailures++;
+    this.upgradeBackoffUntil = performance.now() + delay;
+    this.emit('upgradefailed', undefined);
+  }
+
+  private resetUpgradeBackoff(): void {
+    this.upgradeFailures = 0;
+    this.upgradeBackoffUntil = 0;
   }
 
   // ── Private: connection factory ───────────────────────────────────────
@@ -1309,6 +1364,10 @@ export class CameraConnection extends Disposable {
     const removeOld = () => {
       if (gen !== this._swapGeneration) return; // Superseded by a newer swap.
       this.clearSwapDeadline();
+      // The upgrade painted its first frame; failures are forgotten only if it then holds.
+      if (pcw && pcw === this.upgradePc && this.upgradePaintedAt === null) {
+        this.upgradePaintedAt = performance.now();
+      }
       for (const old of this.managedStream.getVideoTracks()) {
         if (old !== newTrack) {
           this.managedStream.removeTrack(old);
@@ -1441,6 +1500,14 @@ export class CameraConnection extends Disposable {
 
   /** Full teardown of upgrade: abort retry, cleanup PCW, clear stream. */
   private disposeUpgradeInternal(): void {
+    // An upgrade that held HQ long enough proved the link carries it: forget past failures.
+    if (
+      this.upgradePaintedAt !== null &&
+      performance.now() - this.upgradePaintedAt >= CameraConnection.UPGRADE_STABLE_MS
+    ) {
+      this.resetUpgradeBackoff();
+    }
+    this.upgradePaintedAt = null;
     this.upgradeRetryAc?.abort();
     this.upgradeRetryAc = null;
     for (const cleanup of this.upgradeCleanups) cleanup();
@@ -1486,6 +1553,8 @@ export class CameraConnection extends Disposable {
     if (this.disposed) return;
 
     this._deliveryMethod = 'mse';
+    // MSE has no upgrade, so a rebuild deferred to resume is moot.
+    this._needsUpgradeRebuild = false;
     this.emit('msefallback', undefined);
 
     // MSE delivers the native stream without transcoding, so switch to
@@ -1571,6 +1640,8 @@ export class CameraConnection extends Disposable {
     // A user seek/speed change supersedes the prior server timestamp; clear it so the resync honors the new intent.
     if (!preserveServerTimestamp) {
       this.latestServerTimestampMs = undefined;
+      // Past upgrade failures were for the old position/mode, not this one.
+      this.resetUpgradeBackoff();
     }
 
     const upgradeNeedsReconnect =
