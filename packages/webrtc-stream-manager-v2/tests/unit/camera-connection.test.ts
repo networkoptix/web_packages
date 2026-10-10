@@ -158,6 +158,11 @@ const { mockState, MockPCW } = vi.hoisted(() => {
       this._emitter.dispatchEvent(new CustomEvent('dcopen'));
     }
 
+    /** Store activeStream without firing 'track' — production ontrack fires before ICE connects, so setBasePc's replay is the only delivery. */
+    setStoredActiveStream(stream: MediaStream | null): void {
+      this._activeStream = stream;
+    }
+
     /** Set the dcopen flag without firing the event (for the synchronous-replay path inside setBasePc/setUpgradePc). */
     setDataChannelOpen(open: boolean): void {
       this._dataChannelOpen = open;
@@ -2552,5 +2557,282 @@ describe('CameraConnection', () => {
     await vi.advanceTimersByTimeAsync(0);
 
     expect(mockState.instances.length).toBe(pcCount);
+  });
+
+  // ── CLOUD-18232: base reconnect while upgraded, then release ─────────
+  // Exiting fullscreen calls releaseHighRes. If the base PC was rebuilt while the
+  // upgrade was active, the managed stream must not be left on the ended upgrade track.
+
+  /** Base + upgrade both painting, upgrade active on the managed stream. */
+  async function setupUpgraded() {
+    const { cc, lowPcw } = await setupWithLowConnected();
+    const base = makeMockStream('base');
+    lowPcw.simulateTrack(base.track, [base.stream]);
+
+    cc.requestHighRes();
+    await vi.advanceTimersByTimeAsync(0);
+    const highPcw = getMock(1);
+    highPcw.simulateStateChange(PeerState.connected);
+    await vi.advanceTimersByTimeAsync(0);
+    const upgrade = makeMockStream('upgrade');
+    highPcw.simulateTrack(upgrade.track, [upgrade.stream]);
+    expect(cc.activeStream!.getVideoTracks()).toEqual([upgrade.track]);
+
+    return { cc, base, upgrade };
+  }
+
+  it('CLOUD-18232: base reconnect while upgraded, then releaseHighRes, swaps the new base track', async () => {
+    const { cc, base, upgrade } = await setupUpgraded();
+
+    // Base SRTP torn down while upgraded → base rebuild.
+    simulateTrackEnded(base.track);
+    await vi.advanceTimersByTimeAsync(0);
+    const freshPcw = getMock(2);
+    // Production order: ontrack fires during SDP negotiation, before ICE connects.
+    const fresh = makeMockStream('fresh-base');
+    freshPcw.setStoredActiveStream(fresh.stream);
+    freshPcw.simulateStateChange(PeerState.connected);
+    await vi.advanceTimersByTimeAsync(0);
+
+    const listener = vi.fn();
+    cc.on('track', listener);
+
+    // Exit fullscreen. Disposing the upgrade PC ends its receiver track.
+    cc.releaseHighRes();
+    simulateTrackEnded(upgrade.track);
+    await vi.advanceTimersByTimeAsync(0);
+
+    expect(cc.activeStream?.getVideoTracks()).toEqual([fresh.track]);
+    expect(fresh.track.readyState).toBe('live');
+    expect(listener).toHaveBeenCalledWith({
+      track: fresh.track,
+      streams: [cc.activeStream],
+    });
+  });
+
+  it('CLOUD-18232: releaseHighRes rebuilds a connected base that has no live track', async () => {
+    const { cc, base, upgrade } = await setupUpgraded();
+
+    simulateTrackEnded(base.track);
+    await vi.advanceTimersByTimeAsync(0);
+    const freshPcw = getMock(2);
+    // Base PC connected but never delivered a track.
+    freshPcw.simulateStateChange(PeerState.connected);
+    await vi.advanceTimersByTimeAsync(0);
+    const pcCount = mockState.instances.length;
+
+    cc.releaseHighRes();
+    simulateTrackEnded(upgrade.track);
+    await vi.advanceTimersByTimeAsync(0);
+
+    // Nothing to fall back to and no retry in flight: base must be rebuilt.
+    expect(mockState.instances.length).toBe(pcCount + 1);
+    expect(freshPcw.disposed).toBe(true);
+  });
+
+  it('CLOUD-18232: a base track delivered while upgraded still triggers rebuild when it ends', async () => {
+    const { base } = await setupUpgraded();
+
+    simulateTrackEnded(base.track);
+    await vi.advanceTimersByTimeAsync(0);
+    const freshPcw = getMock(2);
+    freshPcw.simulateStateChange(PeerState.connected);
+    await vi.advanceTimersByTimeAsync(0);
+    const fresh = makeMockStream('fresh-base');
+    freshPcw.simulateTrack(fresh.track, [fresh.stream]);
+    const pcCount = mockState.instances.length;
+
+    // Base SRTP dies again while still upgraded.
+    simulateTrackEnded(fresh.track);
+    await vi.advanceTimersByTimeAsync(0);
+
+    expect(mockState.instances.length).toBe(pcCount + 1);
+    expect(freshPcw.disposed).toBe(true);
+  });
+
+  it('CLOUD-18232: re-enter requestHighRes while a release is settling, then release again, swaps the new base track', async () => {
+    const { cc, base, upgrade } = await setupUpgraded();
+
+    simulateTrackEnded(base.track);
+    await vi.advanceTimersByTimeAsync(0);
+    const basePcw = getMock(2); // base retry in flight
+
+    // Exit #1: no live base, retry in flight → nothing to swap yet.
+    cc.releaseHighRes();
+    simulateTrackEnded(upgrade.track);
+    // Enter #2: the new upgrade connects before the base retry does.
+    cc.requestHighRes();
+    await vi.advanceTimersByTimeAsync(0);
+    const highPcw2 = getMock(3);
+    const upgrade2 = makeMockStream('upgrade2');
+    highPcw2.setStoredActiveStream(upgrade2.stream);
+    highPcw2.simulateStateChange(PeerState.connected);
+    await vi.advanceTimersByTimeAsync(0);
+
+    // Base retry connects while upgraded (track delivered before ICE).
+    const fresh = makeMockStream('fresh-base');
+    basePcw.setStoredActiveStream(fresh.stream);
+    basePcw.simulateStateChange(PeerState.connected);
+    await vi.advanceTimersByTimeAsync(0);
+
+    // Exit #2.
+    cc.releaseHighRes();
+    simulateTrackEnded(upgrade2.track);
+    await vi.advanceTimersByTimeAsync(0);
+
+    expect(cc.activeStream?.getVideoTracks()).toEqual([fresh.track]);
+  });
+
+  // ── CLOUD-18232: base failure-cycle cap survives instant reconnects ──
+  // A fault that ends the base track right after every reconnect must hit the
+  // cycle cap and fall into the rearm cooldown, not loop forever. 'connected'
+  // alone must not reset the cap; only a stable healthy period may.
+
+  /** End the current base track; return the PCW count delta (1 = rebuilt). */
+  async function failBaseAndReconnect(track: MediaStreamTrack, i: number) {
+    const before = mockState.instances.length;
+    simulateTrackEnded(track);
+    await vi.advanceTimersByTimeAsync(0);
+    if (mockState.instances.length === before) return { rebuilt: false, track };
+    const pcw = getMock(mockState.instances.length - 1);
+    // Production order: ontrack before ICE connects → setBasePc replay path.
+    const fresh = makeMockStream(`loop-base-${i}`);
+    pcw.setStoredActiveStream(fresh.stream);
+    pcw.simulateStateChange(PeerState.connected);
+    await vi.advanceTimersByTimeAsync(0);
+    return { rebuilt: true, track: fresh.track };
+  }
+
+  async function countRebuildsInLoop(startTrack: MediaStreamTrack) {
+    let track = startTrack;
+    let rebuilds = 0;
+    for (let i = 0; i < 6; i++) {
+      const r = await failBaseAndReconnect(track, i);
+      if (!r.rebuilt) break;
+      rebuilds++;
+      track = r.track;
+      await vi.advanceTimersByTimeAsync(100); // short, not a stable period
+    }
+    return rebuilds;
+  }
+
+  it('CLOUD-18232: base track ending after every reconnect stops at the cycle cap (non-upgraded)', async () => {
+    const { lowPcw } = await setupWithLowConnected();
+    const base = makeMockStream('base');
+    lowPcw.simulateTrack(base.track, [base.stream]);
+
+    const rebuilds = await countRebuildsInLoop(base.track);
+    expect(rebuilds).toBe(3);
+
+    // Cooldown: no new PCW before the rearm fires, one after.
+    const count = mockState.instances.length;
+    await vi.advanceTimersByTimeAsync(29_000);
+    expect(mockState.instances.length).toBe(count);
+    await vi.advanceTimersByTimeAsync(2_000);
+    expect(mockState.instances.length).toBe(count + 1);
+  });
+
+  it('CLOUD-18232: base track ending after every reconnect stops at the cycle cap (upgraded)', async () => {
+    const { base } = await setupUpgraded();
+
+    const rebuilds = await countRebuildsInLoop(base.track);
+    expect(rebuilds).toBe(3);
+
+    const count = mockState.instances.length;
+    await vi.advanceTimersByTimeAsync(29_000);
+    expect(mockState.instances.length).toBe(count);
+    await vi.advanceTimersByTimeAsync(2_000);
+    expect(mockState.instances.length).toBe(count + 1);
+  });
+
+  it('CLOUD-18232: isolated base failures separated by healthy periods always rebuild', async () => {
+    const { lowPcw } = await setupWithLowConnected();
+    const base = makeMockStream('base');
+    lowPcw.simulateTrack(base.track, [base.stream]);
+
+    let track = base.track;
+    for (let i = 0; i < 5; i++) {
+      const r = await failBaseAndReconnect(track, i);
+      expect(r.rebuilt).toBe(true);
+      track = r.track;
+      await vi.advanceTimersByTimeAsync(60_000); // long healthy period
+    }
+  });
+  // ── CLOUD-18232: user-driven base rebuilds reset the failure-cycle cap ──
+  // Intentional rebuilds (seek across live/archive, speed change, metadata,
+  // stream switch) start a fresh base. A transient failure after each one must
+  // not accumulate toward the cap that is meant for a base that keeps dying.
+
+  it('CLOUD-18232: repeated user rebuilds with one transient failure each never give up', async () => {
+    const { cc, lowPcw } = await setupWithLowConnected();
+    const base = makeMockStream('base');
+    lowPcw.simulateTrack(base.track, [base.stream]);
+    const errors = vi.fn();
+    cc.on('error', errors);
+
+    for (let i = 0; i < 6; i++) {
+      // User flips live <-> archive: intentional base rebuild.
+      cc.updatePosition(i % 2 === 0 ? 5000 : 0);
+      await vi.advanceTimersByTimeAsync(0);
+      const pcw = getMock(mockState.instances.length - 1);
+      const s = makeMockStream(`seek-base-${i}`);
+      pcw.setStoredActiveStream(s.stream);
+      pcw.simulateStateChange(PeerState.connected);
+      await vi.advanceTimersByTimeAsync(0);
+
+      // One transient failure, recovered by an automatic rebuild.
+      const r = await failBaseAndReconnect(s.track, i);
+      expect(r.rebuilt).toBe(true);
+      await vi.advanceTimersByTimeAsync(3_000); // short of the stable period
+    }
+
+    expect(errors).not.toHaveBeenCalled();
+  });
+
+  it('CLOUD-18232: an ended-track loop still hits the cap after a user rebuild', async () => {
+    const { cc, lowPcw } = await setupWithLowConnected();
+    const base = makeMockStream('base');
+    lowPcw.simulateTrack(base.track, [base.stream]);
+
+    cc.updatePosition(5000);
+    await vi.advanceTimersByTimeAsync(0);
+    const pcw = getMock(mockState.instances.length - 1);
+    const s = makeMockStream('seek-base');
+    pcw.setStoredActiveStream(s.stream);
+    pcw.simulateStateChange(PeerState.connected);
+    await vi.advanceTimersByTimeAsync(0);
+
+    // Automatic recovery from ended tracks is not intentional: the cap holds.
+    expect(await countRebuildsInLoop(s.track)).toBe(3);
+  });
+
+  // ── CLOUD-18232: a successful connectBase releases its parent-signal link ──
+
+  it('CLOUD-18232: successful base reconnects do not leak abort listeners on the connection signal', async () => {
+    const { cc, lowPcw } = await setupWithLowConnected();
+    const parent = (cc as unknown as { signal: AbortSignal }).signal;
+    const live: AbortSignal[] = [];
+    const origAdd = parent.addEventListener.bind(parent);
+    parent.addEventListener = ((type: string, l: EventListener, opts?: AddEventListenerOptions) => {
+      if (type === 'abort' && opts?.signal) live.push(opts.signal);
+      return origAdd(type, l, opts);
+    }) as typeof parent.addEventListener;
+    const liveCount = () => live.filter((s) => !s.aborted).length;
+
+    let prev = lowPcw;
+    for (let i = 0; i < 5; i++) {
+      cc.updatePosition(i % 2 === 0 ? 5000 : 0);
+      await vi.advanceTimersByTimeAsync(0);
+      const pcw = getMock(mockState.instances.length - 1);
+      expect(pcw).not.toBe(prev);
+      pcw.simulateStateChange(PeerState.connected);
+      await vi.advanceTimersByTimeAsync(0);
+      prev = pcw;
+    }
+
+    expect(live.length).toBe(5);
+    expect(liveCount()).toBe(0);
+    // The live base is untouched by releasing its retry link.
+    expect(prev.disposed).toBe(false);
   });
 });

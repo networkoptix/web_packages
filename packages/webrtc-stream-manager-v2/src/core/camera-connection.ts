@@ -209,6 +209,11 @@ export class CameraConnection extends Disposable {
   // ── Reconnect cycle guard ────────────────────────────────────────────
   private baseFailureCycles = 0;
   private static readonly MAX_BASE_FAILURE_CYCLES = 3;
+  /** Resets baseFailureCycles once base stays connected this long. Resetting on
+   *  'connected' alone let a fault that recurs right after each reconnect loop
+   *  forever past the cap (CLOUD-18232). */
+  private baseStableTimer: ReturnType<typeof globalThis.setTimeout> | null = null;
+  private static readonly BASE_STABLE_RESET_MS = 15_000;
 
   // ── Circuit breaker: stop retrying after N consecutive WS failures ──
   private _consecutiveConnectFailures = 0;
@@ -760,12 +765,17 @@ export class CameraConnection extends Disposable {
 
       diagTracker.phaseEnd(this.connectionKey, `baseRetry#${_diagRetryAttempt}`);
       this.config.logger?.info?.(`[WEBRTC-DIAG] [${this.connectionKey}] connectBase withRetry resolved (PC connected)`, { elapsed: (performance.now() - _diagStart).toFixed(1) + 'ms' });
+      // CLOUD-18232: retry is done; clear it so releaseHighRes can tell "retry in flight" from "connected".
+      // Abort to drop the linkSignal listener on this.signal; nothing still listens on retryAc.
+      this.baseRetryAc = null;
+      retryAc.abort();
       this.setBasePc(pcw);
     } catch {
       this.config.logger?.info?.(`[WEBRTC-DIAG] [${this.connectionKey}] connectBase withRetry FAILED (all retries exhausted)`, { elapsed: (performance.now() - _diagStart).toFixed(1) + 'ms' });
       if (!this.disposed && this.baseRetryAc === retryAc) {
         // Let releaseHighRes detect "no retry running" and force-rebuild base.
         this.baseRetryAc = null;
+        retryAc.abort(); // drop the linkSignal listener on this.signal
         if (this.isPaused) {
           // Pause caused server to drop the SRTP session; defer until resume.
           this._needsBaseRebuild = true;
@@ -803,13 +813,15 @@ export class CameraConnection extends Disposable {
         // MSE delivers via DataChannel → MseRenderer; the RTP track is a
         // placeholder. Skip forwarding AND the ended listener — its end would
         // tear down a healthy MseRenderer. Replay path below is already gated.
-        if (!this._isUpgraded && this._deliveryMethod !== 'mse') {
-          // Prevents audio tracks from replacing the video track.
-          if (detail.track.kind === 'audio') {
-            this.swapManagedAudioTrack(detail.track);
-            return;
-          }
-          this.attachBaseTrackEndedListener(detail.track, pcw);
+        if (this._deliveryMethod === 'mse') return;
+        // Prevents audio tracks from replacing the video track.
+        if (detail.track.kind === 'audio') {
+          if (!this._isUpgraded) this.swapManagedAudioTrack(detail.track);
+          return;
+        }
+        // CLOUD-18232: watch the base track even while upgraded, or its death goes unnoticed.
+        this.attachBaseTrackEndedListener(detail.track, pcw);
+        if (!this._isUpgraded) {
           this.swapManagedTrack(detail.track, pcw);
           this.emit('track', {
             track: detail.track,
@@ -836,8 +848,10 @@ export class CameraConnection extends Disposable {
       }),
       pcw.on('statechange', (detail) => {
         if (detail.state === PeerState.connected) {
-          this.baseFailureCycles = 0;
+          this.startBaseStableTimer(pcw);
           this._postResumeRebuildPending = false;
+        } else {
+          this.clearBaseStableTimer();
         }
         if (!this._isUpgraded) {
           this.updateState(detail.state);
@@ -889,12 +903,18 @@ export class CameraConnection extends Disposable {
     // (ontrack fires during SDP negotiation, before ICE connects.)
     // Skip in MSE mode — the SRTP track is a placeholder; real track
     // comes from MseRenderer's captureStream() (same guard as on('track')).
-    if (pcw.activeStream && !this._isUpgraded && this._deliveryMethod !== 'mse') {
+    // CLOUD-18232: store the stream and watch the track even while upgraded —
+    // releaseHighRes falls back to baseMediaStream. Only swap+emit is gated.
+    if (pcw.activeStream && this._deliveryMethod !== 'mse') {
       this.baseMediaStream = pcw.activeStream;
       const track = pcw.activeStream.getVideoTracks()[0];
-      this.swapManagedAudioTrack(pcw.activeStream.getAudioTracks()[0]);
       if (track) {
         this.attachBaseTrackEndedListener(track, pcw);
+      }
+      if (!this._isUpgraded) {
+        this.swapManagedAudioTrack(pcw.activeStream.getAudioTracks()[0]);
+      }
+      if (track && !this._isUpgraded) {
         this.swapManagedTrack(track, pcw);
         this.emit('track', {
           track,
@@ -904,7 +924,7 @@ export class CameraConnection extends Disposable {
     }
 
     if (pcw.state === PeerState.connected) {
-      this.baseFailureCycles = 0;
+      this.startBaseStableTimer(pcw);
       this._postResumeRebuildPending = false;
     }
     if (pcw.dataChannelOpen) {
@@ -912,6 +932,29 @@ export class CameraConnection extends Disposable {
     }
     if (!this._isUpgraded) {
       this.updateState(pcw.state);
+    }
+  }
+
+  /** Reset the failure-cycle count only after base stays connected for a stable period. */
+  private startBaseStableTimer(pcw: PeerConnectionWrapper): void {
+    this.clearBaseStableTimer();
+    this.baseStableTimer = this.setTimeout(() => {
+      this.baseStableTimer = null;
+      if (this.basePc === pcw) this.baseFailureCycles = 0;
+    }, CameraConnection.BASE_STABLE_RESET_MS);
+  }
+
+  /** CLOUD-18232: a user-driven rebuild starts a fresh base, so earlier failures do not count toward the cap.
+   *  Not for automatic recovery (handleBaseFailure, reconnect()): the cap must stop a base that keeps dying. */
+  private resetBaseFailureCycles(): void {
+    this.baseFailureCycles = 0;
+    this.clearBaseStableTimer();
+  }
+
+  private clearBaseStableTimer(): void {
+    if (this.baseStableTimer !== null) {
+      this.clearTimeout(this.baseStableTimer);
+      this.baseStableTimer = null;
     }
   }
 
@@ -997,6 +1040,7 @@ export class CameraConnection extends Disposable {
    */
   private handleBaseFailure(): void {
     if (this.disposed) return;
+    this.clearBaseStableTimer();
     if (this.isPaused) {
       this.config.logger?.info?.(`[WEBRTC-DIAG] [${this.connectionKey}] handleBaseFailure deferred (paused)`);
       this._needsBaseRebuild = true;
@@ -1484,6 +1528,7 @@ export class CameraConnection extends Disposable {
 
   /** Full teardown of base: abort retry, cleanup PCW, clear stream, dispose MseRenderer. */
   private disposeBaseInternal(): void {
+    this.clearBaseStableTimer();
     this.baseRetryAc?.abort();
     this.baseRetryAc = null;
     if (this.rearmTimer !== null) {
@@ -1568,6 +1613,7 @@ export class CameraConnection extends Disposable {
     }
 
     // Tear down current connections.
+    this.resetBaseFailureCycles();
     this.disposeBaseInternal();
     if (this.upgradePc || this.upgradeRetryAc) {
       this.disposeUpgradeInternal();
@@ -1595,6 +1641,7 @@ export class CameraConnection extends Disposable {
     if (this.baseStream === newStream) return;
 
     this.baseStream = newStream;
+    this.resetBaseFailureCycles();
     this.disposeBaseInternal();
     this.updateState(PeerState.connecting);
     this.connectBase();
@@ -1619,6 +1666,7 @@ export class CameraConnection extends Disposable {
       this.disposeUpgradeInternal();
     }
 
+    this.resetBaseFailureCycles();
     this.disposeBaseInternal();
     this.updateState(PeerState.connecting);
     this.connectBase();
@@ -1642,6 +1690,8 @@ export class CameraConnection extends Disposable {
       this.latestServerTimestampMs = undefined;
       // Past upgrade failures were for the old position/mode, not this one.
       this.resetUpgradeBackoff();
+      // User action, not recovery: start a fresh failure budget.
+      this.resetBaseFailureCycles();
     }
 
     const upgradeNeedsReconnect =
