@@ -1008,6 +1008,7 @@ describe('CameraConnection', () => {
       AvailableStreams.PRIMARY,
       'mse',
       true,
+      0,
     );
   });
 
@@ -1181,6 +1182,7 @@ describe('CameraConnection', () => {
       AvailableStreams.SECONDARY,
       'mse',
       true,
+      0,
     );
   });
 
@@ -2834,5 +2836,61 @@ describe('CameraConnection', () => {
     expect(liveCount()).toBe(0);
     // The live base is untouched by releasing its retry link.
     expect(prev.disposed).toBe(false);
+  });
+});
+
+describe('CameraConnection archive position on (re)connect', () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+    mockState.instances = [];
+    mockMseState.instances = [];
+    mockIsMseSupported.mockReturnValue(true);
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it('reconnects at its own position, not the one it opened at', async () => {
+    const signalingUrl = vi.fn((stream: AvailableStreams) => `wss://example.com/webrtc?stream=${stream}`);
+    const { cc } = await setupWithLowConnected({
+      ...TEST_CONFIG,
+      signalingUrl,
+      initialPosition: 1_000_000,
+    });
+    expect(signalingUrl).toHaveBeenCalledWith(AvailableStreams.SECONDARY, 'srtp', true, 1_000_000);
+    cc.updatePosition(1_200_000);
+    signalingUrl.mockClear();
+
+    // An archive speed change rebuilds the stream.
+    cc.updateSpeed(2);
+    await vi.advanceTimersByTimeAsync(0);
+
+    expect(signalingUrl).toHaveBeenCalledWith(AvailableStreams.SECONDARY, 'srtp', true, 1_200_000);
+  });
+
+  it('applies a seek that arrived while the stream was connecting once its data channel opens', async () => {
+    const cc = new CameraConnection({ ...TEST_CONFIG, initialPosition: 1_000_000 });
+    await vi.advanceTimersByTimeAsync(0);
+    const pcw = getMock(0);
+
+    cc.updatePosition(1_300_000);
+    pcw.simulateStateChange(PeerState.connected);
+    await vi.advanceTimersByTimeAsync(0);
+    pcw.simulateDcOpen();
+
+    expect(pcw.sendSeek).toHaveBeenLastCalledWith(1_300_000);
+  });
+
+  it('does not seek a stream that opened at the wanted position', async () => {
+    new CameraConnection({ ...TEST_CONFIG, initialPosition: 1_000_000 });
+    await vi.advanceTimersByTimeAsync(0);
+    const pcw = getMock(0);
+
+    pcw.simulateStateChange(PeerState.connected);
+    await vi.advanceTimersByTimeAsync(0);
+    pcw.simulateDcOpen();
+
+    expect(pcw.sendSeek).not.toHaveBeenCalled();
   });
 });

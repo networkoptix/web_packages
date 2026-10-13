@@ -141,6 +141,8 @@ export class WebRTCStreamManager {
       };
       StreamManager.configure(config);
       WebRTCStreamManager._configured = true;
+      // A seek made before the first connect reached only the static field.
+      StreamManager.getInstance().updatePosition(WebRTCStreamManager.position);
     }
     return StreamManager.getInstance();
   }
@@ -226,9 +228,7 @@ export class WebRTCStreamManager {
     const rounded = Math.round(position);
     WebRTCStreamManager.position = rounded;
     if (WebRTCStreamManager._configured) {
-      StreamManager.getInstance().updatePosition(
-        rounded || undefined,
-      );
+      StreamManager.getInstance().updatePosition(rounded);
     }
   }
 

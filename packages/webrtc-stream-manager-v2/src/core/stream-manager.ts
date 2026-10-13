@@ -311,8 +311,11 @@ export class StreamManager extends Disposable {
     const needsMse = this.camerasNeedingMse.has(connectionKey);
     const connectionConfig: CameraConnectionConfig = {
       connectionKey,
-      signalingUrl: (stream: AvailableStreams, deliveryMethod?: DeliveryMethod, enableMetadata?: boolean) =>
-        this.buildSignalingUrl(urlConfig, stream, deliveryMethod ?? 'srtp', enableMetadata),
+      signalingUrl: (stream: AvailableStreams, deliveryMethod: DeliveryMethod, enableMetadata: boolean, positionMs: number) =>
+        this.buildSignalingUrl(urlConfig, stream, deliveryMethod, enableMetadata, {
+          positionMs,
+          speed: this._currentSpeed,
+        }),
       availableStreams,
       initialStream,
       canAutoUpgrade,
@@ -755,9 +758,9 @@ export class StreamManager extends Disposable {
   private async buildSignalingUrl(
     urlConfig: WebRtcUrlConfig,
     stream: AvailableStreams,
-    deliveryMethod: DeliveryMethod = 'srtp',
-    enableMetadata?: boolean,
-    playback?: { positionMs: number; speed: number | 'unlimited' },
+    deliveryMethod: DeliveryMethod,
+    enableMetadata: boolean,
+    playback: { positionMs: number; speed: number | 'unlimited' },
   ): Promise<string> {
     const _diagStart = performance.now();
     const _diagKey = `${urlConfig.systemId}:${urlConfig.cameraId}`;
@@ -778,16 +781,13 @@ export class StreamManager extends Disposable {
       params.push(`x-server-guid=${urlConfig.serverId}`);
     }
 
-    // Companion sessions inject their own playback params; pooled
-    // connections use the manager's shared position/speed state.
-    const positionMs = playback ? playback.positionMs : this._currentPosition;
-    if (positionMs) {
-      params.push(`positionMs=${positionMs}`);
+    // Each session passes its own position: the manager-wide one misses per-camera seeks.
+    if (playback.positionMs) {
+      params.push(`positionMs=${playback.positionMs}`);
     }
 
-    const speed = playback ? playback.speed : this._currentSpeed;
-    if (speed !== 1) {
-      params.push(`speed=${speed === 'unlimited' ? 0 : speed}`);
+    if (playback.speed !== 1) {
+      params.push(`speed=${playback.speed === 'unlimited' ? 0 : playback.speed}`);
     }
 
     params.push(`stream=${stream}`);

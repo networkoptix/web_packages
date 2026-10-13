@@ -363,21 +363,23 @@ describe('WebRTCStreamManager (legacy facade)', () => {
       expect(WebRTCStreamManager.position).toBe(3000);
     });
 
-    it('passes undefined when position is 0 (live mode)', () => {
+    it('passes 0 when position is 0 (live mode)', () => {
       WebRTCStreamManager.connect(makeUrlConfig('sys1', 'cam1'));
+      mockState.positionCalls = [];
 
       WebRTCStreamManager.updatePosition(0);
 
-      expect(mockState.positionCalls).toContain(undefined);
+      expect(mockState.positionCalls).toEqual([0]);
     });
 
     it('defaults to 0 when called without arguments', () => {
       WebRTCStreamManager.connect(makeUrlConfig('sys1', 'cam1'));
+      mockState.positionCalls = [];
 
       WebRTCStreamManager.updatePosition();
 
       expect(WebRTCStreamManager.position).toBe(0);
-      expect(mockState.positionCalls).toContain(undefined);
+      expect(mockState.positionCalls).toEqual([0]);
     });
 
     it('is a no-op when not configured', () => {
@@ -385,6 +387,14 @@ describe('WebRTCStreamManager (legacy facade)', () => {
       WebRTCStreamManager.updatePosition(5000);
 
       expect(mockState.positionCalls).toHaveLength(0);
+    });
+
+    it('hands a position set before the first connect to the stream manager', () => {
+      WebRTCStreamManager.updatePosition(5000);
+
+      WebRTCStreamManager.connect(makeUrlConfig('sys1', 'cam1'));
+
+      expect(mockState.positionCalls).toEqual([5000]);
     });
   });
 

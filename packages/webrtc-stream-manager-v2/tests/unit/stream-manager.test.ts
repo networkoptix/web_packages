@@ -73,7 +73,9 @@ const { mockState, MockCameraConnection } = vi.hoisted(() => {
     }
 
     // Captured config for assertions.
-    signalingUrlFn: ((stream: number, deliveryMethod?: string) => string) | null = null;
+    signalingUrlFn:
+      | ((stream: number, deliveryMethod: string, enableMetadata?: boolean, positionMs?: number) => string)
+      | null = null;
     needsMse: boolean;
     mediaStreams: any[] | undefined;
     initialPosition: number | undefined;
@@ -83,7 +85,7 @@ const { mockState, MockCameraConnection } = vi.hoisted(() => {
 
     constructor(config: {
       connectionKey: string;
-      signalingUrl: (stream: number, deliveryMethod?: string) => string;
+      signalingUrl: (stream: number, deliveryMethod: string, enableMetadata?: boolean, positionMs?: number) => string;
       availableStreams: number[];
       initialStream?: number;
       targetStream?: string;
@@ -386,6 +388,20 @@ describe('StreamManager', () => {
     expect(getMock(0).updatePosition).toHaveBeenCalledWith(5000);
     expect(getMock(1).updatePosition).toHaveBeenCalledWith(5000);
   });
+
+  it.each([undefined, 0])(
+    'updatePosition(%s) sends 0 (live) to connections',
+    (position) => {
+      StreamManager.configure(TEST_CONFIG);
+      const sm = StreamManager.getInstance();
+
+      sm.connect(makeUrlConfig('sys1', 'cam1'));
+
+      sm.updatePosition(position);
+
+      expect(getMock(0).updatePosition).toHaveBeenCalledWith(0);
+    }
+  );
 
   // ── 9. updateCameraPosition() forwards to specific connection ─────────
 
@@ -1244,12 +1260,31 @@ describe('StreamManager.createFetchSession', () => {
 
     // A pooled connection built afterwards still sees the shared state.
     sm.connect(makeFetchUrlConfig());
-    const pooledUrl = await getMock(0).signalingUrlFn!(
+    const pooled = getMock(0);
+    const pooledUrl = await pooled.signalingUrlFn!(
       AvailableStreams.SECONDARY,
       'srtp',
+      true,
+      pooled.initialPosition,
     );
+    expect(pooled.initialPosition).toBe(99_999);
     expect(pooledUrl).toContain('positionMs=99999');
     expect(pooledUrl).toContain('speed=4');
+  });
+
+  it('opens a pooled connection at the position it passes, not the shared one', async () => {
+    StreamManager.configure(TEST_CONFIG);
+    const sm = StreamManager.getInstance();
+    sm.updatePosition(99_999);
+    sm.connect(makeFetchUrlConfig());
+    const pooled = getMock(0);
+
+    const ownUrl = await pooled.signalingUrlFn!(AvailableStreams.SECONDARY, 'srtp', true, 12_345);
+    const liveUrl = await pooled.signalingUrlFn!(AvailableStreams.SECONDARY, 'srtp', true, 0);
+
+    expect(ownUrl).toContain('positionMs=12345');
+    expect(ownUrl).not.toContain('positionMs=99999');
+    expect(liveUrl).not.toContain('positionMs=');
   });
 
   it('honors speed, stream, and deliveryMethod options', async () => {

@@ -35,7 +35,12 @@ export interface CameraConnectionConfig {
    * May return a Promise to support async operations like one-time ticket fetching.
    * Called fresh for each connection attempt (including retries) to ensure fresh tokens.
    */
-  signalingUrl: (stream: AvailableStreams, deliveryMethod?: DeliveryMethod, enableMetadata?: boolean) => string | Promise<string>;
+  signalingUrl: (
+    stream: AvailableStreams,
+    deliveryMethod: DeliveryMethod,
+    enableMetadata: boolean,
+    positionMs: number,
+  ) => string | Promise<string>;
   /** Available streams for this camera (filtered to exclude transcoding streams when possible). */
   availableStreams: AvailableStreams[];
   /**
@@ -247,6 +252,8 @@ export class CameraConnection extends Disposable {
   private currentSpeed: number | 'unlimited';
   /** Live frame timestamp (ms); used to align a fresh PC to actual playback, since `currentPosition` can be seconds stale. */
   private latestServerTimestampMs: number | undefined;
+  /** Position each PC's stream opened at: a seek that arrives before its data channel opens is replayed then. */
+  private readonly pcOpenedAtMs = new WeakMap<PeerConnectionWrapper, number>();
 
   constructor(config: CameraConnectionConfig) {
     super();
@@ -727,14 +734,17 @@ export class CameraConnection extends Disposable {
           diagTracker.phaseStart(this.connectionKey, `baseRetry#${_diagRetryAttempt}`);
           this.config.logger?.info?.(`[WEBRTC-DIAG] [${this.connectionKey}] connectBase retry attempt #${_diagRetryAttempt}`, { elapsed: (performance.now() - _diagStart).toFixed(1) + 'ms' });
           const _diagTicketStart = performance.now();
+          const openedAtMs = this.currentPosition;
           const signalingUrl = await this.config.signalingUrl(
             this.baseStream,
             this._deliveryMethod,
             this._metadataEnabled,
+            openedAtMs,
           );
           this.config.logger?.info?.(`[WEBRTC-DIAG] [${this.connectionKey}] connectBase signalingUrl built`, { signalingUrlLength: signalingUrl.length, ticketFetchMs: (performance.now() - _diagTicketStart).toFixed(1) + 'ms', elapsed: (performance.now() - _diagStart).toFixed(1) + 'ms' });
           try {
             const pc = await this.createConnection(signalingUrl, retryAc.signal);
+            this.pcOpenedAtMs.set(pc, openedAtMs);
             this._consecutiveConnectFailures = 0;
             return pc;
           } catch (err) {
@@ -964,11 +974,14 @@ export class CameraConnection extends Disposable {
       pcw.sendPause();
     }
     // Seek only applies in archive (a position is set).
+    const target = this.latestServerTimestampMs ?? this.currentPosition;
     if (
       this.currentPosition &&
-      (this.isPaused || this.latestServerTimestampMs !== undefined)
+      (this.isPaused ||
+        this.latestServerTimestampMs !== undefined ||
+        target !== this.pcOpenedAtMs.get(pcw))
     ) {
-      pcw.sendSeek(this.latestServerTimestampMs ?? this.currentPosition);
+      pcw.sendSeek(target);
     }
     // CLOUD-17616: pause has now been (re)applied to this PC, so a track this PC
     // deferred while paused will show a frozen frame, not live-playing video.
@@ -1104,12 +1117,16 @@ export class CameraConnection extends Disposable {
           // is the persistent metadata source and the upgrade/PRIMARY doesn't need it.
           const needsMetadata =
             this._metadataEnabled && this.upgradeStream === AvailableStreams.SECONDARY;
+          const openedAtMs = this.currentPosition;
           const signalingUrl = await this.config.signalingUrl(
             this.upgradeStream,
             this._deliveryMethod,
             needsMetadata,
+            openedAtMs,
           );
-          return this.createConnection(signalingUrl, retryAc.signal);
+          const pc = await this.createConnection(signalingUrl, retryAc.signal);
+          this.pcOpenedAtMs.set(pc, openedAtMs);
+          return pc;
         },
         this.highResRetryConfig,
         retryAc.signal,
