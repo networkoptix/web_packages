@@ -20,7 +20,7 @@ import {
   type WebRtcUrlConfig,
   type Logger,
 } from '../types';
-import { getNonTranscodingStreams } from '../utils/streams';
+import { resolveInitialStream } from '../utils/streams';
 import { diagTracker } from '../utils/diag-tracker';
 import { RelayPrefixPool } from '../utils/relay-prefix-pool';
 
@@ -294,7 +294,11 @@ export class StreamManager extends Disposable {
     this._config.logger?.info?.(`[WEBRTC-DIAG] [${connectionKey}] available streams resolved`, { availableStreams, elapsed: (performance.now() - _diagStart).toFixed(1) + 'ms' });
 
     // Determine which stream to start with (based on codec viability).
-    const initialStream = this.resolveInitialStream(urlConfig, availableStreams);
+    const initialStream = resolveInitialStream(
+      urlConfig.targetStream,
+      availableStreams,
+      urlConfig.mediaStreams,
+    );
     this._config.logger?.info?.(`[WEBRTC-DIAG] [${connectionKey}] initial stream selected`, { initialStream, elapsed: (performance.now() - _diagStart).toFixed(1) + 'ms' });
 
     // Determine if the quality optimizer can auto-upgrade this connection.
@@ -662,56 +666,6 @@ export class StreamManager extends Disposable {
 
     // 3. No device data — default to both (primary is always available).
     return [AvailableStreams.PRIMARY, AvailableStreams.SECONDARY];
-  }
-
-  /**
-   * Determine which stream to connect first as the always-on base connection.
-   *
-   * Decision logic:
-   * - Explicit HIGH → PRIMARY
-   * - Explicit LOW → SECONDARY
-   * - AUTO → cheapest non-transcoding stream as the persistent base:
-   *   - SECONDARY if non-transcoding (cheap low-res base)
-   *   - PRIMARY if SECONDARY requires transcoding
-   *   - SECONDARY if all streams require transcoding (cheaper to transcode)
-   */
-  private resolveInitialStream(
-    urlConfig: WebRtcUrlConfig,
-    availableStreams: AvailableStreams[],
-  ): AvailableStreams {
-    // Explicit target overrides auto-detection.
-    if (urlConfig.targetStream === TargetStream.HIGH) {
-      return availableStreams.includes(AvailableStreams.PRIMARY)
-        ? AvailableStreams.PRIMARY
-        : availableStreams[0];
-    }
-    if (urlConfig.targetStream === TargetStream.LOW) {
-      return availableStreams.includes(AvailableStreams.SECONDARY)
-        ? AvailableStreams.SECONDARY
-        : availableStreams[0];
-    }
-
-    // AUTO: use codec data to pick the best persistent base stream.
-    if (urlConfig.mediaStreams?.length) {
-      const nonTranscoding = getNonTranscodingStreams(urlConfig.mediaStreams);
-      if (nonTranscoding?.includes(AvailableStreams.SECONDARY)) {
-        // SECONDARY is non-transcoding — cheapest persistent base.
-        return AvailableStreams.SECONDARY;
-      }
-      if (nonTranscoding?.length) {
-        // Only PRIMARY is non-transcoding — use it as base.
-        return nonTranscoding[0];
-      }
-      // All streams require transcoding — SECONDARY is cheaper to transcode.
-      return availableStreams.includes(AvailableStreams.SECONDARY)
-        ? AvailableStreams.SECONDARY
-        : availableStreams[0];
-    }
-
-    // No codec data — default to SECONDARY if available.
-    return availableStreams.includes(AvailableStreams.SECONDARY)
-      ? AvailableStreams.SECONDARY
-      : availableStreams[0];
   }
 
   /**

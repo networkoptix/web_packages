@@ -264,6 +264,7 @@ import {
   PeerState,
   AvailableStreams,
   ConnectionError,
+  KnownCodec,
   TargetStream,
 } from '../../src/types';
 
@@ -323,7 +324,8 @@ const TEST_CONFIG: CameraConnectionConfig = {
  * Common setup: create a CameraConnection and connect the low-res PCW.
  * Returns references to both for further interaction.
  */
-async function setupWithLowConnected(config = TEST_CONFIG) {
+// A fresh copy: the targetStream setter writes into the config it was given.
+async function setupWithLowConnected(config = { ...TEST_CONFIG }) {
   const cc = new CameraConnection(config);
   // Flush microtasks to let the async signalingUrl resolve and create the PCW.
   await vi.advanceTimersByTimeAsync(0);
@@ -2892,5 +2894,173 @@ describe('CameraConnection archive position on (re)connect', () => {
     pcw.simulateDcOpen();
 
     expect(pcw.sendSeek).not.toHaveBeenCalled();
+  });
+});
+
+describe('CameraConnection codec that needs transcoding', () => {
+  const H264_MAIN_MJPEG_SUB = [
+    { codec: KnownCodec.H264, encoderIndex: AvailableStreams.PRIMARY },
+    { codec: KnownCodec.MJPEG, encoderIndex: AvailableStreams.SECONDARY },
+  ];
+  const MJPEG_MAIN_H264_SUB = [
+    { codec: KnownCodec.MJPEG, encoderIndex: AvailableStreams.PRIMARY },
+    { codec: KnownCodec.H264, encoderIndex: AvailableStreams.SECONDARY },
+  ];
+
+  beforeEach(() => {
+    vi.useFakeTimers();
+    mockState.instances = [];
+    mockMseState.instances = [];
+    mockIsMseSupported.mockReturnValue(true);
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it('never connects when the base stream is MJPEG', async () => {
+    const cc = new CameraConnection({
+      ...TEST_CONFIG,
+      initialStream: AvailableStreams.SECONDARY,
+      mediaStreams: [
+        { codec: KnownCodec.MJPEG, encoderIndex: AvailableStreams.PRIMARY },
+        { codec: KnownCodec.MJPEG, encoderIndex: AvailableStreams.SECONDARY },
+      ],
+    });
+    await vi.advanceTimersByTimeAsync(0);
+
+    expect(mockState.instances).toHaveLength(0);
+    expect(cc.unsupportedCodec).toBe(ConnectionError.mjpegDisabled);
+    expect(cc.state).toBe(PeerState.failed);
+  });
+
+  it('reports transcodingDisabled for a non-MJPEG codec that needs transcoding', async () => {
+    const cc = new CameraConnection({
+      ...TEST_CONFIG,
+      availableStreams: [AvailableStreams.PRIMARY],
+      initialStream: AvailableStreams.PRIMARY,
+      mediaStreams: [{ codec: 12, encoderIndex: AvailableStreams.PRIMARY }],
+    });
+    await vi.advanceTimersByTimeAsync(0);
+
+    expect(mockState.instances).toHaveLength(0);
+    expect(cc.unsupportedCodec).toBe(ConnectionError.transcodingDisabled);
+  });
+
+  it('stops and reports the codec when LOW selects an MJPEG secondary', async () => {
+    const { cc, lowPcw } = await setupWithLowConnected({
+      ...TEST_CONFIG,
+      initialStream: AvailableStreams.PRIMARY,
+      mediaStreams: H264_MAIN_MJPEG_SUB,
+    });
+    const errors = vi.fn();
+    cc.on('error', errors);
+
+    cc.targetStream = TargetStream.LOW;
+    await vi.advanceTimersByTimeAsync(0);
+
+    expect(lowPcw.disposed).toBe(true);
+    expect(mockState.instances).toHaveLength(1);
+    expect(errors).toHaveBeenCalledWith(ConnectionError.mjpegDisabled);
+    expect(cc.unsupportedCodec).toBe(ConnectionError.mjpegDisabled);
+    expect(cc.state).toBe(PeerState.failed);
+  });
+
+  it('does not open an MJPEG upgrade when HIGH selects an MJPEG primary', async () => {
+    const { cc, lowPcw } = await setupWithLowConnected({
+      ...TEST_CONFIG,
+      initialStream: AvailableStreams.SECONDARY,
+      canAutoUpgrade: false,
+      mediaStreams: MJPEG_MAIN_H264_SUB,
+    });
+
+    cc.targetStream = TargetStream.HIGH;
+    await vi.advanceTimersByTimeAsync(0);
+
+    expect(lowPcw.disposed).toBe(true);
+    expect(mockState.instances).toHaveLength(1);
+    expect(cc.unsupportedCodec).toBe(ConnectionError.mjpegDisabled);
+  });
+
+  it('stays down through seeks, resume and metadata changes while blocked', async () => {
+    const { cc } = await setupWithLowConnected({
+      ...TEST_CONFIG,
+      initialStream: AvailableStreams.PRIMARY,
+      mediaStreams: H264_MAIN_MJPEG_SUB,
+    });
+    cc.targetStream = TargetStream.LOW;
+    await vi.advanceTimersByTimeAsync(0);
+
+    cc.updatePosition(1_700_000_000_000);
+    cc.sendPause();
+    cc.sendResume();
+    cc.disableMetadata();
+    await vi.advanceTimersByTimeAsync(60_000);
+
+    expect(mockState.instances).toHaveLength(1);
+  });
+
+  it('reconnects on the playable stream once the target allows it again', async () => {
+    const signalingUrl = vi.fn((stream: AvailableStreams) => `wss://example.com/webrtc?stream=${stream}`);
+    const { cc } = await setupWithLowConnected({
+      ...TEST_CONFIG,
+      signalingUrl,
+      initialStream: AvailableStreams.PRIMARY,
+      mediaStreams: H264_MAIN_MJPEG_SUB,
+    });
+    cc.targetStream = TargetStream.LOW;
+    await vi.advanceTimersByTimeAsync(0);
+    signalingUrl.mockClear();
+
+    cc.targetStream = TargetStream.AUTO;
+    await vi.advanceTimersByTimeAsync(0);
+
+    expect(cc.unsupportedCodec).toBeNull();
+    expect(mockState.instances).toHaveLength(2);
+    expect(signalingUrl).toHaveBeenCalledWith(AvailableStreams.PRIMARY, 'srtp', true, 0);
+  });
+
+  it('resumes archive at its own position, not where the stream stopped', async () => {
+    const signalingUrl = vi.fn((stream: AvailableStreams) => `wss://example.com/webrtc?stream=${stream}`);
+    const { cc, lowPcw } = await setupWithLowConnected({
+      ...TEST_CONFIG,
+      signalingUrl,
+      initialStream: AvailableStreams.PRIMARY,
+      mediaStreams: H264_MAIN_MJPEG_SUB,
+      initialPosition: 1_000_000,
+    });
+    lowPcw.simulateTimestamp({ timestampMs: 1_005_000, rtpTimestamp: 1 });
+    cc.targetStream = TargetStream.LOW;
+    // Playback moves on while blocked; the player keeps telling the connection.
+    cc.updatePosition(1_060_000);
+    signalingUrl.mockClear();
+
+    cc.targetStream = TargetStream.AUTO;
+    await vi.advanceTimersByTimeAsync(0);
+    const freshPcw = getMock(1);
+    freshPcw.simulateStateChange(PeerState.connected);
+    await vi.advanceTimersByTimeAsync(0);
+    freshPcw.simulateDcOpen();
+
+    expect(signalingUrl).toHaveBeenCalledWith(AvailableStreams.PRIMARY, 'srtp', true, 1_060_000);
+    expect(freshPcw.sendSeek).not.toHaveBeenCalled();
+  });
+
+  it('keeps an MSE camera on its playable secondary when the primary is MJPEG', async () => {
+    const signalingUrl = vi.fn((stream: AvailableStreams) => `wss://example.com/webrtc?stream=${stream}`);
+    const cc = new CameraConnection({
+      ...TEST_CONFIG,
+      signalingUrl,
+      needsMse: true,
+      initialStream: AvailableStreams.SECONDARY,
+      mediaStreams: [
+        { codec: KnownCodec.MJPEG, encoderIndex: AvailableStreams.PRIMARY },
+        { codec: KnownCodec.H265, encoderIndex: AvailableStreams.SECONDARY },
+      ],
+    });
+    await vi.advanceTimersByTimeAsync(0);
+
+    expect(cc.unsupportedCodec).toBeNull();
+    expect(signalingUrl).toHaveBeenCalledWith(AvailableStreams.SECONDARY, 'mse', true, 0);
   });
 });

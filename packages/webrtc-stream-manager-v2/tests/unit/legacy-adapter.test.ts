@@ -61,6 +61,7 @@ const { mockState, MockStreamManager, MockCameraConnection } = vi.hoisted(() => 
     setDataPaused = vi.fn().mockReturnValue(true);
     activeStreamIndex = 1;
     activeStream: MediaStream | null = null;
+    unsupportedCodec: string | null = null;
     getPlayingCodec = vi.fn().mockResolvedValue('video/H265');
     setVideoElement = vi.fn();
     dispose = vi.fn().mockResolvedValue(undefined);
@@ -543,6 +544,36 @@ describe('WebRTCStreamManager (legacy facade)', () => {
       secondSub.unsubscribe();
     });
 
+    it('replays a codec the connection refused to play, instead of any stale stream', () => {
+      const obs = WebRTCStreamManager.connect(makeUrlConfig('sys1', 'cam1'));
+      const mockConnection = mockState.connections.get('sys1:cam1')!;
+      mockConnection.activeStream = { id: 'stale' } as unknown as MediaStream;
+      mockConnection.unsupportedCodec = ConnectionError.mjpegDisabled;
+
+      const emissions: any[] = [];
+      const sub = obs.subscribe((value) => emissions.push(value));
+
+      expect(emissions).toHaveLength(1);
+      expect(emissions[0][0]).toBeNull();
+      expect(emissions[0][1]).toBe(ConnectionError.mjpegDisabled);
+
+      sub.unsubscribe();
+    });
+
+    it('reports the codec its connection refuses to play', () => {
+      const obs = WebRTCStreamManager.connect(makeUrlConfig('sys1', 'cam1'));
+      const mockConnection = mockState.connections.get('sys1:cam1')!;
+      mockConnection.unsupportedCodec = ConnectionError.mjpegDisabled;
+      const emissions: any[] = [];
+      const sub = obs.subscribe((value) => emissions.push(value));
+      const instance = emissions[0][2] as WebRTCStreamManager;
+
+      expect(instance.unsupportedCodec).toBe(ConnectionError.mjpegDisabled);
+      mockConnection.unsupportedCodec = null;
+      expect(instance.unsupportedCodec).toBeNull();
+      sub.unsubscribe();
+    });
+
     it('does not emit on subscribe before the connection has a stream', () => {
       const emissions: any[] = [];
       const sub = WebRTCStreamManager.connect(makeUrlConfig('sys1', 'cam1'))
@@ -783,6 +814,38 @@ describe('WebRTCStreamManager (legacy facade)', () => {
         facade.updateAvailableStreams([AvailableStreams.PRIMARY, AvailableStreams.SECONDARY]);
       }).not.toThrow();
 
+      sub.unsubscribe();
+    });
+
+    it('moves a codec-blocked camera to the resume position before its new target reconnects it', () => {
+      const obs = WebRTCStreamManager.connect(makeUrlConfig('sys1', 'cam1'));
+      const mockConnection = mockState.connections.get('sys1:cam1')!;
+      mockConnection.unsupportedCodec = ConnectionError.mjpegDisabled;
+      const calls: string[] = [];
+      mockConnection.updatePosition.mockImplementation((p: number) => calls.push(`position ${p}`));
+      Object.defineProperty(mockConnection, 'targetStream', { set: (t: TargetStream) => calls.push(`target ${t}`) });
+      const emissions: any[] = [];
+      const sub = obs.subscribe((value) => emissions.push(value));
+
+      (emissions[0][2] as WebRTCStreamManager).updateAvailableStreams(
+        [AvailableStreams.PRIMARY, AvailableStreams.SECONDARY],
+        1_060_000,
+      );
+
+      expect(calls).toEqual(['position 1060000', `target ${TargetStream.AUTO}`]);
+      sub.unsubscribe();
+    });
+
+    it('leaves the position of a playing camera alone', () => {
+      const obs = WebRTCStreamManager.connect(makeUrlConfig('sys1', 'cam1'));
+      const mockConnection = mockState.connections.get('sys1:cam1')!;
+      mockConnection.activeStream = { id: 'playing' } as unknown as MediaStream;
+      const emissions: any[] = [];
+      const sub = obs.subscribe((value) => emissions.push(value));
+
+      (emissions[0][2] as WebRTCStreamManager).updateAvailableStreams([AvailableStreams.SECONDARY], 1_060_000);
+
+      expect(mockConnection.updatePosition).not.toHaveBeenCalled();
       sub.unsubscribe();
     });
   });

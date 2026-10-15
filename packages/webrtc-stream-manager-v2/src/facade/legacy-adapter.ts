@@ -383,8 +383,14 @@ export class WebRTCStreamManager {
 
       // A reused connection (same camera in several cells) has already fired its
       // track event, so replay the current stream to late subscribers.
+      // A codec blocked at construction never fires its error to anyone, so replay that too.
+      const unsupportedCodec = _connection.unsupportedCodec;
       const activeStream = _connection.activeStream;
-      if (activeStream) {
+      if (unsupportedCodec) {
+        const tuple: [MediaStream | null, ConnectionError | null, WebRTCStreamManager] = [null, unsupportedCodec, this];
+        this.mediaStream$.next(tuple);
+        subscriber.next(tuple);
+      } else if (activeStream) {
         const tuple: [MediaStream | null, ConnectionError | null, WebRTCStreamManager] = [activeStream, null, this];
         this.mediaStream$.next(tuple);
         subscriber.next(tuple);
@@ -419,6 +425,11 @@ export class WebRTCStreamManager {
   /** Whether this connection's server-side stream is paused. */
   get isPaused(): boolean {
     return this._connection.isPaused;
+  }
+
+  /** The error reported instead of playing, while the target stream's codec needs server transcoding. */
+  get unsupportedCodec(): ConnectionError | null {
+    return this._connection.unsupportedCodec;
   }
 
   /**
@@ -497,7 +508,11 @@ export class WebRTCStreamManager {
    * - [PRIMARY] only → HIGH (always request high-res)
    * - both / other → AUTO (optimizer decides)
    */
-  updateAvailableStreams(streams: AvailableStreams[]): void {
+  updateAvailableStreams(streams: AvailableStreams[], resumeAtMs?: number): void {
+    // Its own position is the last seek, long behind a marker that kept moving while it was blocked.
+    if (resumeAtMs && this._connection.unsupportedCodec) {
+      this._connection.updatePosition(resumeAtMs);
+    }
     let target: TargetStream;
     if (streams.length === 1 && streams[0] === AvailableStreams.SECONDARY) {
       target = TargetStream.LOW;

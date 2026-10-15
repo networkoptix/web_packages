@@ -11,6 +11,7 @@ import { withRetry, classifyError, backoffDelay, type RetryConfig } from '../str
 import { linkSignal } from '../utils/abort-helpers';
 import { extractPlayingCodecMime, isMseSupported } from '../utils/codecs';
 import { diagTracker } from '../utils/diag-tracker';
+import { resolveInitialStream, unsupportedCodecError } from '../utils/streams';
 import {
   AvailableStreams,
   PeerState,
@@ -208,6 +209,9 @@ export class CameraConnection extends Disposable {
   private mseRenderer: MseRenderer | null = null;
   private _deliveryMethod: DeliveryMethod = 'srtp';
 
+  /** Set while the target stream's codec needs server transcoding; no PC is built until the target changes. */
+  private _unsupportedCodec: ConnectionError | null = null;
+
   // ── Metadata state ────────────────────────────────────────────────
   private _metadataEnabled = true;
 
@@ -287,12 +291,14 @@ export class CameraConnection extends Disposable {
     // Respect explicit LOW target — the user chose low quality intentionally.
     if (config.needsMse) {
       this._deliveryMethod = 'mse';
-      if (
-        config.targetStream !== TargetStream.LOW &&
-        config.availableStreams.includes(AvailableStreams.PRIMARY)
-      ) {
+      if (this.mseCanUsePrimary(config.targetStream)) {
         this.baseStream = AvailableStreams.PRIMARY;
       }
+    }
+
+    this._unsupportedCodec = unsupportedCodecError(this.baseStream, config.mediaStreams);
+    if (this._unsupportedCodec) {
+      this._state = PeerState.failed;
     }
 
     if (config.enableMetadata === false) {
@@ -378,6 +384,27 @@ export class CameraConnection extends Disposable {
     if (this.config.targetStream === target) return;
     this.config.targetStream = target;
 
+    const stream = resolveInitialStream(
+      target,
+      this.config.availableStreams,
+      this.config.mediaStreams,
+    );
+    const unsupported = unsupportedCodecError(stream, this.config.mediaStreams);
+    if (unsupported) {
+      this.blockUnsupportedCodec(unsupported);
+      return;
+    }
+    if (this._unsupportedCodec) {
+      this._unsupportedCodec = null;
+      this.baseStream =
+        this._deliveryMethod === 'mse' && this.mseCanUsePrimary(target)
+          ? AvailableStreams.PRIMARY
+          : stream;
+      this.updateState(PeerState.connecting);
+      this.connectBase();
+      return;
+    }
+
     // MSE cameras have no upgrade concept — the base connection itself
     // must be reconnected with the appropriate stream.
     if (this._deliveryMethod === 'mse') {
@@ -392,6 +419,11 @@ export class CameraConnection extends Disposable {
     } else if (target === TargetStream.LOW) {
       this.releaseHighRes();
     }
+  }
+
+  /** The error reported instead of playing, while the target stream's codec needs server transcoding. */
+  get unsupportedCodec(): ConnectionError | null {
+    return this._unsupportedCodec;
   }
 
   /** Whether the quality optimizer can auto-promote this connection to PRIMARY. */
@@ -714,7 +746,7 @@ export class CameraConnection extends Disposable {
    * Fire-and-forget — errors are caught and emitted as events.
    */
   private async connectBase(): Promise<void> {
-    if (this.disposed) return;
+    if (this.disposed || this._unsupportedCodec) return;
     // Reset circuit breaker per reconnect cycle so each cycle gets fresh attempts.
     this._consecutiveConnectFailures = 0;
     const _diagStart = performance.now();
@@ -1094,7 +1126,7 @@ export class CameraConnection extends Disposable {
    * falls back to base (no error event).
    */
   private async connectUpgrade(): Promise<void> {
-    if (this.disposed) return;
+    if (this.disposed || this._unsupportedCodec) return;
     // MSE delivers native quality — no upgrade concept.
     if (this._deliveryMethod === 'mse') return;
     const _diagStart = performance.now();
@@ -1610,6 +1642,26 @@ export class CameraConnection extends Disposable {
     return isMseSupported();
   }
 
+  /** MSE prefers PRIMARY unless LOW was chosen explicitly or PRIMARY's codec would need transcoding. */
+  private mseCanUsePrimary(target: TargetStream | undefined): boolean {
+    return (
+      target !== TargetStream.LOW &&
+      this.config.availableStreams.includes(AvailableStreams.PRIMARY) &&
+      !unsupportedCodecError(AvailableStreams.PRIMARY, this.config.mediaStreams)
+    );
+  }
+
+  /** Stop streaming and report `error` until a target with a playable codec is set. */
+  private blockUnsupportedCodec(error: ConnectionError): void {
+    this._unsupportedCodec = error;
+    this._pendingVisibleTrack = null;
+    this._pendingVisiblePcw = null;
+    this.disposeUpgradeInternal();
+    this.disposeBaseInternal();
+    this.emit('error', error);
+    this.updateState(PeerState.failed);
+  }
+
   /** Tear down SRTP connections and reconnect with MSE delivery. */
   private reconnectWithMse(): void {
     if (this.disposed) return;
@@ -1621,11 +1673,7 @@ export class CameraConnection extends Disposable {
 
     // MSE delivers the native stream without transcoding, so switch to
     // PRIMARY for full resolution (no reason to stay on low-res SECONDARY).
-    // Respect explicit LOW target — the user chose low quality intentionally.
-    if (
-      this.config.targetStream !== TargetStream.LOW &&
-      this.config.availableStreams.includes(AvailableStreams.PRIMARY)
-    ) {
+    if (this.mseCanUsePrimary(this.config.targetStream)) {
       this.baseStream = AvailableStreams.PRIMARY;
     }
 
@@ -1649,10 +1697,9 @@ export class CameraConnection extends Disposable {
   private reconnectBaseForTarget(target: TargetStream): void {
     if (this.disposed) return;
 
-    const newStream =
-      target === TargetStream.LOW || !this.config.availableStreams.includes(AvailableStreams.PRIMARY)
-        ? AvailableStreams.SECONDARY
-        : AvailableStreams.PRIMARY;
+    const newStream = this.mseCanUsePrimary(target)
+      ? AvailableStreams.PRIMARY
+      : AvailableStreams.SECONDARY;
 
     // Skip reconnect if the base stream is already correct.
     if (this.baseStream === newStream) return;

@@ -1,6 +1,13 @@
 // Copyright 2018-present Network Optix, Inc. Licensed under MPL 2.0: www.mozilla.org/MPL/2.0/
 
-import { AvailableStreams, Stream, isNativeWebRtcCodec } from '../types';
+import {
+  AvailableStreams,
+  ConnectionError,
+  KnownCodec,
+  Stream,
+  TargetStream,
+  isNativeWebRtcCodec,
+} from '../types';
 
 /**
  * Determines actual available streams from camera mediaStreams data.
@@ -52,4 +59,58 @@ export function getNonTranscodingStreams(
     .filter((s) => isNativeWebRtcCodec(s.codec))
     .map((s) => s.encoderIndex);
   return native.length > 0 ? native : undefined;
+}
+
+/**
+ * Determine which stream to connect first as the always-on base connection.
+ *
+ * Decision logic:
+ * - Explicit HIGH → PRIMARY
+ * - Explicit LOW → SECONDARY
+ * - AUTO → cheapest non-transcoding stream as the persistent base:
+ *   - SECONDARY if non-transcoding (cheap low-res base)
+ *   - PRIMARY if SECONDARY requires transcoding
+ *   - SECONDARY if all streams require transcoding (cheaper to transcode)
+ */
+export function resolveInitialStream(
+  targetStream: TargetStream | undefined,
+  availableStreams: AvailableStreams[],
+  mediaStreams: Stream[] | undefined,
+): AvailableStreams {
+  if (targetStream === TargetStream.HIGH) {
+    return availableStreams.includes(AvailableStreams.PRIMARY)
+      ? AvailableStreams.PRIMARY
+      : availableStreams[0];
+  }
+  if (targetStream === TargetStream.LOW) {
+    return availableStreams.includes(AvailableStreams.SECONDARY)
+      ? AvailableStreams.SECONDARY
+      : availableStreams[0];
+  }
+
+  const nonTranscoding = getNonTranscodingStreams(mediaStreams);
+  if (nonTranscoding?.includes(AvailableStreams.SECONDARY)) {
+    return AvailableStreams.SECONDARY;
+  }
+  if (nonTranscoding?.length) {
+    return nonTranscoding[0];
+  }
+  return availableStreams.includes(AvailableStreams.SECONDARY)
+    ? AvailableStreams.SECONDARY
+    : availableStreams[0];
+}
+
+/**
+ * Error to report instead of playing `stream` when only server transcoding could deliver
+ * its codec (the web client must not request it); `null` when native or unknown.
+ */
+export function unsupportedCodecError(
+  stream: AvailableStreams,
+  mediaStreams: Stream[] | undefined,
+): ConnectionError | null {
+  const codec = mediaStreams?.find((s) => s.encoderIndex === stream)?.codec;
+  if (!codec || isNativeWebRtcCodec(codec)) return null;
+  return codec === KnownCodec.MJPEG
+    ? ConnectionError.mjpegDisabled
+    : ConnectionError.transcodingDisabled;
 }
