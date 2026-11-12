@@ -357,3 +357,26 @@ export const isMetadataMessage = (message: unknown): message is MetadataMessage 
   typeof (message as MetadataMessage).metadata === 'object' &&
   (message as MetadataMessage).metadata !== null &&
   Array.isArray((message as MetadataMessage).metadata.objectMetadataList);
+
+// ─── Undecryptable archive ───────────────────────────────────────────────────
+
+/** Detail for the server reaching archive encrypted with a key the site doesn't have. */
+export interface CannotDecryptMediaEventDetail {
+  deviceId: string;
+  /** Epoch ms of the first packet it couldn't decrypt. */
+  timestampMs: number;
+}
+
+export interface CannotDecryptMediaMessage {
+  cannotDecryptMedia: CannotDecryptMediaEventDetail;
+}
+
+export const isCannotDecryptMediaMessage = (
+  message: unknown,
+): message is CannotDecryptMediaMessage => {
+  if (typeof message !== 'object' || message === null) return false;
+  const detail = (message as Record<string, unknown>)['cannotDecryptMedia'];
+  if (typeof detail !== 'object' || detail === null) return false;
+  const d = detail as Record<string, unknown>;
+  return typeof d['deviceId'] === 'string' && typeof d['timestampMs'] === 'number';
+};

@@ -24,6 +24,7 @@ import {
   type TimestampEventDetail,
   type StateChangeEventDetail,
   type MetadataEventDetail,
+  type CannotDecryptMediaEventDetail,
 } from '../types';
 
 // ─── Config ─────────────────────────────────────────────────────────────────
@@ -102,6 +103,8 @@ interface CameraConnectionEventMap {
   msefallback: undefined;
   metadata: MetadataEventDetail;
   metadatachange: { enabled: boolean };
+  /** The server reached archive it can't decrypt, on either quality's stream. */
+  cannotdecrypt: CannotDecryptMediaEventDetail;
   /** Raw data channel message (string or ArrayBuffer). Fired for every message. */
   datachannel: string | ArrayBuffer;
   /** The high-res upgrade failed and the connection fell back to the base
@@ -243,6 +246,8 @@ export class CameraConnection extends Disposable {
   // that is still sitting in an archive gap.
   private _userPaused = false;
   private _dataPaused = false;
+  /** A third intent, owned by the tile: the server refuses frames and sessions in archive it can't decrypt. */
+  private _undecryptablePaused = false;
   /** Last effective state actually dispatched to the PCs; guards redundant DC traffic. */
   private _pauseApplied = false;
   /** PC died while paused (server tore down media). Rebuild on next resume. */
@@ -475,6 +480,10 @@ export class CameraConnection extends Disposable {
     listener: (detail: { enabled: boolean }) => void,
   ): () => void;
   on(
+    event: 'cannotdecrypt',
+    listener: (detail: CannotDecryptMediaEventDetail) => void,
+  ): () => void;
+  on(
     event: 'datachannel',
     listener: (data: string | ArrayBuffer) => void,
   ): () => void;
@@ -608,7 +617,7 @@ export class CameraConnection extends Disposable {
 
   /** Whether this connection is currently paused, for any reason. */
   get isPaused(): boolean {
-    return this._userPaused || this._dataPaused;
+    return this._userPaused || this._dataPaused || this._undecryptablePaused;
   }
 
   /**
@@ -628,6 +637,19 @@ export class CameraConnection extends Disposable {
   /** Pause/resume driven by archive data availability, independent of user pause. */
   setDataPaused(paused: boolean): boolean {
     this._dataPaused = paused;
+    return this.applyPauseState();
+  }
+
+  /** Pause/resume while the archive at the position can't be decrypted; paused, the connection stops retrying. */
+  setUndecryptablePaused(paused: boolean): boolean {
+    const released = this._undecryptablePaused && !paused;
+    this._undecryptablePaused = paused;
+    // A seek releases it, off the refused position: rebuild there now, not when the rearm fires.
+    if (released && this.rearmTimer !== null) {
+      this.clearTimeout(this.rearmTimer);
+      this.rearmTimer = null;
+      this._needsBaseRebuild = true;
+    }
     return this.applyPauseState();
   }
 
@@ -691,6 +713,8 @@ export class CameraConnection extends Disposable {
     if (this.disposed) return;
     // Only recover a connected-but-stalled PC; other states are owned by connectBase's retry/rearm.
     if (this._state !== PeerState.connected) return;
+    // Silent on purpose: a rebuilt session there would be refused.
+    if (this._undecryptablePaused) return;
     // Recovery, not a user action: keep the last server timestamp so the rebuilt PC resumes at the current playback position, not the stale seek.
     this.reconnectForPlaybackChange(true);
   }
@@ -908,6 +932,7 @@ export class CameraConnection extends Disposable {
         // regardless of whether the upgrade connection is active.
         this.emit('metadata', detail);
       }),
+      pcw.on('cannotdecrypt', (detail) => this.emit('cannotdecrypt', detail)),
       pcw.on('transcoding', (detail) => {
         if (detail.video && this.shouldFallbackToMse()) {
           this.reconnectWithMse();
@@ -1238,6 +1263,7 @@ export class CameraConnection extends Disposable {
         // metadata on the high-quality stream, so this is the primary source.
         this.emit('metadata', detail);
       }),
+      pcw.on('cannotdecrypt', (detail) => this.emit('cannotdecrypt', detail)),
       pcw.on('datachannel', (data) => {
         this.emit('datachannel', data);
       }),

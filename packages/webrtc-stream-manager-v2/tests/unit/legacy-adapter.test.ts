@@ -59,6 +59,7 @@ const { mockState, MockStreamManager, MockCameraConnection } = vi.hoisted(() => 
     updatePosition = vi.fn();
     updateSpeed = vi.fn();
     setDataPaused = vi.fn().mockReturnValue(true);
+    setUndecryptablePaused = vi.fn().mockReturnValue(true);
     activeStreamIndex = 1;
     activeStream: MediaStream | null = null;
     unsupportedCodec: string | null = null;
@@ -679,6 +680,40 @@ describe('WebRTCStreamManager (legacy facade)', () => {
       expect(facade.currentPosition$.getValue()).toBe(0);
 
       sub.unsubscribe();
+    });
+  });
+
+  describe('instance onCannotDecryptMedia()', () => {
+    it('relays the connection event until unsubscribed', () => {
+      const sub = WebRTCStreamManager.connect(makeUrlConfig('sys1', 'cam1')).subscribe();
+      const instance = WebRTCStreamManager.getInstance({ id: 'cam1', systemId: 'sys1' })!;
+      const mockConnection = mockState.connections.get('sys1:cam1')!;
+      const handler = vi.fn();
+
+      const unsubscribe = instance.onCannotDecryptMedia(handler);
+      const detail = { deviceId: 'cam1', timestampMs: 42_000 };
+      mockConnection._emit('cannotdecrypt', detail);
+      unsubscribe();
+      mockConnection._emit('cannotdecrypt', detail);
+
+      expect(handler).toHaveBeenCalledOnce();
+      expect(handler).toHaveBeenCalledWith(detail);
+      sub.unsubscribe();
+    });
+  });
+
+  describe('instance setUndecryptablePaused()', () => {
+    it.each([
+      ['hold', { paused: true }],
+      ['release', { paused: false }],
+    ])('delegates a %s to the underlying connection', (_name, { paused }) => {
+      WebRTCStreamManager.connect(makeUrlConfig('sys1', 'cam1'));
+      const instance = WebRTCStreamManager.getInstance({ id: 'cam1', systemId: 'sys1' })!;
+
+      expect(instance.setUndecryptablePaused(paused)).toBe(true);
+
+      const connection = mockState.connections.get('sys1:cam1');
+      expect(connection.setUndecryptablePaused).toHaveBeenCalledWith(paused);
     });
   });
 

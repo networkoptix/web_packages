@@ -9,6 +9,7 @@ import {
   type TrackEventDetail,
   type TimestampEventDetail,
   type MetadataEventDetail,
+  type CannotDecryptMediaEventDetail,
   ConnectionError,
   TargetStream,
 } from '../types';
@@ -498,6 +499,21 @@ export class WebRTCStreamManager {
    */
   onMetadata(handler: (detail: MetadataEventDetail) => void): () => void {
     return this._connection.on('metadata', handler);
+  }
+
+  /**
+   * Subscribe to the server reaching archive it can't decrypt. It then sends
+   * no frames, and says so again after every seek that lands in such archive.
+   */
+  onCannotDecryptMedia(
+    handler: (detail: CannotDecryptMediaEventDetail) => void,
+  ): () => void {
+    return this._connection.on('cannotdecrypt', handler);
+  }
+
+  /** Hold the stream while its archive can't be decrypted, so it stops retrying a refused position. */
+  setUndecryptablePaused(paused: boolean): boolean {
+    return this._connection.setUndecryptablePaused(paused);
   }
 
   /**

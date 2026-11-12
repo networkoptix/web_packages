@@ -630,6 +630,29 @@ describe('PeerConnectionWrapper', () => {
     expect(bufferListener).not.toHaveBeenCalled();
   });
 
+  it('parses cannotDecryptMedia messages and emits cannotdecrypt event', () => {
+    const wrapper = new PeerConnectionWrapper(TEST_CONFIG);
+    const pc = getPC();
+    const channel = new MockDataChannel();
+    pc.simulateDataChannel(channel);
+
+    const listener = vi.fn();
+    const tsListener = vi.fn();
+    wrapper.on('cannotdecrypt', listener);
+    wrapper.on('timestamp', tsListener);
+
+    channel.simulateMessage(
+      '{"cannotDecryptMedia":{"deviceId":"075646df-fbc3-382e-509b-7faaecaaaf06","timestampMs":1794356131801}}',
+    );
+
+    expect(listener).toHaveBeenCalledOnce();
+    expect(listener).toHaveBeenCalledWith({
+      deviceId: '075646df-fbc3-382e-509b-7faaecaaaf06',
+      timestampMs: 1794356131801,
+    });
+    expect(tsListener).not.toHaveBeenCalled();
+  });
+
   // ── Data channel: transcoding messages ────────────────────────────────
 
   it('parses transcoding messages from datachannel and emits transcoding event', () => {

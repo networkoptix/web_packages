@@ -12,6 +12,7 @@ import {
   isTranscodingMessage,
   isMimeInit,
   isMetadataMessage,
+  isCannotDecryptMediaMessage,
   type SdpInit,
   type IceInit,
   type Logger,
@@ -22,6 +23,7 @@ import {
   type TranscodingEventDetail,
   type DeliveryMethodEventDetail,
   type MetadataEventDetail,
+  type CannotDecryptMediaEventDetail,
 } from '../types';
 
 // ─── Signaling type guards ──────────────────────────────────────────────────
@@ -65,6 +67,7 @@ interface PeerConnectionEventMap {
   transcoding: TranscodingEventDetail;
   deliverymethod: DeliveryMethodEventDetail;
   metadata: MetadataEventDetail;
+  cannotdecrypt: CannotDecryptMediaEventDetail;
   /** Raw data channel message (string or ArrayBuffer). Fired for every message. */
   datachannel: string | ArrayBuffer;
   /** Fires once the data channel is open and ready for `send`. */
@@ -282,6 +285,10 @@ export class PeerConnectionWrapper extends Disposable {
   on(
     event: 'metadata',
     listener: (detail: MetadataEventDetail) => void,
+  ): () => void;
+  on(
+    event: 'cannotdecrypt',
+    listener: (detail: CannotDecryptMediaEventDetail) => void,
   ): () => void;
   on(
     event: 'datachannel',
@@ -571,6 +578,11 @@ export class PeerConnectionWrapper extends Disposable {
         this.emit('metadata', {
           metadata: parsed.metadata,
         } satisfies MetadataEventDetail);
+      } else if (isCannotDecryptMediaMessage(parsed)) {
+        this.emit('cannotdecrypt', {
+          deviceId: parsed.cannotDecryptMedia.deviceId,
+          timestampMs: parsed.cannotDecryptMedia.timestampMs,
+        } satisfies CannotDecryptMediaEventDetail);
       } else if (isTranscodingMessage(parsed)) {
         // Transcoding may arrive over the data channel when the server
         // sends it after the WebSocket signaling channel has closed.

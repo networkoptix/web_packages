@@ -130,6 +130,13 @@ const { mockState, MockPCW } = vi.hoisted(() => {
       );
     }
 
+    simulateCannotDecrypt(detail: { deviceId: string; timestampMs: number }): void {
+      if (this.disposed) return;
+      this._emitter.dispatchEvent(
+        new CustomEvent('cannotdecrypt', { detail }),
+      );
+    }
+
     simulateTranscoding(detail: { video: boolean; audio?: boolean }): void {
       if (this.disposed) return;
       this._transcodingDetail = detail;
@@ -404,6 +411,26 @@ describe('CameraConnection', () => {
 
     const detail = { timestamp: 1000, rtpTimestamp: 500 };
     lowPcw.simulateTimestamp(detail);
+
+    expect(listener).toHaveBeenCalledOnce();
+    expect(listener).toHaveBeenCalledWith(detail);
+  });
+
+  it.each([
+    ['the low-res stream', { pcwIndex: 0 }],
+    ['the high-res stream before its track takes over', { pcwIndex: 1 }],
+  ])('forwards undecryptable archive reported on %s', async (_name, { pcwIndex }) => {
+    const { cc } = await setupWithLowConnected();
+    cc.requestHighRes();
+    await vi.advanceTimersByTimeAsync(0);
+    getMock(1).simulateStateChange(PeerState.connected);
+    await vi.advanceTimersByTimeAsync(0);
+
+    const listener = vi.fn();
+    cc.on('cannotdecrypt', listener);
+
+    const detail = { deviceId: 'cam-1', timestampMs: 1_794_356_131_801 };
+    getMock(pcwIndex).simulateCannotDecrypt(detail);
 
     expect(listener).toHaveBeenCalledOnce();
     expect(listener).toHaveBeenCalledWith(detail);
@@ -2121,6 +2148,72 @@ describe('CameraConnection', () => {
     cc.setDataPaused(false);
     await vi.advanceTimersByTimeAsync(0);
     expect(mockState.instances.length).toBeGreaterThan(pcCountAfterFailure);
+  });
+
+  // ── Undecryptable archive hold ──────────────────────────────────────
+
+  it('stops retrying a base that fails while held for undecryptable archive, and rebuilds on release', async () => {
+    const { cc, lowPcw } = await setupWithLowConnected({ ...TEST_CONFIG, initialPosition: 5000 });
+    cc.setUndecryptablePaused(true);
+
+    lowPcw.simulateStateChange(PeerState.failed);
+    await vi.advanceTimersByTimeAsync(60_000);
+    expect(mockState.instances).toHaveLength(1);
+
+    cc.setUndecryptablePaused(false);
+    await vi.advanceTimersByTimeAsync(0);
+    expect(mockState.instances).toHaveLength(2);
+  });
+
+  it.each([
+    ['released from a hold rebuilds at once', { holdFirst: true, rebuiltAtOnce: true }],
+    ['never held waits for the rearm', { holdFirst: false, rebuiltAtOnce: false }],
+  ])('a base waiting on its rearm %s', async (_name, { holdFirst, rebuiltAtOnce }) => {
+    const cc = new CameraConnection({
+      ...TEST_CONFIG,
+      initialPosition: 5000,
+      lowResRetry: { maxAttempts: 1, baseDelayMs: 0, maxDelayMs: 0 },
+    });
+    await vi.advanceTimersByTimeAsync(0);
+    getMock(0).simulateStateChange(PeerState.failed);
+    await vi.advanceTimersByTimeAsync(50);
+    const instancesAtRearmTime = mockState.instances.length;
+
+    if (holdFirst) {
+      cc.setUndecryptablePaused(true);
+    }
+    cc.setUndecryptablePaused(false);
+    await vi.advanceTimersByTimeAsync(0);
+    const rebuiltBeforeRearm = mockState.instances.length > instancesAtRearmTime;
+    await vi.advanceTimersByTimeAsync(31_000);
+
+    expect(rebuiltBeforeRearm).toBe(rebuiltAtOnce);
+    expect(mockState.instances.length).toBeGreaterThan(instancesAtRearmTime);
+  });
+
+  it.each([
+    ['held for undecryptable archive', { hold: true, rebuilds: 1 }],
+    ['not held', { hold: false, rebuilds: 2 }],
+  ])('recovery reconnect() on a stream %s', async (_name, { hold, rebuilds }) => {
+    const { cc } = await setupWithLowConnected({ ...TEST_CONFIG, initialPosition: 5000 });
+    cc.setUndecryptablePaused(hold);
+
+    cc.reconnect();
+    await vi.advanceTimersByTimeAsync(0);
+
+    expect(mockState.instances).toHaveLength(rebuilds);
+  });
+
+  it('does NOT resume a connection held for undecryptable archive when the user resumes', async () => {
+    const { cc, lowPcw } = await setupWithLowConnected();
+    cc.setUndecryptablePaused(true);
+    lowPcw.sendResume.mockClear();
+
+    cc.sendPause();
+    cc.sendResume();
+
+    expect(cc.isPaused).toBe(true);
+    expect(lowPcw.sendResume).not.toHaveBeenCalled();
   });
 
   // ── Deferred upgrade swap vs. base teardown ──────────────────────────

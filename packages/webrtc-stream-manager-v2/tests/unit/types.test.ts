@@ -16,6 +16,7 @@ import {
   isTranscodingMessage,
   isMimeInit,
   isNativeWebRtcCodec,
+  isCannotDecryptMediaMessage,
 } from '../../src/types';
 
 // ─── Enum value tests ────────────────────────────────────────────────────────
@@ -154,6 +155,19 @@ describe('isRequiresTranscoding', () => {
   it('should return false for non-number, non-string values', () => {
     expect(isRequiresTranscoding(null as unknown as number)).toBe(false);
     expect(isRequiresTranscoding(undefined as unknown as number)).toBe(false);
+  });
+});
+
+describe('isCannotDecryptMediaMessage', () => {
+  it.each<[string, { message: unknown; expected: boolean }]>([
+    ['the server message', { message: { cannotDecryptMedia: { deviceId: 'cam-1', timestampMs: 1000 } }, expected: true }],
+    ['a timestamp message', { message: { timestampMs: 1000, rtpTimestamp: 500 }, expected: false }],
+    ['a null detail', { message: { cannotDecryptMedia: null }, expected: false }],
+    ['a detail without deviceId', { message: { cannotDecryptMedia: { timestampMs: 1000 } }, expected: false }],
+    ['a string timestampMs', { message: { cannotDecryptMedia: { deviceId: 'cam-1', timestampMs: '1000' } }, expected: false }],
+    ['null', { message: null, expected: false }],
+  ])('%s', (_name, { message, expected }) => {
+    expect(isCannotDecryptMediaMessage(message)).toBe(expected);
   });
 });
 
