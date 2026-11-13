@@ -3075,6 +3075,24 @@ describe('CameraConnection codec that needs transcoding', () => {
     expect(cc.unsupportedCodec).toBe(ConnectionError.mjpegDisabled);
   });
 
+  it('does not open an MJPEG upgrade when RADASS asks for high in Auto (CLOUD-19169)', async () => {
+    const { cc, lowPcw } = await setupWithLowConnected({
+      ...TEST_CONFIG,
+      initialStream: AvailableStreams.SECONDARY,
+      canAutoUpgrade: false,
+      targetStream: TargetStream.AUTO,
+      mediaStreams: MJPEG_MAIN_H264_SUB,
+    });
+
+    // The viewport-forced 'high' directive calls requestHighRes() directly.
+    cc.requestHighRes();
+    await vi.advanceTimersByTimeAsync(0);
+
+    expect(mockState.instances).toHaveLength(1);
+    expect(lowPcw.disposed).toBe(false);
+    expect(cc.unsupportedCodec).toBeNull();
+  });
+
   it('stays down through seeks, resume and metadata changes while blocked', async () => {
     const { cc } = await setupWithLowConnected({
       ...TEST_CONFIG,

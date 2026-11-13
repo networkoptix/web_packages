@@ -530,6 +530,8 @@ export class CameraConnection extends Disposable {
     // When base is already PRIMARY, there's nothing higher to switch to.
     if (this.upgradeStream !== AvailableStreams.PRIMARY) return;
     if (!this.config.availableStreams.includes(AvailableStreams.PRIMARY)) return;
+    // Viewport-forced HIGH reaches here in Auto: never open a PRIMARY the server must transcode (CLOUD-19169).
+    if (unsupportedCodecError(AvailableStreams.PRIMARY, this.config.mediaStreams)) return;
     if (this._isUpgraded) return;
     if (this.upgradeRetryAc) return;
     // A failed upgrade is not retried at once: callers re-request every RADASS
