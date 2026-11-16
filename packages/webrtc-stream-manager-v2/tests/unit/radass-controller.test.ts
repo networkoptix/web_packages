@@ -83,6 +83,14 @@ describe('RadassController', () => {
   }
 
   /**
+   * The system-wide performance settle (CLOUD-18779) counterpart of hand-setting
+   * lastSwitchTime = 0: lets the next Pass 1 / Pass 2 switch happen at once.
+   */
+  function expireSystemPerformanceSettle() {
+    (controller as unknown as { lastPerformanceSwitchAt: number }).lastPerformanceSwitchAt = -Infinity;
+  }
+
+  /**
    * Hold the current (healthy) conditions for longer than the sustained-health
    * dwell, so a performance-demoted camera becomes eligible for promotion.
    * Performance recovery is deliberately not instantaneous — see CLOUD-18327.
@@ -276,6 +284,7 @@ describe('RadassController', () => {
       state2.registeredAt = 0;
       state1.lastSwitchTime = 0;
       state2.lastSwitchTime = 0;
+      expireSystemPerformanceSettle();
 
       // One tick to trigger performance demotion
       tick();
@@ -339,6 +348,7 @@ describe('RadassController', () => {
       state2.registeredAt = 0;
       state1.lastSwitchTime = 0;
       state2.lastSwitchTime = 0;
+      expireSystemPerformanceSettle();
 
       // First demotion: cam-1 bad MOS → cam-2 (smaller) demoted
       tick();
@@ -354,6 +364,7 @@ describe('RadassController', () => {
       // Second demotion: cam-1 bad MOS again → cam-2 demoted again
       cam1.snapshot = { mos: 2.0, focus: 3, stalled: false };
       state2.lastSwitchTime = 0;
+      expireSystemPerformanceSettle();
       tick();
       expect(state2.lqReason).toBe(LqReason.Performance);
 
@@ -1046,6 +1057,7 @@ describe('RadassController', () => {
       state2.registeredAt = 0;
       state1.lastSwitchTime = 0;
       state2.lastSwitchTime = 0;
+      expireSystemPerformanceSettle();
 
       tick();
 
@@ -1099,6 +1111,7 @@ describe('RadassController', () => {
       state1.lastSwitchTime = 0;
       state2.lastSwitchTime = 0;
       state3.lastSwitchTime = 0;
+      expireSystemPerformanceSettle();
 
       // Step 1: cam1 bad MOS -> cam3 (smallest) demoted to Performance
       tick();
@@ -1115,6 +1128,7 @@ describe('RadassController', () => {
       // Step 3: cam1 bad MOS again -> cam3 demoted again -> cam3 gets antiThrash
       cam1.snapshot = { mos: 2.0, focus: 3, stalled: false };
       state3.lastSwitchTime = 0;
+      expireSystemPerformanceSettle();
       tick();
       expect(state3.currentQuality).toBe('low');
       expect(state3.lqReason).toBe(LqReason.Performance);
@@ -1154,6 +1168,7 @@ describe('RadassController', () => {
       state2.registeredAt = 0;
       state1.lastSwitchTime = 0;
       state2.lastSwitchTime = 0;
+      expireSystemPerformanceSettle();
 
       // Demotion 1
       tick();
@@ -1167,6 +1182,7 @@ describe('RadassController', () => {
       // Demotion 2 -> antiThrash set on cam2
       cam1.snapshot = { mos: 2.0, focus: 3, stalled: false };
       state2.lastSwitchTime = 0;
+      expireSystemPerformanceSettle();
       tick();
       expect(state2.antiThrash).toBe(true);
 
@@ -1363,6 +1379,7 @@ describe('RadassController', () => {
       goodState.registeredAt = 0;
       badState.lastSwitchTime = 0;
       goodState.lastSwitchTime = 0;
+      expireSystemPerformanceSettle();
 
       // System struggles → cam-good (smallest AUTO HQ) is demoted for performance.
       tick();
@@ -1453,7 +1470,8 @@ describe('RadassController', () => {
       // past the dwell must still promote the camera back to HQ.
       camA.snapshot = { mos: 4.5, focus: 3, stalled: false };
       camB.snapshot = { mos: 4.5, focus: 3, stalled: false };
-      vi.advanceTimersByTime(config.performanceRecoveryDelayMs + config.tickIntervalMs);
+      // cam-a recovers first; cam-b follows one settle period later (CLOUD-18779).
+      vi.advanceTimersByTime(config.performanceRecoveryDelayMs + config.tickIntervalMs + config.switchCooldownMs);
       tick();
       expect(stateB.currentQuality).toBe('high');
     });
@@ -1703,8 +1721,9 @@ describe('RadassController', () => {
       // antiThrashRetryMs, the floor it actually has to beat — a rung below that
       // floor can never bind and would be a silent no-op.
       expect(required(0)).toBe(config.performanceRecoveryDelayMs);
-      expect(required(1)).toBe(config.antiThrashRetryMs * 2);
-      expect(required(2)).toBe(config.maxPerformanceRecoveryDelayMs);
+      expect(required(1)).toBe(config.antiThrashRetryMs);
+      expect(required(2)).toBe(config.antiThrashRetryMs * 2);
+      expect(required(3)).toBe(config.maxPerformanceRecoveryDelayMs);
 
       // Unbounded doubling would run away to hours and then Infinity, which is a
       // permanent blacklist. The cap is what keeps recovery reachable.
@@ -2335,8 +2354,8 @@ describe('RadassController', () => {
       }
 
       // Without the fix this is one failed attempt every ~5s (≈ 2000 in 3 hours).
-      // With the backoff: one quick retry after the base dwell, then 20 min,
-      // then the 30 min cap — 8 attempts in 3 hours.
+      // With the backoff: one quick retry after the base dwell, then 10 min,
+      // 20 min, then the 30 min cap — at most 8 attempts in 3 hours.
       expect(failures).toBeLessThanOrEqual(8);
       expect(state.failedHqAttempts).toBeGreaterThanOrEqual(2);
       const gaps = promotions.slice(1).map((t, i) => t - promotions[i]);
@@ -2492,6 +2511,79 @@ describe('RadassController', () => {
       expect(state.currentQuality).toBe('low');
       expect(state.performancePromotionPending).toBe(false);
       expect(state.antiThrash).toBe(true);
+    });
+  });
+
+  describe('CLOUD-18779: one performance switch per settle period, system-wide', () => {
+    /** Four AUTO HQ cameras with distinct areas, past grace and cooldown. */
+    function setupFourHqCameras() {
+      const keys = ['cam-1', 'cam-2', 'cam-3', 'cam-4'];
+      keys.forEach((key, i) => {
+        cameras.set(key, makeMockCamera({
+          connectionKey: key,
+          elementHeight: 300 + i * 50,
+          elementArea: (400 + i * 100) * (300 + i * 50),
+          statsUpdateCount: 20,
+        }));
+        controller.registerCamera(key);
+      });
+      vi.advanceTimersByTime(config.switchCooldownMs + config.recentlyAddedDelayMs);
+      const states = keys.map((k) => controller.getState(k)!);
+      for (const s of states) expect(s.currentQuality).toBe('high');
+      return { keys, states };
+    }
+
+    it('demotes only one camera while bad MOS lasts 2-3 seconds', () => {
+      const { states } = setupFourHqCameras();
+
+      // QA repro: MOS stays bad for ~3 s (6 ticks) before the demotion relieves it.
+      cameras.get('cam-4')!.snapshot = { mos: 2.0, focus: 3, stalled: false };
+      tick(6);
+
+      const demoted = states.filter((s) => s.lqReason === LqReason.Performance);
+      expect(demoted).toHaveLength(1);
+      expect(states.filter((s) => s.currentQuality === 'high')).toHaveLength(3);
+    });
+
+    it('does not promote all performance-LQ cameras on consecutive ticks after recovery', () => {
+      const { states } = setupFourHqCameras();
+      for (const s of states.slice(0, 3)) {
+        s.currentQuality = 'low';
+        s.lqReason = LqReason.Performance;
+        s.lastSwitchTime = 0;
+      }
+
+      const promotions: number[] = [];
+      const steps = (config.performanceRecoveryDelayMs + 4 * config.switchCooldownMs) / config.tickIntervalMs;
+      for (let i = 0; i < steps; i++) {
+        const before = states.filter((s) => s.currentQuality === 'high').length;
+        tick();
+        const after = states.filter((s) => s.currentQuality === 'high').length;
+        for (let n = before; n < after; n++) promotions.push(performance.now());
+      }
+
+      expect(promotions).toHaveLength(3);
+      const gaps = promotions.slice(1).map((t, i) => t - promotions[i]);
+      for (const gap of gaps) expect(gap).toBeGreaterThanOrEqual(config.switchCooldownMs);
+    });
+  });
+
+  describe('CLOUD-19096: first failed HQ retry backs off 10 minutes, not 20', () => {
+    it('uses antiThrashRetryMs * 2^(failures - 1), capped', () => {
+      cameras.set('cam-1', makeMockCamera({ connectionKey: 'cam-1' }));
+      controller.registerCamera('cam-1');
+      const state = controller.getState('cam-1')!;
+      const required = (failures: number): number => {
+        state.failedHqAttempts = failures;
+        return (controller as unknown as {
+          requiredHealthyMs(s: typeof state): number;
+        }).requiredHealthyMs(state);
+      };
+
+      expect(required(0)).toBe(config.performanceRecoveryDelayMs);
+      expect(required(1)).toBe(config.antiThrashRetryMs); // 10 min
+      expect(required(2)).toBe(config.antiThrashRetryMs * 2); // 20 min
+      expect(required(3)).toBe(config.maxPerformanceRecoveryDelayMs); // 30 min cap
     });
   });
 });

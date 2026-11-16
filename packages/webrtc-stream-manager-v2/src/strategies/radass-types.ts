@@ -98,14 +98,14 @@ export interface RadassConfig {
   performanceRecoveryDelayMs: number;
   /** Upper bound on the exponential promotion backoff. Each HQ attempt that is
    *  undone by a performance demotion doubles the required healthy period
-   *  (antiThrashRetryMs * 2^failures, from the first failure), so a link that
+   *  (antiThrashRetryMs * 2^(failures - 1), from the first failure), so a link that
    *  genuinely cannot carry HQ settles at LQ instead of retrying forever.
    *
    *  MUST be larger than antiThrashRetryMs. Promotion is gated by
    *  max(antiThrashRetryMs, requiredHealthyMs), so a cap at or below that floor
    *  makes every rung non-binding and silently disables the whole backoff.
-   *  Default: 1_800_000 (30 min), 3x antiThrashRetryMs — reached at the second
-   *  failed attempt. */
+   *  Default: 1_800_000 (30 min), 3x antiThrashRetryMs — reached at the third
+   *  failed attempt (10 min, 20 min, 30 min). */
   maxPerformanceRecoveryDelayMs: number;
   /** Uninterrupted time at HQ that counts as a successful promotion and clears
    *  the failure history. Must comfortably exceed switchCooldownMs, so that a

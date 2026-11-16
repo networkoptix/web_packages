@@ -57,6 +57,15 @@ export class RadassController extends Disposable {
    */
   private systemFailedHqProbes = 0;
 
+  /**
+   * Time of the latest performance demotion or promotion (Pass 1 / Pass 2),
+   * shared by all cameras. canSwitch() is per camera, so without this gate
+   * Pass 1 demotes a different camera on every tick while MOS stays bad and
+   * the whole layout drops to LQ (CLOUD-18779). Uses the same 5 s interval
+   * (switchCooldownMs) as the desktop kQualitySwitchInterval.
+   */
+  private lastPerformanceSwitchAt = -Infinity;
+
   constructor(
     private readonly config: RadassConfig,
     private readonly host: RadassHost,
@@ -159,6 +168,7 @@ export class RadassController extends Disposable {
     this.states.clear();
     this.systemFailedHqProbes = 0;
     this.healthyMs = 0;
+    this.lastPerformanceSwitchAt = -Infinity;
   }
 
   // ── Tick loop ───────────────────────────────────────────────────────────
@@ -397,7 +407,10 @@ export class RadassController extends Disposable {
 
     this.accrueHqEvidence();
 
-    if (hasBadMos && !switchedThisTick) {
+    const performanceSettled =
+      now - this.lastPerformanceSwitchAt >= this.config.switchCooldownMs;
+
+    if (hasBadMos && !switchedThisTick && performanceSettled) {
       // Find the smallest HQ camera by area to demote
       let smallestHqKey: string | null = null;
       let smallestArea = Infinity;
@@ -435,6 +448,7 @@ export class RadassController extends Disposable {
         const targetState = this.states.get(smallestHqKey)!;
         this.setQuality(targetState, 'low', LqReason.Performance, now);
         this.host.applyDirective(smallestHqKey, 'low');
+        this.lastPerformanceSwitchAt = now;
         switchedThisTick = true;
       }
     }
@@ -447,7 +461,7 @@ export class RadassController extends Disposable {
     // gate a healthy-MOS camera would be demoted (Pass 1) then re-promoted (Pass 2)
     // then demoted again, tripping anti-thrash and locking it out of HQ for
     // antiThrashRetryMs (10 min). See CLOUD-18327.
-    if (!switchedThisTick && !hasBadMos) {
+    if (!switchedThisTick && !hasBadMos && performanceSettled) {
       for (const [k, s] of this.states) {
         if (switchedThisTick) break;
         if (s.currentQuality !== 'low' || s.lqReason !== LqReason.Performance) continue;
@@ -477,6 +491,7 @@ export class RadassController extends Disposable {
         s.performancePromotionPending = true;
         s.wasPerformancePromoted = true;
         this.host.applyDirective(k, 'high');
+        this.lastPerformanceSwitchAt = now;
         switchedThisTick = true;
       }
     }
@@ -604,20 +619,20 @@ export class RadassController extends Disposable {
    * anti-thrash and promotion is then gated by max(antiThrashRetryMs, this).
    * Rungs below that floor cannot bind, so basing the doubling on the small base
    * dwell would produce several silent no-op rungs before escalation was even
-   * observable. Starting at the floor makes the very first failure lengthen the
-   * retry interval.
+   * observable. The first failure waits the floor itself (10 min,
+   * CLOUD-19096); each further failure doubles it, up to the cap.
    */
   private requiredHealthyMs(state: CameraRadassState): number {
     const perCamera =
       state.failedHqAttempts === 0
         ? this.config.performanceRecoveryDelayMs
         : Math.min(
-            this.config.antiThrashRetryMs * 2 ** state.failedHqAttempts,
+            this.config.antiThrashRetryMs * 2 ** (state.failedHqAttempts - 1),
             this.config.maxPerformanceRecoveryDelayMs,
           );
     // System ladder: a failed probe by ANY camera gates the next probe from
-    // every camera (see systemFailedHqProbes). One rung below the per-camera
-    // ladder — the prober itself is penalized harder than bystanders.
+    // every camera (see systemFailedHqProbes). Same rungs as the per-camera
+    // ladder, counted on the shared probe failures.
     const system =
       this.systemFailedHqProbes === 0
         ? 0
