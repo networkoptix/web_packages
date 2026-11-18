@@ -1108,6 +1108,51 @@ describe('PeerConnectionWrapper', () => {
     expect(listener).not.toHaveBeenCalled();
   });
 
+  // CLOUD-18468: a stitched panoramic camera reports H.264, but the server transcodes it
+  // and sends no transcoding message. The SDP offer is the only place that shows it.
+  it('reports video transcoding when the SDP offer has no H.264 or H.265 video codec', async () => {
+    const wrapper = new PeerConnectionWrapper(TEST_CONFIG);
+    const pc = getPC();
+    const ws = getWS();
+    const listener = vi.fn();
+    wrapper.on('transcoding', listener);
+
+    ws.simulateMessage({
+      sdp: {
+        type: 'offer',
+        sdp: 'v=0\r\nm=video 9 UDP/TLS/RTP/SAVPF 96\r\na=rtpmap:96 VP8/90000\r\n',
+      },
+    });
+    await vi.waitFor(() => {
+      expect(pc.setLocalDescription).toHaveBeenCalledOnce();
+    });
+
+    expect(listener).toHaveBeenCalledOnce();
+    expect(listener).toHaveBeenCalledWith({ video: true });
+    expect(wrapper.transcoding).toEqual({ video: true });
+  });
+
+  it('reports no transcoding when the SDP offer has an H.264 video codec', async () => {
+    const wrapper = new PeerConnectionWrapper(TEST_CONFIG);
+    const pc = getPC();
+    const ws = getWS();
+    const listener = vi.fn();
+    wrapper.on('transcoding', listener);
+
+    ws.simulateMessage({
+      sdp: {
+        type: 'offer',
+        sdp: 'v=0\r\nm=video 9 UDP/TLS/RTP/SAVPF 96\r\na=rtpmap:96 H264/90000\r\n',
+      },
+    });
+    await vi.waitFor(() => {
+      expect(pc.setLocalDescription).toHaveBeenCalledOnce();
+    });
+
+    expect(listener).not.toHaveBeenCalled();
+    expect(wrapper.transcoding).toBeNull();
+  });
+
   // ── Delivery method events ───────────────────────────────────────────
 
   it('emits deliverymethod event when server sends mime type', () => {

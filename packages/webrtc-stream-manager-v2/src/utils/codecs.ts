@@ -85,6 +85,25 @@ export function _resetH265Cache(): void {
 }
 
 /**
+ * Whether an SDP offer delivers video in a codec that only the server transcoder outputs.
+ *
+ * The mediaserver passes H264 and H265 through over SRTP; any other video codec in its
+ * offer (typically VP8) is transcoder output. CLOUD-18468: this is the only sign of
+ * transcoding for a camera whose own codec is native, e.g. a stitched panoramic camera.
+ *
+ * @returns `false` when the offer has no video section or names no video codec.
+ */
+export function sdpOffersTranscodedVideo(sdp: string | undefined): boolean {
+  if (!sdp) return false;
+  const videoCodecs = sdp
+    .split(/^m=/m)
+    .filter((section) => section.startsWith('video'))
+    .flatMap((section) => [...section.matchAll(/^a=rtpmap:\d+ ([^/\s]+)/gm)])
+    .map((match) => match[1].toUpperCase());
+  return videoCodecs.length > 0 && !videoCodecs.some((codec) => codec === 'H264' || codec === 'H265');
+}
+
+/**
  * Extract the mime type of the video codec actually being delivered from an
  * RTCStatsReport: the `inbound-rtp` video report's `codecId` points at the
  * `codec` report holding the negotiated mime (e.g. `video/H264`).

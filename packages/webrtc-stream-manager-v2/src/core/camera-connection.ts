@@ -16,6 +16,7 @@ import {
   AvailableStreams,
   PeerState,
   ConnectionError,
+  KnownCodec,
   TargetStream,
   type DeliveryMethod,
   type Logger,
@@ -936,6 +937,7 @@ export class CameraConnection extends Disposable {
       }),
       pcw.on('cannotdecrypt', (detail) => this.emit('cannotdecrypt', detail)),
       pcw.on('transcoding', (detail) => {
+        if (detail.video && this.blockTranscodedNativeStream()) return;
         if (detail.video && this.shouldFallbackToMse()) {
           this.reconnectWithMse();
         }
@@ -948,6 +950,7 @@ export class CameraConnection extends Disposable {
     // Replay stored transcoding detail (arrives during signaling, before
     // ICE connects and before setBasePc is called — same pattern as
     // activeStream and deliveryMethod replay).
+    if (pcw.transcoding?.video && this.blockTranscodedNativeStream()) return;
     if (pcw.transcoding?.video && this.shouldFallbackToMse()) {
       this.reconnectWithMse();
       return;
@@ -1688,6 +1691,21 @@ export class CameraConnection extends Disposable {
     this.disposeBaseInternal();
     this.emit('error', error);
     this.updateState(PeerState.failed);
+  }
+
+  /**
+   * CLOUD-18468: H264 always passes through SRTP, so a server that transcodes an H264 base
+   * stream does it for another reason (e.g. it stitches a panoramic camera). MSE delivery
+   * would be transcoded too, so report the stream as not supported instead.
+   *
+   * @returns `true` when the stream was blocked.
+   */
+  private blockTranscodedNativeStream(): boolean {
+    if (this._deliveryMethod === 'mse') return false;
+    const codec = this.config.mediaStreams?.find((s) => s.encoderIndex === this.baseStream)?.codec;
+    if (codec !== KnownCodec.H264) return false;
+    this.blockUnsupportedCodec(ConnectionError.transcodingDisabled);
+    return true;
   }
 
   /** Tear down SRTP connections and reconnect with MSE delivery. */

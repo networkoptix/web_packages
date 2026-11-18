@@ -3157,6 +3157,108 @@ describe('CameraConnection codec that needs transcoding', () => {
     expect(freshPcw.sendSeek).not.toHaveBeenCalled();
   });
 
+  // CLOUD-18468: a stitched panoramic camera reports H.264 on both streams, but the server
+  // transcodes the stitched picture. MSE gets a transcoded stream too, so it is no fallback.
+  it('stops and reports transcodingDisabled when the server transcodes an H.264 stream', async () => {
+    const cc = new CameraConnection({
+      ...TEST_CONFIG,
+      initialStream: AvailableStreams.SECONDARY,
+      mediaStreams: [
+        { codec: KnownCodec.H264, encoderIndex: AvailableStreams.PRIMARY },
+        { codec: KnownCodec.H264, encoderIndex: AvailableStreams.SECONDARY },
+      ],
+    });
+    await vi.advanceTimersByTimeAsync(0);
+    const basePcw = getMock(0);
+    // The wrapper found a transcoded video codec in the SDP offer, before ICE connected.
+    basePcw.setStoredTranscoding({ video: true });
+    const errors = vi.fn();
+    const mseFallback = vi.fn();
+    cc.on('error', errors);
+    cc.on('msefallback', mseFallback);
+
+    basePcw.simulateStateChange(PeerState.connected);
+    await vi.advanceTimersByTimeAsync(60_000);
+
+    expect(mseFallback).not.toHaveBeenCalled();
+    expect(errors).toHaveBeenCalledWith(ConnectionError.transcodingDisabled);
+    expect(cc.unsupportedCodec).toBe(ConnectionError.transcodingDisabled);
+    expect(cc.state).toBe(PeerState.failed);
+    expect(basePcw.disposed).toBe(true);
+    expect(mockState.instances).toHaveLength(1);
+  });
+
+  it('blocks a transcoded H.264 stream again after a resolution change', async () => {
+    const cc = new CameraConnection({
+      ...TEST_CONFIG,
+      initialStream: AvailableStreams.SECONDARY,
+      mediaStreams: [
+        { codec: KnownCodec.H264, encoderIndex: AvailableStreams.PRIMARY },
+        { codec: KnownCodec.H264, encoderIndex: AvailableStreams.SECONDARY },
+      ],
+    });
+    await vi.advanceTimersByTimeAsync(0);
+    getMock(0).setStoredTranscoding({ video: true });
+    getMock(0).simulateStateChange(PeerState.connected);
+    await vi.advanceTimersByTimeAsync(0);
+    expect(cc.unsupportedCodec).toBe(ConnectionError.transcodingDisabled);
+    const mseFallback = vi.fn();
+    cc.on('msefallback', mseFallback);
+
+    cc.targetStream = TargetStream.HIGH;
+    await vi.advanceTimersByTimeAsync(0);
+    expect(mockState.instances).toHaveLength(2);
+    const retryPcw = getMock(1);
+    retryPcw.setStoredTranscoding({ video: true });
+    retryPcw.simulateStateChange(PeerState.connected);
+    await vi.advanceTimersByTimeAsync(60_000);
+
+    expect(mseFallback).not.toHaveBeenCalled();
+    expect(cc.unsupportedCodec).toBe(ConnectionError.transcodingDisabled);
+    expect(cc.state).toBe(PeerState.failed);
+    expect(retryPcw.disposed).toBe(true);
+    expect(mockState.instances).toHaveLength(2);
+  });
+
+  it('stops when the transcoding report for an H.264 stream comes after the connection', async () => {
+    const { cc, lowPcw } = await setupWithLowConnected({
+      ...TEST_CONFIG,
+      initialStream: AvailableStreams.SECONDARY,
+      mediaStreams: [
+        { codec: KnownCodec.H264, encoderIndex: AvailableStreams.PRIMARY },
+        { codec: KnownCodec.H264, encoderIndex: AvailableStreams.SECONDARY },
+      ],
+    });
+    const mseFallback = vi.fn();
+    cc.on('msefallback', mseFallback);
+
+    lowPcw.simulateTranscoding({ video: true });
+    await vi.advanceTimersByTimeAsync(0);
+
+    expect(mseFallback).not.toHaveBeenCalled();
+    expect(cc.unsupportedCodec).toBe(ConnectionError.transcodingDisabled);
+    expect(lowPcw.disposed).toBe(true);
+    expect(mockState.instances).toHaveLength(1);
+  });
+
+  it('still falls back to MSE when the server transcodes an H.265 stream', async () => {
+    const { cc, lowPcw } = await setupWithLowConnected({
+      ...TEST_CONFIG,
+      initialStream: AvailableStreams.SECONDARY,
+      mediaStreams: [
+        { codec: KnownCodec.H265, encoderIndex: AvailableStreams.PRIMARY },
+        { codec: KnownCodec.H265, encoderIndex: AvailableStreams.SECONDARY },
+      ],
+    });
+    const mseFallback = vi.fn();
+    cc.on('msefallback', mseFallback);
+
+    lowPcw.simulateTranscoding({ video: true });
+
+    expect(mseFallback).toHaveBeenCalledOnce();
+    expect(cc.unsupportedCodec).toBeNull();
+  });
+
   it('keeps an MSE camera on its playable secondary when the primary is MJPEG', async () => {
     const signalingUrl = vi.fn((stream: AvailableStreams) => `wss://example.com/webrtc?stream=${stream}`);
     const cc = new CameraConnection({

@@ -2,6 +2,7 @@
 
 import { Disposable } from './disposable';
 import { SignalingChannel } from './signaling';
+import { sdpOffersTranscodedVideo } from '../utils/codecs';
 import { diagTracker } from '../utils/diag-tracker';
 import {
   AvailableStreams,
@@ -433,6 +434,14 @@ export class PeerConnectionWrapper extends Disposable {
     if (isMimeInit(data)) {
       this._deliveryMethodDetail = { method: 'mse', mime: data.mime };
       this.emit('deliverymethod', this._deliveryMethodDetail);
+      if (this.disposed) return;
+    }
+
+    // CLOUD-18468: the server can transcode without a transcoding message (e.g. a stitched
+    // panoramic camera). The video codec of its offer is then the only sign.
+    if (isSdpInit(data) && !this._transcodingDetail?.video && sdpOffersTranscodedVideo(data.sdp.sdp)) {
+      this._transcodingDetail = { ...this._transcodingDetail, video: true };
+      this.emit('transcoding', this._transcodingDetail);
       if (this.disposed) return;
     }
 

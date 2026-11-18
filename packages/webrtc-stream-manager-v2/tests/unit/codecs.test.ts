@@ -8,6 +8,7 @@ import {
   browserSupportsH265WebRTC,
   _resetH265Cache,
   extractPlayingCodecMime,
+  sdpOffersTranscodedVideo,
 } from '../../src/utils/codecs';
 import { KnownCodec } from '../../src/types';
 
@@ -189,5 +190,46 @@ describe('extractPlayingCodecMime', () => {
 
   it('returns empty string for empty stats', () => {
     expect(extractPlayingCodecMime(new Map() as unknown as RTCStatsReport)).toBe('');
+  });
+});
+
+describe('sdpOffersTranscodedVideo', () => {
+  const sdp = (...lines: string[]): string => ['v=0', ...lines, ''].join('\r\n');
+
+  it('is true when the video section offers only VP8', () => {
+    expect(
+      sdpOffersTranscodedVideo(sdp('m=video 9 UDP/TLS/RTP/SAVPF 96', 'a=rtpmap:96 VP8/90000')),
+    ).toBe(true);
+  });
+
+  it('is false when the video section offers H.264 or H.265', () => {
+    expect(
+      sdpOffersTranscodedVideo(sdp('m=video 9 UDP/TLS/RTP/SAVPF 96', 'a=rtpmap:96 H264/90000')),
+    ).toBe(false);
+    expect(
+      sdpOffersTranscodedVideo(sdp('m=video 9 UDP/TLS/RTP/SAVPF 96', 'a=rtpmap:96 h265/90000')),
+    ).toBe(false);
+  });
+
+  it('does not count the codecs of other sections', () => {
+    expect(
+      sdpOffersTranscodedVideo(
+        sdp(
+          'm=audio 9 UDP/TLS/RTP/SAVPF 111',
+          'a=rtpmap:111 opus/48000/2',
+          'm=video 9 UDP/TLS/RTP/SAVPF 96',
+          'a=rtpmap:96 H264/90000',
+          'm=application 9 UDP/DTLS/SCTP webrtc-datachannel',
+        ),
+      ),
+    ).toBe(false);
+  });
+
+  it('is false when the offer names no video codec', () => {
+    expect(sdpOffersTranscodedVideo(undefined)).toBe(false);
+    expect(sdpOffersTranscodedVideo('v=0\r\noffer-sdp\r\n')).toBe(false);
+    expect(
+      sdpOffersTranscodedVideo(sdp('m=audio 9 UDP/TLS/RTP/SAVPF 111', 'a=rtpmap:111 opus/48000/2')),
+    ).toBe(false);
   });
 });
